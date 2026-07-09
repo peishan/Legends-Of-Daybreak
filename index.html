@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Legends of Daybreak - RPG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+:root {
+  --bg: #0f0e17; --bg-card: #1a1825; --bg-hover: #242236; --border: #2e2c42;
+  --text: #e8e6f0; --text-dim: #9ca3af; --accent: #7c3aed; --accent-light: #a78bfa;
+  --hp: #ef4444; --mp: #3b82f6; --xp: #eab308; --gold: #f59e0b; --success: #22c55e; --danger: #ef4444;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+#game-app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+.game-header { background: linear-gradient(135deg, #1a1825 0%, #242236 100%); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
+.header-left { display: flex; align-items: center; gap: 10px; }
+.player-name { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; }
+.class-tag { font-size: 10px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
+.level-badge { background: var(--xp); color: #000; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 12px; }
+.header-right { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
+.stat-bar { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.stat-icon { width: 24px; text-align: center; font-size: 10px; font-weight: 700; color: var(--text-dim); }
+.bar { flex: 1; height: 8px; background: #2e2c42; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+.bar-fill.hp { background: var(--hp); } .bar-fill.mp { background: var(--mp); } .bar-fill.xp { background: var(--xp); }
+.bar-text { min-width: 55px; text-align: right; font-size: 10px; color: var(--text-dim); }
+.gold-display { font-size: 13px; font-weight: 700; color: var(--gold); text-align: right; }
+.buffs-row { display: flex; gap: 6px; padding: 6px 16px; background: #1a1825; border-bottom: 1px solid var(--border); flex-wrap: wrap; flex-shrink: 0; }
+.buff-pill { background: var(--accent); color: white; font-size: 10px; padding: 3px 10px; border-radius: 10px; }
+.game-content { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 80px; }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.menu-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+.menu-card:hover, .menu-card:active { border-color: var(--accent); background: var(--bg-hover); transform: translateY(-2px); }
+.menu-icon { font-size: 28px; margin-bottom: 6px; }
+.menu-label { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+.menu-desc { font-size: 11px; color: var(--text-dim); line-height: 1.3; }
+.section-title { font-family: 'Cinzel', serif; font-weight: 700; margin-bottom: 12px; font-size: 18px; color: var(--text); }
+.zone-list { display: flex; flex-direction: column; gap: 10px; }
+.zone-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+.zone-card:hover:not(.locked) { border-color: var(--accent); }
+.zone-card.locked { opacity: 0.5; cursor: not-allowed; }
+.zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.zone-name { font-weight: 600; font-size: 15px; }
+.zone-level { font-size: 12px; color: var(--text-dim); }
+.zone-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.zone-meta { display: flex; gap: 8px; }
+.danger-badge, .xp-badge { font-size: 10px; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.xp-badge { background: #eab30820; color: var(--xp); }
+.combat-view { padding-bottom: 20px; }
+.enemies-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.enemy-card { background: var(--bg-card); border: 2px solid var(--border); border-radius: 14px; padding: 12px; min-width: 90px; text-align: center; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+.enemy-card.selected-target { border-color: var(--danger); box-shadow: 0 0 0 3px #ef444430; }
+.enemy-card.dead { opacity: 0.4; border-color: #333; cursor: default; }
+.enemy-icon { font-size: 32px; margin-bottom: 4px; }
+.enemy-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.hp-bar-small { height: 6px; background: #2e2c42; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.hp-text { font-size: 10px; color: var(--text-dim); }
+.dead-text { font-size: 10px; color: #666; font-style: italic; }
+.party-status { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.member-status { font-size: 11px; display: flex; align-items: center; gap: 4px; background: #242236; padding: 4px 10px; border-radius: 10px; }
+.member-dot { width: 8px; height: 8px; border-radius: 50%; }
+.skills-grid h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.skill-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.skill-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+.skill-btn:hover:not(.disabled) { border-color: var(--accent); }
+.skill-btn.selected-skill { border-color: var(--accent); background: #7c3aed15; }
+.skill-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+.skill-name { font-weight: 600; font-size: 13px; }
+.skill-cost { font-size: 11px; color: var(--mp); }
+.skill-desc { font-size: 11px; color: var(--text-dim); }
+.attack-btn, .flee-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 8px; user-select: none; }
+.attack-btn { background: linear-gradient(135deg, var(--accent), #6d28d9); color: white; }
+.attack-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+.flee-btn { background: #374151; color: var(--text); }
+.party-list { display: flex; flex-direction: column; gap: 10px; }
+.party-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; gap: 14px; align-items: flex-start; }
+.party-card.locked { opacity: 0.5; }
+.party-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 20px; }
+.party-info { flex: 1; }
+.party-name { font-weight: 700; font-size: 15px; }
+.party-title { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+.party-role { font-size: 12px; font-weight: 600; margin: 2px 0; }
+.party-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; margin-bottom: 4px; }
+.party-bonus { font-size: 11px; color: var(--success); font-weight: 500; }
+.party-stats { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+.skills-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.skill-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.skill-card.locked { opacity: 0.5; }
+.skill-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.skill-icon { font-size: 20px; }
+.skill-title { font-weight: 700; font-size: 14px; flex: 1; }
+.skill-status { font-size: 10px; padding: 3px 10px; border-radius: 10px; background: var(--success); color: white; }
+.skill-card.locked .skill-status { background: #6b7280; }
+.skill-details { display: flex; gap: 8px; margin-bottom: 6px; }
+.detail-pill { font-size: 11px; background: #242236; padding: 3px 10px; border-radius: 8px; color: var(--text-dim); }
+.skill-desc-text { font-size: 12px; color: var(--text-dim); }
+.stats-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.stats-block h3 { font-size: 14px; margin-bottom: 10px; }
+.stat-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-value { font-weight: 700; color: var(--accent-light); }
+.equip-section, .items-section { margin-bottom: 16px; }
+.equip-section h3, .items-section h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.equip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.equip-slot { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.slot-icon { font-size: 24px; margin-bottom: 4px; }
+.slot-name { font-size: 10px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 4px; }
+.slot-item { font-size: 12px; font-weight: 600; }
+.slot-stat { font-size: 11px; color: var(--success); }
+.slot-empty { font-size: 11px; color: #555; font-style: italic; }
+.item-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.item-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.item-icon { font-size: 24px; margin-bottom: 4px; }
+.item-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.item-qty { font-size: 11px; color: var(--text-dim); }
+.item-actions { margin-top: 6px; }
+.item-btn { padding: 4px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; margin: 2px; user-select: none; }
+.item-btn.use { background: var(--success); color: white; }
+.item-btn.equip { background: var(--mp); color: white; }
+.empty-inventory { color: #555; font-style: italic; padding: 20px; text-align: center; grid-column: span 2; }
+.recipe-list { display: flex; flex-direction: column; gap: 10px; }
+.recipe-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.recipe-result { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.result-icon { font-size: 24px; }
+.result-name { font-weight: 700; font-size: 14px; }
+.result-desc { font-size: 11px; color: var(--text-dim); }
+.recipe-mats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mat-pill { font-size: 10px; padding: 3px 10px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.mat-pill.ok { background: #22c55e20; color: var(--success); }
+.mat-pill.missing { background: #ef444420; color: var(--danger); }
+.craft-btn { width: 100%; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--accent); color: white; user-select: none; }
+.craft-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+.quest-list { display: flex; flex-direction: column; gap: 10px; }
+.quest-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.quest-card.completed { border-color: var(--success); }
+.quest-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.quest-name { font-weight: 600; font-size: 14px; }
+.quest-reward { font-size: 11px; color: var(--gold); }
+.quest-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.quest-progress { display: flex; align-items: center; gap: 10px; }
+.progress-bar { flex: 1; height: 8px; background: #2e2c42; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s ease; }
+.progress-text { font-size: 11px; color: var(--text-dim); min-width: 40px; text-align: right; }
+.stats-summary { display: flex; gap: 10px; margin-top: 16px; }
+.summary-item { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.sum-val { font-size: 20px; font-weight: 700; color: var(--accent-light); display: block; }
+.sum-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+.focus-view { text-align: center; padding: 20px; }
+.focus-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 24px; }
+.focus-timer { font-size: 36px; font-weight: 700; color: var(--accent-light); font-family: 'Cinzel', serif; }
+.focus-label { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+.focus-tips { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; text-align: left; }
+.focus-tips h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.focus-tips ul { list-style: none; padding: 0; }
+.focus-tips li { font-size: 13px; color: var(--text-dim); padding: 6px 0; border-bottom: 1px solid var(--border); }
+.focus-tips li:last-child { border-bottom: none; }
+.focus-tips li::before { content: "→ "; color: var(--accent); font-weight: 700; }
+.cancel-focus { padding: 12px 24px; border-radius: 12px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 14px; font-weight: 600; cursor: pointer; user-select: none; }
+.game-log { background: #0a0912; border-top: 1px solid var(--border); padding: 10px 16px; max-height: 120px; overflow-y: auto; font-size: 12px; line-height: 1.5; flex-shrink: 0; }
+.log-entry { padding: 2px 0; color: var(--text-dim); border-bottom: 1px solid #1a1825; }
+.log-entry:last-child { border-bottom: none; }
+.game-nav { display: flex; justify-content: space-around; background: #1a1825; border-top: 1px solid var(--border); padding: 6px 0; position: sticky; bottom: 0; z-index: 10; flex-shrink: 0; }
+.nav-btn { background: none; border: none; color: var(--text-dim); font-size: 11px; font-weight: 500; padding: 6px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.2s; user-select: none; flex: 1; }
+.nav-btn::before { font-size: 18px; display: block; }
+.nav-btn[data-tab="home"]::before { content: "🏠"; }
+.nav-btn[data-tab="explore"]::before { content: "🗺️"; }
+.nav-btn[data-tab="party"]::before { content: "👥"; }
+.nav-btn[data-tab="quest"]::before { content: "📜"; }
+.nav-btn[data-tab="craft"]::before { content: "⚒️"; }
+.nav-btn[data-tab="inventory"]::before { content: "🎒"; }
+.nav-btn:hover, .nav-btn.active { color: var(--accent-light); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="game-app"></div>
+<script>
+const Game = {
+  state: 'menu',
+  player: {
+    name: 'San',
+    class: 'Sorcerer',
+    level: 1,
+    xp: 0,
+    xpToNext: 100,
+    hp: 80, maxHp: 80,
+    mp: 120, maxMp: 120,
+    gold: 50,
+    stats: { str: 4, dex: 6, con: 5, int: 12, wis: 10, cha: 8 },
+    skills: [
+      { name: 'Arcane Bolt', cost: 10, dmg: '1d8+int', learned: true, desc: 'Basic magic missile' },
+      { name: 'Fireball', cost: 25, dmg: '2d6+int', learned: false, desc: 'Area fire damage', unlockLevel: 3 },
+      { name: 'Frost Shield', cost: 15, dmg: null, learned: false, desc: '+5 AC for 3 turns', unlockLevel: 2, buff: true },
+      { name: 'Lightning Strike', cost: 35, dmg: '3d8+int', learned: false, desc: 'Devastating single target', unlockLevel: 5 },
+      { name: 'Mana Surge', cost: 5, dmg: null, learned: false, desc: 'Restore 20 MP', unlockLevel: 4, buff: true },
+      { name: 'Meteor Swarm', cost: 60, dmg: '4d10+int', learned: false, desc: 'Ultimate destruction', unlockLevel: 8 }
+    ],
+    equipment: {
+      weapon: { name: 'Apprentice Staff', atk: 2, type: 'staff', rarity: 'common' },
+      armor: { name: 'Novice Robes', def: 2, type: 'robe', rarity: 'common' },
+      accessory: null
+    },
+    inventory: [
+      { name: 'Health Potion', type: 'potion', effect: 'heal', value: 30, qty: 3, rarity: 'common' },
+      { name: 'Mana Potion', type: 'potion', effect: 'mana', value: 25, qty: 2, rarity: 'common' },
+      { name: 'Goblin Tooth', type: 'material', qty: 2, rarity: 'common' },
+      { name: 'Iron Ore', type: 'material', qty: 3, rarity: 'common' },
+      { name: 'Herb Bundle', type: 'material', qty: 4, rarity: 'common' }
+    ],
+    buffs: [],
+    questsCompleted: 0,
+    monstersDefeated: 0,
+    focusStreak: 0
+  },
+  party: [
+    { name: 'Joel', title: 'The Steadfast', role: 'Tank', hp: 120, maxHp: 120, atk: 6, def: 8, spd: 4, unlocked: true, ability: 'Shield Bash', desc: 'Your partner and shield. Never lets you fight alone.', bonus: '+10% Max HP', color: '#7c3aed' },
+    { name: 'Aisyah', title: 'Sisterblade', role: 'Rogue', hp: 70, maxHp: 70, atk: 10, def: 4, spd: 9, unlocked: true, ability: 'Backstab', desc: 'Your sister, sharp-eyed and sharper-tongued.', bonus: '+20% Gold found', color: '#059669' },
+    { name: 'Mezstorm', title: 'Stormsinger', role: 'Mage', hp: 60, maxHp: 60, atk: 12, def: 3, spd: 6, unlocked: false, unlockLevel: 3, ability: 'Thunderclap', desc: 'A wandering storm mage seeking purpose.', bonus: '+15% Spell damage', color: '#0891b2' },
+    { name: 'Eliz', title: 'Little Healer', role: 'Healer', hp: 65, maxHp: 65, atk: 4, def: 5, spd: 5, unlocked: false, unlockLevel: 4, ability: 'Healing Light', desc: 'A gentle soul with hands that mend wounds.', bonus: '+25% Healing potency', color: '#db2777' },
+    { name: 'Senedra', title: 'Swift Scout', role: 'Ranger', hp: 75, maxHp: 75, atk: 8, def: 5, spd: 10, unlocked: false, unlockLevel: 6, ability: 'Piercing Shot', desc: 'An eagle-eyed tracker from the northern woods.', bonus: '+20% Crit chance', color: '#ca8a04' },
+    { name: 'Zaki', title: 'Young Blade', role: 'Warrior', hp: 100, maxHp: 100, atk: 9, def: 6, spd: 6, unlocked: false, unlockLevel: 8, ability: 'Whirlwind', desc: 'A hot-headed swordsman with a heart of gold.', bonus: '+15% Attack speed', color: '#dc2626' },
+    { name: 'Soel', title: 'The Familiar', role: 'Support', hp: 55, maxHp: 55, atk: 5, def: 4, spd: 8, unlocked: false, unlockLevel: 10, ability: 'Lucky Charm', desc: 'Your loyal companion. Brings fortune to the party.', bonus: '+10% All stats', color: '#7c2d12' }
+  ],
+  combat: { active: false, turn: 0, enemies: [], log: [], selectedSkill: 0, selectedTarget: 0 },
+  zones: [
+    { name: 'Whispering Woods', level: 1, desc: 'Mossy paths where goblins lurk.', enemies: ['Goblin', 'Wolf', 'Slime'], loot: ['Herb Bundle', 'Goblin Tooth', 'Health Potion'], xp: 15, danger: 'low' },
+    { name: 'Cursed Catacombs', level: 2, desc: 'Ancient tombs filled with restless dead.', enemies: ['Skeleton', 'Zombie', 'Ghost'], loot: ['Iron Ore', 'Bone Shard', 'Mana Potion'], xp: 30, danger: 'medium' },
+    { name: 'Ember Peak', level: 4, desc: 'Volcanic caves with fire elementals.', enemies: ['Fire Imp', 'Lava Slug', 'Ash Wraith'], loot: ['Fire Essence', 'Obsidian', 'Phoenix Feather'], xp: 60, danger: 'high' },
+    { name: 'Frostspire Ruins', level: 6, desc: 'Frozen castle of a fallen ice lord.', enemies: ['Ice Elemental', 'Frost Wolf', 'Frozen Knight'], loot: ['Ice Crystal', 'Frost Gem', 'Glacial Staff'], xp: 100, danger: 'very high' },
+    { name: 'Abyssal Depths', level: 8, desc: 'The void between worlds. Only the brave enter.', enemies: ['Void Beast', 'Shadow Demon', 'Abyssal Horror'], loot: ['Void Essence', 'Dark Crystal', 'Abyssal Robe'], xp: 200, danger: 'extreme' }
+  ],
+  recipes: [
+    { name: 'Health Potion', materials: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, result: { name: 'Health Potion', type: 'potion', effect: 'heal', value: 30, qty: 1, rarity: 'common' }, desc: 'Restores 30 HP' },
+    { name: 'Mana Potion', materials: { 'Herb Bundle': 1, 'Iron Ore': 1 }, result: { name: 'Mana Potion', type: 'potion', effect: 'mana', value: 25, qty: 1, rarity: 'common' }, desc: 'Restores 25 MP' },
+    { name: 'Greater Health Potion', materials: { 'Herb Bundle': 3, 'Bone Shard': 2, 'Iron Ore': 1 }, result: { name: 'Greater Health Potion', type: 'potion', effect: 'heal', value: 75, qty: 1, rarity: 'uncommon' }, desc: 'Restores 75 HP' },
+    { name: 'Iron Sword', materials: { 'Iron Ore': 4, 'Bone Shard': 1 }, result: { name: 'Iron Sword', type: 'weapon', atk: 6, rarity: 'uncommon' }, desc: 'ATK +6' },
+    { name: 'Reinforced Robes', materials: { 'Iron Ore': 2, 'Herb Bundle': 3, 'Goblin Tooth': 2 }, result: { name: 'Reinforced Robes', type: 'armor', def: 5, rarity: 'uncommon' }, desc: 'DEF +5' },
+    { name: 'Fire Staff', materials: { 'Fire Essence': 2, 'Obsidian': 3, 'Iron Ore': 2 }, result: { name: 'Fire Staff', type: 'weapon', atk: 10, bonus: 'fire', rarity: 'rare' }, desc: 'ATK +10, Fire damage' },
+    { name: 'Frost Ring', materials: { 'Ice Crystal': 2, 'Frost Gem': 1, 'Iron Ore': 1 }, result: { name: 'Frost Ring', type: 'accessory', bonus: 'frost', int: 3, rarity: 'rare' }, desc: 'INT +3, Frost spells cost -5 MP' }
+  ],
+  activeQuests: [
+    { id: 1, name: 'First Steps', desc: 'Defeat 3 monsters in Whispering Woods', target: 'monsters', count: 0, needed: 3, reward: { xp: 50, gold: 20 }, completed: false },
+    { id: 2, name: 'Potion Brewer', desc: 'Craft 2 potions', target: 'craft', count: 0, needed: 2, reward: { xp: 30, gold: 15 }, completed: false },
+    { id: 3, name: 'Focus Warrior', desc: 'Complete a 25-minute focus session', target: 'focus', count: 0, needed: 1, reward: { xp: 100, gold: 50 }, completed: false }
+  ],
+  log: ['Welcome to Legends of Daybreak, San.'],
+  menuSelection: 0, subSelection: 0, mode: 'normal'
+};
+
+function rollDie(sides) { return Math.floor(Math.random() * sides) + 1; }
+function rollDice(count, sides) { let sum = 0; for (let i = 0; i < count; i++) sum += rollDie(sides); return sum; }
+function rollD20() { return rollDie(20); }
+function parseDice(diceStr, bonus) {
+  if (!diceStr) return bonus || 0;
+  const match = diceStr.match(/(\d+)d(\d+)/);
+  if (!match) return bonus || 0;
+  return rollDice(parseInt(match[1]), parseInt(match[2])) + (bonus || 0);
+}
+
+function startCombat(zoneIndex) {
+  const zone = Game.zones[zoneIndex];
+  Game.combat.active = true; Game.combat.turn = 0; Game.combat.log = []; Game.combat.enemies = []; Game.state = 'combat';
+  const enemyCount = Math.floor(Math.random() * 2) + 1 + Math.floor(zone.level / 3);
+  for (let i = 0; i < enemyCount; i++) {
+    const type = zone.enemies[Math.floor(Math.random() * zone.enemies.length)];
+    let e = { name: type, hp: 0, maxHp: 0, atk: 0, def: 0, xp: 0, gold: 0 };
+    switch(type) {
+      case 'Goblin': e = { ...e, hp: 25, maxHp: 25, atk: 5, def: 2, xp: 12, gold: 5 }; break;
+      case 'Wolf': e = { ...e, hp: 20, maxHp: 20, atk: 7, def: 1, xp: 10, gold: 3 }; break;
+      case 'Slime': e = { ...e, hp: 15, maxHp: 15, atk: 3, def: 3, xp: 8, gold: 2 }; break;
+      case 'Skeleton': e = { ...e, hp: 30, maxHp: 30, atk: 6, def: 3, xp: 18, gold: 6 }; break;
+      case 'Zombie': e = { ...e, hp: 40, maxHp: 40, atk: 5, def: 1, xp: 20, gold: 5 }; break;
+      case 'Ghost': e = { ...e, hp: 20, maxHp: 20, atk: 8, def: 0, xp: 25, gold: 10 }; break;
+      case 'Fire Imp': e = { ...e, hp: 35, maxHp: 35, atk: 9, def: 2, xp: 35, gold: 12 }; break;
+      case 'Lava Slug': e = { ...e, hp: 50, maxHp: 50, atk: 6, def: 5, xp: 30, gold: 8 }; break;
+      case 'Ash Wraith': e = { ...e, hp: 30, maxHp: 30, atk: 11, def: 1, xp: 45, gold: 18 }; break;
+      case 'Ice Elemental': e = { ...e, hp: 60, maxHp: 60, atk: 10, def: 6, xp: 70, gold: 25 }; break;
+      case 'Frost Wolf': e = { ...e, hp: 45, maxHp: 45, atk: 12, def: 3, xp: 55, gold: 18 }; break;
+      case 'Frozen Knight': e = { ...e, hp: 80, maxHp: 80, atk: 14, def: 8, xp: 100, gold: 40 }; break;
+      case 'Void Beast': e = { ...e, hp: 100, maxHp: 100, atk: 16, def: 5, xp: 150, gold: 60 }; break;
+      case 'Shadow Demon': e = { ...e, hp: 80, maxHp: 80, atk: 18, def: 3, xp: 130, gold: 50 }; break;
+      case 'Abyssal Horror': e = { ...e, hp: 150, maxHp: 150, atk: 20, def: 8, xp: 300, gold: 100 }; break;
+    }
+    e.id = i; Game.combat.enemies.push(e);
+  }
+  addLog('Entered ' + zone.name + '! ' + enemyCount + ' enemies appear!');
+  Game.menuSelection = 0; render();
+}
+
+function playerAttack(skillIndex, targetIndex) {
+  const skill = Game.player.skills[skillIndex];
+  const target = Game.combat.enemies[targetIndex];
+  if (!target || target.hp <= 0) return;
+  if (Game.player.mp < skill.cost) { addLog('Not enough MP!'); return; }
+  Game.player.mp -= skill.cost;
+  if (skill.buff) {
+    if (skill.name === 'Frost Shield') {
+      Game.player.buffs.push({ name: 'Frost Shield', turns: 3, def: 5 });
+      addLog('You cast Frost Shield! Defense +5 for 3 turns.');
+    } else if (skill.name === 'Mana Surge') {
+      Game.player.mp = Math.min(Game.player.maxMp, Game.player.mp + 20);
+      addLog('Mana Surge! You restore 20 MP.');
+    }
+  } else {
+    const toHit = rollD20() + Math.floor(Game.player.stats.int / 3);
+    if (toHit >= 10 + target.def) {
+      let dmg = parseDice(skill.dmg, Math.floor(Game.player.stats.int / 2));
+      dmg += Game.player.equipment.weapon ? Game.player.equipment.weapon.atk : 0;
+      if (Game.party[2].unlocked) dmg = Math.floor(dmg * 1.15);
+      dmg = Math.max(1, dmg - Math.floor(target.def / 2));
+      target.hp -= dmg;
+      addLog(skill.name + ' hits ' + target.name + ' for ' + dmg + ' damage!');
+      if (target.hp <= 0) { addLog(target.name + ' is defeated!'); target.hp = 0; }
+    } else {
+      addLog('Your spell misses ' + target.name + '!');
+    }
+  }
+  for (let p of Game.party) {
+    if (!p.unlocked || p.hp <= 0) continue;
+    const aliveEnemies = Game.combat.enemies.filter(e => e.hp > 0);
+    if (aliveEnemies.length === 0) break;
+    const et = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+    const hit = rollD20() + Math.floor(p.atk / 3);
+    if (hit >= 10 + et.def) {
+      let pdmg = rollDice(1, 6) + Math.floor(p.atk / 2);
+      pdmg = Math.max(1, pdmg - Math.floor(et.def / 3));
+      et.hp -= pdmg;
+      addLog(p.name + ' attacks ' + et.name + ' for ' + pdmg + ' damage!');
+      if (et.hp <= 0) { addLog(et.name + ' falls!'); et.hp = 0; }
+    } else {
+      addLog(p.name + ' misses ' + et.name + '!');
+    }
+  }
+  enemyTurn();
+  if (Game.combat.enemies.every(e => e.hp <= 0)) {
+    const totalXp = Game.combat.enemies.reduce((s, e) => s + e.xp, 0);
+    const totalGold = Game.combat.enemies.reduce((s, e) => s + e.gold, 0);
+    let bonusGold = totalGold;
+    if (Game.party[1].unlocked) bonusGold = Math.floor(bonusGold * 1.2);
+    Game.player.xp += totalXp; Game.player.gold += bonusGold;
+    Game.player.monstersDefeated += Game.combat.enemies.length;
+    addLog('Victory! Gained ' + totalXp + ' XP and ' + bonusGold + ' Gold!');
+    const zone = Game.zones.find(z => z.enemies.includes(Game.combat.enemies[0].name));
+    if (zone) {
+      const loot = zone.loot[Math.floor(Math.random() * zone.loot.length)];
+      addToInventory({ name: loot, type: 'material', qty: 1, rarity: 'common' });
+      addLog('Found: ' + loot);
+    }
+    checkLevelUp(); checkQuests();
+    Game.combat.active = false; Game.state = 'explore';
+  } else if (Game.player.hp <= 0) {
+    Game.player.hp = 1;
+    addLog('You were defeated! Retreating to safety...');
+    Game.combat.active = false; Game.state = 'menu';
+  }
+  Game.combat.turn++; render();
+}
+
+function enemyTurn() {
+  for (let e of Game.combat.enemies) {
+    if (e.hp <= 0) continue;
+    let target = Game.player;
+    if (Math.random() > 0.5) {
+      const aliveParty = Game.party.filter(p => p.unlocked && p.hp > 0);
+      if (aliveParty.length > 0) target = aliveParty[Math.floor(Math.random() * aliveParty.length)];
+    }
+    const hit = rollD20() + Math.floor(e.atk / 3);
+    let targetDef = target === Game.player ? (Game.player.equipment.armor ? Game.player.equipment.armor.def : 0) : target.def;
+    if (target === Game.player) targetDef += Game.player.buffs.reduce((s, b) => s + (b.def || 0), 0);
+    if (hit >= 10 + targetDef) {
+      let dmg = rollDice(1, 6) + Math.floor(e.atk / 2);
+      dmg = Math.max(1, dmg - Math.floor(targetDef / 2));
+      target.hp -= dmg;
+      addLog(e.name + ' attacks ' + (target.name || 'you') + ' for ' + dmg + ' damage!');
+      if (target.hp <= 0) { target.hp = 0; addLog((target.name || 'You') + ' fall unconscious!'); }
+    } else {
+      addLog(e.name + ' misses!');
+    }
+  }
+  for (let b of Game.player.buffs) b.turns--;
+  Game.player.buffs = Game.player.buffs.filter(b => b.turns > 0);
+}
+
+function checkLevelUp() {
+  while (Game.player.xp >= Game.player.xpToNext) {
+    Game.player.xp -= Game.player.xpToNext; Game.player.level++;
+    Game.player.xpToNext = Math.floor(Game.player.xpToNext * 1.5);
+    Game.player.maxHp += 10; Game.player.maxMp += 15;
+    Game.player.hp = Game.player.maxHp; Game.player.mp = Game.player.maxMp;
+    Game.player.stats.int += 2; Game.player.stats.con += 1;
+    addLog('LEVEL UP! You are now Level ' + Game.player.level + '!');
+    for (let s of Game.player.skills) {
+      if (!s.learned && s.unlockLevel <= Game.player.level) { s.learned = true; addLog('New skill learned: ' + s.name + '!'); }
+    }
+    for (let p of Game.party) {
+      if (!p.unlocked && p.unlockLevel <= Game.player.level) { p.unlocked = true; p.hp = p.maxHp; addLog(p.name + ' ' + p.title + ' has joined your party!'); }
+    }
+  }
+}
+
+function checkQuests() {
+  for (let q of Game.activeQuests) {
+    if (q.completed) continue;
+    if (q.target === 'monsters' && Game.player.monstersDefeated >= q.count + q.needed) q.count = q.needed;
+    if (q.count >= q.needed) {
+      q.completed = true; Game.player.xp += q.reward.xp; Game.player.gold += q.reward.gold;
+      Game.player.questsCompleted++;
+      addLog('Quest Complete: ' + q.name + '! +' + q.reward.xp + ' XP, +' + q.reward.gold + ' Gold');
+      checkLevelUp();
+    }
+  }
+}
+
+function addToInventory(item) {
+  const existing = Game.player.inventory.find(i => i.name === item.name && i.type === item.type);
+  if (existing) { existing.qty += item.qty || 1; }
+  else { Game.player.inventory.push({ ...item, qty: item.qty || 1 }); }
+}
+
+function useItem(index) {
+  const item = Game.player.inventory[index];
+  if (!item || item.type !== 'potion') return;
+  if (item.effect === 'heal') { Game.player.hp = Math.min(Game.player.maxHp, Game.player.hp + item.value); addLog('Used ' + item.name + '. Restored ' + item.value + ' HP.'); }
+  else if (item.effect === 'mana') { Game.player.mp = Math.min(Game.player.maxMp, Game.player.mp + item.value); addLog('Used ' + item.name + '. Restored ' + item.value + ' MP.'); }
+  item.qty--;
+  if (item.qty <= 0) Game.player.inventory.splice(index, 1);
+  render();
+}
+
+function craftItem(recipeIndex) {
+  const recipe = Game.recipes[recipeIndex];
+  for (let [mat, qty] of Object.entries(recipe.materials)) {
+    const inv = Game.player.inventory.find(i => i.name === mat);
+    if (!inv || inv.qty < qty) { addLog('Missing materials for ' + recipe.name); return; }
+  }
+  for (let [mat, qty] of Object.entries(recipe.materials)) {
+    const inv = Game.player.inventory.find(i => i.name === mat);
+    inv.qty -= qty;
+    if (inv.qty <= 0) { const idx = Game.player.inventory.indexOf(inv); Game.player.inventory.splice(idx, 1); }
+  }
+  addToInventory({ ...recipe.result });
+  addLog('Crafted: ' + recipe.name + '!');
+  const potionQuest = Game.activeQuests.find(q => q.target === 'craft');
+  if (potionQuest && !potionQuest.completed) { potionQuest.count++; checkQuests(); }
+  render();
+}
+
+function equipItem(index) {
+  const item = Game.player.inventory[index];
+  if (!item || (item.type !== 'weapon' && item.type !== 'armor' && item.type !== 'accessory')) return;
+  const old = Game.player.equipment[item.type];
+  if (old) addToInventory(old);
+  Game.player.equipment[item.type] = { ...item };
+  delete Game.player.inventory[index].qty;
+  Game.player.inventory.splice(index, 1);
+  addLog('Equipped ' + item.name + '!');
+  render();
+}
+
+let focusTimer = null;
+function startFocus() {
+  Game.state = 'focus'; Game.focusStart = Date.now(); Game.focusDuration = 25 * 60 * 1000;
+  addLog('Focus Mode started! Stay on task for 25 minutes...');
+  render();
+  focusTimer = setInterval(() => {
+    const elapsed = Date.now() - Game.focusStart;
+    const remaining = Game.focusDuration - elapsed;
+    if (Game.state !== 'focus') { clearInterval(focusTimer); return; }
+    if (remaining <= 0) {
+      clearInterval(focusTimer); Game.player.focusStreak++;
+      Game.player.xp += 100; Game.player.gold += 50;
+      const fq = Game.activeQuests.find(q => q.target === 'focus');
+      if (fq && !fq.completed) { fq.count++; checkQuests(); }
+      addLog('Focus Complete! +100 XP, +50 Gold. Streak: ' + Game.player.focusStreak);
+      checkLevelUp(); Game.state = 'menu'; render();
+    } else {
+      const el = document.getElementById('focus-timer');
+      if (el) { const mins = Math.floor(remaining / 60000); const secs = Math.floor((remaining % 60000) / 1000); el.textContent = mins + ':' + secs.toString().padStart(2, '0'); }
+    }
+  }, 1000);
+}
+
+function cancelFocus() {
+  if (focusTimer) clearInterval(focusTimer);
+  setState('menu'); addLog('Focus cancelled.'); render();
+}
+
+function addLog(msg) {
+  Game.log.push(msg);
+  if (Game.log.length > 50) Game.log.shift();
+  const logEl = document.getElementById('game-log');
+  if (logEl) { logEl.innerHTML = Game.log.map(m => '<div class="log-entry">' + m + '</div>').join(''); logEl.scrollTop = logEl.scrollHeight; }
+}
+
+function render() {
+  const app = document.getElementById('game-app');
+  if (!app) return;
+  let html = '';
+  html += '<div class="game-header"><div class="header-left"><div class="player-name">' + Game.player.name + ' <span class="class-tag">' + Game.player.class + '</span></div><div class="level-badge">Lv.' + Game.player.level + '</div></div><div class="header-right"><div class="stat-bar"><span class="stat-icon">HP</span><div class="bar"><div class="bar-fill hp" style="width:' + ((Game.player.hp/Game.player.maxHp)*100) + '%"></div></div><span class="bar-text">' + Game.player.hp + '/' + Game.player.maxHp + '</span></div><div class="stat-bar"><span class="stat-icon">MP</span><div class="bar"><div class="bar-fill mp" style="width:' + ((Game.player.mp/Game.player.maxMp)*100) + '%"></div></div><span class="bar-text">' + Game.player.mp + '/' + Game.player.maxMp + '</span></div><div class="stat-bar"><span class="stat-icon">XP</span><div class="bar"><div class="bar-fill xp" style="width:' + ((Game.player.xp/Game.player.xpToNext)*100) + '%"></div></div><span class="bar-text">' + Game.player.xp + '/' + Game.player.xpToNext + '</span></div><div class="gold-display">GOLD: ' + Game.player.gold + '</div></div></div>';
+  if (Game.player.buffs.length > 0) {
+    html += '<div class="buffs-row">' + Game.player.buffs.map(b => '<span class="buff-pill">' + b.name + ' (' + b.turns + ')</span>').join('') + '</div>';
+  }
+  html += '<div class="game-content">';
+  if (Game.state === 'menu') html += renderMenu();
+  else if (Game.state === 'explore') html += renderExplore();
+  else if (Game.state === 'combat') html += renderCombat();
+  else if (Game.state === 'party') html += renderParty();
+  else if (Game.state === 'skills') html += renderSkills();
+  else if (Game.state === 'inventory') html += renderInventory();
+  else if (Game.state === 'craft') html += renderCraft();
+  else if (Game.state === 'quest') html += renderQuest();
+  else if (Game.state === 'focus') html += renderFocus();
+  html += '</div>';
+  html += '<div class="game-log" id="game-log">' + Game.log.map(m => '<div class="log-entry">' + m + '</div>').join('') + '</div>';
+  html += '<div class="game-nav"><button class="nav-btn ' + (Game.state==='menu'?'active':'') + '" data-tab="home" onclick="setState('menu')">Home</button><button class="nav-btn ' + (Game.state==='explore'?'active':'') + '" data-tab="explore" onclick="setState('explore')">Explore</button><button class="nav-btn ' + (Game.state==='party'?'active':'') + '" data-tab="party" onclick="setState('party')">Party</button><button class="nav-btn ' + (Game.state==='quest'?'active':'') + '" data-tab="quest" onclick="setState('quest')">Quests</button><button class="nav-btn ' + (Game.state==='craft'?'active':'') + '" data-tab="craft" onclick="setState('craft')">Craft</button><button class="nav-btn ' + (Game.state==='inventory'?'active':'') + '" data-tab="inventory" onclick="setState('inventory')">Items</button></div>';
+  app.innerHTML = html;
+  const logEl = document.getElementById('game-log');
+  if (logEl) logEl.scrollTop = logEl.scrollHeight;
+}
+
+function renderMenu() {
+  const items = [
+    { icon: '⚔️', label: 'Adventure', desc: 'Explore zones and fight monsters', action: "setState('explore')" },
+    { icon: '👥', label: 'Party', desc: 'Manage your companions', action: "setState('party')" },
+    { icon: '✨', label: 'Skills', desc: 'View your mage abilities', action: "setState('skills')" },
+    { icon: '⚒️', label: 'Crafting', desc: 'Brew potions and forge gear', action: "setState('craft')" },
+    { icon: '📜', label: 'Quests', desc: 'View active quests', action: "setState('quest')" },
+    { icon: '🎒', label: 'Inventory', desc: 'Manage items and equipment', action: "setState('inventory')" },
+    { icon: '🧘', label: 'Focus Mode', desc: '25-min ADHD-friendly timer', action: "startFocus()" },
+    { icon: '💤', label: 'Rest', desc: 'Restore HP/MP (free)', action: "rest()" }
+  ];
+  let html = '<div class="menu-grid">';
+  for (let i = 0; i < items.length; i++) {
+    const m = items[i];
+    html += '<div class="menu-card" onclick="' + m.action + '"><div class="menu-icon">' + m.icon + '</div><div class="menu-label">' + m.label + '</div><div class="menu-desc">' + m.desc + '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderExplore() {
+  let html = '<div class="explore-view"><h2 class="section-title">🗺️ Adventure Zones</h2><div class="zone-list">';
+  for (let i = 0; i < Game.zones.length; i++) {
+    const z = Game.zones[i];
+    const locked = Game.player.level < z.level;
+    const dc = z.danger === 'low' ? '#22c55e' : z.danger === 'medium' ? '#eab308' : z.danger === 'high' ? '#f97316' : z.danger === 'very high' ? '#ef4444' : '#a855f7';
+    html += '<div class="zone-card ' + (locked?'locked':'') + '" onclick="' + (locked?'':'startCombat('+i+')') + '"><div class="zone-header"><span class="zone-name">' + z.name + '</span><span class="zone-level">Lv.' + z.level + (locked?' 🔒':'') + '</span></div><div class="zone-desc">' + z.desc + '</div><div class="zone-meta"><span class="danger-badge" style="background:' + dc + '20;color:' + dc + '">' + z.danger + '</span><span class="xp-badge">' + z.xp + ' XP</span></div></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderCombat() {
+  let html = '<div class="combat-view"><h2 class="section-title">⚔️ Combat</h2>';
+  html += '<div class="enemies-row">';
+  for (let i = 0; i < Game.combat.enemies.length; i++) {
+    const e = Game.combat.enemies[i];
+    const dead = e.hp <= 0;
+    const selected = Game.combat.selectedTarget === i && !dead ? 'selected-target' : '';
+    html += '<div class="enemy-card ' + (dead?'dead':'') + ' ' + selected + '" onclick="' + (dead?'':'Game.combat.selectedTarget=' + i + ';render()') + '"><div class="enemy-icon">' + (dead?'💀':getEnemyEmoji(e.name)) + '</div><div class="enemy-name">' + e.name + '</div>' + (!dead?'<div class="hp-bar-small"><div class="bar-fill hp" style="width:' + ((e.hp/e.maxHp)*100) + '%"></div></div><div class="hp-text">' + e.hp + '/' + e.maxHp + '</div>':'<div class="dead-text">DEFEATED</div>') + '</div>';
+  }
+  html += '</div>';
+  html += '<div class="party-status">';
+  html += '<div class="member-status"><span class="member-dot" style="background:#7c3aed"></span>San ' + Game.player.hp + '/' + Game.player.maxHp + '</div>';
+  for (let p of Game.party) {
+    if (!p.unlocked) continue;
+    html += '<div class="member-status"><span class="member-dot" style="background:' + p.color + '"></span>' + p.name + ' ' + p.hp + '/' + p.maxHp + '</div>';
+  }
+  html += '</div>';
+  html += '<div class="skills-grid"><h3>Select Skill</h3><div class="skill-list">';
+  const learnedSkills = Game.player.skills.filter(s => s.learned);
+  for (let i = 0; i < learnedSkills.length; i++) {
+    const s = learnedSkills[i];
+    const canUse = Game.player.mp >= s.cost;
+    const selected = Game.combat.selectedSkill === i ? 'selected-skill' : '';
+    html += '<div class="skill-btn ' + (!canUse?'disabled':'') + ' ' + selected + '" onclick="Game.combat.selectedSkill=' + i + ';render()"><div class="skill-name">' + s.name + '</div><div class="skill-cost">' + s.cost + ' MP</div><div class="skill-desc">' + s.desc + '</div></div>';
+  }
+  html += '</div>';
+  const skill = learnedSkills[Game.combat.selectedSkill];
+  const canAttack = skill && Game.player.mp >= skill.cost;
+  html += '<button class="attack-btn ' + (!canAttack?'disabled':'') + '" onclick="' + (canAttack?'playerAttack(' + Game.player.skills.indexOf(skill) + ',' + Game.combat.selectedTarget + ')':'') + '">🎯 Cast ' + (skill?skill.name:'...') + '</button>';
+  html += '<button class="flee-btn" onclick="flee()">🏃 Flee</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderParty() {
+  let html = '<div class="party-view"><h2 class="section-title">👥 Party</h2><div class="party-list">';
+  for (let p of Game.party) {
+    const status = p.unlocked ? (p.hp > 0 ? 'Active' : 'Unconscious') : 'Unlocks Lv.' + p.unlockLevel;
+    html += '<div class="party-card ' + (p.unlocked?'unlocked':'locked') + '"><div class="party-avatar" style="background:' + p.color + '20;border-color:' + p.color + '"><span style="font-size:28px">' + (p.unlocked?getRoleEmoji(p.role):'🔒') + '</span></div><div class="party-info"><div class="party-name">' + p.name + ' <span class="party-title">' + p.title + '</span></div><div class="party-role" style="color:' + p.color + '">' + p.role + '</div><div class="party-desc">' + p.desc + '</div><div class="party-bonus">' + p.bonus + '</div>' + (p.unlocked?'<div class="party-stats">HP: ' + p.hp + '/' + p.maxHp + ' | ATK: ' + p.atk + ' | DEF: ' + p.def + ' | SPD: ' + p.spd + '</div>':'') + '</div></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderSkills() {
+  let html = '<div class="skills-view"><h2 class="section-title">✨ Mage Skills</h2><div class="skills-list">';
+  for (let s of Game.player.skills) {
+    const status = s.learned ? 'LEARNED' : 'Unlocks Lv.' + s.unlockLevel;
+    html += '<div class="skill-card ' + (s.learned?'learned':'locked') + '"><div class="skill-header"><span class="skill-icon">' + (s.buff?'🛡️':'⚡') + '</span><span class="skill-title">' + s.name + '</span><span class="skill-status">' + status + '</span></div><div class="skill-details"><span class="detail-pill">' + s.cost + ' MP</span><span class="detail-pill">' + (s.dmg || 'Buff') + '</span></div><div class="skill-desc-text">' + s.desc + '</div></div>';
+  }
+  html += '</div><div class="stats-block"><h3>Character Stats</h3>';
+  for (let [stat, val] of Object.entries(Game.player.stats)) {
+    html += '<div class="stat-row"><span class="stat-name">' + stat.toUpperCase() + '</span><span class="stat-value">' + val + '</span></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderInventory() {
+  let html = '<div class="inventory-view"><h2 class="section-title">🎒 Inventory</h2>';
+  html += '<div class="equip-section"><h3>Equipped</h3><div class="equip-grid">';
+  const slots = ['weapon', 'armor', 'accessory'];
+  const slotNames = { weapon: 'Weapon', armor: 'Armor', accessory: 'Accessory' };
+  for (let slot of slots) {
+    const item = Game.player.equipment[slot];
+    const rc = item ? (item.rarity==='common'?'#9ca3af':item.rarity==='uncommon'?'#22c55e':item.rarity==='rare'?'#3b82f6':'#a855f7') : '#6b7280';
+    html += '<div class="equip-slot"><div class="slot-name">' + slotNames[slot] + '</div>' + (item?'<div class="slot-item" style="color:' + rc + '">' + item.name + '</div><div class="slot-stat">' + (item.atk?'ATK +' + item.atk:item.def?'DEF +' + item.def:item.int?'INT +' + item.int:'') + '</div>':'<div class="slot-empty">Empty</div>') + '</div>';
+  }
+  html += '</div></div>';
+  html += '<div class="items-section"><h3>Items (' + Game.player.inventory.length + ')</h3><div class="item-grid">';
+  for (let i = 0; i < Game.player.inventory.length; i++) {
+    const item = Game.player.inventory[i];
+    const rc = item.rarity==='common'?'#9ca3af':item.rarity==='uncommon'?'#22c55e':item.rarity==='rare'?'#3b82f6':'#a855f7';
+    html += '<div class="item-card"><div class="item-icon">' + getItemEmoji(item) + '</div><div class="item-name" style="color:' + rc + '">' + item.name + '</div><div class="item-qty">x' + item.qty + '</div><div class="item-actions">' + (item.type === 'potion'?'<button class="item-btn use" onclick="useItem(' + i + ')">Use</button>':'') + ((item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory')?'<button class="item-btn equip" onclick="equipItem(' + i + ')">Equip</button>':'') + '</div></div>';
+  }
+  if (Game.player.inventory.length === 0) html += '<div class="empty-inventory">Your pack is empty.</div>';
+  html += '</div></div></div>';
+  return html;
+}
+
+function renderCraft() {
+  let html = '<div class="craft-view"><h2 class="section-title">⚒️ Crafting</h2><div class="recipe-list">';
+  for (let i = 0; i < Game.recipes.length; i++) {
+    const r = Game.recipes[i];
+    let canCraft = true;
+    let matsHtml = '';
+    for (let [mat, qty] of Object.entries(r.materials)) {
+      const inv = Game.player.inventory.find(inv => inv.name === mat);
+      const have = inv ? inv.qty : 0;
+      const enough = have >= qty;
+      if (!enough) canCraft = false;
+      matsHtml += '<span class="mat-pill ' + (enough?'ok':'missing') + '">' + mat + ': ' + have + '/' + qty + '</span>';
+    }
+    const rc = r.result.rarity==='common'?'#9ca3af':r.result.rarity==='uncommon'?'#22c55e':r.result.rarity==='rare'?'#3b82f6':'#a855f7';
+    html += '<div class="recipe-card"><div class="recipe-result"><span class="result-icon">' + getItemEmoji(r.result) + '</span><span class="result-name" style="color:' + rc + '">' + r.name + '</span><span class="result-desc">' + r.desc + '</span></div><div class="recipe-mats">' + matsHtml + '</div><button class="craft-btn ' + (canCraft?'':'disabled') + '" onclick="' + (canCraft?'craftItem(' + i + ')':'') + '">Forge</button></div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function renderQuest() {
+  let html = '<div class="quest-view"><h2 class="section-title">📜 Active Quests</h2><div class="quest-list">';
+  for (let q of Game.activeQuests) {
+    const pct = Math.min(100, (q.count / q.needed) * 100);
+    html += '<div class="quest-card ' + (q.completed?'completed':'') + '"><div class="quest-header"><span class="quest-name">' + (q.completed?'✅ ':'') + q.name + '</span><span class="quest-reward">' + q.reward.xp + ' XP | ' + q.reward.gold + ' GOLD</span></div><div class="quest-desc">' + q.desc + '</div><div class="quest-progress"><div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div><span class="progress-text">' + Math.min(q.count, q.needed) + '/' + q.needed + '</span></div></div>';
+  }
+  html += '</div>';
+  html += '<div class="stats-summary"><div class="summary-item"><span class="sum-val">' + Game.player.monstersDefeated + '</span><span class="sum-label">Monsters</span></div><div class="summary-item"><span class="sum-val">' + Game.player.questsCompleted + '</span><span class="sum-label">Quests</span></div><div class="summary-item"><span class="sum-val">' + Game.player.focusStreak + '</span><span class="sum-label">Focus Streak</span></div></div></div>';
+  return html;
+}
+
+function renderFocus() {
+  const elapsed = Date.now() - (Game.focusStart || Date.now());
+  const remaining = Math.max(0, (25 * 60 * 1000) - elapsed);
+  const mins = Math.floor(remaining / 60000);
+  const secs = Math.floor((remaining % 60000) / 1000);
+  return '<div class="focus-view"><div class="focus-circle"><div class="focus-timer" id="focus-timer">' + mins + ':' + secs.toString().padStart(2,'0') + '</div><div class="focus-label">Focus Mode</div></div><div class="focus-tips"><h3>🧠 ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward yourself after: +100 XP!</li></ul></div><button class="cancel-focus" onclick="cancelFocus()">Cancel</button></div>';
+}
+
+function getEnemyEmoji(name) {
+  const map = { 'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙' };
+  return map[name] || '👾';
+}
+function getRoleEmoji(role) {
+  const map = { 'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀' };
+  return map[role] || '👤';
+}
+function getItemEmoji(item) {
+  if (item.type === 'potion') return item.effect==='heal'?'🧪':'💧';
+  if (item.type === 'weapon') return '⚔️';
+  if (item.type === 'armor') return '🛡️';
+  if (item.type === 'accessory') return '💍';
+  if (item.type === 'material') return '💎';
+  return '📦';
+}
+function setState(s) { Game.state = s; Game.menuSelection = 0; render(); }
+function rest() {
+  Game.player.hp = Game.player.maxHp; Game.player.mp = Game.player.maxMp;
+  for (let p of Game.party) { if (p.unlocked) p.hp = p.maxHp; }
+  addLog('You rest at the campfire. HP and MP fully restored.');
+  render();
+}
+function flee() {
+  if (Math.random() > 0.5) {
+    addLog('You fled successfully!');
+    Game.combat.active = false; Game.state = 'explore';
+  } else {
+    addLog('Flee failed! Enemies attack!');
+    enemyTurn();
+  }
+  render();
+}
+
+// Initialize
+render();
+</script>
+</body>
+</html>
