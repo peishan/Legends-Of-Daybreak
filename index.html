@@ -447,6 +447,153 @@ function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
+
+// ============================================================
+// SAVE SYSTEM
+// ============================================================
+const SAVE_KEY = 'ldb_save_v1';
+
+function saveGame() {
+  const saveData = {
+    player: {
+      name: G.p.name, cls: G.p.cls, lvl: G.p.lvl, xp: G.p.xp, xpN: G.p.xpN,
+      hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
+      stats: G.p.stats,
+      skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff })),
+      equipment: {
+        w: G.p.eq.w,
+        a: G.p.eq.a,
+        acc: G.p.eq.acc
+      },
+      inventory: G.p.inv,
+      buffs: G.p.buffs,
+      kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
+    },
+    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col })),
+    quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
+    log: G.log,
+    state: G.state
+  };
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+    lg('💾 Game saved!');
+    return true;
+  } catch(e) {
+    lg('❌ Save failed: ' + e.message);
+    return false;
+  }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+
+    // Restore player
+    G.p.lvl = data.player.lvl;
+    G.p.xp = data.player.xp;
+    G.p.xpN = data.player.xpN;
+    G.p.hp = data.player.hp;
+    G.p.mhp = data.player.mhp;
+    G.p.mp = data.player.mp;
+    G.p.mmp = data.player.mmp;
+    G.p.gold = data.player.gold;
+    G.p.stats = data.player.stats;
+    G.p.inv = data.player.inventory;
+    G.p.buffs = data.player.buffs || [];
+    G.p.kills = data.player.kills;
+    G.p.quests = data.player.quests;
+    G.p.fstreak = data.player.fstreak;
+
+    // Restore skills
+    for (let s of G.p.skills) {
+      const saved = data.player.skills.find(ss => ss.n === s.n);
+      if (saved) s.on = saved.on;
+    }
+
+    // Restore equipment
+    G.p.eq = data.player.equipment;
+
+    // Restore party
+    for (let p of G.party) {
+      const saved = data.party.find(sp => sp.n === p.n);
+      if (saved) {
+        p.on = saved.on;
+        p.hp = saved.hp;
+        p.mhp = saved.mhp;
+      }
+    }
+
+    // Restore quests
+    for (let q of G.quests) {
+      const saved = data.quests.find(sq => sq.id === q.id);
+      if (saved) {
+        q.c = saved.c;
+        q.done = saved.done;
+      }
+    }
+
+    G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
+    lg('💾 Game loaded!');
+    return true;
+  } catch(e) {
+    console.error('Load failed:', e);
+    return false;
+  }
+}
+
+function resetGame() {
+  if (confirm('Are you sure? ALL progress will be lost forever!')) {
+    localStorage.removeItem(SAVE_KEY);
+    location.reload();
+  }
+}
+
+function exportSave() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { lg('No save data to export.'); return; }
+  const blob = new Blob([raw], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'legends-daybreak-save.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  lg('💾 Save exported!');
+}
+
+function importSave() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        JSON.parse(ev.target.result); // validate
+        localStorage.setItem(SAVE_KEY, ev.target.result);
+        loadGame();
+        render();
+        lg('💾 Save imported!');
+      } catch(err) {
+        lg('❌ Invalid save file!');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// Auto-save every 30 seconds and on page hide
+setInterval(saveGame, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveGame();
+});
+
+// ============================================================
 function render(){
   const a=document.getElementById('app'); if(!a)return;
   let h='';
@@ -483,6 +630,10 @@ function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
     el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')rest();});
   });
+  const btnSave=document.getElementById('btn-save');if(btnSave)btnSave.addEventListener('click',()=>{saveGame();});
+  const btnExport=document.getElementById('btn-export');if(btnExport)btnExport.addEventListener('click',exportSave);
+  const btnImport=document.getElementById('btn-import');if(btnImport)btnImport.addEventListener('click',importSave);
+  const btnReset=document.getElementById('btn-reset');if(btnReset)btnReset.addEventListener('click',resetGame);
   document.querySelectorAll('.zcard:not(.locked)').forEach(el=>{
     el.addEventListener('click',()=>{const i=parseInt(el.getAttribute('data-i'));sc(i);});
   });
@@ -531,10 +682,20 @@ function rMenu(){
   ];
   let h='<div class="grid2">';
   for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
-  h+='</div>'; return h;
-}
-
-function rExp(){
+  h+='</div>';
+  // Save/Load section
+  h+='<div style="margin-top:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;">';
+  h+='<h3 style="font-size:14px;margin-bottom:10px;color:var(--accent-light);">💾 Save Data</h3>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;" id="btn-save">Save Now</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:#374151;" id="btn-export">Export</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:#374151;" id="btn-import">Import</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:var(--danger);" id="btn-reset">Reset</button>';
+  h+='</div>';
+  h+='<div style="margin-top:8px;font-size:11px;color:var(--text-dim);">Auto-saves every 30 seconds</div>';
+  h+='</div>';
+  return h;
+}function rExp(){
   let h='<div class="explore-view"><h2 class="st">🗺️ Adventure Zones</h2><div class="zlist">';
   for(let i=0;i<G.zones.length;i++){
     const z=G.zones[i],lk=G.p.lvl<z.lv;
@@ -636,6 +797,11 @@ function rFocus(){
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+  const hasSave = loadGame();
+  if (!hasSave) {
+    lg('Welcome to Legends of Daybreak, San.');
+    lg('Tap Adventure to start your journey!');
+  }
   render();
 });
 </script>
