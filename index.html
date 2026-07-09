@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src https: fonts.gstatic.com;">
 <title>Legends of Daybreak - RPG</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -385,11 +386,11 @@ function useI(ix){
 function craft(ri){
   const r=G.recipes[ri];
   for(let [mn,mq] of Object.entries(r.m)){
-    const iv=G.p.inv.find(i=>i.n==mn);
+    const iv=G.p.inv.find(x=>x.n==mn);
     if(!iv||iv.q<mq){lg('Missing mats for '+r.n);return;}
   }
   for(let [mn,mq] of Object.entries(r.m)){
-    const iv=G.p.inv.find(i=>i.n==mn);
+    const iv=G.p.inv.find(x=>x.n==mn);
     iv.q-=mq; if(iv.q<=0){const ix=G.p.inv.indexOf(iv);G.p.inv.splice(ix,1);}
   }
   addI({...r.res}); lg('Crafted: '+r.n+'!');
@@ -467,29 +468,69 @@ function render(){
   else if(G.state=='focus')h+=rFocus();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
-  h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" onclick="setS('menu')">Home</button>';
-  h+='<button class="nb '+(G.state=='explore'?'on':'')+'" data-t="exp" onclick="setS('explore')">Explore</button>';
-  h+='<button class="nb '+(G.state=='party'?'on':'')+'" data-t="party" onclick="setS('party')">Party</button>';
-  h+='<button class="nb '+(G.state=='quest'?'on':'')+'" data-t="quest" onclick="setS('quest')">Quests</button>';
-  h+='<button class="nb '+(G.state=='craft'?'on':'')+'" data-t="craft" onclick="setS('craft')">Craft</button>';
-  h+='<button class="nb '+(G.state=='inventory'?'on':'')+'" data-t="inv" onclick="setS('inventory')">Items</button></div>';
+  h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
+  h+='<button class="nb '+(G.state=='explore'?'on':'')+'" data-t="exp" data-a="explore">Explore</button>';
+  h+='<button class="nb '+(G.state=='party'?'on':'')+'" data-t="party" data-a="party">Party</button>';
+  h+='<button class="nb '+(G.state=='quest'?'on':'')+'" data-t="quest" data-a="quest">Quests</button>';
+  h+='<button class="nb '+(G.state=='craft'?'on':'')+'" data-t="craft" data-a="craft">Craft</button>';
+  h+='<button class="nb '+(G.state=='inventory'?'on':'')+'" data-t="inv" data-a="inventory">Items</button></div>';
   a.innerHTML=h;
+  attachEvents();
   const l=document.getElementById('log'); if(l)l.scrollTop=l.scrollHeight;
+}
+
+function attachEvents() {
+  document.querySelectorAll('.card[data-a]').forEach(el=>{
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')rest();});
+  });
+  document.querySelectorAll('.zcard:not(.locked)').forEach(el=>{
+    el.addEventListener('click',()=>{const i=parseInt(el.getAttribute('data-i'));sc(i);});
+  });
+  document.querySelectorAll('.ecard:not(.dead)').forEach(el=>{
+    el.addEventListener('click',()=>{G.cbt.tg=parseInt(el.getAttribute('data-i'));render();});
+  });
+  document.querySelectorAll('.sbtn:not(.dis)').forEach(el=>{
+    el.addEventListener('click',()=>{G.cbt.sk=parseInt(el.getAttribute('data-i'));render();});
+  });
+  const abtn=document.querySelector('.abtn:not(.dis)');
+  if(abtn){
+    abtn.addEventListener('click',()=>{
+      const si=parseInt(abtn.getAttribute('data-si'));
+      const ti=parseInt(abtn.getAttribute('data-ti'));
+      pa(si,ti);
+    });
+  }
+  const fbtn=document.querySelector('.fbtn');
+  if(fbtn)fbtn.addEventListener('click',flee);
+  document.querySelectorAll('.ib-u').forEach(el=>{
+    el.addEventListener('click',(e)=>{e.stopPropagation();useI(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.ib-e').forEach(el=>{
+    el.addEventListener('click',(e)=>{e.stopPropagation();eqI(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.cb:not(.dis)').forEach(el=>{
+    el.addEventListener('click',()=>{craft(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.nb').forEach(el=>{
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');setS(a);});
+  });
+  const cfb=document.querySelector('.cfb');
+  if(cfb)cfb.addEventListener('click',cf);
 }
 
 function rMenu(){
   const items=[
-    {i:'⚔️',l:'Adventure',d:'Explore zones and fight',a:"setS('explore')"},
-    {i:'👥',l:'Party',d:'Manage companions',a:"setS('party')"},
-    {i:'✨',l:'Skills',d:'View mage abilities',a:"setS('skills')"},
-    {i:'⚒️',l:'Crafting',d:'Brew potions, forge gear',a:"setS('craft')"},
-    {i:'📜',l:'Quests',d:'View active quests',a:"setS('quest')"},
-    {i:'🎒',l:'Inventory',d:'Manage items',a:"setS('inventory')"},
-    {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'sf()'},
-    {i:'💤',l:'Rest',d:'Restore HP/MP free',a:'rest()'}
+    {i:'⚔️',l:'Adventure',d:'Explore zones and fight',a:'explore'},
+    {i:'👥',l:'Party',d:'Manage companions',a:'party'},
+    {i:'✨',l:'Skills',d:'View mage abilities',a:'skills'},
+    {i:'⚒️',l:'Crafting',d:'Brew potions, forge gear',a:'craft'},
+    {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
+    {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
+    {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
+    {i:'💤',l:'Rest',d:'Restore HP/MP free',a:'rest'}
   ];
   let h='<div class="grid2">';
-  for(let m of items)h+='<div class="card" onclick="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
+  for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
   h+='</div>'; return h;
 }
 
@@ -498,7 +539,7 @@ function rExp(){
   for(let i=0;i<G.zones.length;i++){
     const z=G.zones[i],lk=G.p.lvl<z.lv;
     const dc=z.dg=='low'?'#22c55e':z.dg=='medium'?'#eab308':z.dg=='high'?'#f97316':z.dg=='very high'?'#ef4444':'#a855f7';
-    h+='<div class="zcard '+(lk?'locked':'')+'" onclick="'+(lk?'':'sc('+i+')')+'"><div class="zh"><span class="zn">'+z.n+'</span><span class="zl">Lv.'+z.lv+(lk?' 🔒':'')+'</span></div><div class="zd">'+z.d+'</div><div class="zm"><span class="db" style="background:'+dc+'20;color:'+dc+'">'+z.dg+'</span><span class="xb">'+z.xp+' XP</span></div></div>';
+    h+='<div class="zcard '+(lk?'locked':'')+'" data-i="'+i+'"><div class="zh"><span class="zn">'+z.n+'</span><span class="zl">Lv.'+z.lv+(lk?' 🔒':'')+'</span></div><div class="zd">'+z.d+'</div><div class="zm"><span class="db" style="background:'+dc+'20;color:'+dc+'">'+z.dg+'</span><span class="xb">'+z.xp+' XP</span></div></div>';
   }
   h+='</div></div>'; return h;
 }
@@ -507,7 +548,7 @@ function rCbt(){
   let h='<div class="combat-view"><h2 class="st">⚔️ Combat</h2><div class="erow">';
   for(let i=0;i<G.cbt.en.length;i++){
     const e=G.cbt.en[i],d=e.hp<=0,s=G.cbt.tg==i&&!d?'sel':'';
-    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" onclick="'+(d?'':'G.cbt.tg='+i+';render()')+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>'+(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
+    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>'+(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
   }
   h+='</div><div class="pstat"><div class="mst"><span class="md" style="background:#7c3aed"></span>San '+G.p.hp+'/'+G.p.mhp+'</div>';
   for(let p of G.party)if(p.on)h+='<div class="mst"><span class="md" style="background:'+p.col+'"></span>'+p.n+' '+p.hp+'/'+p.mhp+'</div>';
@@ -515,13 +556,13 @@ function rCbt(){
   const ls=G.p.skills.filter(s=>s.on);
   for(let i=0;i<ls.length;i++){
     const s=ls[i],u=G.p.mp>=s.c,sel=G.cbt.sk==i?'sel':'';
-    h+='<div class="sbtn '+(u?'':'dis')+' '+sel+'" onclick="G.cbt.sk='+i+';render()"><div class="sn">'+s.n+'</div><div class="sc">'+s.c+' MP</div><div class="sd">'+s.d+'</div></div>';
+    h+='<div class="sbtn '+(u?'':'dis')+' '+sel+'" data-i="'+i+'"><div class="sn">'+s.n+'</div><div class="sc">'+s.c+' MP</div><div class="sd">'+s.d+'</div></div>';
   }
   h+='</div>';
   const sk=ls[G.cbt.sk],ca=sk&&G.p.mp>=sk.c;
   const si=G.p.skills.indexOf(sk);
-  h+='<button class="abtn '+(ca?'':'dis')+'" onclick="'+(ca?'pa('+si+','+G.cbt.tg+')':'')+'">🎯 Cast '+(sk?sk.n:'...')+'</button>';
-  h+='<button class="fbtn" onclick="flee()">🏃 Flee</button></div></div>';
+  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'">🎯 Cast '+(sk?sk.n:'...')+'</button>';
+  h+='<button class="fbtn">🏃 Flee</button></div></div>';
   return h;
 }
 
@@ -556,7 +597,7 @@ function rInv(){
   h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
   for(let i=0;i<G.p.inv.length;i++){
     const it=G.p.inv[i];
-    h+='<div class="ic"><div class="ii">'+ie(it)+'</div><div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="iq">x'+it.q+'</div><div class="ia">'+(it.t=='pot'?'<button class="ib ib-u" onclick="useI('+i+')">Use</button>':'')+((it.t=='wep'||it.t=='arm'||it.t=='acc')?'<button class="ib ib-e" onclick="eqI('+i+')">Equip</button>':'')+'</div></div>';
+    h+='<div class="ic"><div class="ii">'+ie(it)+'</div><div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="iq">x'+it.q+'</div><div class="ia">'+(it.t=='pot'?'<button class="ib ib-u" data-i="'+i+'">Use</button>':'')+((it.t=='wep'||it.t=='arm'||it.t=='acc')?'<button class="ib ib-e" data-i="'+i+'">Equip</button>':'')+'</div></div>';
   }
   if(G.p.inv.length==0)h+='<div class="ei">Your pack is empty.</div>';
   h+='</div></div></div>'; return h;
@@ -572,7 +613,7 @@ function rCraft(){
       if(!en)ok=false;
       ms+='<span class="mp '+(en?'ok':'miss')+'">'+mn+': '+hv+'/'+mq+'</span>';
     }
-    h+='<div class="rc"><div class="rr"><span class="ri">'+ie(r.res)+'</span><span class="rn" style="color:'+rc(r.res.r)+'">'+r.n+'</span><span class="rd">'+r.d+'</span></div><div class="rms">'+ms+'</div><button class="cb '+(ok?'':'dis')+'" onclick="'+(ok?'craft('+i+')':'')+'">Forge</button></div>';
+    h+='<div class="rc"><div class="rr"><span class="ri">'+ie(r.res)+'</span><span class="rn" style="color:'+rc(r.res.r)+'">'+r.n+'</span><span class="rd">'+r.d+'</span></div><div class="rms">'+ms+'</div><button class="cb '+(ok?'':'dis')+'" data-i="'+i+'">Forge</button></div>';
   }
   h+='</div></div>'; return h;
 }
@@ -590,10 +631,10 @@ function rQuest(){
 function rFocus(){
   const el=Date.now()-(G.fs||Date.now()),rm=Math.max(0,G.fd-el);
   const m=Math.floor(rm/60000),s=Math.floor((rm%60000)/1000);
-  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>🧠 ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb" onclick="cf()">Cancel</button></div>';
+  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>🧠 ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
 }
 
-// Initialize when DOM is ready
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
   render();
 });
