@@ -11,6 +11,7 @@
   --bg: #0f0e17; --bg-card: #1a1825; --bg-hover: #242236; --border: #2e2c42;
   --text: #e8e6f0; --text-dim: #9ca3af; --accent: #7c3aed; --accent-light: #a78bfa;
   --hp: #ef4444; --mp: #3b82f6; --xp: #eab308; --gold: #f59e0b; --success: #22c55e; --danger: #ef4444;
+  --rest: #10b981; --rest-dim: #065f46;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
@@ -171,6 +172,36 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .nb[data-t="craft"]::before { content: "⚒️"; }
 .nb[data-t="inv"]::before { content: "🎒"; }
 .nb:hover, .nb.on { color: var(--accent-light); }
+
+/* REST SYSTEM STYLES */
+.rest-view { text-align: center; }
+.rest-sites { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.rs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s; user-select: none; text-align: left; }
+.rs-card:hover:not(.locked) { border-color: var(--rest); background: #10b98110; }
+.rs-card.locked { opacity: 0.4; cursor: not-allowed; }
+.rs-card.active { border-color: var(--rest); background: #10b98115; }
+.rs-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.rs-name { font-weight: 600; font-size: 15px; }
+.rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.rs-type.camp { background: #10b98120; color: var(--rest); }
+.rs-type.tavern { background: #f59e0b20; color: var(--gold); }
+.rs-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.rs-req { font-size: 11px; color: var(--text-dim); }
+.rs-req.ok { color: var(--success); }
+.rs-req.fail { color: var(--danger); }
+.rest-progress { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.rest-timer { font-size: 48px; font-weight: 700; color: var(--rest); font-family: 'Cinzel', serif; margin-bottom: 8px; }
+.rest-label { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+.rest-bar { height: 12px; background: #2e2c42; border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 1s linear; }
+.rest-healer { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+.rest-healer.ok { color: var(--success); }
+.rest-healer.fail { color: var(--danger); }
+.rest-cancel { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 13px; font-weight: 600; cursor: pointer; }
+.rest-result { background: var(--bg-card); border: 1px solid var(--rest); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
+.rest-result p { font-size: 13px; color: var(--text-dim); }
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -235,7 +266,28 @@ const G = {
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
     { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false }
   ],
-  log: ['Welcome to Legends of Daybreak, San.']
+  log: ['Welcome to Legends of Daybreak, San.'],
+
+  // === REST SYSTEM DATA ===
+  rest: {
+    active: false,
+    timer: null,
+    startTime: 0,
+    duration: 3 * 60 * 60 * 1000, // 3 hours in ms
+    selectedSite: null,
+    sites: [
+      { id: 'ww_camp', name: 'Whispering Woods Camp', type: 'camp', zone: 'Whispering Woods', zoneLv: 1, desc: 'A quiet clearing beneath ancient oaks.', unlocked: true, icon: '🏕️' },
+      { id: 'ww_tavern', name: 'The Sleeping Stag', type: 'tavern', zone: 'Whispering Woods', zoneLv: 1, desc: 'A rustic tavern at the forest edge. Warm beds, warm ale.', unlocked: false, icon: '🍺', cost: 5 },
+      { id: 'cc_camp', name: 'Catacombs Hollow', type: 'camp', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A hidden alcove away from the restless dead.', unlocked: false, icon: '⛺' },
+      { id: 'cc_tavern', name: 'The Bone Flute', type: 'tavern', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A morbidly cozy inn carved into tomb walls.', unlocked: false, icon: '🍺', cost: 8 },
+      { id: 'ep_camp', name: 'Ember Peak Shelter', type: 'camp', zone: 'Ember Peak', zoneLv: 4, desc: 'A heat-shielded cave with volcanic warmth.', unlocked: false, icon: '⛺' },
+      { id: 'ep_tavern', name: 'The Molten Mug', type: 'tavern', zone: 'Ember Peak', zoneLv: 4, desc: 'Fire-resistant stone tavern. The ale is warm, the beds are warm, everything is warm.', unlocked: false, icon: '🍺', cost: 12 },
+      { id: 'fr_camp', name: 'Frostspire Shelter', type: 'camp', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A magically warded ice cave. Barely warm enough.', unlocked: false, icon: '⛺' },
+      { id: 'fr_tavern', name: 'The Frozen Hearth', type: 'tavern', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A tavern that somehow keeps warm in the frozen wastes.', unlocked: false, icon: '🍺', cost: 15 },
+      { id: 'ad_camp', name: 'Abyssal Refuge', type: 'camp', zone: 'Abyssal Depths', zoneLv: 8, desc: 'A pocket of reality that the void has not claimed... yet.', unlocked: false, icon: '⛺' },
+      { id: 'ad_tavern', name: 'The Last Light', type: 'tavern', zone: 'Abyssal Depths', zoneLv: 8, desc: 'The final tavern before oblivion. Prices are steep.', unlocked: false, icon: '🍺', cost: 25 }
+    ]
+  }
 };
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -246,6 +298,160 @@ function pd(ds,b) {
   const m=ds.match(/(\d+)d(\d+)/);
   if(!m) return b||0;
   return rdc(parseInt(m[1]),parseInt(m[2]))+(b||0);
+}
+
+// ============================================================
+// REST SYSTEM
+// ============================================================
+let restTimer = null;
+
+function hasHealer() {
+  return G.party.some(p => p.on && p.r === 'Healer' && p.hp > 0);
+}
+
+function getHealerName() {
+  const h = G.party.find(p => p.on && p.r === 'Healer' && p.hp > 0);
+  return h ? h.n : null;
+}
+
+function unlockRestSites() {
+  let newly = false;
+  for (let site of G.rest.sites) {
+    if (!site.unlocked && G.p.lvl >= site.zoneLv) {
+      site.unlocked = true;
+      lg('🏕️ New rest site unlocked: ' + site.name + ' (' + site.zone + ')');
+      newly = true;
+    }
+  }
+  return newly;
+}
+
+function startRest(siteId) {
+  if (G.rest.active) return;
+
+  const site = G.rest.sites.find(s => s.id === siteId);
+  if (!site || !site.unlocked) {
+    lg('That rest site is not available yet.');
+    return;
+  }
+
+  if (!hasHealer()) {
+    lg('❌ No healer in active party! You need a healer to rest safely.');
+    return;
+  }
+
+  if (site.cost && G.p.gold < site.cost) {
+    lg('❌ Not enough gold! ' + site.name + ' costs ' + site.cost + 'G.');
+    return;
+  }
+
+  if (site.cost) {
+    G.p.gold -= site.cost;
+    lg('💰 Paid ' + site.cost + 'G for ' + site.name + '.');
+  }
+
+  G.rest.active = true;
+  G.rest.selectedSite = site;
+  G.rest.startTime = Date.now();
+
+  const healerName = getHealerName();
+  lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
+  lg('⏳ Resting... 3 hours to full recovery.');
+
+  render();
+
+  restTimer = setInterval(() => {
+    if (!G.rest.active) {
+      clearInterval(restTimer);
+      restTimer = null;
+      return;
+    }
+
+    const elapsed = Date.now() - G.rest.startTime;
+    const remaining = G.rest.duration - elapsed;
+
+    // Update timer display
+    const timerEl = document.getElementById('rest-timer');
+    if (timerEl) {
+      const h = Math.floor(remaining / (60 * 60 * 1000));
+      const m = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+      const s = Math.floor((remaining % (60 * 1000)) / 1000);
+      timerEl.textContent = h + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+    }
+
+    // Update progress bar
+    const progressEl = document.getElementById('rest-progress');
+    if (progressEl) {
+      const pct = Math.min(100, (elapsed / G.rest.duration) * 100);
+      progressEl.style.width = pct + '%';
+    }
+
+    if (remaining <= 0) {
+      completeRest();
+    }
+  }, 1000);
+}
+
+function completeRest() {
+  if (restTimer) {
+    clearInterval(restTimer);
+    restTimer = null;
+  }
+
+  const healerName = getHealerName();
+
+  // Restore HP/MP for player and all active party members
+  G.p.hp = G.p.mhp;
+  G.p.mp = G.p.mmp;
+  for (let p of G.party) {
+    if (p.on) p.hp = p.mhp;
+  }
+
+  // Clear any negative buffs (keep positive ones)
+  G.p.buffs = G.p.buffs.filter(b => b.t > 0);
+
+  const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
+  lg('✨ Rest complete at ' + siteName + '!');
+  lg('💚 ' + healerName + ' has restored everyone to full health.');
+
+  G.rest.active = false;
+  G.rest.selectedSite = null;
+  G.rest.startTime = 0;
+
+  render();
+}
+
+function cancelRest() {
+  if (!G.rest.active) return;
+
+  if (restTimer) {
+    clearInterval(restTimer);
+    restTimer = null;
+  }
+
+  const elapsed = Date.now() - G.rest.startTime;
+  const pct = Math.min(1, elapsed / G.rest.duration);
+
+  // Partial rest: restore proportionally (max 50% of what full rest would give)
+  const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
+  const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
+
+  G.p.hp = Math.min(G.p.mhp, G.p.hp + hpRestore);
+  G.p.mp = Math.min(G.p.mmp, G.p.mp + mpRestore);
+
+  for (let p of G.party) {
+    if (p.on) {
+      p.hp = Math.min(p.mhp, p.hp + Math.floor(p.mhp * pct * 0.5));
+    }
+  }
+
+  lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
+
+  G.rest.active = false;
+  G.rest.selectedSite = null;
+  G.rest.startTime = 0;
+
+  render();
 }
 
 function sc(zi) {
@@ -357,6 +563,7 @@ function lvlup(){
     lg('LEVEL UP! Now Level '+G.p.lvl+'!');
     for(let s of G.p.skills){if(!s.on&&s.ul<=G.p.lvl){s.on=true;lg('Learned: '+s.n+'!');}}
     for(let p of G.party){if(!p.on&&p.ul<=G.p.lvl){p.on=true;p.hp=p.mhp;lg(p.n+' '+p.t+' joins!');}}
+    unlockRestSites();
   }
 }
 
@@ -439,7 +646,6 @@ function lg(msg){
 }
 
 function setS(s){G.state=s;render();}
-function rest(){G.p.hp=G.p.mhp;G.p.mp=G.p.mmp;for(let p of G.party)if(p.on)p.hp=p.mhp;lg('Rested. HP/MP restored.');render();}
 function flee(){if(Math.random()>0.5){lg('Fled!');G.cbt.on=false;G.state='explore';}else{lg('Flee failed!');eturn();}render();}
 
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
@@ -447,11 +653,10 @@ function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
-
 // ============================================================
 // SAVE SYSTEM
 // ============================================================
-const SAVE_KEY = 'ldb_save_v1';
+const SAVE_KEY = 'ldb_save_v2';
 
 function saveGame() {
   const saveData = {
@@ -471,15 +676,18 @@ function saveGame() {
     },
     party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col })),
     quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
+    rest: {
+      sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
+    },
     log: G.log,
     state: G.state
   };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
-    lg('💾 Game saved!');
+    lg('Game saved!');
     return true;
   } catch(e) {
-    lg('❌ Save failed: ' + e.message);
+    lg('Save failed: ' + e.message);
     return false;
   }
 }
@@ -490,7 +698,6 @@ function loadGame() {
     if (!raw) return false;
     const data = JSON.parse(raw);
 
-    // Restore player
     G.p.lvl = data.player.lvl;
     G.p.xp = data.player.xp;
     G.p.xpN = data.player.xpN;
@@ -506,16 +713,13 @@ function loadGame() {
     G.p.quests = data.player.quests;
     G.p.fstreak = data.player.fstreak;
 
-    // Restore skills
     for (let s of G.p.skills) {
       const saved = data.player.skills.find(ss => ss.n === s.n);
       if (saved) s.on = saved.on;
     }
 
-    // Restore equipment
     G.p.eq = data.player.equipment;
 
-    // Restore party
     for (let p of G.party) {
       const saved = data.party.find(sp => sp.n === p.n);
       if (saved) {
@@ -525,7 +729,6 @@ function loadGame() {
       }
     }
 
-    // Restore quests
     for (let q of G.quests) {
       const saved = data.quests.find(sq => sq.id === q.id);
       if (saved) {
@@ -534,8 +737,17 @@ function loadGame() {
       }
     }
 
+    if (data.rest && data.rest.sites) {
+      for (let s of G.rest.sites) {
+        const saved = data.rest.sites.find(ss => ss.id === s.id);
+        if (saved) {
+          s.unlocked = saved.unlocked;
+        }
+      }
+    }
+
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
-    lg('💾 Game loaded!');
+    lg('Game loaded!');
     return true;
   } catch(e) {
     console.error('Load failed:', e);
@@ -560,7 +772,7 @@ function exportSave() {
   a.download = 'legends-daybreak-save.json';
   a.click();
   URL.revokeObjectURL(url);
-  lg('💾 Save exported!');
+  lg('Save exported!');
 }
 
 function importSave() {
@@ -573,13 +785,13 @@ function importSave() {
     const reader = new FileReader();
     reader.onload = function(ev) {
       try {
-        JSON.parse(ev.target.result); // validate
+        JSON.parse(ev.target.result);
         localStorage.setItem(SAVE_KEY, ev.target.result);
         loadGame();
         render();
-        lg('💾 Save imported!');
+        lg('Save imported!');
       } catch(err) {
-        lg('❌ Invalid save file!');
+        lg('Invalid save file!');
       }
     };
     reader.readAsText(file);
@@ -587,7 +799,6 @@ function importSave() {
   input.click();
 }
 
-// Auto-save every 30 seconds and on page hide
 setInterval(saveGame, 30000);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
@@ -613,6 +824,7 @@ function render(){
   else if(G.state=='craft')h+=rCraft();
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
+  else if(G.state=='rest')h+=rRest();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
   h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
@@ -628,7 +840,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')rest();});
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')setS('rest');});
   });
   const btnSave=document.getElementById('btn-save');if(btnSave)btnSave.addEventListener('click',()=>{saveGame();});
   const btnExport=document.getElementById('btn-export');if(btnExport)btnExport.addEventListener('click',exportSave);
@@ -667,6 +879,13 @@ function attachEvents() {
   });
   const cfb=document.querySelector('.cfb');
   if(cfb)cfb.addEventListener('click',cf);
+
+  // Rest system events
+  document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
+    el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
+  });
+  const cancelRestBtn=document.getElementById('cancel-rest');
+  if(cancelRestBtn)cancelRestBtn.addEventListener('click',cancelRest);
 }
 
 function rMenu(){
@@ -678,14 +897,13 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
-    {i:'💤',l:'Rest',d:'Restore HP/MP free',a:'rest'}
+    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
   ];
   let h='<div class="grid2">';
   for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
   h+='</div>';
-  // Save/Load section
   h+='<div style="margin-top:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;">';
-  h+='<h3 style="font-size:14px;margin-bottom:10px;color:var(--accent-light);">💾 Save Data</h3>';
+  h+='<h3 style="font-size:14px;margin-bottom:10px;color:var(--accent-light);">Save Data</h3>';
   h+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
   h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;" id="btn-save">Save Now</button>';
   h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:#374151;" id="btn-export">Export</button>';
@@ -695,8 +913,10 @@ function rMenu(){
   h+='<div style="margin-top:8px;font-size:11px;color:var(--text-dim);">Auto-saves every 30 seconds</div>';
   h+='</div>';
   return h;
-}function rExp(){
-  let h='<div class="explore-view"><h2 class="st">🗺️ Adventure Zones</h2><div class="zlist">';
+}
+
+function rExp(){
+  let h='<div class="explore-view"><h2 class="st">Adventure Zones</h2><div class="zlist">';
   for(let i=0;i<G.zones.length;i++){
     const z=G.zones[i],lk=G.p.lvl<z.lv;
     const dc=z.dg=='low'?'#22c55e':z.dg=='medium'?'#eab308':z.dg=='high'?'#f97316':z.dg=='very high'?'#ef4444':'#a855f7';
@@ -706,7 +926,7 @@ function rMenu(){
 }
 
 function rCbt(){
-  let h='<div class="combat-view"><h2 class="st">⚔️ Combat</h2><div class="erow">';
+  let h='<div class="combat-view"><h2 class="st">Combat</h2><div class="erow">';
   for(let i=0;i<G.cbt.en.length;i++){
     const e=G.cbt.en[i],d=e.hp<=0,s=G.cbt.tg==i&&!d?'sel':'';
     h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>'+(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
@@ -722,13 +942,13 @@ function rCbt(){
   h+='</div>';
   const sk=ls[G.cbt.sk],ca=sk&&G.p.mp>=sk.c;
   const si=G.p.skills.indexOf(sk);
-  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'">🎯 Cast '+(sk?sk.n:'...')+'</button>';
-  h+='<button class="fbtn">🏃 Flee</button></div></div>';
+  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'">Cast '+(sk?sk.n:'...')+'</button>';
+  h+='<button class="fbtn">Flee</button></div></div>';
   return h;
 }
 
 function rParty(){
-  let h='<div class="party-view"><h2 class="st">👥 Party</h2><div class="plist">';
+  let h='<div class="party-view"><h2 class="st">Party</h2><div class="plist">';
   for(let p of G.party){
     h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+'</div></div>';
   }
@@ -736,7 +956,7 @@ function rParty(){
 }
 
 function rSkills(){
-  let h='<div class="skills-view"><h2 class="st">✨ Mage Skills</h2><div class="sklist">';
+  let h='<div class="skills-view"><h2 class="st">Mage Skills</h2><div class="sklist">';
   for(let s of G.p.skills){
     const st=s.on?'LEARNED':'Unlocks Lv.'+s.ul;
     h+='<div class="skcard '+(s.on?'':'locked')+'"><div class="skh"><span class="ski">'+(s.buff?'🛡️':'⚡')+'</span><span class="skt">'+s.n+'</span><span class="sks">'+st+'</span></div><div class="skd"><span class="dp">'+s.c+' MP</span><span class="dp">'+(s.dmg||'Buff')+'</span></div><div class="skdsc">'+s.d+'</div></div>';
@@ -747,7 +967,7 @@ function rSkills(){
 }
 
 function rInv(){
-  let h='<div class="inventory-view"><h2 class="st">🎒 Inventory</h2>';
+  let h='<div class="inventory-view"><h2 class="st">Inventory</h2>';
   h+='<div class="eqs"><h3>Equipped</h3><div class="eqg">';
   const sn={w:'Weapon',a:'Armor',acc:'Accessory'};
   for(let sl of ['w','a','acc']){
@@ -765,7 +985,7 @@ function rInv(){
 }
 
 function rCraft(){
-  let h='<div class="craft-view"><h2 class="st">⚒️ Crafting</h2><div class="rlist">';
+  let h='<div class="craft-view"><h2 class="st">Crafting</h2><div class="rlist">';
   for(let i=0;i<G.recipes.length;i++){
     const r=G.recipes[i]; let ok=true,ms='';
     for(let [mn,mq] of Object.entries(r.m)){
@@ -780,7 +1000,7 @@ function rCraft(){
 }
 
 function rQuest(){
-  let h='<div class="quest-view"><h2 class="st">📜 Active Quests</h2><div class="qlist">';
+  let h='<div class="quest-view"><h2 class="st">Active Quests</h2><div class="qlist">';
   for(let q of G.quests){
     const pc=Math.min(100,(q.c/q.need)*100);
     h+='<div class="qc '+(q.done?'done':'')+'"><div class="qh"><span class="qn">'+(q.done?'✅ ':'')+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div><div class="qd">'+q.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
@@ -792,7 +1012,103 @@ function rQuest(){
 function rFocus(){
   const el=Date.now()-(G.fs||Date.now()),rm=Math.max(0,G.fd-el);
   const m=Math.floor(rm/60000),s=Math.floor((rm%60000)/1000);
-  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>🧠 ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
+  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
+}
+
+function rRest() {
+  // If rest is active, show the resting progress screen
+  if (G.rest.active && G.rest.selectedSite) {
+    const elapsed = Date.now() - G.rest.startTime;
+    const remaining = Math.max(0, G.rest.duration - elapsed);
+    const pct = Math.min(100, (elapsed / G.rest.duration) * 100);
+
+    const h = Math.floor(remaining / (60 * 60 * 1000));
+    const m = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+    const s = Math.floor((remaining % (60 * 1000)) / 1000);
+    const timerStr = h + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+
+    const healerName = getHealerName();
+    const site = G.rest.selectedSite;
+
+    let h2 = '<div class="rest-view">';
+    h2 += '<h2 class="st">💤 Resting at ' + site.name + '</h2>';
+    h2 += '<div class="rest-progress">';
+    h2 += '<div class="rest-timer" id="rest-timer">' + timerStr + '</div>';
+    h2 += '<div class="rest-label">remaining until full recovery</div>';
+    h2 += '<div class="rest-bar"><div class="rest-fill" id="rest-progress" style="width:' + pct + '%"></div></div>';
+    h2 += '<div class="rest-healer ok">💚 ' + healerName + ' is tending to the party</div>';
+    h2 += '</div>';
+    h2 += '<button class="rest-cancel" id="cancel-rest">Cancel Rest (Partial Recovery)</button>';
+    h2 += '</div>';
+    return h2;
+  }
+
+  // Normal rest selection screen
+  const healerOk = hasHealer();
+  const healerName = getHealerName();
+
+  let h2 = '<div class="rest-view">';
+  h2 += '<h2 class="st">💤 Rest</h2>';
+
+  // Healer status
+  if (healerOk) {
+    h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
+    h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Your healer can perform the 3-hour rest ritual.</div>';
+    h2 += '</div>';
+  } else {
+    h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
+    h2 += '<div style="font-size:13px;font-weight:600;color:var(--danger);">❌ No Healer in Party</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest. Rest is a 3-hour ritual.</div>';
+    h2 += '</div>';
+  }
+
+  // Rest sites list
+  h2 += '<div class="rest-sites">';
+
+  // Group by zone
+  const zones = {};
+  for (let site of G.rest.sites) {
+    if (!zones[site.zone]) zones[site.zone] = [];
+    zones[site.zone].push(site);
+  }
+
+  for (let zoneName in zones) {
+    const sites = zones[zoneName];
+    const anyUnlocked = sites.some(s => s.unlocked);
+    if (!anyUnlocked) continue;
+
+    h2 += '<div style="margin-bottom:12px;">';
+    h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
+
+    for (let site of sites) {
+      const locked = !site.unlocked;
+      const canAfford = !site.cost || G.p.gold >= site.cost;
+      const canRest = healerOk && !locked && canAfford;
+
+      h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
+      h2 += '<div class="rs-head">';
+      h2 += '<span class="rs-name">' + site.icon + ' ' + site.name + '</span>';
+      h2 += '<span class="rs-type ' + site.type + '">' + site.type.toUpperCase() + '</span>';
+      h2 += '</div>';
+      h2 += '<div class="rs-desc">' + site.desc + '</div>';
+
+      if (locked) {
+        h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
+      } else if (site.cost) {
+        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G | ' + (canRest ? 'Tap to rest' : 'Cannot rest here') + '</div>';
+      } else {
+        h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅ Free campsite' : '❌ Need a healer') + ' | ' + (canRest ? 'Tap to rest' : 'Cannot rest here') + '</div>';
+      }
+      h2 += '</div>';
+    }
+    h2 += '</div>';
+  }
+
+  h2 += '</div>';
+  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes 3 hours. A healer must be in your active party.</div>';
+  h2 += '</div>';
+  return h2;
 }
 
 // Initialize
