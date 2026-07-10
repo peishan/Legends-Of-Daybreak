@@ -193,7 +193,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rest-timer { font-size: 48px; font-weight: 700; color: var(--rest); font-family: 'Cinzel', serif; margin-bottom: 8px; }
 .rest-label { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
 .rest-bar { height: 12px; background: #2e2c42; border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
-.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 1s linear; }
+.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 0.3s ease; }
 .rest-healer { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
 .rest-healer.ok { color: var(--success); }
 .rest-healer.fail { color: var(--danger); }
@@ -202,12 +202,25 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
 .rest-result p { font-size: 13px; color: var(--text-dim); }
 
+/* CAMPFIRE REST - TICK STYLES */
+.tick-track { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.tick { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.3s; }
+.tick.done { background: var(--rest); border-color: var(--rest); color: white; }
+.tick.current { border-color: var(--rest); box-shadow: 0 0 0 3px #10b98140; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px #10b98140; } 50% { box-shadow: 0 0 0 6px #10b98120; } }
+.tick-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
 /* DIALOGUE STYLES */
 .dialogue-box { background: #1a1825; border: 1px solid var(--dialogue); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: fadeIn 0.5s ease; }
 .dialogue-box .d-speaker { font-size: 12px; font-weight: 700; color: var(--dialogue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 .dialogue-box .d-text { font-size: 13px; color: var(--text); line-height: 1.5; font-style: italic; }
 .dialogue-box .d-tick { font-size: 10px; color: var(--text-dim); margin-top: 6px; text-align: right; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* AMBUSH WARNING */
+.ambush-warning { background: #ef444415; border: 1px solid var(--danger); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: shake 0.5s ease; }
+.ambush-warning .aw-text { font-size: 13px; color: var(--danger); font-weight: 600; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -275,13 +288,15 @@ const G = {
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
-  // === PHASE 2: REST SYSTEM ===
+  // === PHASE 2: CAMPFIRE REST SYSTEM (5-tick rapid) ===
   rest: {
     active: false,
     timer: null,
-    startTime: 0,
-    duration: 3 * 60 * 60 * 1000,
+    tick: 0,
+    maxTicks: 5,
+    tickDuration: 1500, // 1.5 seconds per tick
     selectedSite: null,
+    ambushPending: false,
     sites: [
       { id: 'ww_camp', name: 'Whispering Woods Camp', type: 'camp', zone: 'Whispering Woods', zoneLv: 1, desc: 'A quiet clearing beneath ancient oaks.', unlocked: true, icon: '🏕️', cost: 0 },
       { id: 'ww_tavern', name: 'The Sleeping Stag', type: 'tavern', zone: 'Whispering Woods', zoneLv: 1, desc: 'A rustic tavern at the forest edge. Warm beds, warm ale.', unlocked: false, icon: '🍺', cost: 5 },
@@ -374,9 +389,8 @@ const G = {
     ]
   },
 
-  // Current dialogue being shown during rest
   currentDialogue: null,
-  lastDialogueTime: 0
+  ambushWarning: null
 };
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -390,7 +404,7 @@ function pd(ds,b) {
 }
 
 // ============================================================
-// REST SYSTEM
+// CAMPFIRE REST SYSTEM (5-tick rapid)
 // ============================================================
 let restTimer = null;
 
@@ -415,19 +429,21 @@ function unlockRestSites() {
   return newly;
 }
 
-// === PHASE 2: DIALOGUE PICKER ===
-function pickBanter(type) {
+// === DIALOGUE PICKER ===
+function pickBanter(type, tense) {
   const pool = [];
 
-  if (type === 'tavern' && Math.random() < 0.4) {
+  if (tense) {
+    pool.push(...G.banter.tense);
+  } else if (type === 'tavern' && Math.random() < 0.4) {
     pool.push(...G.banter.tavern);
   }
 
   const active = G.party.filter(p => p.on);
 
-  if (active.length === 0) {
+  if (active.length === 0 && !tense) {
     pool.push(...G.banter.solo);
-  } else {
+  } else if (!tense) {
     for (let p of active) {
       const key = p.n.toLowerCase();
       if (G.banter[key]) pool.push(...G.banter[key]);
@@ -441,8 +457,34 @@ function pickBanter(type) {
 function showDialogue(dialogue) {
   if (!dialogue) return;
   G.currentDialogue = dialogue;
-  G.lastDialogueTime = Date.now();
   lg('💬 ' + dialogue.speaker + ': ' + dialogue.text);
+}
+
+function showAmbushWarning(dialogue) {
+  if (!dialogue) return;
+  G.ambushWarning = dialogue;
+  lg('⚠️ ' + dialogue.text);
+}
+
+function doRestTick() {
+  // Heal 20% per tick
+  const healAmt = Math.ceil(G.p.mhp / G.rest.maxTicks);
+  const manaAmt = Math.ceil(G.p.mmp / G.rest.maxTicks);
+
+  G.p.hp = Math.min(G.p.mhp, G.p.hp + healAmt);
+  G.p.mp = Math.min(G.p.mmp, G.p.mp + manaAmt);
+
+  for (let p of G.party) {
+    if (p.on) {
+      p.hp = Math.min(p.mhp, p.hp + Math.ceil(p.mhp / G.rest.maxTicks));
+    }
+  }
+
+  // Show banter dialogue
+  const line = pickBanter(G.rest.selectedSite.type, false);
+  if (line) showDialogue(line);
+
+  render();
 }
 
 function startRest(siteId) {
@@ -471,16 +513,18 @@ function startRest(siteId) {
 
   G.rest.active = true;
   G.rest.selectedSite = site;
-  G.rest.startTime = Date.now();
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
   G.currentDialogue = null;
+  G.ambushWarning = null;
 
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
-  lg('⏳ Resting... 3 hours to full recovery.');
+  lg('🔥 Campfire lit. 5 ticks to full recovery.');
 
-  // First dialogue immediately
-  const firstLine = pickBanter(site.type);
-  if (firstLine) showDialogue(firstLine);
+  // First tick immediately
+  doRestTick();
+  G.rest.tick = 1;
 
   render();
 
@@ -491,42 +535,42 @@ function startRest(siteId) {
       return;
     }
 
-    const elapsed = Date.now() - G.rest.startTime;
-    const remaining = G.rest.duration - elapsed;
+    // Ambush check BEFORE healing this tick
+    const ambushChance = G.rest.selectedSite.type === 'tavern' ? 0.05 : 0.15;
+    if (Math.random() < ambushChance && G.rest.tick < G.rest.maxTicks) {
+      // Show tense warning
+      const tenseLine = pickBanter(G.rest.selectedSite.type, true);
+      showAmbushWarning(tenseLine);
 
-    // Update timer display
-    const timerEl = document.getElementById('rest-timer');
-    if (timerEl) {
-      const h = Math.floor(remaining / (60 * 60 * 1000));
-      const m = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-      const s = Math.floor((remaining % (60 * 1000)) / 1000);
-      timerEl.textContent = h + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+      clearInterval(restTimer);
+      restTimer = null;
+      G.rest.active = false;
+      G.rest.ambushPending = true;
+
+      // Small delay then combat
+      setTimeout(() => {
+        G.rest.ambushPending = false;
+        G.currentDialogue = null;
+        G.ambushWarning = null;
+        // Find zone index for this site
+        const zi = G.zones.findIndex(z => z.n === G.rest.selectedSite.zone);
+        sc(zi >= 0 ? zi : 0);
+        G.rest.selectedSite = null;
+        G.rest.tick = 0;
+      }, 1500);
+      return;
     }
 
-    // Update progress bar
-    const progressEl = document.getElementById('rest-progress');
-    if (progressEl) {
-      const pct = Math.min(100, (elapsed / G.rest.duration) * 100);
-      progressEl.style.width = pct + '%';
-    }
+    // Do the tick
+    doRestTick();
+    G.rest.tick++;
 
-    // Dialogue every ~20% of rest (roughly every 36 min game time)
-    const progressPct = elapsed / G.rest.duration;
-    const dialogueTriggers = [0.15, 0.35, 0.55, 0.75];
-    for (let trigger of dialogueTriggers) {
-      if (progressPct >= trigger && progressPct < trigger + 0.02) {
-        // Check if we haven't shown dialogue recently
-        if (Date.now() - G.lastDialogueTime > 30000) {
-          const line = pickBanter(G.rest.selectedSite.type);
-          if (line) showDialogue(line);
-        }
-      }
-    }
-
-    if (remaining <= 0) {
+    if (G.rest.tick >= G.rest.maxTicks) {
+      clearInterval(restTimer);
+      restTimer = null;
       completeRest();
     }
-  }, 1000);
+  }, G.rest.tickDuration);
 }
 
 function completeRest() {
@@ -537,6 +581,7 @@ function completeRest() {
 
   const healerName = getHealerName();
 
+  // Full restore to be safe
   G.p.hp = G.p.mhp;
   G.p.mp = G.p.mmp;
   for (let p of G.party) {
@@ -545,6 +590,7 @@ function completeRest() {
 
   G.p.buffs = G.p.buffs.filter(b => b.t > 0);
   G.currentDialogue = null;
+  G.ambushWarning = null;
 
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
@@ -552,7 +598,8 @@ function completeRest() {
 
   G.rest.active = false;
   G.rest.selectedSite = null;
-  G.rest.startTime = 0;
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
 
   render();
 }
@@ -565,9 +612,9 @@ function cancelRest() {
     restTimer = null;
   }
 
-  const elapsed = Date.now() - G.rest.startTime;
-  const pct = Math.min(1, elapsed / G.rest.duration);
+  const pct = G.rest.tick / G.rest.maxTicks;
 
+  // Partial heal based on ticks completed
   const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
   const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
 
@@ -581,11 +628,13 @@ function cancelRest() {
   }
 
   G.currentDialogue = null;
+  G.ambushWarning = null;
   lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
 
   G.rest.active = false;
   G.rest.selectedSite = null;
-  G.rest.startTime = 0;
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
 
   render();
 }
@@ -662,8 +711,7 @@ function pa(si,ti){
       const l=z.loot[Math.floor(Math.random()*z.loot.length)];
       addI({n:l,t:'mat',q:1,r:'common'});
       lg('Found: '+l);
-      // PHASE 2: Unlock camp on zone clear
-      const zi = G.zones.indexOf(z);
+      // Unlock camp on zone clear
       const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
       const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
       if (campSite && !campSite.unlocked) {
@@ -808,7 +856,7 @@ function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')re
 // ============================================================
 // SAVE SYSTEM
 // ============================================================
-const SAVE_KEY = 'ldb_save_v3';
+const SAVE_KEY = 'ldb_save_v4';
 
 function saveGame() {
   const saveData = {
@@ -1165,37 +1213,56 @@ function rFocus(){
 }
 
 function rRest() {
-  // If rest is active, show the resting progress screen with dialogue
+  // If rest is active, show the campfire tick progress
   if (G.rest.active && G.rest.selectedSite) {
-    const elapsed = Date.now() - G.rest.startTime;
-    const remaining = Math.max(0, G.rest.duration - elapsed);
-    const pct = Math.min(100, (elapsed / G.rest.duration) * 100);
-
-    const h = Math.floor(remaining / (60 * 60 * 1000));
-    const m = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-    const s = Math.floor((remaining % (60 * 1000)) / 1000);
-    const timerStr = h + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+    const site = G.rest.selectedSite;
+    const currentTick = G.rest.tick;
+    const maxTicks = G.rest.maxTicks;
+    const pct = (currentTick / maxTicks) * 100;
 
     const healerName = getHealerName();
-    const site = G.rest.selectedSite;
 
     let h2 = '<div class="rest-view">';
-    h2 += '<h2 class="st">💤 Resting at ' + site.name + '</h2>';
+    h2 += '<h2 class="st">🔥 Resting at ' + site.name + '</h2>';
 
-    // Dialogue box if active
-    if (G.currentDialogue) {
+    // Ambush warning
+    if (G.ambushWarning) {
+      h2 += '<div class="ambush-warning">';
+      h2 += '<div class="aw-text">⚠️ ' + G.ambushWarning.text + '</div>';
+      h2 += '</div>';
+    }
+
+    // Dialogue box
+    if (G.currentDialogue && !G.ambushWarning) {
       h2 += '<div class="dialogue-box">';
       h2 += '<div class="d-speaker">' + G.currentDialogue.speaker + '</div>';
       h2 += '<div class="d-text">' + G.currentDialogue.text + '</div>';
       h2 += '</div>';
     }
 
-    h2 += '<div class="rest-progress">';
-    h2 += '<div class="rest-timer" id="rest-timer">' + timerStr + '</div>';
-    h2 += '<div class="rest-label">remaining until full recovery</div>';
-    h2 += '<div class="rest-bar"><div class="rest-fill" id="rest-progress" style="width:' + pct + '%"></div></div>';
+    // Tick tracker
+    h2 += '<div class="tick-track">';
+    for (let i = 1; i <= maxTicks; i++) {
+      let tickClass = '';
+      let tickIcon = '○';
+      if (i < currentTick) {
+        tickClass = 'done';
+        tickIcon = '✓';
+      } else if (i === currentTick) {
+        tickClass = 'current';
+        tickIcon = '🔥';
+      }
+      h2 += '<div class="tick ' + tickClass + '">' + tickIcon + '</div>';
+    }
+    h2 += '</div>';
+    h2 += '<div class="tick-label">Tick ' + currentTick + '/' + maxTicks + '</div>';
+
+    // Progress bar
+    h2 += '<div class="rest-progress" style="margin-top:16px;">';
+    h2 += '<div class="rest-bar"><div class="rest-fill" style="width:' + pct + '%"></div></div>';
     h2 += '<div class="rest-healer ok">💚 ' + healerName + ' is tending to the party</div>';
     h2 += '</div>';
+
     h2 += '<button class="rest-cancel" id="cancel-rest">Cancel Rest (Partial Recovery)</button>';
     h2 += '</div>';
     return h2;
@@ -1208,23 +1275,20 @@ function rRest() {
   let h2 = '<div class="rest-view">';
   h2 += '<h2 class="st">💤 Rest</h2>';
 
-  // Healer status
   if (healerOk) {
     h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Your healer can perform the 3-hour rest ritual. Party banter will appear during rest.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">5 ticks, 1.5s each. Dialogue every tick. Ambush chance: 15% camp / 5% tavern.</div>';
     h2 += '</div>';
   } else {
     h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--danger);">❌ No Healer in Party</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest. Rest is a 3-hour ritual with party dialogue.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest.</div>';
     h2 += '</div>';
   }
 
-  // Rest sites list
   h2 += '<div class="rest-sites">';
 
-  // Group by zone
   const zones = {};
   for (let site of G.rest.sites) {
     if (!zones[site.zone]) zones[site.zone] = [];
@@ -1254,9 +1318,9 @@ function rRest() {
       if (locked) {
         h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
       } else if (site.cost) {
-        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G | ' + (canRest ? 'Tap to rest' : 'Cannot rest here') + '</div>';
+        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G · Ambush: 5% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
       } else {
-        h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅ Free campsite' : '❌ Need a healer') + ' | ' + (canRest ? 'Tap to rest' : 'Cannot rest here') + '</div>';
+        h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
       }
       h2 += '</div>';
     }
@@ -1264,7 +1328,7 @@ function rRest() {
   }
 
   h2 += '</div>';
-  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes 3 hours. Party banter appears during rest. Taverns cost gold but are safer.</div>';
+  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes ~7.5 seconds. Party banter every tick. Taverns cost gold but are safer.</div>';
   h2 += '</div>';
   return h2;
 }
