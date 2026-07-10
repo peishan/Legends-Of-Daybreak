@@ -11,7 +11,7 @@
   --bg: #0f0e17; --bg-card: #1a1825; --bg-hover: #242236; --border: #2e2c42;
   --text: #e8e6f0; --text-dim: #9ca3af; --accent: #7c3aed; --accent-light: #a78bfa;
   --hp: #ef4444; --mp: #3b82f6; --xp: #eab308; --gold: #f59e0b; --success: #22c55e; --danger: #ef4444;
-  --rest: #10b981; --rest-dim: #065f46;
+  --rest: #10b981; --rest-dim: #065f46; --dialogue: #f0abfc;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
@@ -202,6 +202,13 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
 .rest-result p { font-size: 13px; color: var(--text-dim); }
 
+/* DIALOGUE STYLES */
+.dialogue-box { background: #1a1825; border: 1px solid var(--dialogue); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: fadeIn 0.5s ease; }
+.dialogue-box .d-speaker { font-size: 12px; font-weight: 700; color: var(--dialogue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.dialogue-box .d-text { font-size: 13px; color: var(--text); line-height: 1.5; font-style: italic; }
+.dialogue-box .d-tick { font-size: 10px; color: var(--text-dim); margin-top: 6px; text-align: right; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -268,26 +275,108 @@ const G = {
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
-  // === REST SYSTEM DATA ===
+  // === PHASE 2: REST SYSTEM ===
   rest: {
     active: false,
     timer: null,
     startTime: 0,
-    duration: 3 * 60 * 60 * 1000, // 3 hours in ms
+    duration: 3 * 60 * 60 * 1000,
     selectedSite: null,
     sites: [
-      { id: 'ww_camp', name: 'Whispering Woods Camp', type: 'camp', zone: 'Whispering Woods', zoneLv: 1, desc: 'A quiet clearing beneath ancient oaks.', unlocked: true, icon: '🏕️' },
+      { id: 'ww_camp', name: 'Whispering Woods Camp', type: 'camp', zone: 'Whispering Woods', zoneLv: 1, desc: 'A quiet clearing beneath ancient oaks.', unlocked: true, icon: '🏕️', cost: 0 },
       { id: 'ww_tavern', name: 'The Sleeping Stag', type: 'tavern', zone: 'Whispering Woods', zoneLv: 1, desc: 'A rustic tavern at the forest edge. Warm beds, warm ale.', unlocked: false, icon: '🍺', cost: 5 },
-      { id: 'cc_camp', name: 'Catacombs Hollow', type: 'camp', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A hidden alcove away from the restless dead.', unlocked: false, icon: '⛺' },
+      { id: 'cc_camp', name: 'Catacombs Hollow', type: 'camp', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A hidden alcove away from the restless dead.', unlocked: false, icon: '⛺', cost: 0 },
       { id: 'cc_tavern', name: 'The Bone Flute', type: 'tavern', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A morbidly cozy inn carved into tomb walls.', unlocked: false, icon: '🍺', cost: 8 },
-      { id: 'ep_camp', name: 'Ember Peak Shelter', type: 'camp', zone: 'Ember Peak', zoneLv: 4, desc: 'A heat-shielded cave with volcanic warmth.', unlocked: false, icon: '⛺' },
+      { id: 'ep_camp', name: 'Ember Peak Shelter', type: 'camp', zone: 'Ember Peak', zoneLv: 4, desc: 'A heat-shielded cave with volcanic warmth.', unlocked: false, icon: '⛺', cost: 0 },
       { id: 'ep_tavern', name: 'The Molten Mug', type: 'tavern', zone: 'Ember Peak', zoneLv: 4, desc: 'Fire-resistant stone tavern. The ale is warm, the beds are warm, everything is warm.', unlocked: false, icon: '🍺', cost: 12 },
-      { id: 'fr_camp', name: 'Frostspire Shelter', type: 'camp', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A magically warded ice cave. Barely warm enough.', unlocked: false, icon: '⛺' },
+      { id: 'fr_camp', name: 'Frostspire Shelter', type: 'camp', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A magically warded ice cave. Barely warm enough.', unlocked: false, icon: '⛺', cost: 0 },
       { id: 'fr_tavern', name: 'The Frozen Hearth', type: 'tavern', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A tavern that somehow keeps warm in the frozen wastes.', unlocked: false, icon: '🍺', cost: 15 },
-      { id: 'ad_camp', name: 'Abyssal Refuge', type: 'camp', zone: 'Abyssal Depths', zoneLv: 8, desc: 'A pocket of reality that the void has not claimed... yet.', unlocked: false, icon: '⛺' },
+      { id: 'ad_camp', name: 'Abyssal Refuge', type: 'camp', zone: 'Abyssal Depths', zoneLv: 8, desc: 'A pocket of reality that the void has not claimed... yet.', unlocked: false, icon: '⛺', cost: 0 },
       { id: 'ad_tavern', name: 'The Last Light', type: 'tavern', zone: 'Abyssal Depths', zoneLv: 8, desc: 'The final tavern before oblivion. Prices are steep.', unlocked: false, icon: '🍺', cost: 25 }
     ]
-  }
+  },
+
+  // === PHASE 2: DIALOGUE / BANTER ===
+  banter: {
+    solo: [
+      { speaker: 'San', text: "The fire crackles. You stare into it, thinking of Joel." },
+      { speaker: 'San', text: "A moth circles the flame. You let it live." },
+      { speaker: 'San', text: "You sharpen your staff by firelight. The rhythm soothes you." },
+      { speaker: 'San', text: "The woods are quiet. Too quiet." },
+      { speaker: 'San', text: "You count your gold twice. Old habits." },
+      { speaker: 'San', text: "A shooting star. You don't make a wish — you've learned better." }
+    ],
+    joel: [
+      { speaker: 'Joel', text: "Joel tosses you a dried fruit. 'Eat. You're no use to anyone faint.'" },
+      { speaker: 'Joel', text: "'Remember when we thought goblins were scary?' Joel laughs, nursing a bruise." },
+      { speaker: 'Joel', text: "Joel checks his shield for the third time. 'Habit,' he mutters." },
+      { speaker: 'Joel', text: "'Your sister asked about you,' Joel says to the fire. You don't reply." },
+      { speaker: 'Joel', text: "Joel hums an old tune. You almost recognize it." },
+      { speaker: 'Joel', text: "'You're burning the rations,' Joel notes. You pull the stick back." }
+    ],
+    aisyah: [
+      { speaker: 'Aisyah', text: "Aisyah appears from the shadows with berries. 'You're welcome.'" },
+      { speaker: 'Aisyah', text: "'Stop fidgeting,' Aisyah sighs. 'The fire won't attack you.'" },
+      { speaker: 'Aisyah', text: "She's cleaning her daggers. The steel catches the light like teeth." },
+      { speaker: 'Aisyah', text: "'Joel snores,' Aisyah whispers. 'Loudly. Just so you know.'" },
+      { speaker: 'Aisyah', text: "Aisyah stares at the stars. 'Brunei's sky was never this clear.'" },
+      { speaker: 'Aisyah', text: "'You fight like Mum,' she says suddenly. Then: 'That's not a compliment.'" }
+    ],
+    mezstorm: [
+      { speaker: 'Mezstorm', text: "Mezstorm's hands spark with static. 'Sorry. Nervous habit.'" },
+      { speaker: 'Mezstorm', text: "'The ley lines here are... wrong,' Mezstorm mutters, drawing in dirt." },
+      { speaker: 'Mezstorm', text: "He offers you a strange tea. It tastes like copper and regret." },
+      { speaker: 'Mezstorm', text: "'I knew a sorcerer in the east who'd laugh at your form,' he says. 'Rude of him.'" },
+      { speaker: 'Mezstorm', text: "Mezstorm watches the fire like it's speaking to him. Maybe it is." }
+    ],
+    eliz: [
+      { speaker: 'Eliz', text: "Eliz presses a cool cloth to your forehead without asking. 'Fever.'" },
+      { speaker: 'Eliz', text: "'Your aura is frayed,' she says gently. 'Rest now. I mean it.'" },
+      { speaker: 'Eliz', text: "She hums while sorting herbs. The sound makes your shoulders drop." },
+      { speaker: 'Eliz', text: "'Joel hides his wounds,' Eliz confides. 'Check on him. Please.'" },
+      { speaker: 'Eliz', text: "A firefly lands on her hand. She smiles like it's a gift." }
+    ],
+    senedra: [
+      { speaker: 'Senedra', text: "Senedra returns from the treeline. 'Two wolves. Watching. Not hungry.'" },
+      { speaker: 'Senedra', text: "She strings her bow by feel, eyes never leaving the dark." },
+      { speaker: 'Senedra', text: "'The north has harsher winters than this,' she says, almost fondly." },
+      { speaker: 'Senedra', text: "Senedra offers you pemmican. It tastes like survival." },
+      { speaker: 'Senedra', text: "'Your cat would hate these woods,' she says. You think of Soel." }
+    ],
+    zaki: [
+      { speaker: 'Zaki', text: "Zaki sharpens his sword too aggressively. Sparks fly. 'Sorry.'" },
+      { speaker: 'Zaki', text: "'I could take a goblin blindfolded,' he boasts. No one argues." },
+      { speaker: 'Zaki', text: "He's young. The firelight makes him look younger." },
+      { speaker: 'Zaki', text: "'Why'd you pick sorcery?' Zaki asks. 'Seems... lonely.'" },
+      { speaker: 'Zaki', text: "Zaki throws a pebble at a bat. It misses by a meter. 'Meant to do that.'" }
+    ],
+    soel: [
+      { speaker: 'Soel', text: "Soel curls in your lap, purring like a motor. The warmth seeps in." },
+      { speaker: 'Soel', text: "He bats at a moth, misses, pretends he didn't care." },
+      { speaker: 'Soel', text: "Soel's ears twitch. He stares at nothing. You trust his instincts." },
+      { speaker: 'Soel', text: "He brings you a leaf. It's the thought that counts." },
+      { speaker: 'Soel', text: "Soel kneads your robe. Tiny claws, enormous love." }
+    ],
+    tavern: [
+      { speaker: 'Barkeep', text: "The barkeep slides you watered ale. 'On the house, mage.'" },
+      { speaker: 'Bard', text: "A bard sings of the Frostspire. You know the ending. Everyone dies." },
+      { speaker: 'San', text: "The fire here is warm, the floor sticky, the company loud." },
+      { speaker: 'San', text: "Someone recognizes your staff. You leave before questions." },
+      { speaker: 'Merchant', text: "A merchant offers to buy your goblin teeth. 'For research,' he claims." },
+      { speaker: 'San', text: "The tavern cat is fatter than Soel. You send him a mental apology." }
+    ],
+    tense: [
+      { speaker: 'San', text: "The fire flickers. The wind shifts. Something's wrong." },
+      { speaker: 'Soel', text: "Soel's hackles rise. The woods go silent." },
+      { speaker: 'San', text: "A twig snaps. Not deer. Too heavy." },
+      { speaker: 'San', text: "The temperature drops. Not natural." },
+      { speaker: 'San', text: "You smell sulfur. Or rot. Or both." }
+    ]
+  },
+
+  // Current dialogue being shown during rest
+  currentDialogue: null,
+  lastDialogueTime: 0
 };
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -326,6 +415,36 @@ function unlockRestSites() {
   return newly;
 }
 
+// === PHASE 2: DIALOGUE PICKER ===
+function pickBanter(type) {
+  const pool = [];
+
+  if (type === 'tavern' && Math.random() < 0.4) {
+    pool.push(...G.banter.tavern);
+  }
+
+  const active = G.party.filter(p => p.on);
+
+  if (active.length === 0) {
+    pool.push(...G.banter.solo);
+  } else {
+    for (let p of active) {
+      const key = p.n.toLowerCase();
+      if (G.banter[key]) pool.push(...G.banter[key]);
+    }
+  }
+
+  if (pool.length === 0) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showDialogue(dialogue) {
+  if (!dialogue) return;
+  G.currentDialogue = dialogue;
+  G.lastDialogueTime = Date.now();
+  lg('💬 ' + dialogue.speaker + ': ' + dialogue.text);
+}
+
 function startRest(siteId) {
   if (G.rest.active) return;
 
@@ -353,10 +472,15 @@ function startRest(siteId) {
   G.rest.active = true;
   G.rest.selectedSite = site;
   G.rest.startTime = Date.now();
+  G.currentDialogue = null;
 
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
   lg('⏳ Resting... 3 hours to full recovery.');
+
+  // First dialogue immediately
+  const firstLine = pickBanter(site.type);
+  if (firstLine) showDialogue(firstLine);
 
   render();
 
@@ -386,6 +510,19 @@ function startRest(siteId) {
       progressEl.style.width = pct + '%';
     }
 
+    // Dialogue every ~20% of rest (roughly every 36 min game time)
+    const progressPct = elapsed / G.rest.duration;
+    const dialogueTriggers = [0.15, 0.35, 0.55, 0.75];
+    for (let trigger of dialogueTriggers) {
+      if (progressPct >= trigger && progressPct < trigger + 0.02) {
+        // Check if we haven't shown dialogue recently
+        if (Date.now() - G.lastDialogueTime > 30000) {
+          const line = pickBanter(G.rest.selectedSite.type);
+          if (line) showDialogue(line);
+        }
+      }
+    }
+
     if (remaining <= 0) {
       completeRest();
     }
@@ -400,15 +537,14 @@ function completeRest() {
 
   const healerName = getHealerName();
 
-  // Restore HP/MP for player and all active party members
   G.p.hp = G.p.mhp;
   G.p.mp = G.p.mmp;
   for (let p of G.party) {
     if (p.on) p.hp = p.mhp;
   }
 
-  // Clear any negative buffs (keep positive ones)
   G.p.buffs = G.p.buffs.filter(b => b.t > 0);
+  G.currentDialogue = null;
 
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
@@ -432,7 +568,6 @@ function cancelRest() {
   const elapsed = Date.now() - G.rest.startTime;
   const pct = Math.min(1, elapsed / G.rest.duration);
 
-  // Partial rest: restore proportionally (max 50% of what full rest would give)
   const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
   const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
 
@@ -445,6 +580,7 @@ function cancelRest() {
     }
   }
 
+  G.currentDialogue = null;
   lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
 
   G.rest.active = false;
@@ -522,7 +658,23 @@ function pa(si,ti){
     G.p.xp+=txp; G.p.gold+=tg2; G.p.kills+=G.cbt.en.length;
     lg('Victory! +'+txp+' XP, +'+tg2+' Gold!');
     const z=G.zones.find(z=>z.en.includes(G.cbt.en[0].n));
-    if(z){const l=z.loot[Math.floor(Math.random()*z.loot.length)];addI({n:l,t:'mat',q:1,r:'common'});lg('Found: '+l);}
+    if(z){
+      const l=z.loot[Math.floor(Math.random()*z.loot.length)];
+      addI({n:l,t:'mat',q:1,r:'common'});
+      lg('Found: '+l);
+      // PHASE 2: Unlock camp on zone clear
+      const zi = G.zones.indexOf(z);
+      const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
+      const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
+      if (campSite && !campSite.unlocked) {
+        campSite.unlocked = true;
+        lg('🏕️ Campsite discovered in ' + z.n + '!');
+      }
+      if (tavernSite && !tavernSite.unlocked && G.p.lvl >= tavernSite.zoneLv) {
+        tavernSite.unlocked = true;
+        lg('🍺 Tavern discovered: ' + tavernSite.name + '!');
+      }
+    }
     lvlup(); checkQ();
     G.cbt.on=false; G.state='explore';
   }else if(G.p.hp<=0){
@@ -656,7 +808,7 @@ function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')re
 // ============================================================
 // SAVE SYSTEM
 // ============================================================
-const SAVE_KEY = 'ldb_save_v2';
+const SAVE_KEY = 'ldb_save_v3';
 
 function saveGame() {
   const saveData = {
@@ -665,11 +817,7 @@ function saveGame() {
       hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
       stats: G.p.stats,
       skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff })),
-      equipment: {
-        w: G.p.eq.w,
-        a: G.p.eq.a,
-        acc: G.p.eq.acc
-      },
+      equipment: { w: G.p.eq.w, a: G.p.eq.a, acc: G.p.eq.acc },
       inventory: G.p.inv,
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
@@ -805,6 +953,8 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ============================================================
+// RENDER
+// ============================================================
 function render(){
   const a=document.getElementById('app'); if(!a)return;
   let h='';
@@ -880,7 +1030,6 @@ function attachEvents() {
   const cfb=document.querySelector('.cfb');
   if(cfb)cfb.addEventListener('click',cf);
 
-  // Rest system events
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
   });
@@ -1016,7 +1165,7 @@ function rFocus(){
 }
 
 function rRest() {
-  // If rest is active, show the resting progress screen
+  // If rest is active, show the resting progress screen with dialogue
   if (G.rest.active && G.rest.selectedSite) {
     const elapsed = Date.now() - G.rest.startTime;
     const remaining = Math.max(0, G.rest.duration - elapsed);
@@ -1032,6 +1181,15 @@ function rRest() {
 
     let h2 = '<div class="rest-view">';
     h2 += '<h2 class="st">💤 Resting at ' + site.name + '</h2>';
+
+    // Dialogue box if active
+    if (G.currentDialogue) {
+      h2 += '<div class="dialogue-box">';
+      h2 += '<div class="d-speaker">' + G.currentDialogue.speaker + '</div>';
+      h2 += '<div class="d-text">' + G.currentDialogue.text + '</div>';
+      h2 += '</div>';
+    }
+
     h2 += '<div class="rest-progress">';
     h2 += '<div class="rest-timer" id="rest-timer">' + timerStr + '</div>';
     h2 += '<div class="rest-label">remaining until full recovery</div>';
@@ -1054,12 +1212,12 @@ function rRest() {
   if (healerOk) {
     h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Your healer can perform the 3-hour rest ritual.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Your healer can perform the 3-hour rest ritual. Party banter will appear during rest.</div>';
     h2 += '</div>';
   } else {
     h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--danger);">❌ No Healer in Party</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest. Rest is a 3-hour ritual.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest. Rest is a 3-hour ritual with party dialogue.</div>';
     h2 += '</div>';
   }
 
@@ -1106,7 +1264,7 @@ function rRest() {
   }
 
   h2 += '</div>';
-  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes 3 hours. A healer must be in your active party.</div>';
+  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes 3 hours. Party banter appears during rest. Taverns cost gold but are safer.</div>';
   h2 += '</div>';
   return h2;
 }
