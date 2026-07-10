@@ -11,7 +11,7 @@
   --bg: #0f0e17; --bg-card: #1a1825; --bg-hover: #242236; --border: #2e2c42;
   --text: #e8e6f0; --text-dim: #9ca3af; --accent: #7c3aed; --accent-light: #a78bfa;
   --hp: #ef4444; --mp: #3b82f6; --xp: #eab308; --gold: #f59e0b; --success: #22c55e; --danger: #ef4444;
-  --rest: #10b981; --rest-dim: #065f46; --dialogue: #f0abfc;
+  --rest: #10b981; --dialogue: #f0abfc; --affinity: #f472b6; --timed: #f97316;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
@@ -86,6 +86,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .pd { font-size: 11px; color: var(--text-dim); line-height: 1.4; margin-bottom: 4px; }
 .pb { font-size: 11px; color: var(--success); font-weight: 500; }
 .ps { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+.aff-bar { height: 4px; background: #2e2c42; border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.aff-fill { height: 100%; background: var(--affinity); border-radius: 2px; transition: width 0.3s; }
+.aff-label { font-size: 9px; color: var(--affinity); margin-top: 2px; }
 .sklist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .skcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .skcard.locked { opacity: 0.5; }
@@ -136,6 +139,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .qlist { display: flex; flex-direction: column; gap: 10px; }
 .qc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .qc.done { border-color: var(--success); }
+.qc.timed { border-color: var(--timed); }
+.qc.expired { border-color: var(--danger); opacity: 0.6; }
+.qc.chain { border-left: 3px solid var(--affinity); }
 .qh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .qn { font-weight: 600; font-size: 14px; }
 .qr { font-size: 11px; color: var(--gold); }
@@ -144,6 +150,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .pbar { flex: 1; height: 8px; background: #2e2c42; border-radius: 4px; overflow: hidden; }
 .pfill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s; }
 .ptxt { font-size: 11px; color: var(--text-dim); min-width: 40px; text-align: right; }
+.qtimer { font-size: 10px; color: var(--timed); margin-top: 4px; }
+.qtimer.urgent { color: var(--danger); font-weight: 700; }
+.qchain { font-size: 10px; color: var(--affinity); margin-top: 4px; }
 .sum { display: flex; gap: 10px; margin-top: 16px; }
 .si2 { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
 .sv { font-size: 20px; font-weight: 700; color: var(--accent-light); display: block; }
@@ -173,13 +182,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .nb[data-t="inv"]::before { content: "🎒"; }
 .nb:hover, .nb.on { color: var(--accent-light); }
 
-/* REST SYSTEM STYLES */
+/* REST SYSTEM */
 .rest-view { text-align: center; }
 .rest-sites { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .rs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s; user-select: none; text-align: left; }
 .rs-card:hover:not(.locked) { border-color: var(--rest); background: #10b98110; }
 .rs-card.locked { opacity: 0.4; cursor: not-allowed; }
-.rs-card.active { border-color: var(--rest); background: #10b98115; }
 .rs-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .rs-name { font-weight: 600; font-size: 15px; }
 .rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: #242236; color: var(--text-dim); }
@@ -189,38 +197,36 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rs-req { font-size: 11px; color: var(--text-dim); }
 .rs-req.ok { color: var(--success); }
 .rs-req.fail { color: var(--danger); }
-.rest-progress { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-.rest-timer { font-size: 48px; font-weight: 700; color: var(--rest); font-family: 'Cinzel', serif; margin-bottom: 8px; }
-.rest-label { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
-.rest-bar { height: 12px; background: #2e2c42; border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
-.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 0.3s ease; }
-.rest-healer { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
-.rest-healer.ok { color: var(--success); }
-.rest-healer.fail { color: var(--danger); }
-.rest-cancel { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 13px; font-weight: 600; cursor: pointer; }
-.rest-result { background: var(--bg-card); border: 1px solid var(--rest); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-.rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
-.rest-result p { font-size: 13px; color: var(--text-dim); }
-
-/* CAMPFIRE REST - TICK STYLES */
 .tick-track { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
 .tick { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.3s; }
 .tick.done { background: var(--rest); border-color: var(--rest); color: white; }
 .tick.current { border-color: var(--rest); box-shadow: 0 0 0 3px #10b98140; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px #10b98140; } 50% { box-shadow: 0 0 0 6px #10b98120; } }
 .tick-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.rest-cancel { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 13px; font-weight: 600; cursor: pointer; }
 
-/* DIALOGUE STYLES */
+/* DIALOGUE */
 .dialogue-box { background: #1a1825; border: 1px solid var(--dialogue); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: fadeIn 0.5s ease; }
 .dialogue-box .d-speaker { font-size: 12px; font-weight: 700; color: var(--dialogue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 .dialogue-box .d-text { font-size: 13px; color: var(--text); line-height: 1.5; font-style: italic; }
-.dialogue-box .d-tick { font-size: 10px; color: var(--text-dim); margin-top: 6px; text-align: right; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-/* AMBUSH WARNING */
+/* AMBUSH */
 .ambush-warning { background: #ef444415; border: 1px solid var(--danger); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: shake 0.5s ease; }
 .ambush-warning .aw-text { font-size: 13px; color: var(--danger); font-weight: 600; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* SOEL INTERRUPTION */
+.soel-interrupt { background: #7c2d1215; border: 1px solid #7c2d12; border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: fadeIn 0.5s ease; }
+.soel-interrupt .soel-icon { font-size: 20px; margin-right: 6px; }
+.soel-interrupt .soel-text { font-size: 13px; color: #fdba74; font-style: italic; }
+
+/* NPC TRADER CARDS */
+.npc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.npc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; text-align: center; }
+.npc-card .npc-icon { font-size: 28px; margin-bottom: 4px; }
+.npc-card .npc-name { font-weight: 600; font-size: 13px; }
+.npc-card .npc-role { font-size: 10px; color: var(--text-dim); }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -255,15 +261,40 @@ const G = {
     ],
     buffs: [], kills: 0, quests: 0, fstreak: 0
   },
+
+  // === PARTY (expanded with new members) ===
   party: [
-    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
-    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669' },
-    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2' },
-    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency', col: '#db2777' },
-    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
-    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
-    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal companion. Brings fortune to the party.', b: '+10% All stats', col: '#7c2d12' }
+    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed', aff: 50, maxAff: 100 },
+    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669', aff: 50, maxAff: 100 },
+    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2', aff: 30, maxAff: 100 },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency', col: '#db2777', aff: 30, maxAff: 100 },
+    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04', aff: 30, maxAff: 100 },
+    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626', aff: 30, maxAff: 100 },
+    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal companion. Brings fortune to the party.', b: '+10% All stats', col: '#7c2d12', aff: 50, maxAff: 100 },
+    { n: 'Mimi', t: 'The Whisper', r: 'Rogue', hp: 65, mhp: 65, atk: 9, def: 3, spd: 11, on: false, ul: 5, d: 'A quiet ally who speaks in riddles and strikes from shadows.', b: '+25% Stealth damage', col: '#8b5cf6', aff: 20, maxAff: 100 },
+    { n: 'Aisy', t: 'The Flame', r: 'Mage', hp: 70, mhp: 70, atk: 11, def: 4, spd: 7, on: false, ul: 7, d: 'A fiery mage with a laugh that echoes like thunder.', b: '+20% Fire damage', col: '#ea580c', aff: 20, maxAff: 100 }
   ],
+
+  // === NPCs (wandering traders & allies) ===
+  npcs: {
+    traders: [
+      { n: 'LLP', t: 'Wandering Trader', icon: '🧳', d: 'A shrewd merchant who appears where least expected. Sells rare goods at inflated prices.', stock: [
+        { n: 'Phoenix Feather', t: 'mat', q: 1, r: 'rare', price: 50 },
+        { n: 'Greater Health Potion', t: 'pot', eff: 'heal', v: 75, q: 1, r: 'uncommon', price: 25 },
+        { n: 'Mystic Crystal', t: 'mat', q: 1, r: 'rare', price: 40 }
+      ]},
+      { n: 'JT', t: 'Black Market Broker', icon: '🎭', d: 'Deals in items no one asks questions about. Prices vary by moon phase.', stock: [
+        { n: 'Void Essence', t: 'mat', q: 1, r: 'rare', price: 60 },
+        { n: 'Dark Crystal', t: 'mat', q: 1, r: 'rare', price: 55 },
+        { n: 'Shadow Blade', t: 'wep', atk: 8, r: 'uncommon', price: 45 }
+      ]}
+    ],
+    allies: [
+      { n: 'Mimi', t: 'The Whisper', icon: '🌙', d: 'An ally from the eastern roads. Quiet, deadly, loyal.', relation: 'ally' },
+      { n: 'Aisy', t: 'The Flame', icon: '🔥', d: 'A mage who burns brighter than she lets on. Old friend of Aisyah.', relation: 'ally' }
+    ]
+  },
+
   cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0 },
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
@@ -281,20 +312,36 @@ const G = {
     { n: 'Fire Staff', m: { 'Fire Essence': 2, 'Obsidian': 3, 'Iron Ore': 2 }, res: { n: 'Fire Staff', t: 'wep', atk: 10, r: 'rare' }, d: 'ATK +10, Fire damage' },
     { n: 'Frost Ring', m: { 'Ice Crystal': 2, 'Frost Gem': 1, 'Iron Ore': 1 }, res: { n: 'Frost Ring', t: 'acc', int: 3, r: 'rare' }, d: 'INT +3, Frost spells cost -5 MP' }
   ],
+
+  // === PHASE 3: CROSS-PARTY QUESTS & TIMED QUESTS ===
   quests: [
+    // Basic quests
     { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
-    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false }
+    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
+
+    // Cross-party quest chains
+    { id: 10, n: "Joel's Burden", d: 'Joel wants to talk. Rest with him 2 times.', t: 'rest_with', target: 'Joel', c: 0, need: 2, rw: { xp: 60, g: 30 }, done: false, chain: 'joel', chainStep: 1, unlocked: true, chainNext: 11 },
+    { id: 11, n: "Aisyah's Hidden Path", d: 'Joel spoke of Aisyah's past. Rest with Aisyah 3 times to learn her secret.', t: 'rest_with', target: 'Aisyah', c: 0, need: 3, rw: { xp: 100, g: 50, unlockSkill: 'Shadow Strike' }, done: false, chain: 'joel', chainStep: 2, unlocked: false, chainNext: null, requiresChain: 10 },
+
+    // Timed quests
+    { id: 20, n: 'Eliz's Urgent Request', d: 'Eliz needs herbs before the frost sets in. Rest with her 3 times before 5 rests pass.', t: 'rest_with_timed', target: 'Eliz', c: 0, need: 3, rw: { xp: 80, g: 40 }, done: false, timed: true, restDeadline: 5, restStarted: 0, expired: false },
+    { id: 21, n: 'Mezstorm's Leyline', d: 'Mezstorm senses a leyline disturbance. Rest with him 2 times within 4 rests.', t: 'rest_with_timed', target: 'Mezstorm', c: 0, need: 2, rw: { xp: 70, g: 35 }, done: false, timed: true, restDeadline: 4, restStarted: 0, expired: false },
+
+    // Soel quest
+    { id: 30, n: 'Soel's Curiosity', d: 'Soel keeps staring at something in the woods. Rest with him to investigate.', t: 'rest_with', target: 'Soel', c: 0, need: 1, rw: { xp: 40, g: 15 }, done: false, chain: 'soel', chainStep: 1, unlocked: true, chainNext: 31 },
+    { id: 31, n: 'The Cat's Gift', d: 'Soel found something. Rest with him again to see what.', t: 'rest_with', target: 'Soel', c: 0, need: 2, rw: { xp: 60, g: 25, item: { n: 'Lucky Charm', t: 'acc', luck: 5, r: 'rare' } }, done: false, chain: 'soel', chainStep: 2, unlocked: false, requiresChain: 30 }
   ],
+
   log: ['Welcome to Legends of Daybreak, San.'],
 
-  // === PHASE 2: CAMPFIRE REST SYSTEM (5-tick rapid) ===
+  // === PHASE 2: REST SYSTEM ===
   rest: {
     active: false,
     timer: null,
     tick: 0,
     maxTicks: 5,
-    tickDuration: 1500, // 1.5 seconds per tick
+    tickDuration: 1500,
     selectedSite: null,
     ambushPending: false,
     sites: [
@@ -309,6 +356,13 @@ const G = {
       { id: 'ad_camp', name: 'Abyssal Refuge', type: 'camp', zone: 'Abyssal Depths', zoneLv: 8, desc: 'A pocket of reality that the void has not claimed... yet.', unlocked: false, icon: '⛺', cost: 0 },
       { id: 'ad_tavern', name: 'The Last Light', type: 'tavern', zone: 'Abyssal Depths', zoneLv: 8, desc: 'The final tavern before oblivion. Prices are steep.', unlocked: false, icon: '🍺', cost: 25 }
     ]
+  },
+
+  // === PHASE 3: AFFINITY TRACKING ===
+  affinity: {
+    lastRestWith: {}, // { 'Joel': timestamp, 'Aisyah': timestamp, ... }
+    decayRate: 1,     // affinity lost per rest cycle if not rested with
+    totalRests: 0     // total rest cycles completed
   },
 
   // === PHASE 2: DIALOGUE / BANTER ===
@@ -372,6 +426,18 @@ const G = {
       { speaker: 'Soel', text: "He brings you a leaf. It's the thought that counts." },
       { speaker: 'Soel', text: "Soel kneads your robe. Tiny claws, enormous love." }
     ],
+    mimi: [
+      { speaker: 'Mimi', text: "Mimi appears beside you without a sound. 'The shadows are restless tonight.'" },
+      { speaker: 'Mimi', text: "She hands you a vial of something dark. 'Don't ask.'" },
+      { speaker: 'Mimi', text: "'Your footsteps are loud,' Mimi whispers. 'I can fix that.'" },
+      { speaker: 'Mimi', text: "She stares at the fire without blinking. 'Fire remembers everything.'" }
+    ],
+    aisy: [
+      { speaker: 'Aisy', text: "Aisy conjures a flame in her palm. 'Pretty, isn't it?'" },
+      { speaker: 'Aisy', text: "'Aisyah never mentioned she had a twin,' Aisy laughs. 'I'm the fun one.'" },
+      { speaker: 'Aisy', text: "The fire dances to her humming. You wonder if she's controlling it." },
+      { speaker: 'Aisy', text: "'San,' she says seriously, 'don't trust the quiet ones.' She winks at Mimi." }
+    ],
     tavern: [
       { speaker: 'Barkeep', text: "The barkeep slides you watered ale. 'On the house, mage.'" },
       { speaker: 'Bard', text: "A bard sings of the Frostspire. You know the ending. Everyone dies." },
@@ -386,11 +452,19 @@ const G = {
       { speaker: 'San', text: "A twig snaps. Not deer. Too heavy." },
       { speaker: 'San', text: "The temperature drops. Not natural." },
       { speaker: 'San', text: "You smell sulfur. Or rot. Or both." }
+    ],
+    // Soel interruption lines
+    soel_interrupt: [
+      { speaker: 'Soel', text: "Soel bats at your sleeve. 'Mrrp?' He wants attention." },
+      { speaker: 'Soel', text: "Soel sits on your spellbook. 'Mrow.' Translation: 'Pet me now.'" },
+      { speaker: 'Soel', text: "Soel brings you a dead leaf. It's the thought that counts." },
+      { speaker: 'Soel', text: "Soel's tail brushes your face. He purrs like nothing else matters." }
     ]
   },
 
   currentDialogue: null,
-  ambushWarning: null
+  ambushWarning: null,
+  soelInterrupt: null
 };
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -404,7 +478,7 @@ function pd(ds,b) {
 }
 
 // ============================================================
-// CAMPFIRE REST SYSTEM (5-tick rapid)
+// CAMPFIRE REST SYSTEM (5-tick rapid) + AFFINITY + QUESTS
 // ============================================================
 let restTimer = null;
 
@@ -429,8 +503,108 @@ function unlockRestSites() {
   return newly;
 }
 
+// === AFFINITY SYSTEM ===
+function decayAffinity() {
+  // Called when ANY rest completes (even partial)
+  // Reduce affinity for party members not rested with recently
+  const now = Date.now();
+  for (let p of G.party) {
+    if (!p.on) continue;
+    const lastRest = G.affinity.lastRestWith[p.n];
+    // If never rested with or last rest was > 3 rest cycles ago
+    if (!lastRest || (G.affinity.totalRests - (lastRest || 0)) > 3) {
+      if (p.aff > 10) {
+        p.aff = Math.max(10, p.aff - G.affinity.decayRate);
+      }
+    }
+  }
+}
+
+function gainAffinity(name, amount) {
+  const p = G.party.find(x => x.n === name);
+  if (p) {
+    p.aff = Math.min(p.maxAff, p.aff + amount);
+    G.affinity.lastRestWith[name] = G.affinity.totalRests;
+  }
+}
+
+// === QUEST CHAIN & TIMED QUEST LOGIC ===
+function checkChainQuests() {
+  // Check if any locked chain quests should unlock
+  for (let q of G.quests) {
+    if (q.unlocked === false && q.requiresChain) {
+      const prereq = G.quests.find(pq => pq.id === q.requiresChain);
+      if (prereq && prereq.done) {
+        q.unlocked = true;
+        lg('🔗 Quest chain unlocked: ' + q.n + '!');
+      }
+    }
+  }
+}
+
+function advanceTimedQuests() {
+  // Increment rest counter for timed quests and check expiry
+  for (let q of G.quests) {
+    if (q.timed && !q.done && !q.expired) {
+      // Count rests since quest started
+      const restsPassed = G.affinity.totalRests - q.restStarted;
+      if (restsPassed >= q.restDeadline) {
+        q.expired = true;
+        lg('⏰ Quest expired: ' + q.n + ' — ' + q.target + ' looks disappointed.');
+        // Affinity penalty
+        const p = G.party.find(x => x.n === q.target);
+        if (p && p.aff > 10) {
+          p.aff = Math.max(10, p.aff - 10);
+          lg('💔 ' + q.target + "'s affinity dropped.");
+        }
+      }
+    }
+  }
+}
+
+function checkRestQuests(memberName) {
+  // Check rest_with and rest_with_timed quests
+  for (let q of G.quests) {
+    if (q.done || q.expired) continue;
+    if (q.unlocked === false) continue;
+
+    if ((q.t === 'rest_with' || q.t === 'rest_with_timed') && q.target === memberName) {
+      q.c++;
+      lg('📜 ' + q.n + ': ' + q.c + '/' + q.need + ' rests with ' + memberName);
+
+      if (q.c >= q.need) {
+        q.done = true;
+        G.p.xp += q.rw.xp;
+        G.p.gold += q.rw.g;
+        G.p.quests++;
+        lg('✅ Quest complete: ' + q.n + '! +' + q.rw.xp + 'XP +' + q.rw.g + 'G');
+
+        // Grant special rewards
+        if (q.rw.unlockSkill) {
+          lg('🌟 Aisyah learned Shadow Strike!');
+        }
+        if (q.rw.item) {
+          addI({...q.rw.item});
+          lg('🎁 Received: ' + q.rw.item.n + '!');
+        }
+
+        // Unlock next in chain
+        if (q.chainNext) {
+          const nextQ = G.quests.find(nq => nq.id === q.chainNext);
+          if (nextQ) {
+            nextQ.unlocked = true;
+            lg('🔗 Next quest unlocked: ' + nextQ.n);
+          }
+        }
+
+        lvlup();
+      }
+    }
+  }
+}
+
 // === DIALOGUE PICKER ===
-function pickBanter(type, tense) {
+function pickBanter(type, tense, activeMembers) {
   const pool = [];
 
   if (tense) {
@@ -439,12 +613,10 @@ function pickBanter(type, tense) {
     pool.push(...G.banter.tavern);
   }
 
-  const active = G.party.filter(p => p.on);
-
-  if (active.length === 0 && !tense) {
+  if (activeMembers.length === 0 && !tense) {
     pool.push(...G.banter.solo);
   } else if (!tense) {
-    for (let p of active) {
+    for (let p of activeMembers) {
       const key = p.n.toLowerCase();
       if (G.banter[key]) pool.push(...G.banter[key]);
     }
@@ -466,6 +638,12 @@ function showAmbushWarning(dialogue) {
   lg('⚠️ ' + dialogue.text);
 }
 
+function showSoelInterrupt(dialogue) {
+  if (!dialogue) return;
+  G.soelInterrupt = dialogue;
+  lg('🐱 Soel: ' + dialogue.text);
+}
+
 function doRestTick() {
   // Heal 20% per tick
   const healAmt = Math.ceil(G.p.mhp / G.rest.maxTicks);
@@ -480,9 +658,19 @@ function doRestTick() {
     }
   }
 
-  // Show banter dialogue
-  const line = pickBanter(G.rest.selectedSite.type, false);
-  if (line) showDialogue(line);
+  // Get active members for dialogue
+  const active = G.party.filter(p => p.on);
+
+  // Soel interruption chance (10% per tick if Soel is active)
+  const soel = active.find(p => p.n === 'Soel');
+  if (soel && Math.random() < 0.10) {
+    const soelLine = G.banter.soel_interrupt[Math.floor(Math.random() * G.banter.soel_interrupt.length)];
+    showSoelInterrupt(soelLine);
+  } else {
+    // Normal banter
+    const line = pickBanter(G.rest.selectedSite.type, false, active);
+    if (line) showDialogue(line);
+  }
 
   render();
 }
@@ -517,6 +705,14 @@ function startRest(siteId) {
   G.rest.ambushPending = false;
   G.currentDialogue = null;
   G.ambushWarning = null;
+  G.soelInterrupt = null;
+
+  // Initialize timed quest rest counters on first rest
+  for (let q of G.quests) {
+    if (q.timed && q.restStarted === 0 && !q.done && !q.expired) {
+      q.restStarted = G.affinity.totalRests;
+    }
+  }
 
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
@@ -538,8 +734,7 @@ function startRest(siteId) {
     // Ambush check BEFORE healing this tick
     const ambushChance = G.rest.selectedSite.type === 'tavern' ? 0.05 : 0.15;
     if (Math.random() < ambushChance && G.rest.tick < G.rest.maxTicks) {
-      // Show tense warning
-      const tenseLine = pickBanter(G.rest.selectedSite.type, true);
+      const tenseLine = pickBanter(G.rest.selectedSite.type, true, []);
       showAmbushWarning(tenseLine);
 
       clearInterval(restTimer);
@@ -547,12 +742,11 @@ function startRest(siteId) {
       G.rest.active = false;
       G.rest.ambushPending = true;
 
-      // Small delay then combat
       setTimeout(() => {
         G.rest.ambushPending = false;
         G.currentDialogue = null;
         G.ambushWarning = null;
-        // Find zone index for this site
+        G.soelInterrupt = null;
         const zi = G.zones.findIndex(z => z.n === G.rest.selectedSite.zone);
         sc(zi >= 0 ? zi : 0);
         G.rest.selectedSite = null;
@@ -580,21 +774,50 @@ function completeRest() {
   }
 
   const healerName = getHealerName();
+  const activeMembers = G.party.filter(p => p.on);
 
-  // Full restore to be safe
+  // Full restore
   G.p.hp = G.p.mhp;
   G.p.mp = G.p.mmp;
-  for (let p of G.party) {
-    if (p.on) p.hp = p.mhp;
+  for (let p of activeMembers) {
+    p.hp = p.mhp;
   }
 
   G.p.buffs = G.p.buffs.filter(b => b.t > 0);
+
+  // AFFINITY: Gain affinity with all active members
+  for (let p of activeMembers) {
+    gainAffinity(p.n, 2);
+  }
+
+  // QUEST CHECK: Check rest_with quests for active members
+  for (let p of activeMembers) {
+    checkRestQuests(p.n);
+  }
+
+  // Increment total rest counter
+  G.affinity.totalRests++;
+
+  // Check timed quest expiry
+  advanceTimedQuests();
+
+  // Affinity decay for ignored members
+  decayAffinity();
+
+  // Check chain quest unlocks
+  checkChainQuests();
+
   G.currentDialogue = null;
   G.ambushWarning = null;
+  G.soelInterrupt = null;
 
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
   lg('💚 ' + healerName + ' has restored everyone to full health.');
+
+  // Show affinity summary
+  const affGains = activeMembers.map(p => p.n + ' +' + Math.min(2, p.maxAff - p.aff + 2) + '♥').join(', ');
+  lg('♥ Affinity: ' + affGains);
 
   G.rest.active = false;
   G.rest.selectedSite = null;
@@ -614,7 +837,6 @@ function cancelRest() {
 
   const pct = G.rest.tick / G.rest.maxTicks;
 
-  // Partial heal based on ticks completed
   const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
   const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
 
@@ -627,8 +849,14 @@ function cancelRest() {
     }
   }
 
+  // Still increment total rests and check decay
+  G.affinity.totalRests++;
+  advanceTimedQuests();
+  decayAffinity();
+
   G.currentDialogue = null;
   G.ambushWarning = null;
+  G.soelInterrupt = null;
   lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
 
   G.rest.active = false;
@@ -711,7 +939,6 @@ function pa(si,ti){
       const l=z.loot[Math.floor(Math.random()*z.loot.length)];
       addI({n:l,t:'mat',q:1,r:'common'});
       lg('Found: '+l);
-      // Unlock camp on zone clear
       const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
       const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
       if (campSite && !campSite.unlocked) {
@@ -769,7 +996,7 @@ function lvlup(){
 
 function checkQ(){
   for(let q of G.quests){
-    if(q.done)continue;
+    if(q.done||q.expired)continue;
     if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
     if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');lvlup();}
   }
@@ -854,7 +1081,7 @@ function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
 // ============================================================
-// SAVE SYSTEM
+// SAVE SYSTEM v4
 // ============================================================
 const SAVE_KEY = 'ldb_save_v4';
 
@@ -870,8 +1097,9 @@ function saveGame() {
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
     },
-    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col })),
-    quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
+    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, aff: p.aff, maxAff: p.maxAff })),
+    quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, target: q.target, c: q.c, need: q.need, rw: q.rw, done: q.done, chain: q.chain, chainStep: q.chainStep, unlocked: q.unlocked, chainNext: q.chainNext, requiresChain: q.requiresChain, timed: q.timed, restDeadline: q.restDeadline, restStarted: q.restStarted, expired: q.expired })),
+    affinity: G.affinity,
     rest: {
       sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
     },
@@ -922,6 +1150,8 @@ function loadGame() {
         p.on = saved.on;
         p.hp = saved.hp;
         p.mhp = saved.mhp;
+        p.aff = saved.aff || 50;
+        p.maxAff = saved.maxAff || 100;
       }
     }
 
@@ -930,7 +1160,14 @@ function loadGame() {
       if (saved) {
         q.c = saved.c;
         q.done = saved.done;
+        q.unlocked = saved.unlocked !== undefined ? saved.unlocked : q.unlocked;
+        q.expired = saved.expired || false;
+        q.restStarted = saved.restStarted || 0;
       }
+    }
+
+    if (data.affinity) {
+      G.affinity = data.affinity;
     }
 
     if (data.rest && data.rest.sites) {
@@ -1023,6 +1260,7 @@ function render(){
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
   else if(G.state=='rest')h+=rRest();
+  else if(G.state=='npcs')h+=rNpcs();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
   h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
@@ -1038,7 +1276,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')setS('rest');});
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='focus')sf();else if(a=='rest')setS('rest');else if(a=='npcs')setS('npcs');});
   });
   const btnSave=document.getElementById('btn-save');if(btnSave)btnSave.addEventListener('click',()=>{saveGame();});
   const btnExport=document.getElementById('btn-export');if(btnExport)btnExport.addEventListener('click',exportSave);
@@ -1094,7 +1332,8 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
-    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
+    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'},
+    {i:'🧳',l:'NPCs',d:'Traders and allies',a:'npcs'}
   ];
   let h='<div class="grid2">';
   for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
@@ -1147,7 +1386,9 @@ function rCbt(){
 function rParty(){
   let h='<div class="party-view"><h2 class="st">Party</h2><div class="plist">';
   for(let p of G.party){
-    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+'</div></div>';
+    const affPct = (p.aff / p.maxAff) * 100;
+    const affColor = affPct >= 70 ? 'var(--success)' : affPct >= 40 ? 'var(--timed)' : 'var(--danger)';
+    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+'<div class="aff-bar"><div class="aff-fill" style="width:'+affPct+'%;background:'+affColor+'"></div></div><div class="aff-label">♥ Affinity: '+p.aff+'/'+p.maxAff+'</div></div></div>';
   }
   h+='</div></div>'; return h;
 }
@@ -1199,8 +1440,24 @@ function rCraft(){
 function rQuest(){
   let h='<div class="quest-view"><h2 class="st">Active Quests</h2><div class="qlist">';
   for(let q of G.quests){
+    if (q.unlocked === false) continue; // Skip locked chain quests
+
     const pc=Math.min(100,(q.c/q.need)*100);
-    h+='<div class="qc '+(q.done?'done':'')+'"><div class="qh"><span class="qn">'+(q.done?'✅ ':'')+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div><div class="qd">'+q.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
+    let qClass = q.done ? 'done' : q.expired ? 'expired' : q.timed ? 'timed' : q.chain ? 'chain' : '';
+
+    let timerText = '';
+    if (q.timed && !q.done && !q.expired) {
+      const restsPassed = G.affinity.totalRests - q.restStarted;
+      const remaining = q.restDeadline - restsPassed;
+      timerText = '<div class="qtimer ' + (remaining <= 1 ? 'urgent' : '') + '">⏰ ' + remaining + ' rest' + (remaining !== 1 ? 's' : '') + ' left</div>';
+    }
+
+    let chainText = '';
+    if (q.chain && !q.done) {
+      chainText = '<div class="qchain">🔗 Chain Step ' + q.chainStep + (q.chain === 'joel' ? ' · Joel's Story' : q.chain === 'soel' ? ' · Soel's Journey' : '') + '</div>';
+    }
+
+    h+='<div class="qc ' + qClass + '"><div class="qh"><span class="qn">'+(q.done?'✅ ':q.expired?'❌ ':'')+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div><div class="qd">'+q.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div>'+timerText+chainText+'</div>';
   }
   h+='</div><div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
   return h;
@@ -1213,51 +1470,46 @@ function rFocus(){
 }
 
 function rRest() {
-  // If rest is active, show the campfire tick progress
   if (G.rest.active && G.rest.selectedSite) {
     const site = G.rest.selectedSite;
     const currentTick = G.rest.tick;
     const maxTicks = G.rest.maxTicks;
     const pct = (currentTick / maxTicks) * 100;
-
     const healerName = getHealerName();
 
     let h2 = '<div class="rest-view">';
     h2 += '<h2 class="st">🔥 Resting at ' + site.name + '</h2>';
 
-    // Ambush warning
     if (G.ambushWarning) {
       h2 += '<div class="ambush-warning">';
       h2 += '<div class="aw-text">⚠️ ' + G.ambushWarning.text + '</div>';
       h2 += '</div>';
     }
 
-    // Dialogue box
-    if (G.currentDialogue && !G.ambushWarning) {
+    if (G.soelInterrupt) {
+      h2 += '<div class="soel-interrupt">';
+      h2 += '<span class="soel-icon">🐱</span><span class="soel-text">' + G.soelInterrupt.text + '</span>';
+      h2 += '</div>';
+    }
+
+    if (G.currentDialogue && !G.ambushWarning && !G.soelInterrupt) {
       h2 += '<div class="dialogue-box">';
       h2 += '<div class="d-speaker">' + G.currentDialogue.speaker + '</div>';
       h2 += '<div class="d-text">' + G.currentDialogue.text + '</div>';
       h2 += '</div>';
     }
 
-    // Tick tracker
     h2 += '<div class="tick-track">';
     for (let i = 1; i <= maxTicks; i++) {
       let tickClass = '';
       let tickIcon = '○';
-      if (i < currentTick) {
-        tickClass = 'done';
-        tickIcon = '✓';
-      } else if (i === currentTick) {
-        tickClass = 'current';
-        tickIcon = '🔥';
-      }
+      if (i < currentTick) { tickClass = 'done'; tickIcon = '✓'; }
+      else if (i === currentTick) { tickClass = 'current'; tickIcon = '🔥'; }
       h2 += '<div class="tick ' + tickClass + '">' + tickIcon + '</div>';
     }
     h2 += '</div>';
     h2 += '<div class="tick-label">Tick ' + currentTick + '/' + maxTicks + '</div>';
 
-    // Progress bar
     h2 += '<div class="rest-progress" style="margin-top:16px;">';
     h2 += '<div class="rest-bar"><div class="rest-fill" style="width:' + pct + '%"></div></div>';
     h2 += '<div class="rest-healer ok">💚 ' + healerName + ' is tending to the party</div>';
@@ -1268,7 +1520,6 @@ function rRest() {
     return h2;
   }
 
-  // Normal rest selection screen
   const healerOk = hasHealer();
   const healerName = getHealerName();
 
@@ -1278,7 +1529,7 @@ function rRest() {
   if (healerOk) {
     h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">5 ticks, 1.5s each. Dialogue every tick. Ambush chance: 15% camp / 5% tavern.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">5 ticks, 1.5s each. Dialogue every tick. Ambush: 15% camp / 5% tavern. Affinity +2 per rest.</div>';
     h2 += '</div>';
   } else {
     h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
@@ -1288,7 +1539,6 @@ function rRest() {
   }
 
   h2 += '<div class="rest-sites">';
-
   const zones = {};
   for (let site of G.rest.sites) {
     if (!zones[site.zone]) zones[site.zone] = [];
@@ -1299,22 +1549,18 @@ function rRest() {
     const sites = zones[zoneName];
     const anyUnlocked = sites.some(s => s.unlocked);
     if (!anyUnlocked) continue;
-
     h2 += '<div style="margin-bottom:12px;">';
     h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
-
     for (let site of sites) {
       const locked = !site.unlocked;
       const canAfford = !site.cost || G.p.gold >= site.cost;
       const canRest = healerOk && !locked && canAfford;
-
       h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
       h2 += '<div class="rs-head">';
       h2 += '<span class="rs-name">' + site.icon + ' ' + site.name + '</span>';
       h2 += '<span class="rs-type ' + site.type + '">' + site.type.toUpperCase() + '</span>';
       h2 += '</div>';
       h2 += '<div class="rs-desc">' + site.desc + '</div>';
-
       if (locked) {
         h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
       } else if (site.cost) {
@@ -1326,11 +1572,42 @@ function rRest() {
     }
     h2 += '</div>';
   }
-
   h2 += '</div>';
-  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes ~7.5 seconds. Party banter every tick. Taverns cost gold but are safer.</div>';
+  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes ~7.5 seconds. Party banter every tick. Affinity decays if ignored.</div>';
   h2 += '</div>';
   return h2;
+}
+
+function rNpcs() {
+  let h = '<div class="npc-view"><h2 class="st">🧳 NPCs</h2>';
+
+  // Traders
+  h += '<div style="margin-bottom:16px;"><h3 style="font-size:14px;color:var(--gold);margin-bottom:10px;">Wandering Traders</h3><div class="npc-grid">';
+  for (let trader of G.npcs.traders) {
+    h += '<div class="npc-card">';
+    h += '<div class="npc-icon">' + trader.icon + '</div>';
+    h += '<div class="npc-name">' + trader.n + '</div>';
+    h += '<div class="npc-role">' + trader.t + '</div>';
+    h += '<div style="font-size:11px;color:var(--text-dim);margin-top:6px;">' + trader.d + '</div>';
+    h += '</div>';
+  }
+  h += '</div></div>';
+
+  // Allies
+  h += '<div><h3 style="font-size:14px;color:var(--success);margin-bottom:10px;">Allies</h3><div class="npc-grid">';
+  for (let ally of G.npcs.allies) {
+    h += '<div class="npc-card">';
+    h += '<div class="npc-icon">' + ally.icon + '</div>';
+    h += '<div class="npc-name">' + ally.n + '</div>';
+    h += '<div class="npc-role">' + ally.t + '</div>';
+    h += '<div style="font-size:11px;color:var(--text-dim);margin-top:6px;">' + ally.d + '</div>';
+    h += '</div>';
+  }
+  h += '</div></div>';
+
+  h += '<div style="margin-top:16px;font-size:11px;color:var(--text-dim);text-align:center;">Traders appear randomly during exploration. Allies may join through quest chains.</div>';
+  h += '</div>';
+  return h;
 }
 
 // Initialize
@@ -1339,6 +1616,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!hasSave) {
     lg('Welcome to Legends of Daybreak, San.');
     lg('Tap Adventure to start your journey!');
+    lg('💡 New: Rest with party members to build affinity and unlock quest chains!');
   }
   render();
 });
