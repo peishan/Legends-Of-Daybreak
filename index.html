@@ -295,6 +295,26 @@ const G = {
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
+  affinity: {
+    Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Mezstorm: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Eliz: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Senedra: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Zaki: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Soel: { val: 80, max: 100, lastInteract: Date.now(), decayRate: 0.08 }
+  },
+
+  affinity: {
+    Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Mezstorm: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Eliz: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Senedra: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Zaki: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Soel: { val: 80, max: 100, lastInteract: Date.now(), decayRate: 0.08 }
+  },
+
   rest: {
     active: false,
     timer: null,
@@ -399,6 +419,39 @@ const G = {
 };
 
 
+
+function updateAffinity(partyMemberName, amount) {
+  if (!G.affinity[partyMemberName]) return;
+  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
+  G.affinity[partyMemberName].lastInteract = Date.now();
+  if (amount > 0) {
+    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
+  }
+  checkAffinityDecay();
+}
+
+function checkAffinityDecay() {
+  const now = Date.now();
+  for (let name in G.affinity) {
+    const aff = G.affinity[name];
+    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
+    if (hoursSince > 24) {
+      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
+      aff.val = Math.max(0, aff.val - decay);
+      if (decay > 0) {
+        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
+      }
+      aff.lastInteract = now;
+    }
+  }
+}
+
+function getAffinityColor(val) {
+  if (val >= 70) return 'affinity-high';
+  if (val >= 40) return 'affinity-mid';
+  return 'affinity-low';
+}
+
 function updateTimedQuests() {
   for (let q of G.quests) {
     if (q.timed && !q.done && !q.expired && q.timer > 0) {
@@ -417,6 +470,37 @@ function getTimerStatus(q) {
   if (q.timer <= 0) return { cls: 'timer-expired', label: 'EXPIRED', pct: 0 };
   if (pct < 25) return { cls: 'timer-urgent', label: q.timer + ' ticks left', pct: pct };
   return { cls: 'timer-ok', label: q.timer + ' ticks left', pct: pct };
+}
+
+function updateAffinity(partyMemberName, amount) {
+  if (!G.affinity[partyMemberName]) return;
+  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
+  G.affinity[partyMemberName].lastInteract = Date.now();
+  if (amount > 0) {
+    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
+  }
+}
+
+function checkAffinityDecay() {
+  const now = Date.now();
+  for (let name in G.affinity) {
+    const aff = G.affinity[name];
+    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
+    if (hoursSince > 24) {
+      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
+      aff.val = Math.max(0, aff.val - decay);
+      if (decay > 0) {
+        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
+      }
+      aff.lastInteract = now;
+    }
+  }
+}
+
+function getAffinityColor(val) {
+  if (val >= 70) return 'affinity-high';
+  if (val >= 40) return 'affinity-mid';
+  return 'affinity-low';
 }
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -591,6 +675,8 @@ function completeRest() {
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
   lg('💚 ' + healerName + ' has restored everyone to full health.');
+  // Affinity gain for resting together
+  for (let p of G.party) { if (p.on) updateAffinity(p.n, 2); }
   // Track rest_with quest progress
   for(let q of G.quests){
     if(!q.done && !q.expired && q.t==='rest_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
@@ -725,6 +811,10 @@ function pa(si,ti){
     if(G.party[1].on)tg2=Math.floor(tg2*1.2);
     G.p.xp+=txp; G.p.gold+=tg2; G.p.kills+=G.cbt.en.length;
     lg('Victory! +'+txp+' XP, +'+tg2+' Gold!');
+    // Affinity gain for active party
+    for(let p of G.party){
+      if(p.on && p.hp > 0) updateAffinity(p.n, 1);
+    }
     const z=G.zones.find(z=>z.en.includes(G.cbt.en[0].n));
     if(z){
       const l=z.loot[Math.floor(Math.random()*z.loot.length)];
@@ -906,6 +996,8 @@ function saveGame() {
       sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
     },
     log: G.log,
+    affinity: G.affinity,
+    affinity: G.affinity,
     state: G.state
   };
   try {
@@ -972,6 +1064,22 @@ function loadGame() {
       }
     }
 
+    if (data.affinity) {
+      for (let name in data.affinity) {
+        if (G.affinity[name]) {
+          G.affinity[name].val = data.affinity[name].val;
+          G.affinity[name].lastInteract = data.affinity[name].lastInteract;
+        }
+      }
+    }
+    if (data.affinity) {
+      for (let name in data.affinity) {
+        if (G.affinity[name]) {
+          G.affinity[name].val = data.affinity[name].val;
+          G.affinity[name].lastInteract = data.affinity[name].lastInteract;
+        }
+      }
+    }
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     lg('Game loaded!');
     return true;
@@ -1027,6 +1135,7 @@ function importSave() {
 
 setInterval(saveGame, 30000);
 setInterval(updateTimedQuests, 60000);
+setInterval(checkAffinityDecay, 60000);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
 });
@@ -1181,7 +1290,7 @@ function rCbt(){
 function rParty(){
   let h='<div class="party-view"><h2 class="st">Party</h2><div class="plist">';
   for(let p of G.party){
-    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+'</div></div>';
+    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')+'</div></div>';
   }
   h+='</div></div>'; return h;
 }
