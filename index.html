@@ -583,6 +583,74 @@ const G = {
   ambushWarning: null
 };
 
+// ============================================
+// TEMPLE / RESURRECTION SYSTEM
+// ============================================
+
+const G_TEMPLE = {
+  temples: [
+    { id: 'ww_shrine', name: 'Whispering Shrine', zone: 'Whispering Woods', zoneLv: 1, cost: 10, icon: '⛪', desc: 'A small shrine where fallen allies can be revived.', unlocked: true },
+    { id: 'cc_chapel', name: 'Catacombs Chapel', zone: 'Cursed Catacombs', zoneLv: 2, cost: 20, icon: '⛪', desc: 'Holy ground amidst the dead. Revives cost more here.', unlocked: false },
+    { id: 'ep_temple', name: 'Ember Temple', zone: 'Ember Peak', zoneLv: 4, cost: 35, icon: '⛪', desc: 'Fire priests tend to the wounded. Expensive but reliable.', unlocked: false },
+    { id: 'fr_shrine', name: 'Frost Shrine', zone: 'Frostspire Ruins', zoneLv: 6, cost: 50, icon: '⛪', desc: 'Ice preserves the dead. Revivals are cheaper here.', unlocked: false },
+    { id: 'ad_nexus', name: 'Abyssal Nexus', zone: 'Abyssal Depths', zoneLv: 8, cost: 100, icon: '⛪', desc: 'The void gives back what it takes. For a price.', unlocked: false }
+  ],
+  getResCost: function(member, temple) {
+    const base = temple ? temple.cost : 10;
+    const lvlMult = 1 + (G.p.lvl * 0.1);
+    const deathMult = 1 + ((member.deathCount || 0) * 0.5);
+    return Math.floor(base * lvlMult * deathMult);
+  }
+};
+
+function initDeathTracking() {
+  for (let p of G.party) {
+    if (p.deathCount === undefined) p.deathCount = 0;
+    if (p.isDead === undefined) p.isDead = false;
+  }
+}
+
+function killPartyMember(member) {
+  member.hp = 0;
+  member.isDead = true;
+  member.deathCount = (member.deathCount || 0) + 1;
+  lg('💀 ' + member.n + ' has fallen! Visit a temple to revive them.');
+}
+
+function reviveAtTemple(memberName, templeId) {
+  const member = G.party.find(p => p.n === memberName);
+  if (!member) { lg('❌ Party member not found.'); return false; }
+  if (!member.isDead) { lg('✅ ' + member.n + ' is already alive!'); return false; }
+  const temple = G_TEMPLE.temples.find(t => t.id === templeId);
+  if (!temple) { lg('❌ Temple not found.'); return false; }
+  if (!temple.unlocked) { lg('🔒 Temple not yet discovered.'); return false; }
+  const cost = G_TEMPLE.getResCost(member, temple);
+  if (G.p.gold < cost) { lg('❌ Need ' + cost + 'G to revive ' + member.n + '. You have ' + G.p.gold + 'G.'); return false; }
+  G.p.gold -= cost;
+  member.hp = Math.floor(member.mhp * 0.5);
+  member.isDead = false;
+  lg('✨ ' + member.n + ' has been revived at ' + temple.name + '!');
+  lg('   HP restored to ' + member.hp + '/' + member.mhp + ' (-' + cost + 'G)');
+  updateAffinity(member.n, 5);
+  render();
+  return true;
+}
+
+function unlockTemples() {
+  let newly = false;
+  for (let t of G_TEMPLE.temples) {
+    if (!t.unlocked && G.p.lvl >= t.zoneLv) {
+      t.unlocked = true;
+      lg('⛪ New temple discovered: ' + t.name + ' (' + t.zone + ')!');
+      newly = true;
+    }
+  }
+  return newly;
+}
+
+function hasDeadMembers() { return G.party.some(p => p.isDead); }
+function getDeadMembers() { return G.party.filter(p => p.isDead); }
+
 
 
 function updateAffinity(partyMemberName, amount) {
@@ -1551,6 +1619,52 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
 });
 
+function rTemple() {
+  initDeathTracking();
+  let h = '<div class="temple-view">';
+  h += '<h2 class="st">⛪ Temples</h2>';
+  const dead = getDeadMembers();
+  if (dead.length > 0) {
+    h += '<div style="background:#ef444415;border:1px solid var(--danger);border-radius:14px;padding:14px;margin-bottom:16px;">';
+    h += '<div style="font-size:14px;font-weight:600;color:var(--danger);margin-bottom:8px;">💀 Fallen Allies</div>';
+    for (let m of dead) {
+      h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;padding:8px;background:#1a1825;border-radius:8px;">';
+      h += '<span style="font-size:20px;">💀</span><div style="flex:1;">';
+      h += '<div style="font-weight:600;font-size:13px;">' + m.n + ' <span style="color:var(--text-dim);font-weight:400;">' + m.r + '</span></div>';
+      h += '<div style="font-size:11px;color:var(--text-dim);">Deaths: ' + (m.deathCount||1) + '</div></div></div>';
+    }
+    h += '</div>';
+  }
+  h += '<div class="rest-sites">';
+  for (let t of G_TEMPLE.temples) {
+    h += '<div class="rs-card ' + (!t.unlocked?'locked':'') + '">';
+    h += '<div class="rs-head"><span class="rs-name">' + t.icon + ' ' + t.name + '</span>';
+    h += '<span class="rs-type camp">TEMPLE</span></div>';
+    h += '<div class="rs-desc">' + t.desc + '</div>';
+    if (!t.unlocked) {
+      h += '<div class="rs-req fail">🔒 Requires Level ' + t.zoneLv + '</div>';
+    } else if (dead.length > 0) {
+      for (let m of dead) {
+        const cost = G_TEMPLE.getResCost(m, t);
+        const ok = G.p.gold >= cost;
+        h += '<button class="ib ' + (ok?'ib-u':'ib-e') + '" style="width:100%;margin-bottom:4px;text-align:left;padding:8px 12px;" ';
+        h += 'onclick="reviveAtTemple(\'' + m.n + '\',\'' + t.id + '\')">';
+        h += '💀 Revive ' + m.n + ' — ' + cost + 'G</button>';
+      }
+    } else {
+      h += '<div class="rs-req ok">✅ All allies are alive</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">';
+  h += 'Revival cost scales with level and death count. Revived at 50% HP.';
+  h += '</div></div>';
+  return h;
+}
+
+
+
 function rNPC() {
   let h = '<div class="npc-view"><h2 class="st">🧳 NPCs</h2>';
   h += '<div style="margin-bottom:20px;"><h3 style="font-size:14px;color:var(--trader);margin-bottom:10px;">🧳 Wandering Traders</h3>';
@@ -1696,7 +1810,7 @@ function attachEvents() {
 }
 
 function rMenu(){
-  const items=[
+    const items=[
     {i:'⚔️',l:'Adventure',d:'Explore zones and fight',a:'explore'},
     {i:'👥',l:'Party',d:'Manage companions',a:'party'},
     {i:'✨',l:'Skills',d:'View mage abilities',a:'skills'},
@@ -1704,7 +1818,13 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
-    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
+    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'},
+    {i:'⛪',l:'Temple',d:'Revive fallen allies',a:'temple'}
+  ];
+  if (hasDeadMembers()) {
+    items[8].i = '⛪💀';
+    items[8].d = 'REVIVE FALLEN ALLIES!';
+  }
   ];
   let h='<div class="grid2">';
   for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
