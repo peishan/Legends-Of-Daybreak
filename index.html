@@ -289,7 +289,9 @@ const G = {
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
     { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
     { id: 4, n: "Joel's Shield Oath", d: 'Win 5 battles with Joel in your party', t: 'joel_battle', c: 0, need: 5, rw: { xp: 80, g: 40 }, done: false, chain: 'joel', reqQuest: null, reqParty: 'Joel' },
-    { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false }
+    { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false },
+    { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
+    { id: 7, n: "Senedra's Scout Report", d: 'Explore 3 different zones with Senedra before time runs out', t: 'explore_with', c: 0, need: 3, rw: { xp: 90, g: 45 }, done: false, timed: true, timer: 240, timerMax: 240, reqParty: 'Senedra' }
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
@@ -395,6 +397,27 @@ const G = {
   currentDialogue: null,
   ambushWarning: null
 };
+
+
+function updateTimedQuests() {
+  for (let q of G.quests) {
+    if (q.timed && !q.done && !q.expired && q.timer > 0) {
+      q.timer--;
+      if (q.timer <= 0) {
+        q.expired = true;
+        lg('⏰ Quest expired: ' + q.n + '!');
+      }
+    }
+  }
+}
+
+function getTimerStatus(q) {
+  if (!q.timed || q.done || q.expired) return null;
+  const pct = (q.timer / q.timerMax) * 100;
+  if (q.timer <= 0) return { cls: 'timer-expired', label: 'EXPIRED', pct: 0 };
+  if (pct < 25) return { cls: 'timer-urgent', label: q.timer + ' ticks left', pct: pct };
+  return { cls: 'timer-ok', label: q.timer + ' ticks left', pct: pct };
+}
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
 function rdc(n,s) { let sum=0; for(let i=0;i<n;i++)sum+=rd(s); return sum; }
@@ -568,6 +591,20 @@ function completeRest() {
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
   lg('💚 ' + healerName + ' has restored everyone to full health.');
+  // Track rest_with quest progress
+  for(let q of G.quests){
+    if(!q.done && !q.expired && q.t==='rest_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
+      q.c++;
+      if(q.c>=q.need){
+        q.done=true;
+        G.p.xp+=q.rw.xp;
+        G.p.gold+=q.rw.g;
+        G.p.quests++;
+        lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');
+        lvlup();
+      }
+    }
+  }
   G.rest.active = false;
   G.rest.selectedSite = null;
   G.rest.tick = 0;
@@ -626,6 +663,20 @@ function sc(zi) {
     e.id=i; G.cbt.en.push(e);
   }
   lg('Entered '+z.n+'! '+ec+' enemies appear!');
+  // Track explore_with quest progress
+  for(let q of G.quests){
+    if(!q.done && !q.expired && q.t==='explore_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
+      q.c++;
+      if(q.c>=q.need){
+        q.done=true;
+        G.p.xp+=q.rw.xp;
+        G.p.gold+=q.rw.g;
+        G.p.quests++;
+        lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');
+        lvlup();
+      }
+    }
+  }
   G.cbt.sk=0; G.cbt.tg=0; render();
 }
 
@@ -975,6 +1026,7 @@ function importSave() {
 }
 
 setInterval(saveGame, 30000);
+setInterval(updateTimedQuests, 60000);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
 });
@@ -1181,8 +1233,24 @@ function rCraft(){
 function rQuest(){
   let h='<div class="quest-view"><h2 class="st">Active Quests</h2><div class="qlist">';
   for(let q of G.quests){
+    if(q.hidden && !q.revealed) continue;
     const pc=Math.min(100,(q.c/q.need)*100);
-    h+='<div class="qc '+(q.done?'done':'')+'"><div class="qh"><span class="qn">'+(q.done?'✅ ':'')+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div><div class="qd">'+q.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
+    const timerStatus=getTimerStatus(q);
+    let cardClass=q.done?'done':(q.expired?'expired':(timerStatus?(timerStatus.cls==='timer-urgent'?'timed-urgent':'timed'):''));
+    h+='<div class="qc '+cardClass+'"><div class="qh"><span class="qn">'+(q.done?'✅ ':(q.expired?'❌ ':''))+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div>';
+    if(q.chain){
+      h+='<div style="font-size:10px;color:var(--accent-light);margin-bottom:4px;">🔗 Chain: '+q.chain+'</div>';
+    }
+    if(q.reqQuest && !q.revealed){
+      const req=G.quests.find(rq=>rq.id===q.reqQuest);
+      h+='<div style="font-size:10px;color:var(--text-dim);font-style:italic;margin-bottom:4px;">🔒 Requires: '+(req?req.n:'Unknown')+'</div>';
+    }
+    h+='<div class="qd">'+q.d+'</div>';
+    if(timerStatus){
+      h+='<div class="timer-bar"><div class="timer-fill '+timerStatus.cls+'" style="width:'+timerStatus.pct+'%"></div></div>';
+      h+='<div class="timer-label">⏰ '+timerStatus.label+'</div>';
+    }
+    h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
   }
   h+='</div><div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
   return h;
