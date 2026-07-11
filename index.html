@@ -271,9 +271,14 @@ const G = {
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
     { n: 'Cursed Catacombs', lv: 2, d: 'Ancient tombs filled with restless dead.', en: ['Skeleton','Zombie','Ghost'], loot: ['Iron Ore','Bone Shard','Mana Potion'], xp: 30, dg: 'medium' },
+    { n: 'Crystal Caverns', lv: 3, d: 'Shimmering caves where crystal spiders weave.', en: ['Crystal Spider','Gem Golem','Shimmer Bat'], loot: ['Crystal Shard','Silk Thread','Gem Dust'], xp: 45, dg: 'medium' },
     { n: 'Ember Peak', lv: 4, d: 'Volcanic caves with fire elementals.', en: ['Fire Imp','Lava Slug','Ash Wraith'], loot: ['Fire Essence','Obsidian','Phoenix Feather'], xp: 60, dg: 'high' },
+    { n: 'Stormhold', lv: 5, d: 'A crumbling fortress lashed by eternal lightning.', en: ['Storm Wraith','Lightning Hound','Thunder Knight'], loot: ['Storm Core','Conductive Wire','Static Orb'], xp: 80, dg: 'high' },
     { n: 'Frostspire Ruins', lv: 6, d: 'Frozen castle of a fallen ice lord.', en: ['Ice Elemental','Frost Wolf','Frozen Knight'], loot: ['Ice Crystal','Frost Gem','Glacial Staff'], xp: 100, dg: 'very high' },
-    { n: 'Abyssal Depths', lv: 8, d: 'The void between worlds. Only the brave enter.', en: ['Void Beast','Shadow Demon','Abyssal Horror'], loot: ['Void Essence','Dark Crystal','Abyssal Robe'], xp: 200, dg: 'extreme' }
+    { n: 'Sunken Temple', lv: 7, d: 'An underwater ruin swallowed by the sea.', en: ['Drowned Sailor','Sea Serpent','Coral Golem'], loot: ['Pearl','Coral Branch','Aqua Pearl'], xp: 130, dg: 'very high' },
+    { n: 'Abyssal Depths', lv: 8, d: 'The void between worlds. Only the brave enter.', en: ['Void Beast','Shadow Demon','Abyssal Horror'], loot: ['Void Essence','Dark Crystal','Abyssal Robe'], xp: 200, dg: 'extreme' },
+    { n: "Dragon's Maw", lv: 9, d: 'The lair of an ancient dragon. Ash falls like snow.', en: ['Dragon Whelp','Ash Drake','Elder Wyrm'], loot: ['Dragon Scale','Wyrm Tooth','Ember Heart'], xp: 280, dg: 'extreme' },
+    { n: 'Starlight Spire', lv: 10, d: 'A tower that touches the sky. The final challenge.', en: ['Star Sentinel','Celestial Knight','Astral Lord'], loot: ['Star Fragment','Celestial Dust','Astral Core'], xp: 400, dg: 'impossible' }
   ],
   recipes: [
     { n: 'Health Potion', m: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, res: { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' }, d: 'Restores 30 HP' },
@@ -292,6 +297,22 @@ const G = {
     { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false },
     { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
     { id: 7, n: "Senedra's Scout Report", d: 'Explore 3 different zones with Senedra before time runs out', t: 'explore_with', c: 0, need: 3, rw: { xp: 90, g: 45 }, done: false, timed: true, timer: 240, timerMax: 240, reqParty: 'Senedra' }
+  ],
+
+  bounties: [
+    { id: 'b1', n: 'Goblin Slayer', d: 'Defeat 5 Goblins', t: 'kill_specific', target: 'Goblin', c: 0, need: 5, rw: { xp: 40, g: 25 }, done: false, refreshDay: 0 },
+    { id: 'b2', n: 'Bone Collector', d: 'Defeat 5 Skeletons', t: 'kill_specific', target: 'Skeleton', c: 0, need: 5, rw: { xp: 60, g: 35 }, done: false, refreshDay: 0 },
+    { id: 'b3', n: 'Wolf Hunter', d: 'Defeat 3 Wolves', t: 'kill_specific', target: 'Wolf', c: 0, need: 3, rw: { xp: 30, g: 20 }, done: false, refreshDay: 0 },
+    { id: 'b4', n: 'Ghost Buster', d: 'Defeat 3 Ghosts', t: 'kill_specific', target: 'Ghost', c: 0, need: 3, rw: { xp: 80, g: 50 }, done: false, refreshDay: 0 },
+    { id: 'b5', n: 'Fire Purge', d: 'Defeat 4 Fire Imps', t: 'kill_specific', target: 'Fire Imp', c: 0, need: 4, rw: { xp: 100, g: 60 }, done: false, refreshDay: 0 }
+  ],
+
+  storyline: [
+    { id: 's1', n: 'The Awakening', d: 'Reach Level 3 and defeat your first boss', t: 'reach_level', c: 0, need: 3, rw: { xp: 200, g: 100 }, done: false, unlocked: true, chapter: 1 },
+    { id: 's2', n: 'Echoes of the Past', d: 'Reach Level 5 and explore Stormhold', t: 'reach_level', c: 0, need: 5, rw: { xp: 350, g: 200 }, done: false, unlocked: false, chapter: 2 },
+    { id: 's3', n: 'The Frozen Crown', d: 'Reach Level 7 and defeat the Frozen Knight', t: 'reach_level', c: 0, need: 7, rw: { xp: 500, g: 300 }, done: false, unlocked: false, chapter: 3 },
+    { id: 's4', n: 'Into the Void', d: 'Reach Level 9 and survive the Abyssal Depths', t: 'reach_level', c: 0, need: 9, rw: { xp: 800, g: 500 }, done: false, unlocked: false, chapter: 4 },
+    { id: 's5', n: 'Starlight Ascension', d: 'Reach Level 10 and conquer the Starlight Spire', t: 'reach_level', c: 0, need: 10, rw: { xp: 1500, g: 1000 }, done: false, unlocked: false, chapter: 5 }
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
@@ -327,6 +348,56 @@ const G = {
   lastSoelComment: null,
   soelCommentCooldown: 0,
 
+  npcs: [
+    { n: 'LLP', t: 'trader', title: 'Wandering Merchant', icon: '🧳', col: '#fbbf24', 
+      d: 'A shrewd merchant who appears in Whispering Woods. Sells rare herbs and curious trinkets.',
+      stock: [
+        { n: 'Mystic Herb', t: 'mat', q: 1, r: 'uncommon', price: 15 },
+        { n: 'Silver Thread', t: 'mat', q: 1, r: 'rare', price: 30 },
+        { n: 'Luck Charm', t: 'acc', q: 1, r: 'uncommon', price: 50, cha: 2 }
+      ],
+      unlocked: true, zone: 'Whispering Woods', zoneLv: 1, visitCount: 0 },
+    { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316',
+      d: 'A tinkerer who sets up shop near Ember Peak. Deals in mechanical parts and weapon upgrades.',
+      stock: [
+        { n: 'Gear Assembly', t: 'mat', q: 1, r: 'uncommon', price: 20 },
+        { n: 'Reinforced Plate', t: 'mat', q: 1, r: 'rare', price: 35 },
+        { n: 'Tinker Wrench', t: 'wep', q: 1, r: 'uncommon', price: 45, atk: 4 }
+      ],
+      unlocked: false, zone: 'Ember Peak', zoneLv: 4, visitCount: 0 },
+    { n: 'Mimi', t: 'ally', title: 'The Whisperer', icon: '🦋', col: '#8b5cf6',
+      d: 'A mysterious ally who communicates through dreams. Grants visions and cryptic advice.',
+      ability: 'Dreamsight: Reveals hidden quest paths and secret loot locations.',
+      unlocked: false, ul: 5, affinityReq: 40, reqMember: 'Mezstorm' },
+    { n: 'Aisy', t: 'ally', title: 'The Shadow Walker', icon: '🌙', col: '#6366f1',
+      d: 'A wandering spirit who aids those she deems worthy. Enhances stealth and evasion.',
+      ability: 'Shadow Step: 20% chance to avoid enemy attacks entirely.',
+      unlocked: false, ul: 7, affinityReq: 50, reqMember: 'Aisyah' }
+  ],
+
+  bosses: [
+    { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 100, g: 80, 
+      mechanic: 'rampage', rampageTurn: 3, rampageDmg: 25, desc: 'Enrages after 3 turns. All party members must attack.' },
+    { n: 'Bone Tyrant', zone: 'Cursed Catacombs', hp: 250, mhp: 250, atk: 15, def: 8, xp: 200, g: 150,
+      mechanic: 'resurrect', resurrectCount: 2, desc: 'Resurrects twice. Kill it 3 times.' },
+    { n: 'Crystal Leviathan', zone: 'Crystal Caverns', hp: 300, mhp: 300, atk: 18, def: 10, xp: 300, g: 200,
+      mechanic: 'phase', phases: 3, currentPhase: 1, phaseHp: 100, desc: 'Shifts phases every 100 HP. Changes weaknesses.' },
+    { n: 'Ember Dragon', zone: 'Ember Peak', hp: 400, mhp: 400, atk: 22, def: 12, xp: 450, g: 300,
+      mechanic: 'inferno', infernoTurn: 4, infernoDmg: 40, desc: 'Charges inferno for 4 turns. Interrupt or die.' },
+    { n: 'Storm Tyrant', zone: 'Stormhold', hp: 500, mhp: 500, atk: 25, def: 15, xp: 600, g: 400,
+      mechanic: 'lightning_rod', rodTurns: 3, desc: 'Lightning strikes weakest member every 3 turns.' },
+    { n: 'Frost Queen', zone: 'Frostspire Ruins', hp: 600, mhp: 600, atk: 28, def: 18, xp: 800, g: 500,
+      mechanic: 'freeze', freezeChance: 0.3, desc: '30% chance to freeze a party member each turn.' },
+    { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 1500, g: 1000,
+      mechanic: 'devour', devourTurn: 5, desc: 'Devours a party member on turn 5 if not staggered by all attackers.' },
+    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 2500, g: 2000,
+      mechanic: 'apocalypse', apocalypseTurn: 6, desc: 'Ultimate attack on turn 6. Must kill before then.' },
+    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 5000, g: 5000,
+      mechanic: 'cosmic', cosmicPhase: 1, desc: 'The final boss. Shifts cosmic phases. Requires perfect coordination.' }
+  ],
+
+  currentBoss: null,
+
   affinity: {
     Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
     Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
@@ -358,6 +429,56 @@ const G = {
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
+
+  npcs: [
+    { n: 'LLP', t: 'trader', title: 'Wandering Merchant', icon: '🧳', col: '#fbbf24', 
+      d: 'A shrewd merchant who appears in Whispering Woods. Sells rare herbs and curious trinkets.',
+      stock: [
+        { n: 'Mystic Herb', t: 'mat', q: 1, r: 'uncommon', price: 15 },
+        { n: 'Silver Thread', t: 'mat', q: 1, r: 'rare', price: 30 },
+        { n: 'Luck Charm', t: 'acc', q: 1, r: 'uncommon', price: 50, cha: 2 }
+      ],
+      unlocked: true, zone: 'Whispering Woods', zoneLv: 1, visitCount: 0 },
+    { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316',
+      d: 'A tinkerer who sets up shop near Ember Peak. Deals in mechanical parts and weapon upgrades.',
+      stock: [
+        { n: 'Gear Assembly', t: 'mat', q: 1, r: 'uncommon', price: 20 },
+        { n: 'Reinforced Plate', t: 'mat', q: 1, r: 'rare', price: 35 },
+        { n: 'Tinker Wrench', t: 'wep', q: 1, r: 'uncommon', price: 45, atk: 4 }
+      ],
+      unlocked: false, zone: 'Ember Peak', zoneLv: 4, visitCount: 0 },
+    { n: 'Mimi', t: 'ally', title: 'The Whisperer', icon: '🦋', col: '#8b5cf6',
+      d: 'A mysterious ally who communicates through dreams. Grants visions and cryptic advice.',
+      ability: 'Dreamsight: Reveals hidden quest paths and secret loot locations.',
+      unlocked: false, ul: 5, affinityReq: 40, reqMember: 'Mezstorm' },
+    { n: 'Aisy', t: 'ally', title: 'The Shadow Walker', icon: '🌙', col: '#6366f1',
+      d: 'A wandering spirit who aids those she deems worthy. Enhances stealth and evasion.',
+      ability: 'Shadow Step: 20% chance to avoid enemy attacks entirely.',
+      unlocked: false, ul: 7, affinityReq: 50, reqMember: 'Aisyah' }
+  ],
+
+  bosses: [
+    { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 100, g: 80, 
+      mechanic: 'rampage', rampageTurn: 3, rampageDmg: 25, desc: 'Enrages after 3 turns. All party members must attack.' },
+    { n: 'Bone Tyrant', zone: 'Cursed Catacombs', hp: 250, mhp: 250, atk: 15, def: 8, xp: 200, g: 150,
+      mechanic: 'resurrect', resurrectCount: 2, desc: 'Resurrects twice. Kill it 3 times.' },
+    { n: 'Crystal Leviathan', zone: 'Crystal Caverns', hp: 300, mhp: 300, atk: 18, def: 10, xp: 300, g: 200,
+      mechanic: 'phase', phases: 3, currentPhase: 1, phaseHp: 100, desc: 'Shifts phases every 100 HP. Changes weaknesses.' },
+    { n: 'Ember Dragon', zone: 'Ember Peak', hp: 400, mhp: 400, atk: 22, def: 12, xp: 450, g: 300,
+      mechanic: 'inferno', infernoTurn: 4, infernoDmg: 40, desc: 'Charges inferno for 4 turns. Interrupt or die.' },
+    { n: 'Storm Tyrant', zone: 'Stormhold', hp: 500, mhp: 500, atk: 25, def: 15, xp: 600, g: 400,
+      mechanic: 'lightning_rod', rodTurns: 3, desc: 'Lightning strikes weakest member every 3 turns.' },
+    { n: 'Frost Queen', zone: 'Frostspire Ruins', hp: 600, mhp: 600, atk: 28, def: 18, xp: 800, g: 500,
+      mechanic: 'freeze', freezeChance: 0.3, desc: '30% chance to freeze a party member each turn.' },
+    { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 1500, g: 1000,
+      mechanic: 'devour', devourTurn: 5, desc: 'Devours a party member on turn 5 if not staggered by all attackers.' },
+    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 2500, g: 2000,
+      mechanic: 'apocalypse', apocalypseTurn: 6, desc: 'Ultimate attack on turn 6. Must kill before then.' },
+    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 5000, g: 5000,
+      mechanic: 'cosmic', cosmicPhase: 1, desc: 'The final boss. Shifts cosmic phases. Requires perfect coordination.' }
+  ],
+
+  currentBoss: null,
 
   rest: {
     active: false,
@@ -557,6 +678,106 @@ function triggerSoelCommentary(triggerType) {
   G.lastSoelComment = comment;
   G.soelCommentCooldown = 3;
   lg('🐱 Soel: ' + comment.text);
+}
+
+function checkNPCUnlocks() {
+  for (let npc of G.npcs) {
+    if (npc.t === 'trader' && !npc.unlocked && G.p.lvl >= npc.zoneLv) {
+      npc.unlocked = true;
+      lg('🧳 New trader unlocked: ' + npc.n + ' at ' + npc.zone + '!');
+    }
+    if (npc.t === 'ally' && !npc.unlocked && npc.reqMember) {
+      if (G.affinity[npc.reqMember] && G.affinity[npc.reqMember].val >= npc.affinityReq) {
+        npc.unlocked = true;
+        lg('🌟 ' + npc.n + ' ' + npc.title + ' has joined as an ally!');
+      }
+    }
+  }
+}
+
+function buyFromNPC(npcName, itemIdx) {
+  const npc = G.npcs.find(n => n.n === npcName);
+  if (!npc || !npc.unlocked || npc.t !== 'trader') return;
+  const item = npc.stock[itemIdx];
+  if (!item) return;
+  if (G.p.gold < item.price) {
+    lg('❌ Not enough gold! ' + item.n + ' costs ' + item.price + 'G.');
+    return;
+  }
+  G.p.gold -= item.price;
+  const boughtItem = { n: item.n, t: item.t, q: item.q || 1, r: item.r };
+  if (item.atk) boughtItem.atk = item.atk;
+  if (item.def) boughtItem.def = item.def;
+  if (item.int) boughtItem.int = item.int;
+  if (item.cha) boughtItem.cha = item.cha;
+  addI(boughtItem);
+  npc.visitCount++;
+  lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
+  if (npc.visitCount === 1) {
+    lg('   ' + npc.n + ': "Pleasure doing business, mage."');
+  }
+  render();
+}
+
+function getDayNumber() {
+  return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+}
+
+function refreshBounties() {
+  const today = getDayNumber();
+  let refreshed = false;
+  for (let b of G.bounties) {
+    if (b.done && b.refreshDay !== today) {
+      b.done = false;
+      b.c = 0;
+      b.refreshDay = today;
+      refreshed = true;
+    }
+  }
+  if (refreshed) {
+    lg('📋 New bounties available!');
+  }
+}
+
+function checkStoryline() {
+  for (let s of G.storyline) {
+    if (s.done) continue;
+    if (!s.unlocked) {
+      // Check if previous chapter is done
+      const prev = G.storyline.find(ch => ch.chapter === s.chapter - 1);
+      if (!prev || prev.done) {
+        s.unlocked = true;
+        lg('📖 Storyline unlocked: Chapter ' + s.chapter + ' - ' + s.n + '!');
+      }
+    }
+    if (s.unlocked && G.p.lvl >= s.need) {
+      s.c = s.need;
+      s.done = true;
+      G.p.xp += s.rw.xp;
+      G.p.gold += s.rw.g;
+      G.p.quests++;
+      lg('📖 Storyline complete: ' + s.n + '! +' + s.rw.xp + 'XP +' + s.rw.g + 'G');
+      lvlup();
+    }
+  }
+}
+
+function checkBountyKill(enemyName) {
+  for (let b of G.bounties) {
+    if (b.done) continue;
+    if (b.t === 'kill_specific' && enemyName === b.target) {
+      b.c++;
+      if (b.c >= b.need) {
+        b.done = true;
+        b.refreshDay = getDayNumber();
+        G.p.xp += b.rw.xp;
+        G.p.gold += b.rw.g;
+        G.p.quests++;
+        lg('💰 Bounty complete: ' + b.n + '! +' + b.rw.xp + 'XP +' + b.rw.g + 'G');
+        lvlup();
+      }
+    }
+  }
 }
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -783,9 +1004,25 @@ function cancelRest() {
 function sc(zi) {
   const z=G.zones[zi];
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
-  const ec=Math.floor(Math.random()*2)+1+Math.floor(z.lv/3);
-  for(let i=0;i<ec;i++){
-    const t=z.en[Math.floor(Math.random()*z.en.length)];
+  // 15% chance for boss fight if player level >= zone level
+  const bossChance = Math.random();
+  let isBoss = false;
+  if (bossChance < 0.15 && G.p.lvl >= z.lv) {
+    const boss = G.bosses.find(b => b.zone === z.n);
+    if (boss) {
+      isBoss = true;
+      G.currentBoss = JSON.parse(JSON.stringify(boss));
+      G.currentBoss.id = 99;
+      G.cbt.en.push(G.currentBoss);
+      lg('⚠️ BOSS APPEARS: ' + boss.n + '!');
+      lg('   ' + boss.desc);
+    }
+  }
+
+  if (!isBoss) {
+    const ec=Math.floor(Math.random()*2)+1+Math.floor(z.lv/3);
+    for(let i=0;i<ec;i++){
+      const t=z.en[Math.floor(Math.random()*z.en.length)];
     let e={n:t,hp:0,mhp:0,atk:0,def:0,xp:0,g:0};
     if(t=='Goblin')e={...e,hp:25,mhp:25,atk:5,def:2,xp:12,g:5};
     else if(t=='Wolf')e={...e,hp:20,mhp:20,atk:7,def:1,xp:10,g:3};
@@ -802,9 +1039,25 @@ function sc(zi) {
     else if(t=='Void Beast')e={...e,hp:100,mhp:100,atk:16,def:5,xp:150,g:60};
     else if(t=='Shadow Demon')e={...e,hp:80,mhp:80,atk:18,def:3,xp:130,g:50};
     else if(t=='Abyssal Horror')e={...e,hp:150,mhp:150,atk:20,def:8,xp:300,g:100};
-    e.id=i; G.cbt.en.push(e);
+    else if(t=='Crystal Spider')e={...e,hp:28,mhp:28,atk:6,def:2,xp:15,g:6};
+    else if(t=='Gem Golem')e={...e,hp:40,mhp:40,atk:5,def:6,xp:20,g:8};
+    else if(t=='Shimmer Bat')e={...e,hp:18,mhp:18,atk:7,def:1,xp:12,g:4};
+    else if(t=='Storm Wraith')e={...e,hp:45,mhp:45,atk:11,def:3,xp:35,g:15};
+    else if(t=='Lightning Hound')e={...e,hp:35,mhp:35,atk:13,def:2,xp:30,g:12};
+    else if(t=='Thunder Knight')e={...e,hp:70,mhp:70,atk:12,def:7,xp:55,g:25};
+    else if(t=='Drowned Sailor')e={...e,hp:50,mhp:50,atk:10,def:4,xp:40,g:16};
+    else if(t=='Sea Serpent')e={...e,hp:65,mhp:65,atk:14,def:3,xp:50,g:22};
+    else if(t=='Coral Golem')e={...e,hp:80,mhp:80,atk:9,def:8,xp:55,g:20};
+    else if(t=='Dragon Whelp')e={...e,hp:80,mhp:80,atk:15,def:5,xp:80,g:35};
+    else if(t=='Ash Drake')e={...e,hp:100,mhp:100,atk:17,def:6,xp:100,g:50};
+    else if(t=='Elder Wyrm')e={...e,hp:180,mhp:180,atk:22,def:10,xp:200,g:100};
+    else if(t=='Star Sentinel')e={...e,hp:120,mhp:120,atk:18,def:8,xp:120,g:60};
+    else if(t=='Celestial Knight')e={...e,hp:140,mhp:140,atk:20,def:10,xp:150,g:80};
+    else if(t=='Astral Lord')e={...e,hp:250,mhp:250,atk:25,def:12,xp:300,g:150};
+      e.id=i; G.cbt.en.push(e);
+    }
+    lg('Entered '+z.n+'! '+ec+' enemies appear!');
   }
-  lg('Entered '+z.n+'! '+ec+' enemies appear!');
   triggerSoelCommentary('explore');
   // Track explore_with quest progress
   for(let q of G.quests){
@@ -862,6 +1115,24 @@ function pa(si,ti){
     }else lg(p.n+' misses!');
   }
   eturn();
+  // Boss mechanics: resurrect and phases
+  for (let e of G.cbt.en) {
+    if (e.hp <= 0 && e.mechanic === 'resurrect' && e.resurrectCount > 0) {
+      e.resurrectCount--;
+      e.hp = Math.floor(e.mhp * 0.5);
+      lg('💀 ' + e.n + ' RESURRECTS! HP restored to ' + e.hp + '! (' + e.resurrectCount + ' lives left)');
+    }
+    if (e.hp > 0 && e.mechanic === 'phase') {
+      const phaseThreshold = e.mhp - (e.currentPhase * e.phaseHp);
+      if (e.hp <= phaseThreshold && e.currentPhase < e.phases) {
+        e.currentPhase++;
+        lg('💎 ' + e.n + ' shifts to PHASE ' + e.currentPhase + '! Defenses change!');
+        e.def += 3;
+        e.atk += 2;
+      }
+    }
+  }
+
   if(G.cbt.en.every(e=>e.hp<=0)){
     const txp=G.cbt.en.reduce((s,e)=>s+e.xp,0);
     let tg2=G.cbt.en.reduce((s,e)=>s+e.g,0);
@@ -889,6 +1160,7 @@ function pa(si,ti){
       }
     }
     lvlup(); checkQ();
+    G.currentBoss=null;
     G.cbt.on=false; G.state='explore';
   }else if(G.p.hp<=0){
     G.p.hp=1; lg('Defeated! Retreating...');
@@ -900,6 +1172,42 @@ function pa(si,ti){
 function eturn(){
   for(let e of G.cbt.en){
     if(e.hp<=0)continue;
+
+    // Boss mechanics
+    if (e.mechanic) {
+      G.cbt.turn = G.cbt.turn || 0;
+      if (e.mechanic === 'rampage' && G.cbt.turn >= e.rampageTurn) {
+        lg('🔥 ' + e.n + ' ENRAGES! All party members take ' + e.rampageDmg + ' damage!');
+        G.p.hp = Math.max(1, G.p.hp - e.rampageDmg);
+        for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - e.rampageDmg); }
+      }
+      if (e.mechanic === 'inferno' && G.cbt.turn >= e.infernoTurn) {
+        lg('🔥 ' + e.n + ' unleashes INFERNO! Party takes ' + e.infernoDmg + ' damage!');
+        G.p.hp = Math.max(1, G.p.hp - e.infernoDmg);
+        for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - e.infernoDmg); }
+      }
+      if (e.mechanic === 'freeze' && Math.random() < e.freezeChance) {
+        const targets = [G.p, ...G.party.filter(p=>p.on&&p.hp>0)];
+        const target = targets[Math.floor(Math.random()*targets.length)];
+        lg('❄️ ' + e.n + ' freezes ' + (target.n||'you') + '! Skip next turn!');
+        target.frozen = true;
+      }
+      if (e.mechanic === 'devour' && G.cbt.turn >= e.devourTurn) {
+        const targets = G.party.filter(p=>p.on&&p.hp>0);
+        if (targets.length > 0) {
+          const victim = targets[Math.floor(Math.random()*targets.length)];
+          lg('🌑 ' + e.n + ' DEVOURS ' + victim.n + '!');
+          victim.hp = 0;
+          lg(victim.n + ' has been devoured!');
+        }
+      }
+      if (e.mechanic === 'apocalypse' && G.cbt.turn >= e.apocalypseTurn) {
+        lg('💥 ' + e.n + ' uses APOCALYPSE! Total party wipe!');
+        G.p.hp = 1;
+        for (let p of G.party) { if (p.on) p.hp = 0; }
+      }
+    }
+
     let t=G.p;
     if(Math.random()>0.5){
       const ap=G.party.filter(p=>p.on&&p.hp>0);
@@ -917,6 +1225,9 @@ function eturn(){
   }
   for(let b of G.p.buffs)b.t--;
   G.p.buffs=G.p.buffs.filter(b=>b.t>0);
+  // Clear frozen status after boss turn
+  for (let p of G.party) { if (p.frozen) { p.frozen = false; } }
+  if (G.p.frozen) { G.p.frozen = false; }
 }
 
 function lvlup(){
@@ -929,6 +1240,8 @@ function lvlup(){
     for(let s of G.p.skills){if(!s.on&&s.ul<=G.p.lvl){s.on=true;lg('Learned: '+s.n+'!');}}
     for(let p of G.party){if(!p.on&&p.ul<=G.p.lvl){p.on=true;p.hp=p.mhp;lg(p.n+' '+p.t+' joins!');}}
     unlockRestSites();
+    checkNPCUnlocks();
+    checkStoryline();
   }
 }
 
@@ -1034,10 +1347,10 @@ function setS(s){
   if (s === 'party') triggerSoelCommentary('party');
   G.state=s;render();
 }
-function flee(){if(Math.random()>0.5){lg('Fled!');G.cbt.on=false;G.state='explore';}else{lg('Flee failed!');eturn();}render();}
+function flee(){if(Math.random()>0.5){lg('Fled!');G.currentBoss=null;G.cbt.on=false;G.state='explore';}else{lg('Flee failed!');eturn();}render();}
 
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
-function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙'};return m[n]||'👾';}
+function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
@@ -1148,6 +1461,35 @@ function loadGame() {
     if (data.soelCommentCooldown !== undefined) {
       G.soelCommentCooldown = data.soelCommentCooldown;
     }
+    if (data.npcs) {
+      for (let n of G.npcs) {
+        const saved = data.npcs.find(sn => sn.n === n.n);
+        if (saved) {
+          n.unlocked = saved.unlocked;
+          n.visitCount = saved.visitCount || 0;
+        }
+      }
+    }
+    if (data.bounties) {
+      for (let i = 0; i < G.bounties.length; i++) {
+        if (data.bounties[i]) {
+          G.bounties[i].c = data.bounties[i].c;
+          G.bounties[i].done = data.bounties[i].done;
+          G.bounties[i].refreshDay = data.bounties[i].refreshDay;
+        }
+      }
+    }
+    if (data.storyline) {
+      for (let i = 0; i < G.storyline.length; i++) {
+        if (data.storyline[i]) {
+          G.storyline[i].done = data.storyline[i].done;
+          G.storyline[i].unlocked = data.storyline[i].unlocked;
+        }
+      }
+    }
+    if (data.currentBoss !== undefined) {
+      G.currentBoss = data.currentBoss;
+    }
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     lg('Game loaded!');
     return true;
@@ -1204,9 +1546,65 @@ function importSave() {
 setInterval(saveGame, 30000);
 setInterval(updateTimedQuests, 60000);
 setInterval(checkAffinityDecay, 60000);
+setInterval(refreshBounties, 60000);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
 });
+
+function rNPC() {
+  let h = '<div class="npc-view"><h2 class="st">🧳 NPCs</h2>';
+  h += '<div style="margin-bottom:20px;"><h3 style="font-size:14px;color:var(--trader);margin-bottom:10px;">🧳 Wandering Traders</h3>';
+  const traders = G.npcs.filter(n => n.t === 'trader');
+  for (let npc of traders) {
+    h += '<div class="npc-card" style="border-color:' + (npc.unlocked ? 'var(--trader)' : 'var(--border)') + ';">';
+    h += '<div class="npc-ava" style="background:' + npc.col + '20;border-color:' + npc.col + '">' + npc.icon + '</div>';
+    h += '<div class="npc-info">';
+    h += '<div class="npc-name">' + npc.n + ' <span class="npc-type npc-type-trader">' + npc.title + '</span></div>';
+    if (!npc.unlocked) {
+      h += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">🔒 Unlocked at ' + npc.zone + ' (Lv.' + npc.zoneLv + ')</div>';
+    } else {
+      h += '<div class="npc-desc">' + npc.d + '</div>';
+      h += '<div class="npc-stock">';
+      for (let j = 0; j < npc.stock.length; j++) {
+        const item = npc.stock[j];
+        h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + item.n + ' (' + item.price + 'G)</span>';
+      }
+      h += '</div>';
+      h += '<div style="margin-top:8px;">';
+      for (let j = 0; j < npc.stock.length; j++) {
+        const item = npc.stock[j];
+        const canAfford = G.p.gold >= item.price;
+        h += '<button class="ib ' + (canAfford ? 'ib-u' : 'ib-e') + ' npc-buy" data-npc="' + npc.n + '" data-item="' + j + '" style="margin-right:4px;">' + (canAfford ? 'Buy ' + item.n + ' (' + item.price + 'G)' : 'Need ' + item.price + 'G') + '</button>';
+      }
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '<div><h3 style="font-size:14px;color:var(--ally);margin-bottom:10px;">🌙 Allies</h3>';
+  const allies = G.npcs.filter(n => n.t === 'ally');
+  for (let npc of allies) {
+    const aff = G.affinity[npc.reqMember];
+    h += '<div class="npc-card" style="border-color:' + (npc.unlocked ? 'var(--ally)' : 'var(--border)') + ';">';
+    h += '<div class="npc-ava" style="background:' + npc.col + '20;border-color:' + npc.col + '">' + npc.icon + '</div>';
+    h += '<div class="npc-info">';
+    h += '<div class="npc-name">' + npc.n + ' <span class="npc-type npc-type-ally">' + npc.title + '</span></div>';
+    if (!npc.unlocked) {
+      h += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">🔒 Requires ' + npc.reqMember + ' affinity ' + npc.affinityReq + '+ (currently ' + (aff ? aff.val : 0) + ')</div>';
+      if (aff) {
+        h += '<div class="affinity-bar" style="margin-top:6px;"><div class="affinity-fill ' + getAffinityColor(aff.val) + '" style="width:' + (aff.val / aff.max * 100) + '%"></div></div>';
+      }
+    } else {
+      h += '<div class="npc-desc">' + npc.d + '</div>';
+      h += '<div style="font-size:11px;color:var(--success);margin-top:4px;">' + npc.ability + '</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div>';
+  h += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;">Traders unlock by zone level. Allies unlock through party affinity.</div>';
+  h += '</div>';
+  return h;
+}
 
 function render(){
   const a=document.getElementById('app'); if(!a)return;
@@ -1228,6 +1626,7 @@ function render(){
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
   else if(G.state=='rest')h+=rRest();
+  else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
   h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
@@ -1288,6 +1687,12 @@ function attachEvents() {
   });
   const cancelRestBtn=document.getElementById('cancel-rest');
   if(cancelRestBtn)cancelRestBtn.addEventListener('click',cancelRest);
+  document.querySelectorAll('.npc-buy').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      buyFromNPC(el.getAttribute('data-npc'),parseInt(el.getAttribute('data-item')));
+    });
+  });
 }
 
 function rMenu(){
@@ -1328,14 +1733,26 @@ function rExp(){
 }
 
 function rCbt(){
-  let h='<div class="combat-view"><h2 class="st">Combat</h2><div class="erow">';
+  let h='<div class="combat-view"><h2 class="st">'+(G.currentBoss?'⚔️ BOSS FIGHT':'Combat')+'</h2>';
+  if(G.currentBoss){
+    h+='<div style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--danger);">';
+    h+='🔥 '+G.currentBoss.desc+'</div>';
+  }
+  h+='<div class="erow">';
   for(let i=0;i<G.cbt.en.length;i++){
     const e=G.cbt.en[i],d=e.hp<=0,s=G.cbt.tg==i&&!d?'sel':'';
-    const immuneFire = ['Fire Imp','Lava Slug','Ash Wraith'].includes(e.n);
-    const immuneIce = ['Ice Elemental','Frost Wolf','Frozen Knight'].includes(e.n);
-    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>';
+    const immuneFire=['Fire Imp','Lava Slug','Ash Wraith'].includes(e.n);
+    const immuneIce=['Ice Elemental','Frost Wolf','Frozen Knight'].includes(e.n);
+    const isBoss=e.mechanic?true:false;
+    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'" style="'+(isBoss?'border-color:var(--danger);box-shadow:0 0 10px #ef444440;':'')+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+(isBoss?' 👑':'')+'</div>';
     if(!d && (immuneFire || immuneIce)){
       h+='<div class="e-immune">'+(immuneFire?'🔥 Fire Immune':(immuneIce?'❄️ Ice Immune':''))+'</div>';
+    }
+    if(!d && e.mechanic==='resurrect'){
+      h+='<div style="font-size:10px;color:var(--danger);">💀 Lives: '+(e.resurrectCount+1)+'</div>';
+    }
+    if(!d && e.mechanic==='phase'){
+      h+='<div style="font-size:10px;color:var(--accent-light);">💎 Phase '+e.currentPhase+'/'+e.phases+'</div>';
     }
     h+=(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
   }
@@ -1408,7 +1825,18 @@ function rCraft(){
 }
 
 function rQuest(){
-  let h='<div class="quest-view"><h2 class="st">Active Quests</h2><div class="qlist">';
+  let h='<div class="quest-view">';
+  // Storyline section
+  h+='<h2 class="st">📖 Storyline</h2><div class="qlist">';
+  for(let s of G.storyline){
+    if(!s.unlocked) continue;
+    const pc=Math.min(100,(G.p.lvl/s.need)*100);
+    h+='<div class="qc '+(s.done?'done':'')+'" style="border-color:var(--accent-light);"><div class="qh"><span class="qn">'+(s.done?'✅ ':'')+'Ch.'+s.chapter+': '+s.n+'</span><span class="qr">'+s.rw.xp+' XP | '+s.rw.g+' G</span></div>';
+    h+='<div class="qd">'+s.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">Lv.'+G.p.lvl+'/'+s.need+'</span></div></div>';
+  }
+  h+='</div>';
+  // Active quests section
+  h+='<h2 class="st" style="margin-top:20px;">📜 Active Quests</h2><div class="qlist">';
   for(let q of G.quests){
     if(q.hidden && !q.revealed) continue;
     const pc=Math.min(100,(q.c/q.need)*100);
@@ -1429,7 +1857,17 @@ function rQuest(){
     }
     h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
   }
-  h+='</div><div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
+  h+='</div>';
+  // Bounties section
+  h+='<h2 class="st" style="margin-top:20px;">💰 Bounties (Daily)</h2><div class="qlist">';
+  for(let b of G.bounties){
+    if(b.done) continue;
+    const pc=Math.min(100,(b.c/b.need)*100);
+    h+='<div class="qc"><div class="qh"><span class="qn">'+b.n+'</span><span class="qr">'+b.rw.xp+' XP | '+b.rw.g+' G</span></div>';
+    h+='<div class="qd">'+b.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+b.c+'/'+b.need+'</span></div></div>';
+  }
+  h+='</div>';
+  h+='<div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
   return h;
 }
 
