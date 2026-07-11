@@ -305,6 +305,28 @@ const G = {
     Soel: { val: 80, max: 100, lastInteract: Date.now(), decayRate: 0.08 }
   },
 
+  soelCommentary: [
+    { speaker: 'Soel', text: "Soel bats at the quest scroll. 'Boring. Where's the fish?'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel sits on the quest log. 'This one smells like trouble. Good.'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel yawns dramatically. 'Can we nap instead? The quest will wait.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel's tail puffs up. 'That one. That quest. I don't like it.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel knocks a potion off the table. 'Oops. Was that important?'", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel watches you craft with intense focus. Then falls asleep.", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel walks across your spellbook. 'This page is better blank.'", trigger: 'skills' },
+    { speaker: 'Soel', text: "Soel purrs so loud you can't concentrate. 'Focus? Never heard of her.'", trigger: 'focus' },
+    { speaker: 'Soel', text: "Soel curls up on the map. 'Here. We rest here. I decided.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel stares at the campfire like it's a personal enemy. 'Too bright.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel brings you a dead leaf. 'Gift. For the brave warrior.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel licks his paw while you loot. 'Hurry up. I'm hungry.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel hisses at an empty corner. 'There's something there. Trust me.'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel runs ahead, then back, then ahead again. 'This way! No, this way!'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel sits on Joel's head. 'Better view from up here.'", trigger: 'party' },
+    { speaker: 'Soel', text: "Soel ignores Aisyah. Aisyah ignores him. Mutual respect.", trigger: 'party' }
+  ],
+
+  lastSoelComment: null,
+  soelCommentCooldown: 0,
+
   affinity: {
     Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
     Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
@@ -314,6 +336,28 @@ const G = {
     Zaki: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
     Soel: { val: 80, max: 100, lastInteract: Date.now(), decayRate: 0.08 }
   },
+
+  soelCommentary: [
+    { speaker: 'Soel', text: "Soel bats at the quest scroll. 'Boring. Where's the fish?'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel sits on the quest log. 'This one smells like trouble. Good.'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel yawns dramatically. 'Can we nap instead? The quest will wait.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel's tail puffs up. 'That one. That quest. I don't like it.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel knocks a potion off the table. 'Oops. Was that important?'", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel watches you craft with intense focus. Then falls asleep.", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel walks across your spellbook. 'This page is better blank.'", trigger: 'skills' },
+    { speaker: 'Soel', text: "Soel purrs so loud you can't concentrate. 'Focus? Never heard of her.'", trigger: 'focus' },
+    { speaker: 'Soel', text: "Soel curls up on the map. 'Here. We rest here. I decided.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel stares at the campfire like it's a personal enemy. 'Too bright.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel brings you a dead leaf. 'Gift. For the brave warrior.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel licks his paw while you loot. 'Hurry up. I'm hungry.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel hisses at an empty corner. 'There's something there. Trust me.'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel runs ahead, then back, then ahead again. 'This way! No, this way!'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel sits on Joel's head. 'Better view from up here.'", trigger: 'party' },
+    { speaker: 'Soel', text: "Soel ignores Aisyah. Aisyah ignores him. Mutual respect.", trigger: 'party' }
+  ],
+
+  lastSoelComment: null,
+  soelCommentCooldown: 0,
 
   rest: {
     active: false,
@@ -501,6 +545,18 @@ function getAffinityColor(val) {
   if (val >= 70) return 'affinity-high';
   if (val >= 40) return 'affinity-mid';
   return 'affinity-low';
+}
+
+function triggerSoelCommentary(triggerType) {
+  if (!G.party[6].on) return;
+  if (G.soelCommentCooldown > 0) { G.soelCommentCooldown--; return; }
+  if (Math.random() > 0.35) return;
+  const relevant = G.soelCommentary.filter(c => c.trigger === triggerType);
+  if (relevant.length === 0) return;
+  const comment = relevant[Math.floor(Math.random() * relevant.length)];
+  G.lastSoelComment = comment;
+  G.soelCommentCooldown = 3;
+  lg('🐱 Soel: ' + comment.text);
 }
 
 function rd(s) { return Math.floor(Math.random()*s)+1; }
@@ -749,6 +805,7 @@ function sc(zi) {
     e.id=i; G.cbt.en.push(e);
   }
   lg('Entered '+z.n+'! '+ec+' enemies appear!');
+  triggerSoelCommentary('explore');
   // Track explore_with quest progress
   for(let q of G.quests){
     if(!q.done && !q.expired && q.t==='explore_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
@@ -943,6 +1000,7 @@ function eqI(ix){
 let ft=null;
 function sf(){
   G.state='focus'; G.fs=Date.now(); G.fd=25*60*1000;
+  triggerSoelCommentary('focus');
   lg('Focus started! 25 min...'); render();
   ft=setInterval(()=>{
     const el=Date.now()-G.fs, rm=G.fd-el;
@@ -968,7 +1026,14 @@ function lg(msg){
   if(el){el.innerHTML=G.log.map(m=>'<div class="le">'+m+'</div>').join('');el.scrollTop=el.scrollHeight;}
 }
 
-function setS(s){G.state=s;render();}
+function setS(s){
+  if (s === 'quest') triggerSoelCommentary('quest_view');
+  if (s === 'craft') triggerSoelCommentary('craft');
+  if (s === 'skills') triggerSoelCommentary('skills');
+  if (s === 'rest') triggerSoelCommentary('rest');
+  if (s === 'party') triggerSoelCommentary('party');
+  G.state=s;render();
+}
 function flee(){if(Math.random()>0.5){lg('Fled!');G.cbt.on=false;G.state='explore';}else{lg('Flee failed!');eturn();}render();}
 
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
@@ -1079,6 +1144,9 @@ function loadGame() {
           G.affinity[name].lastInteract = data.affinity[name].lastInteract;
         }
       }
+    }
+    if (data.soelCommentCooldown !== undefined) {
+      G.soelCommentCooldown = data.soelCommentCooldown;
     }
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     lg('Game loaded!');
