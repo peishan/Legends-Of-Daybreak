@@ -222,6 +222,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .ambush-warning .aw-text { font-size: 13px; color: var(--danger); font-weight: 600; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
+/* ELEMENTAL IMMUNITY INDICATOR */
+.e-immune { font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 2px; }
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -238,12 +241,12 @@ const G = {
     hp: 80, mhp: 80, mp: 120, mmp: 120, gold: 50,
     stats: { str: 4, dex: 6, con: 5, int: 12, wis: 10, cha: 8 },
     skills: [
-      { n: 'Arcane Bolt', c: 10, dmg: '1d8', on: true, d: 'Basic magic missile' },
-      { n: 'Fireball', c: 25, dmg: '2d6', on: false, ul: 3, d: 'Area fire damage' },
-      { n: 'Frost Shield', c: 15, on: false, ul: 2, d: '+5 AC for 3 turns', buff: true },
-      { n: 'Lightning Strike', c: 35, dmg: '3d8', on: false, ul: 5, d: 'Devastating single target' },
-      { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true },
-      { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction' }
+      { n: 'Arcane Bolt', c: 10, dmg: '1d8', on: true, d: 'Basic magic missile', elem: 'arcane' },
+      { n: 'Fireball', c: 25, dmg: '2d6', on: false, ul: 3, d: 'Area fire damage', elem: 'fire' },
+      { n: 'Frost Shield', c: 15, on: false, ul: 2, d: '+5 AC for 3 turns', buff: true, elem: 'ice' },
+      { n: 'Lightning Strike', c: 35, dmg: '3d8', on: false, ul: 5, d: 'Devastating single target', elem: 'lightning' },
+      { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true, elem: 'arcane' },
+      { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction', elem: 'fire' }
     ],
     eq: { w: { n: 'Apprentice Staff', atk: 2, r: 'common' }, a: { n: 'Novice Robes', def: 2, r: 'common' }, acc: null },
     inv: [
@@ -288,13 +291,12 @@ const G = {
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
-  // === PHASE 2: CAMPFIRE REST SYSTEM (5-tick rapid) ===
   rest: {
     active: false,
     timer: null,
     tick: 0,
     maxTicks: 5,
-    tickDuration: 1500, // 1.5 seconds per tick
+    tickDuration: 1500,
     selectedSite: null,
     ambushPending: false,
     sites: [
@@ -311,7 +313,6 @@ const G = {
     ]
   },
 
-  // === PHASE 2: DIALOGUE / BANTER ===
   banter: {
     solo: [
       { speaker: 'San', text: "The fire crackles. You stare into it, thinking of Joel." },
@@ -397,15 +398,21 @@ function rd(s) { return Math.floor(Math.random()*s)+1; }
 function rdc(n,s) { let sum=0; for(let i=0;i<n;i++)sum+=rd(s); return sum; }
 function r20() { return rd(20); }
 function pd(ds,b) {
-  if(!ds) return b||0;
+  if(!ds) return 0;
   const m=ds.match(/(\d+)d(\d+)/);
   if(!m) return b||0;
   return rdc(parseInt(m[1]),parseInt(m[2]))+(b||0);
 }
 
-// ============================================================
-// CAMPFIRE REST SYSTEM (5-tick rapid)
-// ============================================================
+function isImmune(enemyName, spellElem) {
+  if (!spellElem) return false;
+  const fireMobs = ['Fire Imp', 'Lava Slug', 'Ash Wraith'];
+  const iceMobs = ['Ice Elemental', 'Frost Wolf', 'Frozen Knight'];
+  if (spellElem === 'fire' && fireMobs.includes(enemyName)) return true;
+  if (spellElem === 'ice' && iceMobs.includes(enemyName)) return true;
+  return false;
+}
+
 let restTimer = null;
 
 function hasHealer() {
@@ -429,18 +436,14 @@ function unlockRestSites() {
   return newly;
 }
 
-// === DIALOGUE PICKER ===
 function pickBanter(type, tense) {
   const pool = [];
-
   if (tense) {
     pool.push(...G.banter.tense);
   } else if (type === 'tavern' && Math.random() < 0.4) {
     pool.push(...G.banter.tavern);
   }
-
   const active = G.party.filter(p => p.on);
-
   if (active.length === 0 && !tense) {
     pool.push(...G.banter.solo);
   } else if (!tense) {
@@ -449,7 +452,6 @@ function pickBanter(type, tense) {
       if (G.banter[key]) pool.push(...G.banter[key]);
     }
   }
-
   if (pool.length === 0) return null;
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -467,92 +469,69 @@ function showAmbushWarning(dialogue) {
 }
 
 function doRestTick() {
-  // Heal 20% per tick
   const healAmt = Math.ceil(G.p.mhp / G.rest.maxTicks);
   const manaAmt = Math.ceil(G.p.mmp / G.rest.maxTicks);
-
   G.p.hp = Math.min(G.p.mhp, G.p.hp + healAmt);
   G.p.mp = Math.min(G.p.mmp, G.p.mp + manaAmt);
-
   for (let p of G.party) {
     if (p.on) {
       p.hp = Math.min(p.mhp, p.hp + Math.ceil(p.mhp / G.rest.maxTicks));
     }
   }
-
-  // Show banter dialogue
   const line = pickBanter(G.rest.selectedSite.type, false);
   if (line) showDialogue(line);
-
   render();
 }
 
 function startRest(siteId) {
   if (G.rest.active) return;
-
   const site = G.rest.sites.find(s => s.id === siteId);
   if (!site || !site.unlocked) {
     lg('That rest site is not available yet.');
     return;
   }
-
   if (!hasHealer()) {
     lg('❌ No healer in active party! You need a healer to rest safely.');
     return;
   }
-
   if (site.cost && G.p.gold < site.cost) {
     lg('❌ Not enough gold! ' + site.name + ' costs ' + site.cost + 'G.');
     return;
   }
-
   if (site.cost) {
     G.p.gold -= site.cost;
     lg('💰 Paid ' + site.cost + 'G for ' + site.name + '.');
   }
-
   G.rest.active = true;
   G.rest.selectedSite = site;
   G.rest.tick = 0;
   G.rest.ambushPending = false;
   G.currentDialogue = null;
   G.ambushWarning = null;
-
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
   lg('🔥 Campfire lit. 5 ticks to full recovery.');
-
-  // First tick immediately
   doRestTick();
   G.rest.tick = 1;
-
   render();
-
   restTimer = setInterval(() => {
     if (!G.rest.active) {
       clearInterval(restTimer);
       restTimer = null;
       return;
     }
-
-    // Ambush check BEFORE healing this tick
     const ambushChance = G.rest.selectedSite.type === 'tavern' ? 0.05 : 0.15;
     if (Math.random() < ambushChance && G.rest.tick < G.rest.maxTicks) {
-      // Show tense warning
       const tenseLine = pickBanter(G.rest.selectedSite.type, true);
       showAmbushWarning(tenseLine);
-
       clearInterval(restTimer);
       restTimer = null;
       G.rest.active = false;
       G.rest.ambushPending = true;
-
-      // Small delay then combat
       setTimeout(() => {
         G.rest.ambushPending = false;
         G.currentDialogue = null;
         G.ambushWarning = null;
-        // Find zone index for this site
         const zi = G.zones.findIndex(z => z.n === G.rest.selectedSite.zone);
         sc(zi >= 0 ? zi : 0);
         G.rest.selectedSite = null;
@@ -560,11 +539,8 @@ function startRest(siteId) {
       }, 1500);
       return;
     }
-
-    // Do the tick
     doRestTick();
     G.rest.tick++;
-
     if (G.rest.tick >= G.rest.maxTicks) {
       clearInterval(restTimer);
       restTimer = null;
@@ -578,64 +554,48 @@ function completeRest() {
     clearInterval(restTimer);
     restTimer = null;
   }
-
   const healerName = getHealerName();
-
-  // Full restore to be safe
   G.p.hp = G.p.mhp;
   G.p.mp = G.p.mmp;
   for (let p of G.party) {
     if (p.on) p.hp = p.mhp;
   }
-
   G.p.buffs = G.p.buffs.filter(b => b.t > 0);
   G.currentDialogue = null;
   G.ambushWarning = null;
-
   const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
   lg('✨ Rest complete at ' + siteName + '!');
   lg('💚 ' + healerName + ' has restored everyone to full health.');
-
   G.rest.active = false;
   G.rest.selectedSite = null;
   G.rest.tick = 0;
   G.rest.ambushPending = false;
-
   render();
 }
 
 function cancelRest() {
   if (!G.rest.active) return;
-
   if (restTimer) {
     clearInterval(restTimer);
     restTimer = null;
   }
-
   const pct = G.rest.tick / G.rest.maxTicks;
-
-  // Partial heal based on ticks completed
   const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
   const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
-
   G.p.hp = Math.min(G.p.mhp, G.p.hp + hpRestore);
   G.p.mp = Math.min(G.p.mmp, G.p.mp + mpRestore);
-
   for (let p of G.party) {
     if (p.on) {
       p.hp = Math.min(p.mhp, p.hp + Math.floor(p.mhp * pct * 0.5));
     }
   }
-
   G.currentDialogue = null;
   G.ambushWarning = null;
   lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
-
   G.rest.active = false;
   G.rest.selectedSite = null;
   G.rest.tick = 0;
   G.rest.ambushPending = false;
-
   render();
 }
 
@@ -672,20 +632,26 @@ function pa(si,ti){
   if(!tg||tg.hp<=0) return;
   if(G.p.mp<sk.c){lg('Not enough MP!');return;}
   G.p.mp-=sk.c;
+
   if(sk.buff){
     if(sk.n=='Frost Shield'){G.p.buffs.push({n:'Frost Shield',t:3,def:5});lg('Frost Shield! DEF +5 for 3 turns.');}
     else if(sk.n=='Mana Surge'){G.p.mp=Math.min(G.p.mmp,G.p.mp+20);lg('Mana Surge! Restored 20 MP.');}
-  }else{
-    const hit=r20()+Math.floor(G.p.stats.int/3);
-    if(hit>=10+tg.def){
-      let dmg=pd(sk.dmg,Math.floor(G.p.stats.int/2));
-      dmg+=G.p.eq.w?G.p.eq.w.atk:0;
-      if(G.party[2].on)dmg=Math.floor(dmg*1.15);
-      dmg=Math.max(1,dmg-Math.floor(tg.def/2));
-      tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
-      if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;}
-    }else lg('Missed '+tg.n+'!');
+  } else {
+    if (isImmune(tg.n, sk.elem)) {
+      lg(sk.n + ' has no effect — ' + tg.n + ' is immune to ' + sk.elem + '!');
+    } else {
+      const hit=r20()+Math.floor(G.p.stats.int/3);
+      if(hit>=10+tg.def){
+        let dmg=pd(sk.dmg,Math.floor(G.p.stats.int/2));
+        dmg+=G.p.eq.w?G.p.eq.w.atk:0;
+        if(G.party[2].on)dmg=Math.floor(dmg*1.15);
+        dmg=Math.max(1,dmg-Math.floor(tg.def/2));
+        tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
+        if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;}
+      }else lg('Missed '+tg.n+'!');
+    }
   }
+
   for(let p of G.party){
     if(!p.on||p.hp<=0)continue;
     const ae=G.cbt.en.filter(e=>e.hp>0);
@@ -711,7 +677,6 @@ function pa(si,ti){
       const l=z.loot[Math.floor(Math.random()*z.loot.length)];
       addI({n:l,t:'mat',q:1,r:'common'});
       lg('Found: '+l);
-      // Unlock camp on zone clear
       const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
       const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
       if (campSite && !campSite.unlocked) {
@@ -853,9 +818,6 @@ function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
-// ============================================================
-// SAVE SYSTEM
-// ============================================================
 const SAVE_KEY = 'ldb_save_v4';
 
 function saveGame() {
@@ -864,7 +826,7 @@ function saveGame() {
       name: G.p.name, cls: G.p.cls, lvl: G.p.lvl, xp: G.p.xp, xpN: G.p.xpN,
       hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
       stats: G.p.stats,
-      skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff })),
+      skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff, elem: s.elem })),
       equipment: { w: G.p.eq.w, a: G.p.eq.a, acc: G.p.eq.acc },
       inventory: G.p.inv,
       buffs: G.p.buffs,
@@ -1000,9 +962,6 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) saveGame();
 });
 
-// ============================================================
-// RENDER
-// ============================================================
 function render(){
   const a=document.getElementById('app'); if(!a)return;
   let h='';
@@ -1126,7 +1085,13 @@ function rCbt(){
   let h='<div class="combat-view"><h2 class="st">Combat</h2><div class="erow">';
   for(let i=0;i<G.cbt.en.length;i++){
     const e=G.cbt.en[i],d=e.hp<=0,s=G.cbt.tg==i&&!d?'sel':'';
-    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>'+(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
+    const immuneFire = ['Fire Imp','Lava Slug','Ash Wraith'].includes(e.n);
+    const immuneIce = ['Ice Elemental','Frost Wolf','Frozen Knight'].includes(e.n);
+    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+'</div>';
+    if(!d && (immuneFire || immuneIce)){
+      h+='<div class="e-immune">'+(immuneFire?'🔥 Fire Immune':(immuneIce?'❄️ Ice Immune':''))+'</div>';
+    }
+    h+=(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
   }
   h+='</div><div class="pstat"><div class="mst"><span class="md" style="background:#7c3aed"></span>San '+G.p.hp+'/'+G.p.mhp+'</div>';
   for(let p of G.party)if(p.on)h+='<div class="mst"><span class="md" style="background:'+p.col+'"></span>'+p.n+' '+p.hp+'/'+p.mhp+'</div>';
@@ -1213,34 +1178,25 @@ function rFocus(){
 }
 
 function rRest() {
-  // If rest is active, show the campfire tick progress
   if (G.rest.active && G.rest.selectedSite) {
     const site = G.rest.selectedSite;
     const currentTick = G.rest.tick;
     const maxTicks = G.rest.maxTicks;
     const pct = (currentTick / maxTicks) * 100;
-
     const healerName = getHealerName();
-
     let h2 = '<div class="rest-view">';
     h2 += '<h2 class="st">🔥 Resting at ' + site.name + '</h2>';
-
-    // Ambush warning
     if (G.ambushWarning) {
       h2 += '<div class="ambush-warning">';
       h2 += '<div class="aw-text">⚠️ ' + G.ambushWarning.text + '</div>';
       h2 += '</div>';
     }
-
-    // Dialogue box
     if (G.currentDialogue && !G.ambushWarning) {
       h2 += '<div class="dialogue-box">';
       h2 += '<div class="d-speaker">' + G.currentDialogue.speaker + '</div>';
       h2 += '<div class="d-text">' + G.currentDialogue.text + '</div>';
       h2 += '</div>';
     }
-
-    // Tick tracker
     h2 += '<div class="tick-track">';
     for (let i = 1; i <= maxTicks; i++) {
       let tickClass = '';
@@ -1256,25 +1212,19 @@ function rRest() {
     }
     h2 += '</div>';
     h2 += '<div class="tick-label">Tick ' + currentTick + '/' + maxTicks + '</div>';
-
-    // Progress bar
     h2 += '<div class="rest-progress" style="margin-top:16px;">';
     h2 += '<div class="rest-bar"><div class="rest-fill" style="width:' + pct + '%"></div></div>';
     h2 += '<div class="rest-healer ok">💚 ' + healerName + ' is tending to the party</div>';
     h2 += '</div>';
-
     h2 += '<button class="rest-cancel" id="cancel-rest">Cancel Rest (Partial Recovery)</button>';
     h2 += '</div>';
     return h2;
   }
 
-  // Normal rest selection screen
   const healerOk = hasHealer();
   const healerName = getHealerName();
-
   let h2 = '<div class="rest-view">';
   h2 += '<h2 class="st">💤 Rest</h2>';
-
   if (healerOk) {
     h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
@@ -1283,38 +1233,31 @@ function rRest() {
   } else {
     h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
     h2 += '<div style="font-size:13px;font-weight:600;color:var(--danger);">❌ No Healer in Party</div>';
-    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest.</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest safely.</div>';
     h2 += '</div>';
   }
-
   h2 += '<div class="rest-sites">';
-
   const zones = {};
   for (let site of G.rest.sites) {
     if (!zones[site.zone]) zones[site.zone] = [];
     zones[site.zone].push(site);
   }
-
   for (let zoneName in zones) {
     const sites = zones[zoneName];
     const anyUnlocked = sites.some(s => s.unlocked);
     if (!anyUnlocked) continue;
-
     h2 += '<div style="margin-bottom:12px;">';
     h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
-
     for (let site of sites) {
       const locked = !site.unlocked;
       const canAfford = !site.cost || G.p.gold >= site.cost;
       const canRest = healerOk && !locked && canAfford;
-
       h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
       h2 += '<div class="rs-head">';
       h2 += '<span class="rs-name">' + site.icon + ' ' + site.name + '</span>';
       h2 += '<span class="rs-type ' + site.type + '">' + site.type.toUpperCase() + '</span>';
       h2 += '</div>';
       h2 += '<div class="rs-desc">' + site.desc + '</div>';
-
       if (locked) {
         h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
       } else if (site.cost) {
@@ -1326,14 +1269,12 @@ function rRest() {
     }
     h2 += '</div>';
   }
-
   h2 += '</div>';
   h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes ~7.5 seconds. Party banter every tick. Taverns cost gold but are safer.</div>';
   h2 += '</div>';
   return h2;
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', function() {
   const hasSave = loadGame();
   if (!hasSave) {
