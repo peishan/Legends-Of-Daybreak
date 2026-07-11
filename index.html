@@ -287,7 +287,9 @@ const G = {
   quests: [
     { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
-    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false }
+    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
+    { id: 4, n: "Joel's Shield Oath", d: 'Win 5 battles with Joel in your party', t: 'joel_battle', c: 0, need: 5, rw: { xp: 80, g: 40 }, done: false, chain: 'joel', reqQuest: null, reqParty: 'Joel' },
+    { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false }
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
@@ -735,8 +737,23 @@ function lvlup(){
 function checkQ(){
   for(let q of G.quests){
     if(q.done)continue;
+    if(q.hidden && !q.revealed)continue;
     if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
-    if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');lvlup();}
+    if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();lvlup();}
+  }
+}
+
+function checkQuestChains(){
+  for(let q of G.quests){
+    if(q.hidden && !q.revealed && q.reqQuest){
+      const req=G.quests.find(rq=>rq.id===q.reqQuest);
+      if(req && req.done){
+        q.revealed=true;
+        q.hidden=false;
+        lg('🔓 Hidden quest unlocked: '+q.n+'!');
+        lg('   '+q.d);
+      }
+    }
   }
 }
 
