@@ -349,6 +349,42 @@ const G = {
     }
   },
 
+  skillTrees: {
+    pyromancer: {
+      name: 'Pyromancer',
+      icon: '🔥',
+      desc: 'Mastery of flame. Burn the world clean.',
+      color: '#ef4444',
+      tiers: [
+        { level: 3, name: 'Inferno Touch', desc: 'Fireball cost -5 MP. Burn chance +20%.', effects: { fireballCostReduction: 5, burnChanceBonus: 0.20 } },
+        { level: 5, name: 'Wildfire', desc: 'Fire spells have 25% chance to chain to adjacent enemy.', effects: { wildfireChance: 0.25, wildfireDmg: 0.5 } },
+        { level: 8, name: 'Phoenix Rising', desc: 'When HP drops below 20%, auto-cast Meteor Swarm once per combat.', effects: { phoenixRising: true, phoenixHpThreshold: 0.20 } }
+      ]
+    },
+    cryomancer: {
+      name: 'Cryomancer',
+      icon: '❄️',
+      desc: 'Mastery of ice. Freeze time itself.',
+      color: '#3b82f6',
+      tiers: [
+        { level: 3, name: 'Frozen Core', desc: 'Frost Shield duration +2 turns. +3 DEF while active.', effects: { frostShieldDuration: 2, frostShieldDefBonus: 3 } },
+        { level: 5, name: 'Absolute Zero', desc: 'Ice spells have 30% chance to freeze enemy (skip 2 turns).', effects: { freezeChance: 0.30, freezeTurns: 2 } },
+        { level: 8, name: 'Glacial Aegis', desc: 'When hit, 20% chance to auto-cast Frost Shield (free, once per 3 turns).', effects: { glacialAegisChance: 0.20, glacialAegisCooldown: 3 } }
+      ]
+    },
+    stormcaller: {
+      name: 'Stormcaller',
+      icon: '⚡',
+      desc: 'Mastery of lightning. Strike before they blink.',
+      color: '#eab308',
+      tiers: [
+        { level: 3, name: 'Static Charge', desc: 'Lightning Strike cost -8 MP. Shock duration +1 turn.', effects: { lightningCostReduction: 8, shockDurationBonus: 1 } },
+        { level: 5, name: 'Chain Lightning', desc: 'Lightning spells hit 2 enemies (50% dmg to second).', effects: { chainLightning: true, chainLightningDmg: 0.5 } },
+        { level: 8, name: 'Thunderlord', desc: 'Crit chance +15%. Crits with lightning refund 50% MP.', effects: { thunderlordCritBonus: 0.15, thunderlordMpRefund: 0.5 } }
+      ]
+    }
+  },
+
   cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
@@ -504,6 +540,7 @@ const G = {
 
   currentBoss: null,
   secretArea: { active: false, zone: null, choice: null, result: null },
+  playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
@@ -1284,6 +1321,95 @@ function closeSecretArea() {
   G.secretArea.result = null;
   G.state = 'explore';
   render();
+}
+
+
+// SKILL TREES
+function hasSpecEffect(name) {
+  if (!G.playerSpec.path) return false;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (tier && tier.effects && tier.effects[name] !== undefined) return true;
+  }
+  return false;
+}
+
+function getSpecEffect(name) {
+  if (!G.playerSpec.path) return 0;
+  let total = 0;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (tier && tier.effects && tier.effects[name] !== undefined) {
+      total += tier.effects[name];
+    }
+  }
+  return total;
+}
+
+function canUnlockTier(tierIdx) {
+  const path = G.skillTrees[G.playerSpec.path];
+  if (!path) return false;
+  const tier = path.tiers[tierIdx];
+  if (!tier) return false;
+  if (G.playerSpec.tiers.includes(tierIdx)) return false;
+  if (G.p.lvl < tier.level) return false;
+  if (tierIdx > 0 && !G.playerSpec.tiers.includes(tierIdx - 1)) return false;
+  return true;
+}
+
+function unlockSpecTier(tierIdx) {
+  if (!canUnlockTier(tierIdx)) return false;
+  G.playerSpec.tiers.push(tierIdx);
+  const path = G.skillTrees[G.playerSpec.path];
+  const tier = path.tiers[tierIdx];
+  lg('🔥 ' + path.icon + ' UNLOCKED: ' + tier.name + '!');
+  lg('   ' + tier.desc);
+  applySpecEffects();
+  render();
+  return true;
+}
+
+function chooseSpecPath(pathKey) {
+  if (G.playerSpec.path) return false;
+  if (!G.skillTrees[pathKey]) return false;
+  G.playerSpec.path = pathKey;
+  G.playerSpec.tiers = [];
+  const path = G.skillTrees[pathKey];
+  lg('🌳 SPECIALIZATION: ' + path.icon + ' ' + path.name + '!');
+  lg('   ' + path.desc);
+  render();
+  return true;
+}
+
+function respecPath() {
+  if (!G.playerSpec.path) return false;
+  const cost = 50 + (G.playerSpec.respecCount * 50);
+  if (G.p.gold < cost) { lg('❌ Need ' + cost + 'G to respec!'); return false; }
+  G.p.gold -= cost;
+  G.playerSpec.respecCount++;
+  G.playerSpec.path = null;
+  G.playerSpec.tiers = [];
+  const fb = G.p.skills.find(s => s.n === 'Fireball'); if (fb) fb.c = 25;
+  const ms = G.p.skills.find(s => s.n === 'Meteor Swarm'); if (ms) ms.c = 60;
+  const ls = G.p.skills.find(s => s.n === 'Lightning Strike'); if (ls) ls.c = 35;
+  lg('🔄 Respec complete! Cost: ' + cost + 'G');
+  render();
+  return true;
+}
+
+function applySpecEffects() {
+  if (!G.playerSpec.path) return;
+  const fb = G.p.skills.find(s => s.n === 'Fireball'); if (fb) fb.c = 25;
+  const ms = G.p.skills.find(s => s.n === 'Meteor Swarm'); if (ms) ms.c = 60;
+  const ls = G.p.skills.find(s => s.n === 'Lightning Strike'); if (ls) ls.c = 35;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (!tier || !tier.effects) continue;
+    const eff = tier.effects;
+    if (eff.fireballCostReduction && fb) fb.c = Math.max(5, 25 - eff.fireballCostReduction);
+    if (eff.fireballCostReduction && ms) ms.c = Math.max(15, 60 - eff.fireballCostReduction);
+    if (eff.lightningCostReduction && ls) ls.c = Math.max(10, 35 - eff.lightningCostReduction);
+  }
 }
 
 function sc(zi) {
@@ -2272,6 +2398,7 @@ function render(){
   else if(G.state=='focus')h+=rFocus();
   else if(G.state=='rest')h+=rRest();
   else if(G.state=='secret')h+=rSecret();
+  else if(G.state=='skilltree')h+=rSkillTree();
   else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
@@ -2289,7 +2416,8 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');});
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
+    else if(a=='skilltree')setS('skilltree');});
   });
   document.querySelectorAll('.story-view .abtn').forEach(el=>{
     el.addEventListener('click',advanceStory);
@@ -2338,6 +2466,14 @@ function attachEvents() {
   });
   const btnCloseSecret=document.getElementById('btn-close-secret');
   if(btnCloseSecret)btnCloseSecret.addEventListener('click',closeSecretArea);
+  document.querySelectorAll('.spec-card').forEach(el=>{
+    el.addEventListener('click',()=>{ if(G.p.lvl>=3) { const spec=el.getAttribute('data-spec'); if(chooseSpecPath(spec)) render(); } });
+  });
+  document.querySelectorAll('.spec-unlock-btn').forEach(el=>{
+    el.addEventListener('click',()=>{ const tier=parseInt(el.getAttribute('data-tier')); if(unlockSpecTier(tier)) render(); });
+  });
+  const btnRespec=document.getElementById('btn-respec');
+  if(btnRespec)btnRespec.addEventListener('click',respecPath);
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -2376,6 +2512,55 @@ function rSecret(){
   } else {
     h += '<div style="margin:20px;">' + (G.secretArea.result === 'loot' ? '🎁 Found something!' : '📦 Empty...') + '</div>';
     h += '<button class="abtn" id="btn-close-secret">Continue</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function rSkillTree(){
+  let h = '<div style="padding:16px;">';
+  h += '<h2 class="st">🌳 Skill Trees</h2>';
+  if (!G.playerSpec.path) {
+    h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:20px;text-align:center;">Choose your specialization at Level 3.</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:12px;">';
+    for (let [key, path] of Object.entries(G.skillTrees)) {
+      const canChoose = G.p.lvl >= 3;
+      h += '<div class="spec-card" data-spec="' + key + '" style="background:var(--bg-card);border:2px solid '+(canChoose?path.color:'#555')+';border-radius:16px;padding:16px;cursor:'+(canChoose?'pointer':'not-allowed')+';opacity:'+(canChoose?'1':'0.5')+';">';
+      h += '<span style="font-size:32px;">' + path.icon + '</span>';
+      h += '<div style="font-size:16px;font-weight:700;color:'+path.color+';">' + path.name + '</div>';
+      h += '<div style="font-size:11px;color:var(--text-dim);">' + path.desc + '</div>';
+      for (let i = 0; i < path.tiers.length; i++) {
+        const tier = path.tiers[i];
+        h += '<div style="font-size:12px;padding:8px;background:#242236;border-radius:8px;margin-top:8px;">';
+        h += '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:'+path.color+'20;color:'+path.color+';">Lv.' + tier.level + '</span> ';
+        h += '<b>' + tier.name + '</b> — ' + tier.desc + '</div>';
+      }
+      if (!canChoose) h += '<div style="margin-top:10px;font-size:11px;color:var(--danger);text-align:center;">🔒 Requires Level 3</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  } else {
+    const path = G.skillTrees[G.playerSpec.path];
+    h += '<div style="text-align:center;margin-bottom:20px;">';
+    h += '<span style="font-size:48px;">' + path.icon + '</span>';
+    h += '<div style="font-size:20px;font-weight:700;color:'+path.color+';">' + path.name + '</div>';
+    h += '</div>';
+    for (let i = 0; i < path.tiers.length; i++) {
+      const tier = path.tiers[i];
+      const unlocked = G.playerSpec.tiers.includes(i);
+      const canUnlock = canUnlockTier(i);
+      h += '<div style="background:var(--bg-card);border:2px solid '+(unlocked?path.color:canUnlock?path.color+'60':'#555')+';border-radius:14px;padding:14px;margin-bottom:12px;">';
+      h += '<div style="font-weight:700;color:'+(unlocked?path.color:'var(--text-dim)')+';">' + (unlocked?'✅':canUnlock?'🔓':'🔒') + ' ' + tier.name + '</div>';
+      h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">' + tier.desc + '</div>';
+      if (unlocked) h += '<div style="font-size:11px;color:var(--success);font-weight:600;">✨ ACTIVE</div>';
+      else if (canUnlock) h += '<button class="spec-unlock-btn" data-tier="' + i + '" style="width:100%;padding:10px;border-radius:10px;border:none;background:'+path.color+';color:white;font-size:13px;font-weight:600;cursor:pointer;">Unlock ' + tier.name + '</button>';
+      else if (G.p.lvl < tier.level) h += '<div style="font-size:11px;color:var(--danger);">🔒 Requires Level ' + tier.level + '</div>';
+      else h += '<div style="font-size:11px;color:var(--text-dim);">🔒 Complete previous tier</div>';
+      h += '</div>';
+    }
+    const respecCost = 50 + (G.playerSpec.respecCount * 50);
+    const canRespec = G.p.gold >= respecCost;
+    h += '<button id="btn-respec" style="width:100%;padding:10px;border-radius:10px;border:1px solid '+(canRespec?'var(--danger)':'#555')+';background:transparent;color:'+(canRespec?'var(--danger)':'#555')+';font-size:12px;font-weight:600;cursor:'+(canRespec?'pointer':'not-allowed')+';">🔄 Respec (' + respecCost + 'G)</button>';
   }
   h += '</div>';
   return h;
@@ -2429,6 +2614,7 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'📖',l:'Bestiary',d:'Catalogue of defeated foes',a:'bestiary'},
+    {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
