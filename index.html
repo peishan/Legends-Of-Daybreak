@@ -320,6 +320,35 @@ const G = {
     { members: ['Eliz', 'San'], name: "Healer's Grace", desc: "San's aura soothes. +20% healing potency.", bonus: { healPct: 0.20 }, icon: '💚💜' }
   ],
 
+  secretAreas: {
+    'Whispering Woods': {
+      name: 'Moss-Covered Ruin',
+      desc: 'Senedra spots crumbling stonework beneath the ivy. Something glints inside.',
+      choices: [
+        { id: 'careful', label: 'Search Carefully', risk: 'low', loot: { common: 0.7, uncommon: 0.25, rare: 0.05 } },
+        { id: 'rush', label: 'Rush In', risk: 'high', loot: { common: 0.3, uncommon: 0.45, rare: 0.25 }, ambushChance: 0.35 }
+      ],
+      lootPool: [
+        { n: 'Ancient Herb', t: 'mat', q: 1, r: 'common', weight: 3 },
+        { n: 'Moss Agate', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
+        { n: "Dryad's Ring", t: 'acc', int: 2, r: 'rare', weight: 1 }
+      ]
+    },
+    'Ember Peak': {
+      name: 'Forgotten Forge',
+      desc: 'Senedra shields her eyes from the heat. An anvil stands in the lava glow, tools still warm.',
+      choices: [
+        { id: 'careful', label: 'Wait for Cooldown', risk: 'low', loot: { common: 0.4, uncommon: 0.4, rare: 0.2 } },
+        { id: 'rush', label: 'Grab and Run', risk: 'high', loot: { common: 0.1, uncommon: 0.3, rare: 0.6 }, ambushChance: 0.45 }
+      ],
+      lootPool: [
+        { n: 'Slag Metal', t: 'mat', q: 2, r: 'common', weight: 3 },
+        { n: 'Ember Coal', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
+        { n: "Forge Master's Hammer", t: 'wep', atk: 12, r: 'rare', weight: 1 }
+      ]
+    }
+  },
+
   cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
@@ -474,6 +503,7 @@ const G = {
   ],
 
   currentBoss: null,
+  secretArea: { active: false, zone: null, choice: null, result: null },
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
@@ -1173,6 +1203,89 @@ function doExploreEvent() {
   return true;
 }
 
+
+// SECRET AREAS
+function canDiscoverSecret(zoneName) {
+  const hasSenedra = G.party.some(p => p.on && p.n === 'Senedra');
+  if (!hasSenedra) return false;
+  const active = G.party.filter(p => p.on && p.hp > 0).map(p => p.n);
+  active.push('San');
+  if (!active.includes('Soel')) return false;
+  if (!G.secretAreas[zoneName]) return false;
+  return true;
+}
+
+function discoverSecret(zoneName) {
+  const area = G.secretAreas[zoneName];
+  if (!area) return false;
+  G.secretArea.active = true;
+  G.secretArea.zone = zoneName;
+  G.secretArea.choice = null;
+  G.secretArea.result = null;
+  G.state = 'secret';
+  lg('🔍 SECRET AREA: ' + area.name + '!');
+  lg('   ' + area.desc);
+  render();
+  return true;
+}
+
+function rollSecretLoot(zoneName, choiceId) {
+  const area = G.secretAreas[zoneName];
+  const choice = area.choices.find(c => c.id === choiceId);
+  if (!choice) return null;
+  const roll = Math.random();
+  let rarity = 'common';
+  if (roll < choice.loot.rare) rarity = 'rare';
+  else if (roll < choice.loot.rare + choice.loot.uncommon) rarity = 'uncommon';
+  const pool = area.lootPool.filter(l => l.r === rarity);
+  if (pool.length === 0) return null;
+  const totalWeight = pool.reduce((s, l) => s + (l.weight || 1), 0);
+  let wRoll = Math.random() * totalWeight;
+  for (let item of pool) {
+    wRoll -= (item.weight || 1);
+    if (wRoll <= 0) return { ...item, q: item.q || 1 };
+  }
+  return pool[0];
+}
+
+function makeSecretChoice(choiceId) {
+  if (!G.secretArea.active) return;
+  const story = G.secretArea;
+  const area = G.secretAreas[story.zone];
+  const choice = area.choices.find(c => c.id === choiceId);
+  if (!choice) return;
+  story.choice = choiceId;
+  if (choice.ambushChance && Math.random() < choice.ambushChance) {
+    story.result = 'ambush';
+    lg('💥 Ambush! Enemies swarm from the shadows!');
+    story.active = false;
+    G.state = 'combat';
+    render();
+    return;
+  }
+  const loot = rollSecretLoot(story.zone, choiceId);
+  story.result = loot ? 'loot' : 'empty';
+  if (loot) {
+    addI({ ...loot });
+    lg('🎁 Found: ' + loot.n + ' (' + loot.r + ')!');
+  } else {
+    lg('📦 Empty...');
+  }
+  G.p.xp += 10;
+  lg('✨ +10 XP');
+  lvlup();
+  render();
+}
+
+function closeSecretArea() {
+  G.secretArea.active = false;
+  G.secretArea.zone = null;
+  G.secretArea.choice = null;
+  G.secretArea.result = null;
+  G.state = 'explore';
+  render();
+}
+
 function sc(zi) {
   const z=G.zones[zi];
   // 30% chance for explore event before combat
@@ -1182,6 +1295,9 @@ function sc(zi) {
     return;
   }
   checkNPCUnlocks();
+  if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
+    if (discoverSecret(z.n)) return;
+  }
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
@@ -2155,6 +2271,7 @@ function render(){
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
   else if(G.state=='rest')h+=rRest();
+  else if(G.state=='secret')h+=rSecret();
   else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
@@ -2216,6 +2333,11 @@ function attachEvents() {
   if(cfb)cfb.addEventListener('click',cf);
   const btnAuto=document.getElementById('btn-auto');
   if(btnAuto)btnAuto.addEventListener('click',toggleAutoCombat);
+  document.querySelectorAll('.secret-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeSecretChoice(el.getAttribute('data-choice')); render(); });
+  });
+  const btnCloseSecret=document.getElementById('btn-close-secret');
+  if(btnCloseSecret)btnCloseSecret.addEventListener('click',closeSecretArea);
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -2234,6 +2356,29 @@ function attachEvents() {
       reviveMember(el.getAttribute('data-m'));
     });
   });
+}
+
+function rSecret(){
+  const area = G.secretAreas[G.secretArea.zone];
+  if (!area) return '<div>Error</div>';
+  let h = '<div style="padding:20px;text-align:center;">';
+  h += '<h2 style="color:var(--accent-light);">🔍 ' + area.name + '</h2>';
+  h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:20px;">' + area.desc + '</div>';
+  if (!G.secretArea.choice && G.secretArea.result !== 'done') {
+    for (let choice of area.choices) {
+      const isRisky = choice.risk === 'high';
+      h += '<button class="secret-choice" data-choice="' + choice.id + '" style="display:block;width:100%;max-width:300px;margin:10px auto;padding:14px;border-radius:14px;border:2px solid '+(isRisky?'var(--danger)':'var(--accent)')+';background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;">';
+      h += choice.label + (isRisky ? ' ⚠️' : '') + '</button>';
+    }
+  } else if (G.secretArea.result === 'ambush') {
+    h += '<div style="color:var(--danger);font-size:18px;margin:20px;">💥 Ambush!</div>';
+    h += '<button class="abtn" onclick="render()">Fight!</button>';
+  } else {
+    h += '<div style="margin:20px;">' + (G.secretArea.result === 'loot' ? '🎁 Found something!' : '📦 Empty...') + '</div>';
+    h += '<button class="abtn" id="btn-close-secret">Continue</button>';
+  }
+  h += '</div>';
+  return h;
 }
 
 function rStory(){
