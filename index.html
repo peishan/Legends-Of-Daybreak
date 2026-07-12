@@ -265,19 +265,6 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .timer-expired { background: #6b7280; }
 .timer-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
 
-/* Secret area styles */
-.secret-choice-btn { transition: all 0.2s; }
-.secret-choice-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(124,58,237,0.2); }
-.secret-choice-btn:active { transform: translateY(0); }
-
-/* Skill tree styles */
-.spec-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-.spec-card:active { transform: translateY(0); }
-
-/* Mini-story styles */
-.ministory-choice:hover:not([style*="cursor:not-allowed"]) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(124,58,237,0.15); border-color: var(--accent-light) !important; }
-.ministory-choice:active:not([style*="cursor:not-allowed"]) { transform: translateY(0); }
-
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -363,299 +350,6 @@ const G = {
     { n: 'Falling Star', d: 'A star falls nearby, leaving something behind.', type: 'loot', chance: 0.05, minLv: 5,
       item: {n:'Star Fragment',t:'mat',q:1,r:'rare'} }
   ],
-
-  secretAreas: {
-    'Whispering Woods': {
-      name: 'Moss-Covered Ruin',
-      desc: 'Senedra spots crumbling stonework beneath the ivy. Something glints inside.',
-      choices: [
-        { id: 'careful', label: 'Search Carefully', risk: 'low', loot: { common: 0.7, uncommon: 0.25, rare: 0.05 } },
-        { id: 'rush', label: 'Rush In', risk: 'high', loot: { common: 0.3, uncommon: 0.45, rare: 0.25 }, ambushChance: 0.35 }
-      ],
-      lootPool: [
-        { n: 'Ancient Herb', t: 'mat', q: 1, r: 'common', weight: 3 },
-        { n: 'Moss Agate', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Dryad's Ring', t: 'acc', int: 2, r: 'rare', weight: 1 }
-      ]
-    },
-    'Cursed Catacombs': {
-      name: 'Hidden Ossuary',
-      desc: 'Senedra traces a draft to a wall of skulls. One is loose. Beyond it: a chamber untouched by time.',
-      choices: [
-        { id: 'careful', label: 'Pry Slowly', risk: 'low', loot: { common: 0.6, uncommon: 0.3, rare: 0.1 } },
-        { id: 'rush', label: 'Kick It Open', risk: 'high', loot: { common: 0.2, uncommon: 0.4, rare: 0.4 }, ambushChance: 0.4 }
-      ],
-      lootPool: [
-        { n: 'Bone Dust', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Spectral Thread', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Deathward Amulet', t: 'acc', con: 3, r: 'rare', weight: 1 }
-      ]
-    },
-    'Crystal Caverns': {
-      name: 'Geode Chamber',
-      desc: 'Senedra's ears twitch at the hollow echo. A perfect crystal sphere waits in the dark.',
-      choices: [
-        { id: 'careful', label: 'Chip Carefully', risk: 'low', loot: { common: 0.5, uncommon: 0.35, rare: 0.15 } },
-        { id: 'rush', label: 'Smash It', risk: 'high', loot: { common: 0.15, uncommon: 0.35, rare: 0.5 }, ambushChance: 0.3 }
-      ],
-      lootPool: [
-        { n: 'Crystal Fragment', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Prismatic Dust', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Crystal Heart', t: 'acc', int: 4, r: 'rare', weight: 1 }
-      ]
-    },
-    'Ember Peak': {
-      name: 'Forgotten Forge',
-      desc: 'Senedra shields her eyes from the heat. An anvil stands in the lava glow, tools still warm.',
-      choices: [
-        { id: 'careful', label: 'Wait for Cooldown', risk: 'low', loot: { common: 0.4, uncommon: 0.4, rare: 0.2 } },
-        { id: 'rush', label: 'Grab and Run', risk: 'high', loot: { common: 0.1, uncommon: 0.3, rare: 0.6 }, ambushChance: 0.45 }
-      ],
-      lootPool: [
-        { n: 'Slag Metal', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Ember Coal', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Forge Master's Hammer', t: 'wep', atk: 12, r: 'rare', weight: 1 }
-      ]
-    },
-    'Stormhold': {
-      name: 'Lightning Rod Spire',
-      desc: 'Senedra points upward. A copper spire crackles with stored energy. Something is fused to its peak.',
-      choices: [
-        { id: 'careful', label: 'Ground It First', risk: 'low', loot: { common: 0.35, uncommon: 0.4, rare: 0.25 } },
-        { id: 'rush', label: 'Climb Fast', risk: 'high', loot: { common: 0.1, uncommon: 0.25, rare: 0.65 }, ambushChance: 0.5 }
-      ],
-      lootPool: [
-        { n: 'Copper Wire', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Static Charge', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Stormcaller's Band', t: 'acc', int: 5, r: 'rare', weight: 1 }
-      ]
-    },
-    'Frostspire Ruins': {
-      name: 'Icebound Vault',
-      desc: 'Senedra's breath freezes mid-air. A door of solid ice bears scratch marks — someone tried to get in. Failed.',
-      choices: [
-        { id: 'careful', label: 'Melt the Seal', risk: 'low', loot: { common: 0.3, uncommon: 0.35, rare: 0.35 } },
-        { id: 'rush', label: 'Shatter the Ice', risk: 'high', loot: { common: 0.05, uncommon: 0.2, rare: 0.75 }, ambushChance: 0.55 }
-      ],
-      lootPool: [
-        { n: 'Frost Shard', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Glacial Water', t: 'pot', eff: 'heal', v: 50, q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Frost Queen's Crown', t: 'acc', int: 6, wis: 2, r: 'rare', weight: 1 }
-      ]
-    },
-    'Sunken Temple': {
-      name: 'Drowned Treasury',
-      desc: 'Senedra spots gold gleam through the murk. A chest, coral-encrusted, sits on the temple floor.',
-      choices: [
-        { id: 'careful', label: 'Dislodge Coral First', risk: 'low', loot: { common: 0.25, uncommon: 0.35, rare: 0.4 } },
-        { id: 'rush', label: 'Yank It Free', risk: 'high', loot: { common: 0.05, uncommon: 0.15, rare: 0.8 }, ambushChance: 0.6 }
-      ],
-      lootPool: [
-        { n: 'Coral Piece', t: 'mat', q: 2, r: 'common', weight: 3 },
-        { n: 'Pearl Dust', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Tidal Trident', t: 'wep', atk: 15, r: 'rare', weight: 1 }
-      ]
-    },
-    'Abyssal Depths': {
-      name: 'Void Pocket',
-      desc: 'Senedra freezes. The darkness here is wrong — it folds inward, and in the fold, something waits. Something valuable.',
-      choices: [
-        { id: 'careful', label: 'Approach with Light', risk: 'low', loot: { common: 0.15, uncommon: 0.3, rare: 0.55 } },
-        { id: 'rush', label: 'Snatch and Retreat', risk: 'high', loot: { common: 0, uncommon: 0.1, rare: 0.9 }, ambushChance: 0.7 }
-      ],
-      lootPool: [
-        { n: 'Void Residue', t: 'mat', q: 1, r: 'common', weight: 3 },
-        { n: 'Abyssal Ink', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
-        { n: 'Void Eye', t: 'acc', int: 8, wis: 3, r: 'rare', weight: 1 }
-      ]
-    }
-  },
-
-  skillTrees: {
-    pyromancer: {
-      name: 'Pyromancer',
-      icon: '🔥',
-      desc: 'Mastery of flame. Burn the world clean.',
-      color: '#ef4444',
-      tiers: [
-        { 
-          level: 3, 
-          name: 'Inferno Touch', 
-          desc: 'Fireball cost -5 MP. Burn chance +20%.',
-          effects: { fireballCostReduction: 5, burnChanceBonus: 0.20 }
-        },
-        { 
-          level: 5, 
-          name: 'Wildfire', 
-          desc: 'Fire spells have 25% chance to chain to adjacent enemy.',
-          effects: { wildfireChance: 0.25, wildfireDmg: 0.5 }
-        },
-        { 
-          level: 8, 
-          name: 'Phoenix Rising', 
-          desc: 'When HP drops below 20%, auto-cast Meteor Swarm once per combat.',
-          effects: { phoenixRising: true, phoenixHpThreshold: 0.20 }
-        }
-      ]
-    },
-    cryomancer: {
-      name: 'Cryomancer',
-      icon: '❄️',
-      desc: 'Mastery of ice. Freeze time itself.',
-      color: '#3b82f6',
-      tiers: [
-        { 
-          level: 3, 
-          name: 'Frozen Core', 
-          desc: 'Frost Shield duration +2 turns. +3 DEF while active.',
-          effects: { frostShieldDuration: 2, frostShieldDefBonus: 3 }
-        },
-        { 
-          level: 5, 
-          name: 'Absolute Zero', 
-          desc: 'Ice spells have 30% chance to freeze enemy (skip 2 turns).',
-          effects: { freezeChance: 0.30, freezeTurns: 2 }
-        },
-        { 
-          level: 8, 
-          name: 'Glacial Aegis', 
-          desc: 'When hit, 20% chance to auto-cast Frost Shield (free, once per 3 turns).',
-          effects: { glacialAegisChance: 0.20, glacialAegisCooldown: 3 }
-        }
-      ]
-    },
-    stormcaller: {
-      name: 'Stormcaller',
-      icon: '⚡',
-      desc: 'Mastery of lightning. Strike before they blink.',
-      color: '#eab308',
-      tiers: [
-        { 
-          level: 3, 
-          name: 'Static Charge', 
-          desc: 'Lightning Strike cost -8 MP. Shock duration +1 turn.',
-          effects: { lightningCostReduction: 8, shockDurationBonus: 1 }
-        },
-        { 
-          level: 5, 
-          name: 'Chain Lightning', 
-          desc: 'Lightning spells hit 2 enemies (50% dmg to second).',
-          effects: { chainLightning: true, chainLightningDmg: 0.5 }
-        },
-        { 
-          level: 8, 
-          name: 'Thunderlord', 
-          desc: 'Crit chance +15%. Crits with lightning refund 50% MP.',
-          effects: { thunderlordCritBonus: 0.15, thunderlordMpRefund: 0.5 }
-        }
-      ]
-    }
-  },
-
-  playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
-
-  miniStories: [
-    {
-      id: 'varn_merchant',
-      name: 'Varn',
-      title: 'Lost Merchant',
-      icon: '🧳',
-      zones: ['Whispering Woods', 'Cursed Catacombs'],
-      chance: 0.12,
-      dialogue: [
-        { speaker: 'Varn', text: "A shivering merchant huddles by a dead campfire. 'Took a wrong turn at the crossroads. Name's Varn. You... you look like you've seen worse.'" }
-      ],
-      choices: [
-        { label: 'Share your rations', cost: { item: 'Herb Bundle', qty: 1 }, reward: { affinity: 'Joel', amt: 20, xp: 15 }, response: "Varn's eyes soften. 'Not many would. Your friend there — the big one — he's lucky to have you.'" },
-        { label: 'Trade for information', cost: { gold: 10 }, reward: { xp: 25, info: 'hazard_hint' }, response: "Varn leans close. 'The Catacombs? Stay near the walls. The dead don't like tight spaces.'" },
-        { label: 'Keep moving', cost: {}, reward: {}, response: "Varn nods, unsurprised. 'Survival first. I'll remember your face.'" }
-      ]
-    },
-    {
-      id: 'elara_scholar',
-      name: 'Elara',
-      title: 'Ruin Scholar',
-      icon: '📜',
-      zones: ['Crystal Caverns', 'Frostspire Ruins'],
-      chance: 0.10,
-      dialogue: [
-        { speaker: 'Elara', text: "A woman in travel-stained robes sketches crystal formations. 'Fascinating lattice structure. The ancients knew something about resonance we've forgotten.' She looks up, pen still moving. 'You're not here for the rocks, are you?'" }
-      ],
-      choices: [
-        { label: 'Ask about magic', cost: {}, reward: { xp: 30, item: { n: 'Crystal Fragment', t: 'mat', q: 2, r: 'common' } }, response: "Elara's eyes light up. 'Finally, someone with curiosity! Here — samples from the deep veins. The resonance is... musical.'" },
-        { label: 'Offer protection', cost: {}, reward: { affinity: 'Mezstorm', amt: 15, xp: 20 }, response: "Elara laughs. 'Protection? From what, dust? But your storm-mage friend — he's got the right energy. Tell him to find me if he wants to talk ley lines.'" },
-        { label: 'Take her notes', cost: {}, reward: { gold: 25, karma: -1 }, response: "You snatch the sketchbook. Elara screams, but you're already gone. The drawings are worth something to the right buyer. Probably." }
-      ]
-    },
-    {
-      id: 'koren_veteran',
-      name: 'Koren',
-      title: 'Wounded Veteran',
-      icon: '🩹',
-      zones: ['Ember Peak', 'Stormhold'],
-      chance: 0.08,
-      dialogue: [
-        { speaker: 'Koren', text: "A soldier props himself against blackened stone, leg wrapped in bloody cloth. 'Fought a fire imp. Lost. Obviously.' He grins, teeth red. 'Got its tooth though. Worth something, if you've got a healer.'" }
-      ],
-      choices: [
-        { label: 'Have Eliz heal him', req: 'Eliz', cost: {}, reward: { affinity: 'Eliz', amt: 25, xp: 40, item: { n: 'Fire Essence', t: 'mat', q: 1, r: 'uncommon' } }, response: "Eliz's hands glow. Koren's breath catches. 'Haven't felt that... gentle... in years.' He presses a vial into your hand. 'From the imp's heart. Don't ask how I got it.'" },
-        { label: 'Buy the tooth', cost: { gold: 15 }, reward: { item: { n: 'Fire Imp Tooth', t: 'mat', q: 1, r: 'uncommon' }, xp: 10 }, response: "Koren tosses you a jagged red tooth. 'Fair trade. Better than dying with it in my pocket.'" },
-        { label: 'Walk past', cost: {}, reward: {}, response: "Koren spits. 'Figured. Heroes are just mercenaries with better PR.'" }
-      ]
-    },
-    {
-      id: 'mira_child',
-      name: 'Mira',
-      title: 'Lost Child',
-      icon: '👧',
-      zones: ['Whispering Woods', 'Cursed Catacombs'],
-      chance: 0.15,
-      dialogue: [
-        { speaker: 'Mira', text: "A small girl sits on a mossy log, hugging a wooden doll. 'Mama said wait here. She went to find water. That was...' She counts on her fingers. '...a lot of sleeps ago.'" }
-      ],
-      choices: [
-        { label: 'Give her your cloak', cost: {}, reward: { affinity: 'Aisyah', amt: 30, xp: 25 }, response: "Mira wraps the cloak around herself like armor. 'It smells like outside. Like before.' She hands you the doll. 'Keep Mr. Buttons safe. He's brave, but he gets scared.'" },
-        { label: 'Escort her to safety', cost: {}, reward: { xp: 50, gold: 20, karma: 1 }, response: "You walk her to the forest edge. A search party finds you — tearful, grateful. The reward is small. The look on her mother's face is not." },
-        { label: 'Ignore her', cost: {}, reward: { karma: -1 }, response: "You walk past. Mira doesn't call out. She's used to being invisible. Soel hisses at you from your pack. Even he knows better." }
-      ]
-    },
-    {
-      id: 'thane_smuggler',
-      name: 'Thane',
-      title: 'Shadow Trader',
-      icon: '🌑',
-      zones: ['Abyssal Depths', 'Sunken Temple'],
-      chance: 0.10,
-      dialogue: [
-        { speaker: 'Thane', text: "A hooded figure melts from the shadows, hands empty but not harmless. 'Heard about you. The sorcerer with the cat and the sisterblade.' A pause. 'I move things. Information. Goods. People, if the price is right. You look like someone who understands prices.'" }
-      ],
-      choices: [
-        { label: 'Buy void-touched goods', cost: { gold: 40 }, reward: { item: { n: 'Void Essence', t: 'mat', q: 2, r: 'rare' }, xp: 20 }, response: "Thane produces a vial from nowhere. 'Pure. Unfiltered. Don't drink it — unless you want to see what the abyss sees.'" },
-        { label: 'Sell information', cost: {}, reward: { gold: 35, karma: -1 }, response: "You tell him about the catacombs layout. Thane nods, counting coins. 'Useful. The dead don't negotiate, but the living do. And the living pay better.'" },
-        { label: 'Threaten him', cost: {}, reward: { xp: 15, karma: -1 }, response: "Thane laughs, low and cold. 'Threats? In the Abyss? You're either brave or stupid. I'm betting on stupid. But I like stupid. It pays well.' He vanishes. You feel watched for hours." }
-      ]
-    },
-    {
-      id: 'soel_ghost',
-      name: '???',
-      title: 'The Familiar's Echo',
-      icon: '🐱',
-      zones: ['Frostspire Ruins', 'Starlight Spire'],
-      chance: 0.05,
-      reqParty: 'Soel',
-      dialogue: [
-        { speaker: '???', text: "The air shimmers. A cat that is not Soel — but looks like him, older, translucent — sits on a frost-covered throne. 'You took good care of him,' the echo says. 'Better than I expected. Better than I did.' The not-Soel blinks slowly. 'He chose you. That's rare. That's... everything.'" }
-      ],
-      choices: [
-        { label: 'Ask who you are', cost: {}, reward: { xp: 60, affinity: 'Soel', amt: 40 }, response: "The echo fades, smiling. 'Someone who failed. Someone who hopes you won't. Tell him... tell him the warm spots were worth it. All of them.' The throne is empty. Soel purrs louder than usual for hours." },
-        { label: 'Reach for him', cost: {}, reward: { item: { n: 'Starlight Tear', t: 'mat', q: 1, r: 'rare' }, xp: 40 }, response: "Your hand passes through, but something warm lingers. A single crystal tear falls into your palm. 'For the days when you forget why you fight,' the echo whispers. Then silence." },
-        { label: 'Stay silent', cost: {}, reward: { xp: 30 }, response: "The echo nods, as if you answered perfectly. 'Good. He chose well. Silence is a kind of love too.' The frost melts where he sat. Soel jumps into your arms, trembling. You hold him until he stops." }
-      ]
-    }
-  ],
-
-  currentMiniStory: null,
-
   recipes: [
     { n: 'Health Potion', m: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, res: { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' }, d: 'Restores 30 HP' },
     { n: 'Mana Potion', m: { 'Herb Bundle': 1, 'Iron Ore': 1 }, res: { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 1, r: 'common' }, d: 'Restores 25 MP' },
@@ -780,7 +474,6 @@ const G = {
   ],
 
   currentBoss: null,
-  secretArea: { active: false, zone: null, choice: null, result: null },
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
@@ -1231,11 +924,7 @@ function getSynergyHealBonus() {
 }
 
 function getTotalCritChance() {
-  let base = getCritChance() + getSynergyCritBonus();
-  if (hasSpecEffect('thunderlordCritBonus')) {
-    base += getSpecEffect('thunderlordCritBonus');
-  }
-  return Math.min(0.90, base);
+  return Math.min(0.75, getCritChance() + getSynergyCritBonus());
 }
 
 function pd(ds,b) {
@@ -1484,388 +1173,6 @@ function doExploreEvent() {
   return true;
 }
 
-
-// SECRET AREA SYSTEM
-function canDiscoverSecret(zoneName) {
-  // Requires Senedra in active party AND Scout & Familiar synergy active
-  const hasSenedra = G.party.some(p => p.on && p.n === 'Senedra');
-  if (!hasSenedra) return false;
-  // Check if Scout & Familiar synergy is active
-  const activeSyns = getActiveSynergies();
-  const scoutFamiliar = activeSyns.find(s => s.name === 'Scout & Familiar');
-  if (!scoutFamiliar) return false;
-  // Check if zone has a secret area defined
-  if (!G.secretAreas[zoneName]) return false;
-  return true;
-}
-
-function discoverSecret(zoneName) {
-  const area = G.secretAreas[zoneName];
-  if (!area) return false;
-  G.secretArea.active = true;
-  G.secretArea.zone = zoneName;
-  G.secretArea.choice = null;
-  G.secretArea.result = null;
-  G.state = 'secret';
-  lg('🔍 SECRET AREA: ' + area.name + '!');
-  lg('   ' + area.desc);
-  lg('   Senedra's keen eyes found something hidden...');
-  render();
-  return true;
-}
-
-function rollSecretLoot(zoneName, choiceId) {
-  const area = G.secretAreas[zoneName];
-  const choice = area.choices.find(c => c.id === choiceId);
-  if (!choice) return null;
-
-  // Roll rarity
-  const roll = Math.random();
-  let rarity = 'common';
-  if (roll < choice.loot.rare) rarity = 'rare';
-  else if (roll < choice.loot.rare + choice.loot.uncommon) rarity = 'uncommon';
-
-  // Filter loot pool by rarity
-  const pool = area.lootPool.filter(l => l.r === rarity);
-  if (pool.length === 0) return null;
-
-  // Weighted random selection
-  const totalWeight = pool.reduce((s, l) => s + (l.weight || 1), 0);
-  let wRoll = Math.random() * totalWeight;
-  for (let item of pool) {
-    wRoll -= (item.weight || 1);
-    if (wRoll <= 0) return { ...item, q: item.q || 1 };
-  }
-  return pool[0];
-}
-
-function makeSecretChoice(choiceId) {
-  if (!G.secretArea.active) return;
-  const zoneName = G.secretArea.zone;
-  const area = G.secretAreas[zoneName];
-  const choice = area.choices.find(c => c.id === choiceId);
-  if (!choice) return;
-
-  G.secretArea.choice = choiceId;
-
-  // Check for ambush on risky choice
-  if (choice.ambushChance && Math.random() < choice.ambushChance) {
-    G.secretArea.result = 'ambush';
-    lg('💥 ' + choice.label + ' triggered an ambush!');
-    G.secretArea.active = false;
-    G.state = 'combat';
-    // Spawn 2 extra enemies from the zone
-    const z = G.zones.find(zn => zn.n === zoneName);
-    if (z) {
-      for (let i = 0; i < 2; i++) {
-        const t = z.en[Math.floor(Math.random() * z.en.length)];
-        // Clone an enemy template
-        const template = G.cbt.en[0];
-        if (template) {
-          const newEnemy = { ...template, id: G.cbt.en.length + i, hp: template.mhp, status: [] };
-          G.cbt.en.push(newEnemy);
-        }
-      }
-      lg('   ' + (z.en.length > 0 ? z.en[0] : 'Enemies') + ' swarm from the shadows!');
-    }
-    render();
-    return;
-  }
-
-  // Roll loot
-  const loot = rollSecretLoot(zoneName, choiceId);
-  G.secretArea.result = loot ? 'loot' : 'empty';
-
-  if (loot) {
-    addI({ ...loot });
-    lg('🎁 Found: ' + loot.n + ' (' + loot.r + ')!');
-    if (loot.atk) lg('   ATK +' + loot.atk);
-    if (loot.int) lg('   INT +' + loot.int);
-    if (loot.con) lg('   CON +' + loot.con);
-    if (loot.wis) lg('   WIS +' + loot.wis);
-  } else {
-    lg('📦 The area was empty... dust and echoes.');
-  }
-
-  // Small XP reward for discovery
-  const xpReward = { 'Whispering Woods': 10, 'Cursed Catacombs': 20, 'Crystal Caverns': 30, 'Ember Peak': 40, 'Stormhold': 50, 'Frostspire Ruins': 60, 'Sunken Temple': 70, 'Abyssal Depths': 100 }[zoneName] || 10;
-  G.p.xp += xpReward;
-  lg('✨ +' + xpReward + ' XP for discovery!');
-  lvlup();
-
-  render();
-}
-
-function closeSecretArea() {
-  G.secretArea.active = false;
-  G.secretArea.zone = null;
-  G.secretArea.choice = null;
-  G.secretArea.result = null;
-  G.state = 'explore';
-  render();
-}
-
-
-// SKILL TREE SYSTEM
-function getSpecPath() {
-  return G.playerSpec.path;
-}
-
-function getSpecTiers() {
-  return G.playerSpec.tiers || [];
-}
-
-function hasSpecTier(tierIdx) {
-  return G.playerSpec.tiers.includes(tierIdx);
-}
-
-function canUnlockTier(tierIdx) {
-  const path = G.skillTrees[G.playerSpec.path];
-  if (!path) return false;
-  const tier = path.tiers[tierIdx];
-  if (!tier) return false;
-  if (hasSpecTier(tierIdx)) return false;
-  if (G.p.lvl < tier.level) return false;
-  // Must have previous tier
-  if (tierIdx > 0 && !hasSpecTier(tierIdx - 1)) return false;
-  return true;
-}
-
-function unlockSpecTier(tierIdx) {
-  if (!canUnlockTier(tierIdx)) return false;
-  G.playerSpec.tiers.push(tierIdx);
-  const path = G.skillTrees[G.playerSpec.path];
-  const tier = path.tiers[tierIdx];
-  lg('🔥 ' + path.icon + ' UNLOCKED: ' + tier.name + '!');
-  lg('   ' + tier.desc);
-  applySpecEffects();
-  render();
-  return true;
-}
-
-function chooseSpecPath(pathKey) {
-  if (G.playerSpec.path) return false; // Already chosen
-  if (!G.skillTrees[pathKey]) return false;
-  G.playerSpec.path = pathKey;
-  G.playerSpec.tiers = [];
-  const path = G.skillTrees[pathKey];
-  lg('🌳 SPECIALIZATION: ' + path.icon + ' ' + path.name + '!');
-  lg('   ' + path.desc);
-  render();
-  return true;
-}
-
-function respecPath() {
-  if (!G.playerSpec.path) return false;
-  const cost = 50 + (G.playerSpec.respecCount * 50);
-  if (G.p.gold < cost) {
-    lg('❌ Need ' + cost + 'G to respec!');
-    return false;
-  }
-  G.p.gold -= cost;
-  G.playerSpec.respecCount++;
-  G.playerSpec.lastRespec = Date.now();
-  G.playerSpec.path = null;
-  G.playerSpec.tiers = [];
-  // Reset any modified skill costs
-  resetSkillCosts();
-  lg('🔄 Respec complete! Path reset. Cost: ' + cost + 'G');
-  render();
-  return true;
-}
-
-function resetSkillCosts() {
-  // Reset all skill costs to base values
-  const baseCosts = { 'Arcane Bolt': 10, 'Fireball': 25, 'Frost Shield': 15, 'Lightning Strike': 35, 'Mana Surge': 5, 'Meteor Swarm': 60 };
-  for (let s of G.p.skills) {
-    if (baseCosts[s.n]) s.c = baseCosts[s.n];
-  }
-}
-
-function applySpecEffects() {
-  const path = G.skillTrees[G.playerSpec.path];
-  if (!path) return;
-
-  // Reset first, then apply all active tiers
-  resetSkillCosts();
-
-  for (let tierIdx of G.playerSpec.tiers) {
-    const tier = path.tiers[tierIdx];
-    if (!tier || !tier.effects) continue;
-    const eff = tier.effects;
-
-    // Pyromancer effects
-    if (eff.fireballCostReduction) {
-      const fb = G.p.skills.find(s => s.n === 'Fireball');
-      if (fb) fb.c = Math.max(5, 25 - eff.fireballCostReduction);
-      const ms = G.p.skills.find(s => s.n === 'Meteor Swarm');
-      if (ms) ms.c = Math.max(15, 60 - eff.fireballCostReduction);
-    }
-    if (eff.burnChanceBonus) {
-      const fb = G.p.skills.find(s => s.n === 'Fireball');
-      if (fb && fb.status) fb.status.chance = Math.min(1, (fb.status.chance || 0.3) + eff.burnChanceBonus);
-    }
-
-    // Cryomancer effects
-    if (eff.frostShieldDuration) {
-      // Applied dynamically in pa() when casting
-    }
-    if (eff.frostShieldDefBonus) {
-      // Applied dynamically in pa() when casting
-    }
-
-    // Stormcaller effects
-    if (eff.lightningCostReduction) {
-      const ls = G.p.skills.find(s => s.n === 'Lightning Strike');
-      if (ls) ls.c = Math.max(10, 35 - eff.lightningCostReduction);
-    }
-    if (eff.shockDurationBonus) {
-      const ls = G.p.skills.find(s => s.n === 'Lightning Strike');
-      if (ls && ls.status) ls.status.turns = (ls.status.turns || 1) + eff.shockDurationBonus;
-    }
-    if (eff.thunderlordCritBonus) {
-      // Applied dynamically in getTotalCritChance()
-    }
-  }
-}
-
-function getSpecEffect(effectName) {
-  const path = G.skillTrees[G.playerSpec.path];
-  if (!path) return 0;
-  let total = 0;
-  for (let tierIdx of G.playerSpec.tiers) {
-    const tier = path.tiers[tierIdx];
-    if (tier && tier.effects && tier.effects[effectName] !== undefined) {
-      total += tier.effects[effectName];
-    }
-  }
-  return total;
-}
-
-function hasSpecEffect(effectName) {
-  return getSpecEffect(effectName) > 0 || getSpecEffect(effectName) === true;
-}
-
-
-// MINI-STORY NPC SYSTEM
-function checkMiniStory(zoneName) {
-  // 10% base chance, reduced by 2% per story already seen (anti-spam)
-  const seenCount = Object.keys(G.currentMiniStory?.completed || {}).length || 0;
-  const adjustedChance = Math.max(0.02, 0.10 - (seenCount * 0.02));
-  if (Math.random() > adjustedChance) return false;
-
-  // Find eligible stories for this zone
-  const eligible = G.miniStories.filter(story => {
-    if (!story.zones.includes(zoneName)) return false;
-    if (story.reqParty && !G.party.some(p => p.on && p.n === story.reqParty)) return false;
-    if (G.currentMiniStory && G.currentMiniStory.completed && G.currentMiniStory.completed[story.id]) return false;
-    return true;
-  });
-
-  if (eligible.length === 0) return false;
-
-  const story = eligible[Math.floor(Math.random() * eligible.length)];
-  G.currentMiniStory = { ...story, choice: null, result: null, completed: G.currentMiniStory?.completed || {} };
-  G.state = 'ministory';
-  lg('🗣️ ENCOUNTER: ' + story.name + ' — ' + story.title);
-  render();
-  return true;
-}
-
-function makeMiniStoryChoice(choiceIdx) {
-  if (!G.currentMiniStory) return;
-  const story = G.currentMiniStory;
-  const choice = story.choices[choiceIdx];
-  if (!choice) return;
-
-  story.choice = choiceIdx;
-
-  // Check requirements
-  if (choice.req) {
-    const hasReq = G.party.some(p => p.on && p.n === choice.req);
-    if (!hasReq) {
-      lg('❌ ' + choice.label + ' requires ' + choice.req + ' in party!');
-      return;
-    }
-  }
-
-  // Apply costs
-  if (choice.cost) {
-    if (choice.cost.gold && G.p.gold < choice.cost.gold) {
-      lg('❌ Not enough gold! Need ' + choice.cost.gold + 'G');
-      return;
-    }
-    if (choice.cost.item) {
-      const item = G.p.inv.find(i => i.n === choice.cost.item);
-      if (!item || item.q < (choice.cost.qty || 1)) {
-        lg('❌ Missing item: ' + choice.cost.item);
-        return;
-      }
-    }
-  }
-
-  // Deduct costs
-  if (choice.cost) {
-    if (choice.cost.gold) {
-      G.p.gold -= choice.cost.gold;
-      lg('💰 -' + choice.cost.gold + 'G');
-    }
-    if (choice.cost.item) {
-      const item = G.p.inv.find(i => i.n === choice.cost.item);
-      if (item) {
-        item.q -= (choice.cost.qty || 1);
-        if (item.q <= 0) {
-          const idx = G.p.inv.indexOf(item);
-          G.p.inv.splice(idx, 1);
-        }
-        lg('🎒 -' + choice.cost.qty + ' ' + choice.cost.item);
-      }
-    }
-  }
-
-  // Apply rewards
-  if (choice.reward) {
-    if (choice.reward.xp) {
-      G.p.xp += choice.reward.xp;
-      lg('✨ +' + choice.reward.xp + ' XP');
-    }
-    if (choice.reward.gold) {
-      G.p.gold += choice.reward.gold;
-      lg('💰 +' + choice.reward.gold + 'G');
-    }
-    if (choice.reward.affinity) {
-      updateAffinity(choice.reward.affinity, choice.reward.amt);
-    }
-    if (choice.reward.item) {
-      addI({ ...choice.reward.item });
-      lg('🎁 +' + choice.reward.item.q + ' ' + choice.reward.item.n);
-    }
-    if (choice.reward.info === 'hazard_hint') {
-      lg('📖 You learned about zone hazards!');
-    }
-  }
-
-  // Log response
-  if (choice.response) {
-    lg('   ' + choice.response);
-  }
-
-  // Mark as completed
-  story.completed[story.id] = true;
-  G.currentMiniStory.result = 'done';
-
-  lvlup();
-  render();
-}
-
-function closeMiniStory() {
-  if (G.currentMiniStory) {
-    G.currentMiniStory = null;
-  }
-  G.state = 'explore';
-  render();
-}
-
 function sc(zi) {
   const z=G.zones[zi];
   // 30% chance for explore event before combat
@@ -1874,17 +1181,7 @@ function sc(zi) {
     render();
     return;
   }
-  // Secret area discovery: 15% chance if Senedra + Scout & Familiar synergy active
-  if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
-    if (discoverSecret(z.n)) {
-      return; // State changed to 'secret', render handled in discoverSecret
-    }
-  }
-  // Mini-story NPC encounter: 10% chance
-  if (checkMiniStory(z.n)) {
-    return; // State changed to 'ministory', render handled
-  }
-  G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.cbt.phoenixUsed=false; G.cbt.glacialAegisLastCast=0; G.state='combat';
+  G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
   let isBoss = false;
@@ -2053,12 +1350,7 @@ function pa(si,ti){
   G.p.mp-=sk.c;
 
   if(sk.buff){
-    if(sk.n=='Frost Shield'){
-      const fsDuration = 3 + (getSpecEffect('frostShieldDuration') || 0);
-      const fsDef = 5 + (getSpecEffect('frostShieldDefBonus') || 0);
-      G.p.buffs.push({n:'Frost Shield',t:fsDuration,def:fsDef});
-      lg('Frost Shield! DEF +' + fsDef + ' for ' + fsDuration + ' turns.' + (fsDuration > 3 ? ' ❄️ Cryomancer bonus!' : ''));
-    }
+    if(sk.n=='Frost Shield'){G.p.buffs.push({n:'Frost Shield',t:3,def:5});lg('Frost Shield! DEF +5 for 3 turns.');}
     else if(sk.n=='Mana Surge'){G.p.mp=Math.min(G.p.mmp,G.p.mp+20);lg('Mana Surge! Restored 20 MP.');}
   } else {
     if (isImmune(tg.n, sk.elem)) {
@@ -2074,58 +1366,17 @@ function pa(si,ti){
         const weakMult = getWeaknessMultiplier(sk.elem, tg.elem);
         if(weakMult > 1) { dmg = Math.floor(dmg * weakMult); lg('⚡ ' + sk.elem + ' is super effective against ' + tg.n + '! x' + weakMult); }
         else if(weakMult < 1) { dmg = Math.floor(dmg * weakMult); lg('⬇️ ' + sk.elem + ' is weak against ' + tg.n + '! x' + weakMult); }
-        // Cryomancer Absolute Zero: ice spells have chance to freeze
-        if (sk.elem === 'ice' && hasSpecEffect('freezeChance') && tg.hp > 0) {
-          if (Math.random() < getSpecEffect('freezeChance')) {
-            const freezeTurns = getSpecEffect('freezeTurns') || 2;
-            const existing = tg.status.find(s => s.type === 'freeze');
-            if (!existing) {
-              tg.status.push({ type: 'freeze', turns: freezeTurns, dmg: 0 });
-              lg('❄️ ABSOLUTE ZERO! ' + tg.n + ' is frozen for ' + freezeTurns + ' turns!');
-            }
-          }
-        }
         dmg=Math.max(1,dmg-Math.floor(tg.def/2));
         // Critical hit check (includes synergy bonuses)
         const isCrit = Math.random() < getTotalCritChance();
-        if(isCrit) { 
-          dmg = Math.floor(dmg * 2); 
-          lg('💥 CRITICAL HIT! x2 damage!');
-          // Stormcaller Thunderlord: lightning crits refund MP
-          if (sk.elem === 'lightning' && hasSpecEffect('thunderlordMpRefund')) {
-            const refund = Math.floor(sk.c * getSpecEffect('thunderlordMpRefund'));
-            G.p.mp = Math.min(G.p.mmp, G.p.mp + refund);
-            lg('⚡ THUNDERLORD: +' + refund + ' MP refunded!');
-          }
-        }
+        if(isCrit) { dmg = Math.floor(dmg * 2); lg('💥 CRITICAL HIT! x2 damage!'); }
         tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
-        // Pyromancer Wildfire: chain to adjacent enemy
-        if (sk.elem === 'fire' && hasSpecEffect('wildfireChance')) {
-          const wfChance = getSpecEffect('wildfireChance');
-          const adjacent = G.cbt.en.filter(e => e.hp > 0 && e !== tg);
-          if (adjacent.length > 0 && Math.random() < wfChance) {
-            const chainTarget = adjacent[Math.floor(Math.random() * adjacent.length)];
-            const chainDmg = Math.floor(dmg * getSpecEffect('wildfireDmg'));
-            chainTarget.hp -= chainDmg;
-            lg('🔥 WILDFIRE chains to ' + chainTarget.n + ' for ' + chainDmg + '!');
-          }
-        }
         // Apply status effect if skill has one
         if(sk.status && tg.hp > 0 && Math.random() < sk.status.chance){
           const existing = tg.status.find(s => s.type === sk.status.type);
           if(!existing){
             tg.status.push({...sk.status, turns: sk.status.turns});
             lg('🔥 ' + tg.n + ' is ' + sk.status.type + 'ed!');
-          }
-        }
-        // Stormcaller Chain Lightning: hit second enemy
-        if (sk.elem === 'lightning' && hasSpecEffect('chainLightning')) {
-          const others = G.cbt.en.filter(e => e.hp > 0 && e !== tg);
-          if (others.length > 0) {
-            const second = others[Math.floor(Math.random() * others.length)];
-            const chainDmg = Math.floor(dmg * getSpecEffect('chainLightningDmg'));
-            second.hp -= chainDmg;
-            lg('⚡ CHAIN LIGHTNING arcs to ' + second.n + ' for ' + chainDmg + '!');
           }
         }
         if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;checkBountyKill(tg.n);
@@ -2337,52 +1588,6 @@ function eturn(){
       d=Math.max(1,d-Math.floor(td/2));
       d = applySynergyDefense(d);
       t.hp-=d; lg(e.n+' hits '+(t.n||'you')+' for '+d+'!');
-      // Cryomancer Glacial Aegis: auto-cast Frost Shield when hit
-      if (t === G.p && hasSpecEffect('glacialAegisChance')) {
-        const now = G.cbt.turn || 0;
-        if (!G.cbt.glacialAegisLastCast || (now - G.cbt.glacialAegisLastCast) >= (getSpecEffect('glacialAegisCooldown') || 3)) {
-          if (Math.random() < getSpecEffect('glacialAegisChance')) {
-            const hasShield = G.p.buffs.some(b => b.n === 'Frost Shield');
-            if (!hasShield) {
-              G.cbt.glacialAegisLastCast = now;
-              const fsDuration = 3 + (getSpecEffect('frostShieldDuration') || 0);
-              const fsDef = 5 + (getSpecEffect('frostShieldDefBonus') || 0);
-              G.p.buffs.push({ n: 'Frost Shield', t: fsDuration, def: fsDef });
-              lg('❄️ GLACIAL AEGIS! Auto-cast Frost Shield! DEF +' + fsDef + ' for ' + fsDuration + ' turns!');
-            }
-          }
-        }
-      }
-      // Pyromancer Phoenix Rising: auto-cast Meteor Swarm when HP < 20%
-      if (t === G.p && hasSpecEffect('phoenixRising') && !G.cbt.phoenixUsed) {
-        const threshold = getSpecEffect('phoenixHpThreshold') || 0.20;
-        if (t.hp > 0 && t.hp <= t.mhp * threshold) {
-          G.cbt.phoenixUsed = true;
-          lg('🔥 PHOENIX RISING! San channels desperate flame!');
-          const ms = G.p.skills.find(s => s.n === 'Meteor Swarm');
-          if (ms) {
-            // Free cast, no MP cost
-            const originalCost = ms.c;
-            ms.c = 0;
-            for (let enemy of G.cbt.en) {
-              if (enemy.hp > 0) {
-                let phoenixDmg = pd(ms.dmg, Math.floor(G.p.stats.int / 2));
-                phoenixDmg += G.p.eq.w ? G.p.eq.w.atk : 0;
-                phoenixDmg = Math.max(1, phoenixDmg - Math.floor(enemy.def / 2));
-                enemy.hp -= phoenixDmg;
-                lg('   ☄️ Meteor Swarm hits ' + enemy.n + ' for ' + phoenixDmg + '!');
-                if (enemy.hp <= 0) {
-                  enemy.hp = 0;
-                  lg('   ' + enemy.n + ' incinerated!');
-                  checkBountyKill(enemy.n);
-                }
-              }
-            }
-            ms.c = originalCost;
-            lg('   The phoenix flame fades...');
-          }
-        }
-      }
       if(t.hp<=0){
         if(t!==G.p && t.passive==='guardian_spirit'){
           t.hp=1; lg('✨ '+t.n+"'s Guardian Spirit shines! She endures at 1 HP!");
@@ -2620,8 +1825,6 @@ function saveGame() {
     bestiary: G.bestiary,
     partySynergies: G.partySynergies,
     autoCombat: G.cbt.autoCombat,
-    secretArea: { active: G.secretArea.active, zone: G.secretArea.zone },
-    playerSpec: G.playerSpec,
     state: G.state
   };
   try {
@@ -2951,9 +2154,6 @@ function render(){
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
   else if(G.state=='rest')h+=rRest();
-  else if(G.state=='secret')h+=rSecret();
-  else if(G.state=='ministory')h+=rMiniStory();
-  else if(G.state=='skilltree')h+=rSkillTree();
   else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
@@ -2971,8 +2171,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
-    else if(a=='skilltree')setS('skilltree');});
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');});
   });
   document.querySelectorAll('.story-view .abtn').forEach(el=>{
     el.addEventListener('click',advanceStory);
@@ -3016,34 +2215,6 @@ function attachEvents() {
   if(cfb)cfb.addEventListener('click',cf);
   const btnAuto=document.getElementById('btn-auto');
   if(btnAuto)btnAuto.addEventListener('click',toggleAutoCombat);
-  document.querySelectorAll('.secret-choice-btn').forEach(el=>{
-    el.addEventListener('click',()=>{makeSecretChoice(el.getAttribute('data-choice'));render();});
-  });
-  const btnCloseSecret=document.getElementById('btn-close-secret');
-  if(btnCloseSecret)btnCloseSecret.addEventListener('click',closeSecretArea);
-  document.querySelectorAll('.ministory-choice').forEach(el=>{
-    el.addEventListener('click',()=>{
-      makeMiniStoryChoice(parseInt(el.getAttribute('data-choice')));
-    });
-  });
-  const btnCloseMini=document.getElementById('btn-close-ministory');
-  if(btnCloseMini)btnCloseMini.addEventListener('click',closeMiniStory);
-  document.querySelectorAll('.spec-card').forEach(el=>{
-    el.addEventListener('click',()=>{
-      if(G.p.lvl >= 3) {
-        const spec = el.getAttribute('data-spec');
-        if(chooseSpecPath(spec)) render();
-      }
-    });
-  });
-  document.querySelectorAll('.spec-unlock-btn').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const tier = parseInt(el.getAttribute('data-tier'));
-      if(unlockSpecTier(tier)) render();
-    });
-  });
-  const btnRespec=document.getElementById('btn-respec');
-  if(btnRespec)btnRespec.addEventListener('click',respecPath);
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -3062,213 +2233,6 @@ function attachEvents() {
       reviveMember(el.getAttribute('data-m'));
     });
   });
-}
-
-function rSecret(){
-  const area = G.secretAreas[G.secretArea.zone];
-  if (!area) return '<div>Secret area error</div>';
-
-  let h = '<div class="secret-view" style="text-align:center;padding:20px;">';
-  h += '<h2 class="st" style="color:var(--accent-light);">🔍 ' + area.name + '</h2>';
-  h += '<div style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto;">' + area.desc + '</div>';
-
-  if (!G.secretArea.choice) {
-    // Show choice buttons
-    h += '<div style="display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto;">';
-    for (let choice of area.choices) {
-      const isRisky = choice.risk === 'high';
-      h += '<button class="secret-choice-btn" data-choice="' + choice.id + '" style="padding:14px 20px;border-radius:14px;border:2px solid '+(isRisky?'var(--danger)':'var(--accent)')+';background:'+(isRisky?'#ef444415':'#7c3aed15')+';color:'+(isRisky?'var(--danger)':'var(--accent-light)')+';font-size:14px;font-weight:600;cursor:pointer;user-select:none;text-align:left;">';
-      h += '<div style="display:flex;justify-content:space-between;align-items:center;">';
-      h += '<span>' + choice.label + '</span>';
-      h += '<span style="font-size:11px;padding:3px 10px;border-radius:8px;background:'+(isRisky?'#ef444430':'#7c3aed30')+';">'+(isRisky?'⚠️ Risky':'✅ Safe')+'</span>';
-      h += '</div>';
-      h += '<div style="font-size:11px;color:var(--text-dim);margin-top:6px;font-weight:400;">';
-      if (isRisky) {
-        h += 'Ambush chance: ' + Math.floor(choice.ambushChance * 100) + '% · Higher rare loot';
-      } else {
-        h += 'No ambush · Steady loot';
-      }
-      h += '</div>';
-      h += '</button>';
-    }
-    h += '</div>';
-    h += '<div style="margin-top:16px;font-size:11px;color:var(--text-dim);">Senedra watches, bow half-drawn. "Your call, San."</div>';
-  } else if (G.secretArea.result === 'ambush') {
-    h += '<div style="background:#ef444415;border:1px solid var(--danger);border-radius:14px;padding:20px;margin-bottom:16px;">';
-    h += '<div style="font-size:24px;margin-bottom:8px;">💥</div>';
-    h += '<div style="font-size:16px;font-weight:700;color:var(--danger);margin-bottom:8px;">Ambush!</div>';
-    h += '<div style="font-size:13px;color:var(--text-dim);">Your haste triggered a trap. Enemies swarm from the shadows!</div>';
-    h += '</div>';
-    h += '<button class="abtn" onclick="render()">Fight!</button>';
-  } else {
-    // Show result
-    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;">';
-    if (G.secretArea.result === 'loot') {
-      h += '<div style="font-size:24px;margin-bottom:8px;">🎁</div>';
-      h += '<div style="font-size:16px;font-weight:700;color:var(--success);margin-bottom:8px;">Discovery!</div>';
-      h += '<div style="font-size:13px;color:var(--text-dim);">You found something valuable in the ' + area.name + '.</div>';
-    } else {
-      h += '<div style="font-size:24px;margin-bottom:8px;">📦</div>';
-      h += '<div style="font-size:16px;font-weight:700;color:var(--text-dim);margin-bottom:8px;">Empty</div>';
-      h += '<div style="font-size:13px;color:var(--text-dim);">Nothing but dust and old bones.</div>';
-    }
-    h += '</div>';
-    h += '<button class="abtn" id="btn-close-secret">Continue Exploring</button>';
-  }
-
-  h += '</div>';
-  return h;
-}
-
-function rSkillTree(){
-  let h = '<div class="skilltree-view" style="padding:16px;">';
-  h += '<h2 class="st">🌳 Skill Trees</h2>';
-
-  if (!G.playerSpec.path) {
-    h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:20px;text-align:center;">Choose your specialization at Level 3. This choice shapes your journey.</div>';
-    h += '<div style="display:flex;flex-direction:column;gap:12px;">';
-    for (let [key, path] of Object.entries(G.skillTrees)) {
-      const canChoose = G.p.lvl >= 3;
-      h += '<div class="spec-card" data-spec="' + key + '" style="background:var(--bg-card);border:2px solid '+(canChoose?path.color:'#555')+';border-radius:16px;padding:16px;cursor:'+(canChoose?'pointer':'not-allowed')+';opacity:'+(canChoose?'1':'0.5')+';transition:all 0.2s;">';
-      h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">';
-      h += '<span style="font-size:32px;">' + path.icon + '</span>';
-      h += '<div><div style="font-size:16px;font-weight:700;color:'+path.color+';">' + path.name + '</div>';
-      h += '<div style="font-size:11px;color:var(--text-dim);">' + path.desc + '</div></div>';
-      h += '</div>';
-      for (let i = 0; i < path.tiers.length; i++) {
-        const tier = path.tiers[i];
-        h += '<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:8px;background:#242236;border-radius:8px;margin-bottom:6px;">';
-        h += '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:'+path.color+'20;color:'+path.color+';">Lv.' + tier.level + '</span>';
-        h += '<div style="flex:1;"><div style="font-weight:600;">' + tier.name + '</div>';
-        h += '<div style="font-size:10px;color:var(--text-dim);">' + tier.desc + '</div></div>';
-        h += '</div>';
-      }
-      if (!canChoose) h += '<div style="margin-top:10px;font-size:11px;color:var(--danger);text-align:center;">🔒 Requires Level 3</div>';
-      h += '</div>';
-    }
-    h += '</div>';
-  } else {
-    const path = G.skillTrees[G.playerSpec.path];
-    h += '<div style="text-align:center;margin-bottom:20px;">';
-    h += '<span style="font-size:48px;">' + path.icon + '</span>';
-    h += '<div style="font-size:20px;font-weight:700;color:'+path.color+';margin-top:8px;">' + path.name + '</div>';
-    h += '<div style="font-size:12px;color:var(--text-dim);">' + path.desc + '</div>';
-    h += '</div>';
-    h += '<div style="display:flex;flex-direction:column;gap:12px;">';
-    for (let i = 0; i < path.tiers.length; i++) {
-      const tier = path.tiers[i];
-      const unlocked = hasSpecTier(i);
-      const canUnlock = canUnlockTier(i);
-      h += '<div style="background:var(--bg-card);border:2px solid '+(unlocked?path.color:canUnlock?path.color+'60':'#555')+';border-radius:14px;padding:14px;opacity:'+(unlocked||canUnlock?'1':'0.5')+';">';
-      h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">';
-      h += '<span style="font-size:24px;">' + (unlocked?'✅':canUnlock?'🔓':'🔒') + '</span>';
-      h += '<div style="flex:1;"><div style="font-weight:700;color:'+(unlocked?path.color:'var(--text-dim)')+';">' + tier.name + '</div>';
-      h += '<div style="font-size:10px;color:var(--text-dim);">Tier ' + (i+1) + ' · Lv.' + tier.level + '</div></div>';
-      h += '</div>';
-      h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">' + tier.desc + '</div>';
-      if (unlocked) {
-        h += '<div style="font-size:11px;color:var(--success);font-weight:600;">✨ ACTIVE</div>';
-      } else if (canUnlock) {
-        h += '<button class="spec-unlock-btn" data-tier="' + i + '" style="width:100%;padding:10px;border-radius:10px;border:none;background:'+path.color+';color:white;font-size:13px;font-weight:600;cursor:pointer;">Unlock ' + tier.name + '</button>';
-      } else if (G.p.lvl < tier.level) {
-        h += '<div style="font-size:11px;color:var(--danger);">🔒 Requires Level ' + tier.level + '</div>';
-      } else {
-        h += '<div style="font-size:11px;color:var(--text-dim);">🔒 Complete previous tier first</div>';
-      }
-      h += '</div>';
-    }
-    h += '</div>';
-    // Respec button
-    const respecCost = 50 + (G.playerSpec.respecCount * 50);
-    const canRespec = G.p.gold >= respecCost;
-    h += '<div style="margin-top:20px;text-align:center;">';
-    h += '<button id="btn-respec" style="padding:10px 20px;border-radius:10px;border:1px solid '+(canRespec?'var(--danger)':'#555')+';background:transparent;color:'+(canRespec?'var(--danger)':'#555')+';font-size:12px;font-weight:600;cursor:'+(canRespec?'pointer':'not-allowed')+';">';
-    h += '🔄 Respec (' + respecCost + 'G)</button>';
-    h += '<div style="font-size:10px;color:var(--text-dim);margin-top:6px;">Resets your specialization. Cost increases each time.</div>';
-    h += '</div>';
-  }
-  h += '</div>';
-  return h;
-}
-
-function rMiniStory(){
-  const story = G.currentMiniStory;
-  if (!story) return '<div>Mini-story error</div>';
-
-  let h = '<div class="ministory-view" style="padding:20px;text-align:center;">';
-  h += '<div style="font-size:48px;margin-bottom:12px;">' + story.icon + '</div>';
-  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Random Encounter</div>';
-  h += '<h2 style="font-family:Cinzel,serif;font-size:20px;margin-bottom:8px;">' + story.name + '</h2>';
-  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:20px;">' + story.title + '</div>';
-
-  // Dialogue
-  for (let line of story.dialogue) {
-    h += '<div class="dialogue-box" style="margin-bottom:20px;text-align:left;">';
-    h += '<div class="d-speaker">' + line.speaker + '</div>';
-    h += '<div class="d-text" style="font-size:14px;line-height:1.7;">' + line.text + '</div>';
-    h += '</div>';
-  }
-
-  if (!story.choice && story.result !== 'done') {
-    // Show choice buttons
-    h += '<div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto;">';
-    for (let i = 0; i < story.choices.length; i++) {
-      const ch = story.choices[i];
-      let canChoose = true;
-      let reason = '';
-
-      if (ch.req && !G.party.some(p => p.on && p.n === ch.req)) {
-        canChoose = false;
-        reason = 'Requires ' + ch.req;
-      }
-      if (ch.cost && ch.cost.gold && G.p.gold < ch.cost.gold) {
-        canChoose = false;
-        reason = 'Need ' + ch.cost.gold + 'G';
-      }
-      if (ch.cost && ch.cost.item) {
-        const item = G.p.inv.find(inv => inv.n === ch.cost.item);
-        if (!item || item.q < (ch.cost.qty || 1)) {
-          canChoose = false;
-          reason = 'Need ' + (ch.cost.qty || 1) + ' ' + ch.cost.item;
-        }
-      }
-
-      h += '<button class="ministory-choice" data-choice="' + i + '" style="padding:14px 18px;border-radius:14px;border:2px solid '+(canChoose?'var(--accent)':'#555')+';background:'+(canChoose?'var(--bg-card)':'#1a1825')+';color:'+(canChoose?'var(--text)':'#555')+';font-size:13px;font-weight:600;cursor:'+(canChoose?'pointer':'not-allowed')+';user-select:none;text-align:left;transition:all 0.2s;">';
-      h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
-      h += '<span>' + ch.label + '</span>';
-      if (!canChoose) {
-        h += '<span style="font-size:10px;color:var(--danger);">🔒 ' + reason + '</span>';
-      }
-      h += '</div>';
-      if (ch.cost && (ch.cost.gold || ch.cost.item)) {
-        h += '<div style="font-size:10px;color:var(--danger);margin-top:4px;">Cost: ';
-        if (ch.cost.gold) h += ch.cost.gold + 'G ';
-        if (ch.cost.item) h += (ch.cost.qty || 1) + '× ' + ch.cost.item;
-        h += '</div>';
-      }
-      if (ch.reward) {
-        h += '<div style="font-size:10px;color:var(--success);margin-top:4px;">Reward: ';
-        const rewards = [];
-        if (ch.reward.xp) rewards.push(ch.reward.xp + ' XP');
-        if (ch.reward.gold) rewards.push(ch.reward.gold + 'G');
-        if (ch.reward.affinity) rewards.push('+' + ch.reward.amt + ' ' + ch.reward.affinity + ' affinity');
-        if (ch.reward.item) rewards.push(ch.reward.item.n);
-        h += rewards.join(', ') + '</div>';
-      }
-      h += '</button>';
-    }
-    h += '</div>';
-  } else if (story.result === 'done') {
-    // Show result
-    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin:20px auto;max-width:400px;">';
-    h += '<div style="font-size:24px;margin-bottom:8px;">✨</div>';
-    h += '<div style="font-size:14px;color:var(--text-dim);line-height:1.6;">' + story.choices[story.choice].response + '</div>';
-    h += '</div>';
-    h += '<button class="abtn" id="btn-close-ministory" style="max-width:200px;margin:0 auto;display:block;">Continue</button>';
-  }
-
-  h += '</div>';
-  return h;
 }
 
 function rStory(){
@@ -3319,7 +2283,6 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'📖',l:'Bestiary',d:'Catalogue of defeated foes',a:'bestiary'},
-    {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
