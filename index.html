@@ -1338,6 +1338,12 @@ function pa(si,ti){
       aisyahQuest.c += G.cbt.en.length;
       if(aisyahQuest.c >= aisyahQuest.need) checkQ();
     }
+    // Track Joel's Shield Oath quest progress
+    const joelQuest = G.quests.find(q=>q.t==='joel_battle'&&!q.done);
+    if(joelQuest && G.party.find(p=>p.on&&p.n==='Joel')){
+      joelQuest.c += G.cbt.en.length;
+      if(joelQuest.c >= joelQuest.need) checkQ();
+    }
     // Affinity gain for active party
     for(let p of G.party){
       if(p.on && p.hp > 0) updateAffinity(p.n, 1);
@@ -1396,7 +1402,14 @@ function eturn(){
         s.turns--;
       }
       e.status = e.status.filter(s => s.turns > 0);
-      if(e.hp <= 0){ lg(e.n + ' falls to status damage!'); e.hp = 0; checkBountyKill(e.n); continue; }
+      if(e.hp <= 0){ lg(e.n + ' falls to status damage!'); e.hp = 0; checkBountyKill(e.n);
+          // Track quest progress for status effect kills
+          const aisyahQuest2 = G.quests.find(q=>q.t==='aisyah_battle'&&!q.done);
+          if(aisyahQuest2 && G.party.find(p=>p.on&&p.n==='Aisyah')) aisyahQuest2.c++;
+          const joelQuest2 = G.quests.find(q=>q.t==='joel_battle'&&!q.done);
+          if(joelQuest2 && G.party.find(p=>p.on&&p.n==='Joel')) joelQuest2.c++;
+          continue;
+        }
       if(e.status.find(s => s.type === 'shock')) continue; // Skip turn if shocked
     }
 
@@ -1489,6 +1502,7 @@ function checkQ(){
     if(q.hidden && !q.revealed)continue;
     if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
     if(q.t=='aisyah_battle'&&q.c>=q.need)q.c=q.need;
+    if(q.t=='joel_battle'&&q.c>=q.need)q.c=q.need;
     if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();lvlup();}
   }
 }
