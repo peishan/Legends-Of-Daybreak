@@ -437,6 +437,3319 @@ const G = {
     }
   ],
 
+  storyModeChapters: [
+    {
+      title: 'The Awakening',
+      icon: '🌅',
+      scenes: [
+        { text: "You wake in a field of silver grass. The sky is wrong — two moons, one bleeding red. A voice whispers your name. Not San. Something older." },
+        { text: "Joel finds you first. 'You were gone three days,' he says, voice tight. 'We thought the storm took you.' He doesn't mention the mark on your wrist. Neither do you." },
+        { text: "Aisyah runs toward you, blade half-drawn, then sheaths it when she sees your face. 'Don't ever do that again,' she says. Her hands shake." },
+        { text: "Soel curls around your ankles, purring loud enough to drown out the silence. Even he knew something was wrong." }
+      ],
+      choices: [
+        { label: 'Tell them about the voice', nextChapter: 1, affinity: 'Joel', amt: 10 },
+        { label: 'Hide the mark', nextChapter: 1, affinity: 'Aisyah', amt: 5 },
+        { label: 'Say nothing', nextChapter: 1 }
+      ]
+    },
+    {
+      title: 'The First Shard',
+      icon: '💎',
+      scenes: [
+        { text: "The mark burns when you sleep. In dreams, you walk through a city of crystal and bone. A figure waits at the end of every street. You never reach them." },
+        { text: "Mezstorm studies the mark with spells you don't recognize. 'It's not a curse,' he says finally. 'It's a key. But a key to what, I cannot say.'" },
+        { text: "Eliz presses her hands to yours. Her healing magic sinks into the mark and vanishes, swallowed whole. 'It doesn't want to be healed,' she whispers. 'It wants to be fed.'" },
+        { text: "Senedra finds you practicing magic in the dark. 'You're stronger,' she says. Not a compliment. A warning." }
+      ],
+      choices: [
+        { label: 'Ask Mezstorm to teach you more', nextChapter: 2, affinity: 'Mezstorm', amt: 15 },
+        { label: 'Let Eliz try again', nextChapter: 2, affinity: 'Eliz', amt: 10 },
+        { label: 'Train alone', nextChapter: 2, xp: 20 }
+      ]
+    },
+    {
+      title: 'The Hollow King',
+      icon: '👑',
+      scenes: [
+        { text: "The dreams change. The figure turns. You see their face — empty, smiling, wearing your expression like a mask. 'Welcome home,' they say. You wake screaming." },
+        { text: "Zaki stands watch outside your tent. 'You cried out in your sleep,' he says. 'About a king. About a throne.' He pauses. 'I know that throne. I've seen it in the Abyssal Depths.'" },
+        { text: "Soel won't leave your side. He hisses at shadows that aren't there, stares at corners of rooms where nothing moves. 'He sees them too,' Eliz says quietly. 'The things between worlds.'" },
+        { text: "The mark spreads. Veins of silver light crawl up your arm, pulsing with a rhythm that matches no heartbeat you've ever heard." }
+      ],
+      choices: [
+        { label: 'Ask Zaki about the Abyss', nextChapter: 3, affinity: 'Zaki', amt: 15 },
+        { label: 'Let Soel guide you', nextChapter: 3, affinity: 'Soel', amt: 20 },
+        { label: 'Study the mark yourself', nextChapter: 3, xp: 30 }
+      ]
+    },
+    {
+      title: 'The Choice',
+      icon: '⚖️',
+      scenes: [
+        { text: "The Hollow King waits in the deepest dream. 'You could stay,' they offer. 'Rule here. No more loss. No more goodbyes. Everyone you love, safe forever. Frozen. Perfect.'" },
+        { text: "You see them — Joel, Aisyah, Soel, all of them, suspended in crystal, smiling, unchanging. Safe. Dead in every way that matters." },
+        { text: "'Or you could wake up,' the King says, and for the first time, their voice sounds almost kind. 'And lose them one by one, the way mortals do. The way you already know you will.'" },
+        { text: "The mark screams. The choice screams louder." }
+      ],
+      choices: [
+        { label: 'Reject the King — wake up', nextChapter: 4, affinity: 'Joel', amt: 25, xp: 50 },
+        { label: 'Accept the offer', nextChapter: 4, karma: -5, gold: 100 },
+        { label: 'Find a third way', nextChapter: 4, xp: 40, item: { n: 'Void-Touched Crystal', t: 'mat', q: 1, r: 'rare' } }
+      ]
+    },
+    {
+      title: 'Aftermath',
+      icon: '🌙',
+      scenes: [
+        { text: "You wake. The mark is still there, but quieter now. A scar, not a wound. A memory, not a prophecy." },
+        { text: "Joel squeezes your shoulder. 'Breakfast,' he says, like nothing happened. Like you didn't almost end the world in your sleep." },
+        { text: "Aisyah smiles — rare, precious, real. 'You chose us,' she says. 'Every time, you choose us.'" },
+        { text: "Soel purrs on your chest, kneading soft circles into your heart. The sun rises. The story continues. Not ended. Just paused." }
+      ],
+      choices: [
+        { label: 'Begin again', nextChapter: 0, reset: true, xp: 10 },
+        { label: 'Return to camp', nextChapter: -1, end: true }
+      ]
+    }
+  ],
+
+  cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
+  zones: [
+    { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
+    { n: 'Cursed Catacombs', lv: 2, d: 'Ancient tombs filled with restless dead.', en: ['Skeleton','Zombie','Ghost'], loot: ['Iron Ore','Bone Shard','Mana Potion'], xp: 30, dg: 'medium' },
+    { n: 'Crystal Caverns', lv: 3, d: 'Shimmering caves where crystal spiders weave.', en: ['Crystal Spider','Gem Golem','Shimmer Bat'], loot: ['Crystal Shard','Silk Thread','Gem Dust'], xp: 45, dg: 'medium' },
+    { n: 'Ember Peak', lv: 4, d: 'Volcanic caves with fire elementals.', en: ['Fire Imp','Lava Slug','Ash Wraith'], loot: ['Fire Essence','Obsidian','Phoenix Feather'], xp: 60, dg: 'high' },
+    { n: 'Stormhold', lv: 5, d: 'A crumbling fortress lashed by eternal lightning.', en: ['Storm Wraith','Lightning Hound','Thunder Knight'], loot: ['Storm Core','Conductive Wire','Static Orb'], xp: 80, dg: 'high' },
+    { n: 'Frostspire Ruins', lv: 6, d: 'Frozen castle of a fallen ice lord.', en: ['Ice Elemental','Frost Wolf','Frozen Knight'], loot: ['Ice Crystal','Frost Gem','Glacial Staff'], xp: 100, dg: 'very high' },
+    { n: 'Sunken Temple', lv: 7, d: 'An underwater ruin swallowed by the sea.', en: ['Drowned Sailor','Sea Serpent','Coral Golem'], loot: ['Pearl','Coral Branch','Aqua Pearl'], xp: 130, dg: 'very high' },
+    { n: 'Abyssal Depths', lv: 8, d: 'The void between worlds. Only the brave enter.', en: ['Void Beast','Shadow Demon','Abyssal Horror'], loot: ['Void Essence','Dark Crystal','Abyssal Robe'], xp: 200, dg: 'extreme' },
+    { n: "Dragon's Maw", lv: 9, d: 'The lair of an ancient dragon. Ash falls like snow.', en: ['Dragon Whelp','Ash Drake','Elder Wyrm'], loot: ['Dragon Scale','Wyrm Tooth','Ember Heart'], xp: 280, dg: 'extreme' },
+    { n: 'Starlight Spire', lv: 10, d: 'A tower that touches the sky. The final challenge.', en: ['Star Sentinel','Celestial Knight','Astral Lord'], loot: ['Star Fragment','Celestial Dust','Astral Core'], xp: 400, dg: 'impossible' }
+  ],
+
+  // Zone hazards: environmental dangers that trigger during combat
+  zoneHazards: {
+    'Ember Peak': { name: 'Lava Vent', chance: 0.20, type: 'damage', dmg: 5, elem: 'fire', msg: 'A lava vent erupts beneath the party!', desc: '20% chance per turn: 5 fire damage to all' },
+    'Stormhold': { name: 'Lightning Strike', chance: 0.10, type: 'damage', dmg: 8, elem: 'lightning', msg: 'Lightning forks from the storm clouds!', desc: '10% chance per turn: 8 lightning damage to random member' },
+    'Frostspire Ruins': { name: 'Freezing Wind', chance: 0.15, type: 'freeze', turns: 1, msg: 'A bone-chilling wind sweeps through!', desc: '15% chance per turn: freeze a random member (skip next turn)' },
+    'Abyssal Depths': { name: 'Void Corruption', chance: 0.05, type: 'mana_drain', drain: 3, msg: 'The void hungers...', desc: '5% chance per turn: drain 3 MP from all' },
+    'Sunken Temple': { name: 'Drowning Pressure', chance: 0.12, type: 'damage', dmg: 4, elem: 'none', msg: 'The water pressure surges!', desc: '12% chance per turn: 4 damage to all (water pressure)' }
+  },
+
+  exploreEvents: [
+    { n: 'Abandoned Cache', d: 'You find a weathered chest half-buried in leaves.', type: 'loot', chance: 0.15, minLv: 1, 
+      gold: 15, items: [{n:'Health Potion',t:'pot',eff:'heal',v:30,q:1,r:'common'}] },
+    { n: 'Strange Shrine', d: 'An old shrine hums with faint magic.', type: 'blessing', chance: 0.08, minLv: 2, mp: 20 },
+    { n: 'Falling Star', d: 'A star falls nearby, leaving something behind.', type: 'loot', chance: 0.05, minLv: 5,
+      item: {n:'Star Fragment',t:'mat',q:1,r:'rare'} }
+  ],
+  recipes: [
+    { n: 'Health Potion', m: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, res: { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' }, d: 'Restores 30 HP' },
+    { n: 'Mana Potion', m: { 'Herb Bundle': 1, 'Iron Ore': 1 }, res: { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 1, r: 'common' }, d: 'Restores 25 MP' },
+    { n: 'Greater Health Potion', m: { 'Herb Bundle': 3, 'Bone Shard': 2, 'Iron Ore': 1 }, res: { n: 'Greater Health Potion', t: 'pot', eff: 'heal', v: 75, q: 1, r: 'uncommon' }, d: 'Restores 75 HP' },
+    { n: 'Iron Sword', m: { 'Iron Ore': 4, 'Bone Shard': 1 }, res: { n: 'Iron Sword', t: 'wep', atk: 6, r: 'uncommon' }, d: 'ATK +6' },
+    { n: 'Reinforced Robes', m: { 'Iron Ore': 2, 'Herb Bundle': 3, 'Goblin Tooth': 2 }, res: { n: 'Reinforced Robes', t: 'arm', def: 5, r: 'uncommon' }, d: 'DEF +5' },
+    { n: 'Fire Staff', m: { 'Fire Essence': 2, 'Obsidian': 3, 'Iron Ore': 2 }, res: { n: 'Fire Staff', t: 'wep', atk: 10, r: 'rare' }, d: 'ATK +10, Fire damage' },
+    { n: 'Frost Ring', m: { 'Ice Crystal': 2, 'Frost Gem': 1, 'Iron Ore': 1 }, res: { n: 'Frost Ring', t: 'acc', int: 3, r: 'rare' }, d: 'INT +3, Frost spells cost -5 MP' },
+    { n: 'Phoenix Feather', m: { 'Fire Essence': 3, 'Obsidian': 2, 'Gem Dust': 1 }, res: { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' }, d: 'Revives fallen companion with 50% HP' }
+  ],
+  quests: [
+    { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
+    { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
+    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
+    { id: 4, n: "Joel's Shield Oath", d: 'Win 5 battles with Joel in your party', t: 'joel_battle', c: 0, need: 5, rw: { xp: 80, g: 40 }, done: false, chain: 'joel', reqQuest: null, reqParty: 'Joel' },
+    { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false },
+    { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
+    { id: 7, n: "Senedra's Scout Report", d: 'Explore 3 different zones with Senedra before time runs out', t: 'explore_with', c: 0, need: 3, rw: { xp: 90, g: 45 }, done: false, timed: true, timer: 240, timerMax: 240, reqParty: 'Senedra' },
+    { id: 8, n: "Aisyah's Ledger", d: 'Defeat 10 enemies in any zone with Aisyah to recover her lost trading notes', t: 'aisyah_battle', c: 0, need: 10, rw: { xp: 150, g: 100 }, done: false, hidden: true, revealed: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah' }
+  ],
+
+  bounties: [
+    { id: 'b1', n: 'Goblin Slayer', d: 'Defeat 5 Goblins', t: 'kill_specific', target: 'Goblin', c: 0, need: 5, rw: { xp: 40, g: 25 }, done: false, refreshDay: 0 },
+    { id: 'b2', n: 'Bone Collector', d: 'Defeat 5 Skeletons', t: 'kill_specific', target: 'Skeleton', c: 0, need: 5, rw: { xp: 60, g: 35 }, done: false, refreshDay: 0 },
+    { id: 'b3', n: 'Wolf Hunter', d: 'Defeat 3 Wolves', t: 'kill_specific', target: 'Wolf', c: 0, need: 3, rw: { xp: 30, g: 20 }, done: false, refreshDay: 0 },
+    { id: 'b4', n: 'Ghost Buster', d: 'Defeat 3 Ghosts', t: 'kill_specific', target: 'Ghost', c: 0, need: 3, rw: { xp: 80, g: 50 }, done: false, refreshDay: 0 },
+    { id: 'b5', n: 'Fire Purge', d: 'Defeat 4 Fire Imps', t: 'kill_specific', target: 'Fire Imp', c: 0, need: 4, rw: { xp: 100, g: 60 }, done: false, refreshDay: 0 },
+    { id: 'b6', n: 'Crystal Breaker', d: 'Defeat 3 Crystal Spiders', t: 'kill_specific', target: 'Crystal Spider', c: 0, need: 3, rw: { xp: 70, g: 40 }, done: false, refreshDay: 0 },
+    { id: 'b7', n: 'Storm Chaser', d: 'Defeat 3 Storm Wraiths', t: 'kill_specific', target: 'Storm Wraith', c: 0, need: 3, rw: { xp: 120, g: 75 }, done: false, refreshDay: 0 },
+    { id: 'b8', n: 'Ice Breaker', d: 'Defeat 3 Ice Elementals', t: 'kill_specific', target: 'Ice Elemental', c: 0, need: 3, rw: { xp: 150, g: 90 }, done: false, refreshDay: 0 },
+    { id: 'b9', n: 'Void Hunter', d: 'Defeat 2 Void Beasts', t: 'kill_specific', target: 'Void Beast', c: 0, need: 2, rw: { xp: 200, g: 120 }, done: false, refreshDay: 0 },
+    { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0 }
+  ],
+
+  storyline: [
+    { id: 's1', n: 'The Awakening', d: 'Reach Level 3 and defeat your first boss', t: 'reach_level', c: 0, need: 3, rw: { xp: 200, g: 100 }, done: false, unlocked: true, chapter: 1 },
+    { id: 's2', n: 'Echoes of the Past', d: 'Reach Level 5 and explore Stormhold', t: 'reach_level', c: 0, need: 5, rw: { xp: 350, g: 200 }, done: false, unlocked: false, chapter: 2 },
+    { id: 's3', n: 'The Frozen Crown', d: 'Reach Level 7 and defeat the Frozen Knight', t: 'reach_level', c: 0, need: 7, rw: { xp: 500, g: 300 }, done: false, unlocked: false, chapter: 3 },
+    { id: 's4', n: 'Into the Void', d: 'Reach Level 9 and survive the Abyssal Depths', t: 'reach_level', c: 0, need: 9, rw: { xp: 800, g: 500 }, done: false, unlocked: false, chapter: 4 },
+    { id: 's5', n: 'Starlight Ascension', d: 'Reach Level 10 and conquer the Starlight Spire', t: 'reach_level', c: 0, need: 10, rw: { xp: 1500, g: 1000 }, done: false, unlocked: false, chapter: 5 }
+  ],
+  log: ['Welcome to Legends of Daybreak, San.'],
+
+  affinity: {
+    Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
+    Mezstorm: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Eliz: { val: 30, max: 100, lastInteract: Date.now(), decayRate: 0.03 },
+    Senedra: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Zaki: { val: 20, max: 100, lastInteract: Date.now(), decayRate: 0.02 },
+    Soel: { val: 80, max: 100, lastInteract: Date.now(), decayRate: 0.08 }
+  },
+
+  soelCommentary: [
+    { speaker: 'Soel', text: "Soel bats at the quest scroll. 'Boring. Where's the fish?'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel sits on the quest log. 'This one smells like trouble. Good.'", trigger: 'quest_start' },
+    { speaker: 'Soel', text: "Soel yawns dramatically. 'Can we nap instead? The quest will wait.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel's tail puffs up. 'That one. That quest. I don't like it.'", trigger: 'quest_view' },
+    { speaker: 'Soel', text: "Soel knocks a potion off the table. 'Oops. Was that important?'", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel watches you craft with intense focus. Then falls asleep.", trigger: 'craft' },
+    { speaker: 'Soel', text: "Soel walks across your spellbook. 'This page is better blank.'", trigger: 'skills' },
+    { speaker: 'Soel', text: "Soel purrs so loud you can't concentrate. 'Focus? Never heard of her.'", trigger: 'focus' },
+    { speaker: 'Soel', text: "Soel curls up on the map. 'Here. We rest here. I decided.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel stares at the campfire like it's a personal enemy. 'Too bright.'", trigger: 'rest' },
+    { speaker: 'Soel', text: "Soel brings you a dead leaf. 'Gift. For the brave warrior.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel licks his paw while you loot. 'Hurry up. I'm hungry.'", trigger: 'combat_win' },
+    { speaker: 'Soel', text: "Soel hisses at an empty corner. 'There's something there. Trust me.'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel runs ahead, then back, then ahead again. 'This way! No, this way!'", trigger: 'explore' },
+    { speaker: 'Soel', text: "Soel sits on Joel's head. 'Better view from up here.'", trigger: 'party' },
+    { speaker: 'Soel', text: "Soel ignores Aisyah. Aisyah ignores him. Mutual respect.", trigger: 'party' }
+  ],
+
+  lastSoelComment: null,
+  soelCommentCooldown: 0,
+
+  npcs: [
+    { n: 'LLP', t: 'trader', title: 'Wandering Merchant', icon: '🧳', col: '#fbbf24', zone: 'Whispering Woods', zoneLv: 1,
+      d: 'A shrewd merchant who appears in Whispering Woods. Sells rare herbs and curious trinkets.',
+      stock: [
+        { n: 'Mystic Herb', t: 'mat', q: 1, r: 'uncommon', price: 15 },
+        { n: 'Silver Thread', t: 'mat', q: 1, r: 'rare', price: 30 },
+        { n: 'Luck Charm', t: 'acc', q: 1, r: 'uncommon', price: 50, cha: 2 }
+      ],
+      unlocked: true, zone: 'Whispering Woods', zoneLv: 1, visitCount: 0 },
+    { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
+      d: 'A tinkerer who sets up shop near Ember Peak. Deals in mechanical parts and weapon upgrades.',
+      stock: [
+        { n: 'Gear Assembly', t: 'mat', q: 1, r: 'uncommon', price: 20 },
+        { n: 'Reinforced Plate', t: 'mat', q: 1, r: 'rare', price: 35 },
+        { n: 'Tinker Wrench', t: 'wep', q: 1, r: 'uncommon', price: 45, atk: 4 }
+      ],
+      unlocked: false, zone: 'Ember Peak', zoneLv: 4, visitCount: 0 },
+    { n: 'Mimi', t: 'ally', title: 'The Whisperer', icon: '🦋', col: '#8b5cf6',
+      d: 'A mysterious ally who communicates through dreams. Grants visions and cryptic advice.',
+      ability: 'Dreamsight: Reveals hidden quest paths and secret loot locations.',
+      unlocked: false, ul: 5, affinityReq: 40, reqMember: 'Mezstorm' },
+    { n: 'Aisy', t: 'ally', title: 'The Shadow Walker', icon: '🌙', col: '#6366f1',
+      d: 'A wandering spirit who aids those she deems worthy. Enhances stealth and evasion.',
+      ability: 'Shadow Step: 20% chance to avoid enemy attacks entirely.',
+      unlocked: false, ul: 7, affinityReq: 50, reqMember: 'Aisyah' }
+  ],
+
+  bosses: [
+    { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 100, g: 80, 
+      mechanic: 'rampage', rampageTurn: 3, rampageDmg: 25, desc: 'Enrages after 3 turns. All party members must attack.' },
+    { n: 'Bone Tyrant', zone: 'Cursed Catacombs', hp: 250, mhp: 250, atk: 15, def: 8, xp: 200, g: 150,
+      mechanic: 'resurrect', resurrectCount: 2, desc: 'Resurrects twice. Kill it 3 times.' },
+    { n: 'Crystal Leviathan', zone: 'Crystal Caverns', hp: 300, mhp: 300, atk: 18, def: 10, xp: 300, g: 200,
+      mechanic: 'phase', phases: 3, currentPhase: 1, phaseHp: 100, desc: 'Shifts phases every 100 HP. Changes weaknesses.' },
+    { n: 'Ember Dragon', zone: 'Ember Peak', hp: 400, mhp: 400, atk: 22, def: 12, xp: 450, g: 300,
+      mechanic: 'inferno', infernoTurn: 4, infernoDmg: 40, desc: 'Charges inferno for 4 turns. Interrupt or die.' },
+    { n: 'Storm Tyrant', zone: 'Stormhold', hp: 500, mhp: 500, atk: 25, def: 15, xp: 600, g: 400,
+      mechanic: 'lightning_rod', rodTurns: 3, desc: 'Lightning strikes weakest member every 3 turns.' },
+    { n: 'Frost Queen', zone: 'Frostspire Ruins', hp: 600, mhp: 600, atk: 28, def: 18, xp: 800, g: 500,
+      mechanic: 'freeze', freezeChance: 0.3, desc: '30% chance to freeze a party member each turn.' },
+    { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 1500, g: 1000,
+      mechanic: 'devour', devourTurn: 5, desc: 'Devours a party member on turn 5 if not staggered by all attackers.' },
+    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 2500, g: 2000,
+      mechanic: 'apocalypse', apocalypseTurn: 6, desc: 'Ultimate attack on turn 6. Must kill before then.' },
+    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 5000, g: 5000,
+      mechanic: 'cosmic', cosmicPhase: 1, desc: 'The final boss. Shifts cosmic phases. Requires perfect coordination.' }
+  ],
+
+  currentBoss: null,
+  secretArea: { active: false, zone: null, choice: null, result: null },
+  playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
+  currentMiniStory: null,
+  storyMode: { active: false, currentChapter: 0, currentScene: 0, choices: [] },
+
+  lastSoelComment: null,
+  soelCommentCooldown: 0,
+
+  rest: {
+    active: false,
+    timer: null,
+    tick: 0,
+    maxTicks: 5,
+    tickDuration: 1500,
+    selectedSite: null,
+    ambushPending: false,
+    sites: [
+      { id: 'ww_camp', name: 'Whispering Woods Camp', type: 'camp', zone: 'Whispering Woods', zoneLv: 1, desc: 'A quiet clearing beneath ancient oaks.', unlocked: true, icon: '🏕️', cost: 0 },
+      { id: 'ww_tavern', name: 'The Sleeping Stag', type: 'tavern', zone: 'Whispering Woods', zoneLv: 1, desc: 'A rustic tavern at the forest edge. Warm beds, warm ale.', unlocked: false, icon: '🍺', cost: 5 },
+      { id: 'cc_camp', name: 'Catacombs Hollow', type: 'camp', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A hidden alcove away from the restless dead.', unlocked: false, icon: '⛺', cost: 0 },
+      { id: 'cc_tavern', name: 'The Bone Flute', type: 'tavern', zone: 'Cursed Catacombs', zoneLv: 2, desc: 'A morbidly cozy inn carved into tomb walls.', unlocked: false, icon: '🍺', cost: 8 },
+      { id: 'ep_camp', name: 'Ember Peak Shelter', type: 'camp', zone: 'Ember Peak', zoneLv: 4, desc: 'A heat-shielded cave with volcanic warmth.', unlocked: false, icon: '⛺', cost: 0 },
+      { id: 'ep_tavern', name: 'The Molten Mug', type: 'tavern', zone: 'Ember Peak', zoneLv: 4, desc: 'Fire-resistant stone tavern. The ale is warm, the beds are warm, everything is warm.', unlocked: false, icon: '🍺', cost: 12 },
+      { id: 'fr_camp', name: 'Frostspire Shelter', type: 'camp', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A magically warded ice cave. Barely warm enough.', unlocked: false, icon: '⛺', cost: 0 },
+      { id: 'fr_tavern', name: 'The Frozen Hearth', type: 'tavern', zone: 'Frostspire Ruins', zoneLv: 6, desc: 'A tavern that somehow keeps warm in the frozen wastes.', unlocked: false, icon: '🍺', cost: 15 },
+      { id: 'ad_camp', name: 'Abyssal Refuge', type: 'camp', zone: 'Abyssal Depths', zoneLv: 8, desc: 'A pocket of reality that the void has not claimed... yet.', unlocked: false, icon: '⛺', cost: 0 },
+      { id: 'ad_tavern', name: 'The Last Light', type: 'tavern', zone: 'Abyssal Depths', zoneLv: 8, desc: 'The final tavern before oblivion. Prices are steep.', unlocked: false, icon: '🍺', cost: 25 },
+      { id: 'temple', name: 'Temple of Resurrection', type: 'temple', zone: 'Sanctuary', zoneLv: 1, desc: 'An ancient temple that restores fallen companions to life.', unlocked: true, icon: '⛪', cost: 50 }
+    ]
+  },
+
+  banter: {
+    solo: [
+      { speaker: 'San', text: "The fire crackles. You stare into it, thinking of Joel." },
+      { speaker: 'San', text: "A moth circles the flame. You let it live." },
+      { speaker: 'San', text: "You sharpen your staff by firelight. The rhythm soothes you." },
+      { speaker: 'San', text: "The woods are quiet. Too quiet." },
+      { speaker: 'San', text: "You count your gold twice. Old habits." },
+      { speaker: 'San', text: "A shooting star. You don't make a wish — you've learned better." }
+    ],
+    joel: [
+      { speaker: 'Joel', text: "Joel tosses you a dried fruit. 'Eat. You're no use to anyone faint.'" },
+      { speaker: 'Joel', text: "'Remember when we thought goblins were scary?' Joel laughs, nursing a bruise." },
+      { speaker: 'Joel', text: "Joel checks his shield for the third time. 'Habit,' he mutters." },
+      { speaker: 'Joel', text: "'Your sister asked about you,' Joel says to the fire. You don't reply." },
+      { speaker: 'Joel', text: "Joel hums an old tune. You almost recognize it." },
+      { speaker: 'Joel', text: "'You're burning the rations,' Joel notes. You pull the stick back." }
+    ],
+    aisyah: [
+      { speaker: 'Aisyah', text: "Aisyah appears from the shadows with berries. 'You're welcome.'" },
+      { speaker: 'Aisyah', text: "'Stop fidgeting,' Aisyah sighs. 'The fire won't attack you.'" },
+      { speaker: 'Aisyah', text: "She's cleaning her daggers. The steel catches the light like teeth." },
+      { speaker: 'Aisyah', text: "'Joel snores,' Aisyah whispers. 'Loudly. Just so you know.'" },
+      { speaker: 'Aisyah', text: "Aisyah stares at the stars. 'Brunei's sky was never this clear.'" },
+      { speaker: 'Aisyah', text: "'You fight like Mum,' she says suddenly. Then: 'That's not a compliment.'" },
+      { speaker: 'Aisyah', text: "Aisyah counts gold by firelight, faster than you can blink. 'Numbers don't lie,' she says. 'People do. But some people... don't.'" },
+      { speaker: 'Aisyah', text: "She unfolds a worn map marked with trade routes. 'This path,' she taps, 'is where the real money flows. Dangerous. Worth it.'" },
+      { speaker: 'Aisyah', text: "'I once traded a single ruby for three weeks of safe passage,' she says, not bragging. Just fact. 'The trick is knowing what the other person needs more than gold.'" },
+      { speaker: 'Aisyah', text: "Aisyah sharpens a second dagger. 'First rule of the road: trust no one. Second rule: find someone worth breaking the first rule for.'" }
+    ],
+    mezstorm: [
+      { speaker: 'Mezstorm', text: "Mezstorm's hands spark with static. 'Sorry. Nervous habit.'" },
+      { speaker: 'Mezstorm', text: "'The ley lines here are... wrong,' Mezstorm mutters, drawing in dirt." },
+      { speaker: 'Mezstorm', text: "He offers you a strange tea. It tastes like copper and regret." },
+      { speaker: 'Mezstorm', text: "'I knew a sorcerer in the east who'd laugh at your form,' he says. 'Rude of him.'" },
+      { speaker: 'Mezstorm', text: "Mezstorm watches the fire like it's speaking to him. Maybe it is." }
+    ],
+    eliz: [
+      { speaker: 'Eliz', text: "Eliz presses a cool cloth to your forehead without asking. 'Fever.'" },
+      { speaker: 'Eliz', text: "'Your aura is frayed,' she says gently. 'Rest now. I mean it.'" },
+      { speaker: 'Eliz', text: "She hums while sorting herbs. The sound makes your shoulders drop." },
+      { speaker: 'Eliz', text: "'Joel hides his wounds,' Eliz confides. 'Check on him. Please.'" },
+      { speaker: 'Eliz', text: "A firefly lands on her hand. She smiles like it's a gift." }
+    ],
+    senedra: [
+      { speaker: 'Senedra', text: "Senedra returns from the treeline. 'Two wolves. Watching. Not hungry.'" },
+      { speaker: 'Senedra', text: "She strings her bow by feel, eyes never leaving the dark." },
+      { speaker: 'Senedra', text: "'The north has harsher winters than this,' she says, almost fondly." },
+      { speaker: 'Senedra', text: "Senedra offers you pemmican. It tastes like survival." },
+      { speaker: 'Senedra', text: "'Your cat would hate these woods,' she says. You think of Soel." }
+    ],
+    zaki: [
+      { speaker: 'Zaki', text: "Zaki sharpens his sword too aggressively. Sparks fly. 'Sorry.'" },
+      { speaker: 'Zaki', text: "'I could take a goblin blindfolded,' he boasts. No one argues." },
+      { speaker: 'Zaki', text: "He's young. The firelight makes him look younger." },
+      { speaker: 'Zaki', text: "'Why'd you pick sorcery?' Zaki asks. 'Seems... lonely.'" },
+      { speaker: 'Zaki', text: "Zaki throws a pebble at a bat. It misses by a meter. 'Meant to do that.'" }
+    ],
+    soel: [
+      { speaker: 'Soel', text: "Soel curls in your lap, purring like a motor. The warmth seeps in." },
+      { speaker: 'Soel', text: "He bats at a moth, misses, pretends he didn't care." },
+      { speaker: 'Soel', text: "Soel's ears twitch. He stares at nothing. You trust his instincts." },
+      { speaker: 'Soel', text: "He brings you a leaf. It's the thought that counts." },
+      { speaker: 'Soel', text: "Soel kneads your robe. Tiny claws, enormous love." }
+    ],
+    tavern: [
+      { speaker: 'Barkeep', text: "The barkeep slides you watered ale. 'On the house, mage.'" },
+      { speaker: 'Bard', text: "A bard sings of the Frostspire. You know the ending. Everyone dies." },
+      { speaker: 'San', text: "The fire here is warm, the floor sticky, the company loud." },
+      { speaker: 'San', text: "Someone recognizes your staff. You leave before questions." },
+      { speaker: 'Merchant', text: "A merchant offers to buy your goblin teeth. 'For research,' he claims." },
+      { speaker: 'San', text: "The tavern cat is fatter than Soel. You send him a mental apology." }
+    ],
+    tense: [
+      { speaker: 'San', text: "The fire flickers. The wind shifts. Something's wrong." },
+      { speaker: 'Soel', text: "Soel's hackles rise. The woods go silent." },
+      { speaker: 'San', text: "A twig snaps. Not deer. Too heavy." },
+      { speaker: 'San', text: "The temperature drops. Not natural." },
+      { speaker: 'San', text: "You smell sulfur. Or rot. Or both." }
+    ]
+  },
+
+  currentDialogue: null,
+  ambushWarning: null,
+  bestiary: {},
+  story: { active: true, chapter: 0, scene: 0, shown: false },
+  storyChapters: [
+    { title: 'The Rain and the Kitten', unlockLevel: 1, scenes: [
+      { speaker: 'Narrator', text: 'It began with rain. The kind that falls for days and turns the world soft and gray.' },
+      { speaker: 'Joel', text: '"She was starving," Joel says, though you do not remember asking. "The mother cat. Skin and bones under the porch."' },
+      { speaker: 'Joel', text: '"I fed her. Every day. Did not plan to. Just... could not stop."' },
+      { speaker: 'Narrator', text: 'Weeks later, the cat vanished. In her place: a cardboard box, sodden at the edges, filled with five damp bundles of fur.' },
+      { speaker: 'Joel', text: '"Gave three away. Kept one for the mother cat, in case she came back." He pauses. "She did not."' },
+      { speaker: 'Joel', text: '"The last one... he would not stop staring at me. Like he had already decided."' },
+      { speaker: 'Narrator', text: 'Joel named him Soel. A name that sounded like rain on a roof. Like something small and certain.' },
+      { speaker: 'Narrator', text: 'Soel grew. Soel watched. Soel chose you, on the nights you visited Joel, climbing into your lap like he had been waiting.' },
+      { speaker: 'Narrator', text: 'Then came the dorm assignment. Joel and his friends, moved across the city. No pets allowed.' },
+      { speaker: 'Joel', text: '"Take him," Joel said, not looking at you. "He already chose you anyway."' },
+      { speaker: 'Narrator', text: 'Soel rode home in your pack, purring like a motor. Like he had always known the way.' }
+    ]},
+    { title: 'The Awakening', unlockLevel: 1, scenes: [
+      { speaker: 'Narrator', text: 'You wake to the sound of rain on stone. The tower room is cold, unfamiliar. A single candle flickers beside a worn leather pack.' },
+      { speaker: 'Narrator', text: 'Your name is San. You are a Sorcerer — or you will be, once you remember what that means.' },
+      { speaker: 'Narrator', text: 'Outside, the world of Aethon waits. Dangerous. Hungry. But somewhere in its depths, answers sleep.' },
+      { speaker: 'Soel', text: 'A small cat curls at your feet, purring like he has always known you. His name is Soel. He came with the rain.' },
+      { speaker: 'Narrator', text: 'Your journey begins in the Whispering Woods. Survive. Grow. Find what was taken from you.' }
+    ]},
+    { title: 'The First Bond', unlockLevel: 2, scenes: [
+      { speaker: 'Joel', text: '"You look like you need a shield," a voice says. Joel stands in the doorway, already armored, already certain.' },
+      { speaker: 'Joel', text: '"I do not ask why you are here. I ask if you will let me stand beside you while you find out."' },
+      { speaker: 'Narrator', text: 'Joel joins your party. His shield is heavy. His loyalty is heavier.' }
+    ]},
+    { title: 'Sisterblade', unlockLevel: 3, scenes: [
+      { speaker: 'Aisyah', text: '"Took you long enough," she says, stepping from the shadows. Her daggers glint like teeth.' },
+      { speaker: 'Aisyah', text: '"Mum asked me to check on you. I told her you were fine. Do not make me a liar."' },
+      { speaker: 'Narrator', text: 'Aisyah joins your party. Family is complicated. Family with knives is complicated and useful.' }
+    ]},
+    { title: "The Healer's Light", unlockLevel: 4, scenes: [
+      { speaker: 'Eliz', text: '"Your aura is frayed," she whispers, pressing a cool hand to your forehead. You did not hear her approach.' },
+      { speaker: 'Eliz', text: '"I will mend what I can. But some wounds are not of the body."' },
+      { speaker: 'Narrator', text: 'Eliz joins your party. Her hands glow with gentle light. Her eyes hold older sorrows.' }
+    ]},
+    { title: 'The Stormsinger', unlockLevel: 5, scenes: [
+      { speaker: 'Mezstorm', text: 'Lightning cracks the sky. A figure stands in the rain, hands sparking with static. "The ley lines brought me to you," he says.' },
+      { speaker: 'Mezstorm', text: '"Something is wrong in Aethon. The magic itself is... afraid."' },
+      { speaker: 'Narrator', text: 'Mezstorm joins your party. He speaks to the storm. Sometimes, it answers.' }
+    ]},
+    { title: 'Shadows of the Past', unlockLevel: 6, scenes: [
+      { speaker: 'Narrator', text: 'The Cursed Catacombs whisper your name. Not San — something older. Something buried.' },
+      { speaker: 'Narrator', text: 'The Bone Tyrant waits below. It has waited a very long time.' }
+    ]},
+    { title: 'The Frozen Crown', unlockLevel: 8, scenes: [
+      { speaker: 'Narrator', text: "Frostspire Ruins rise against the northern sky. The Frost Queen's castle was beautiful once, before the ice took her heart." },
+      { speaker: 'Narrator', text: "They say she still dances in the great hall, alone, waiting for a partner who will never come." }
+    ]},
+    { title: 'Into the Void', unlockLevel: 10, scenes: [
+      { speaker: 'Narrator', text: 'The Abyssal Depths do not belong to this world. They are a wound in reality, and something looks back from the other side.' },
+      { speaker: 'Narrator', text: 'The Abyssal Leviathan devours light, memory, hope. It has swallowed cities. It would swallow you without noticing.' }
+    ]},
+    { title: 'Starlight Ascension', unlockLevel: 12, scenes: [
+      { speaker: 'Narrator', text: 'The Starlight Spire touches the sky. At its peak, the Astral Lord waits — the final gatekeeper, the last question.' },
+      { speaker: 'Narrator', text: 'You have come so far. But the hardest truth is always the last one.' },
+      { speaker: 'Soel', text: 'Soel rubs against your leg. "We go together," his eyes seem to say. "Always together."' }
+    ]}
+  ]
+};
+
+
+
+function updateAffinity(partyMemberName, amount) {
+  if (!G.affinity[partyMemberName]) return;
+  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
+  G.affinity[partyMemberName].lastInteract = Date.now();
+  if (amount > 0) {
+    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
+  }
+  checkAffinityDecay();
+}
+
+function checkAffinityDecay() {
+  const now = Date.now();
+  for (let name in G.affinity) {
+    const aff = G.affinity[name];
+    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
+    if (hoursSince > 24) {
+      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
+      aff.val = Math.max(0, aff.val - decay);
+      if (decay > 0) {
+        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
+      }
+      aff.lastInteract = now;
+    }
+  }
+}
+
+function getAffinityColor(val) {
+  if (val >= 70) return 'affinity-high';
+  if (val >= 40) return 'affinity-mid';
+  return 'affinity-low';
+}
+
+function updateTimedQuests() {
+  for (let q of G.quests) {
+    if (q.timed && !q.done && !q.expired && q.timer > 0) {
+      q.timer--;
+      if (q.timer <= 0) {
+        q.expired = true;
+        lg('⏰ Quest expired: ' + q.n + '!');
+      }
+    }
+  }
+}
+
+function getTimerStatus(q) {
+  if (!q.timed || q.done || q.expired) return null;
+  const pct = (q.timer / q.timerMax) * 100;
+  if (q.timer <= 0) return { cls: 'timer-expired', label: 'EXPIRED', pct: 0 };
+  if (pct < 25) return { cls: 'timer-urgent', label: q.timer + ' ticks left', pct: pct };
+  return { cls: 'timer-ok', label: q.timer + ' ticks left', pct: pct };
+}
+
+function updateAffinity(partyMemberName, amount) {
+  if (!G.affinity[partyMemberName]) return;
+  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
+  G.affinity[partyMemberName].lastInteract = Date.now();
+  if (amount > 0) {
+    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
+  }
+}
+
+function checkAffinityDecay() {
+  const now = Date.now();
+  for (let name in G.affinity) {
+    const aff = G.affinity[name];
+    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
+    if (hoursSince > 24) {
+      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
+      aff.val = Math.max(0, aff.val - decay);
+      if (decay > 0) {
+        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
+      }
+      aff.lastInteract = now;
+    }
+  }
+}
+
+function getAffinityColor(val) {
+  if (val >= 70) return 'affinity-high';
+  if (val >= 40) return 'affinity-mid';
+  return 'affinity-low';
+}
+
+function triggerSoelCommentary(triggerType) {
+  if (!G.party[6].on) return;
+  if (G.soelCommentCooldown > 0) { G.soelCommentCooldown--; return; }
+  if (Math.random() > 0.35) return;
+  const relevant = G.soelCommentary.filter(c => c.trigger === triggerType);
+  if (relevant.length === 0) return;
+  const comment = relevant[Math.floor(Math.random() * relevant.length)];
+  G.lastSoelComment = comment;
+  G.soelCommentCooldown = 3;
+  lg('🐱 Soel: ' + comment.text);
+}
+
+function checkNPCUnlocks() {
+  for (let npc of G.npcs) {
+    if (npc.t === 'trader' && !npc.unlocked && G.p.lvl >= npc.zoneLv) {
+      npc.unlocked = true;
+      lg('🧳 New trader unlocked: ' + npc.n + ' at ' + npc.zone + '!');
+    }
+    if (npc.t === 'ally' && !npc.unlocked && npc.reqMember) {
+      if (G.affinity[npc.reqMember] && G.affinity[npc.reqMember].val >= npc.affinityReq) {
+        npc.unlocked = true;
+        lg('🌟 ' + npc.n + ' ' + npc.title + ' has joined as an ally!');
+      }
+    }
+  }
+}
+
+function buyFromNPC(npcName, itemIdx) {
+  const npc = G.npcs.find(n => n.n === npcName);
+  if (!npc || !npc.unlocked || npc.t !== 'trader') return;
+  const item = npc.stock[itemIdx];
+  if (!item) return;
+  if (G.p.gold < item.price) {
+    lg('❌ Not enough gold! ' + item.n + ' costs ' + item.price + 'G.');
+    return;
+  }
+  G.p.gold -= item.price;
+  const boughtItem = { n: item.n, t: item.t, q: item.q || 1, r: item.r };
+  if (item.atk) boughtItem.atk = item.atk;
+  if (item.def) boughtItem.def = item.def;
+  if (item.int) boughtItem.int = item.int;
+  if (item.cha) boughtItem.cha = item.cha;
+  addI(boughtItem);
+  npc.visitCount++;
+  lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
+  if (npc.visitCount === 1) {
+    lg('   ' + npc.n + ': "Pleasure doing business, mage."');
+  }
+  render();
+}
+
+function getDayNumber() {
+  return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+}
+
+function refreshBounties() {
+  const today = getDayNumber();
+  let refreshed = false;
+  for (let b of G.bounties) {
+    if (b.done && b.refreshDay !== today) {
+      b.done = false;
+      b.c = 0;
+      b.refreshDay = today;
+      refreshed = true;
+    }
+  }
+  if (refreshed) {
+    lg('📋 New bounties available!');
+  }
+}
+
+function checkStoryline() {
+  for (let s of G.storyline) {
+    if (s.done) continue;
+    if (!s.unlocked) {
+      // Check if previous chapter is done
+      const prev = G.storyline.find(ch => ch.chapter === s.chapter - 1);
+      if (!prev || prev.done) {
+        s.unlocked = true;
+        lg('📖 Storyline unlocked: Chapter ' + s.chapter + ' - ' + s.n + '!');
+      }
+    }
+    if (s.unlocked && G.p.lvl >= s.need) {
+      s.c = s.need;
+      s.done = true;
+      G.p.xp += s.rw.xp;
+      G.p.gold += s.rw.g;
+      G.p.quests++;
+      lg('📖 Storyline complete: ' + s.n + '! +' + s.rw.xp + 'XP +' + s.rw.g + 'G');
+      lvlup();
+    }
+  }
+}
+
+function checkBountyKill(enemyName) {
+  for (let b of G.bounties) {
+    if (b.done) continue;
+    if (b.t === 'kill_specific' && enemyName === b.target) {
+      b.c++;
+      if (b.c >= b.need) {
+        b.done = true;
+        b.refreshDay = getDayNumber();
+        G.p.xp += b.rw.xp;
+        G.p.gold += b.rw.g;
+        G.p.quests++;
+        lg('💰 Bounty complete: ' + b.n + '! +' + b.rw.xp + 'XP +' + b.rw.g + 'G');
+        lvlup();
+      }
+    }
+  }
+}
+
+function rd(s) { return Math.floor(Math.random()*s)+1; }
+function rdc(n,s) { let sum=0; for(let i=0;i<n;i++)sum+=rd(s); return sum; }
+function r20() { return rd(20); }
+function getCritChance() {
+  // Base 5% crit, +2% per DEX point
+  return Math.min(0.5, 0.05 + (G.p.stats.dex * 0.02));
+}
+function rollCrit() {
+  return Math.random() < getCritChance();
+}
+function getWeaknessMultiplier(spellElem, enemyElem) {
+  if (!spellElem || !enemyElem || enemyElem === 'none') return 1;
+  // Fire beats Ice, Ice beats Fire
+  if (spellElem === 'fire' && enemyElem === 'ice') return 1.5;
+  if (spellElem === 'ice' && enemyElem === 'fire') return 1.5;
+  // Lightning beats Void
+  if (spellElem === 'lightning' && enemyElem === 'void') return 1.5;
+  // Arcane beats Void
+  if (spellElem === 'arcane' && enemyElem === 'void') return 1.3;
+  // Same element = reduced damage
+  if (spellElem === enemyElem) return 0.5;
+  return 1;
+}
+
+
+function getActiveSynergies() {
+  const active = G.party.filter(p => p.on && p.hp > 0).map(p => p.n);
+  active.push('San');
+  const synergies = [];
+  for (let syn of G.partySynergies) {
+    const allPresent = syn.members.every(m => active.includes(m));
+    if (allPresent) synergies.push(syn);
+  }
+  return synergies;
+}
+
+function getSynergyBonus(type) {
+  const synergies = getActiveSynergies();
+  let bonus = 0;
+  for (let syn of synergies) {
+    if (syn.bonus[type]) bonus += syn.bonus[type];
+  }
+  return bonus;
+}
+
+function getSynergyDesc() {
+  const synergies = getActiveSynergies();
+  if (synergies.length === 0) return null;
+  return synergies.map(s => s.icon + ' ' + s.name).join(' · ');
+}
+
+function applySynergyDamage(dmg, type) {
+  const spellBonus = getSynergyBonus('spellDmgPct');
+  if (type === 'spell' && spellBonus > 0) {
+    dmg = Math.floor(dmg * (1 + spellBonus));
+  }
+  return dmg;
+}
+
+function applySynergyDefense(dmg) {
+  const dmgRed = getSynergyBonus('dmgRed');
+  if (dmgRed > 0) {
+    dmg = Math.floor(dmg * (1 - dmgRed));
+  }
+  return Math.max(1, dmg);
+}
+
+function getSynergyCritBonus() {
+  return getSynergyBonus('critPct');
+}
+
+function getSynergyGoldBonus() {
+  return getSynergyBonus('goldPct');
+}
+
+function getSynergyHealBonus() {
+  return getSynergyBonus('healPct');
+}
+
+function getTotalCritChance() {
+  return Math.min(0.75, getCritChance() + getSynergyCritBonus());
+}
+
+function pd(ds,b) {
+  if(!ds) return 0;
+  const m=ds.match(/(\d+)d(\d+)/);
+  if(!m) return b||0;
+  return rdc(parseInt(m[1]),parseInt(m[2]))+(b||0);
+}
+
+function isImmune(enemyName, spellElem) {
+  if (!spellElem) return false;
+  const fireMobs = ['Fire Imp', 'Lava Slug', 'Ash Wraith'];
+  const iceMobs = ['Ice Elemental', 'Frost Wolf', 'Frozen Knight'];
+  if (spellElem === 'fire' && fireMobs.includes(enemyName)) return true;
+  if (spellElem === 'ice' && iceMobs.includes(enemyName)) return true;
+  return false;
+}
+
+let restTimer = null;
+
+function getDeadParty() {
+  return G.party.filter(p => p.hp <= 0);
+}
+
+function reviveMember(name) {
+  const member = G.party.find(p => p.n === name);
+  if(!member || member.hp > 0) return;
+  if(G.p.gold < 50) { lg('❌ Need 50G to revive!'); return; }
+  G.p.gold -= 50;
+  member.hp = Math.floor(member.mhp * 0.5);
+  member.on = true;
+  lg('⛪ ' + member.n + ' revived! HP: ' + member.hp + '/' + member.mhp);
+  render();
+}
+
+function hasHealer() {
+  return G.party.some(p => p.on && p.r === 'Healer' && p.hp > 0);
+}
+
+function getHealerName() {
+  const h = G.party.find(p => p.on && p.r === 'Healer' && p.hp > 0);
+  return h ? h.n : null;
+}
+
+function unlockRestSites() {
+  let newly = false;
+  for (let site of G.rest.sites) {
+    if (!site.unlocked && G.p.lvl >= site.zoneLv) {
+      site.unlocked = true;
+      lg('🏕️ New rest site unlocked: ' + site.name + ' (' + site.zone + ')');
+      newly = true;
+    }
+  }
+  return newly;
+}
+
+function pickBanter(type, tense) {
+  const pool = [];
+  if (tense) {
+    pool.push(...G.banter.tense);
+  } else if (type === 'tavern' && Math.random() < 0.4) {
+    pool.push(...G.banter.tavern);
+  }
+  const active = G.party.filter(p => p.on);
+  if (active.length === 0 && !tense) {
+    pool.push(...G.banter.solo);
+  } else if (!tense) {
+    for (let p of active) {
+      const key = p.n.toLowerCase();
+      if (G.banter[key]) pool.push(...G.banter[key]);
+    }
+  }
+  if (pool.length === 0) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showDialogue(dialogue) {
+  if (!dialogue) return;
+  G.currentDialogue = dialogue;
+  lg('💬 ' + dialogue.speaker + ': ' + dialogue.text);
+}
+
+function showAmbushWarning(dialogue) {
+  if (!dialogue) return;
+  G.ambushWarning = dialogue;
+  lg('⚠️ ' + dialogue.text);
+}
+
+function doRestTick() {
+  const healAmt = Math.ceil(G.p.mhp / G.rest.maxTicks);
+  const manaAmt = Math.ceil(G.p.mmp / G.rest.maxTicks);
+  G.p.hp = Math.min(G.p.mhp, G.p.hp + healAmt);
+  G.p.mp = Math.min(G.p.mmp, G.p.mp + manaAmt);
+  for (let p of G.party) {
+    if (p.on) {
+      p.hp = Math.min(p.mhp, p.hp + Math.ceil(p.mhp / G.rest.maxTicks));
+    }
+  }
+  const line = pickBanter(G.rest.selectedSite.type, false);
+  if (line) showDialogue(line);
+  render();
+}
+
+function startRest(siteId) {
+  if (G.rest.active) return;
+  const site = G.rest.sites.find(s => s.id === siteId);
+  if (!site || !site.unlocked) {
+    lg('That rest site is not available yet.');
+    return;
+  }
+  if (!hasHealer()) {
+    lg('❌ No healer in active party! You need a healer to rest safely.');
+    return;
+  }
+  if (site.cost && G.p.gold < site.cost) {
+    lg('❌ Not enough gold! ' + site.name + ' costs ' + site.cost + 'G.');
+    return;
+  }
+  if (site.cost) {
+    G.p.gold -= site.cost;
+    lg('💰 Paid ' + site.cost + 'G for ' + site.name + '.');
+  }
+  G.rest.active = true;
+  G.rest.selectedSite = site;
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
+  G.currentDialogue = null;
+  G.ambushWarning = null;
+  const healerName = getHealerName();
+  lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
+  lg('🔥 Campfire lit. 5 ticks to full recovery.');
+  doRestTick();
+  G.rest.tick = 1;
+  render();
+  restTimer = setInterval(() => {
+    if (!G.rest.active) {
+      clearInterval(restTimer);
+      restTimer = null;
+      return;
+    }
+    const ambushChance = G.rest.selectedSite.type === 'tavern' ? 0.05 : 0.15;
+    if (Math.random() < ambushChance && G.rest.tick < G.rest.maxTicks) {
+      const tenseLine = pickBanter(G.rest.selectedSite.type, true);
+      showAmbushWarning(tenseLine);
+      clearInterval(restTimer);
+      restTimer = null;
+      G.rest.active = false;
+      G.rest.ambushPending = true;
+      setTimeout(() => {
+        G.rest.ambushPending = false;
+        G.currentDialogue = null;
+        G.ambushWarning = null;
+        const zi = G.zones.findIndex(z => z.n === G.rest.selectedSite.zone);
+        sc(zi >= 0 ? zi : 0);
+        G.rest.selectedSite = null;
+        G.rest.tick = 0;
+      }, 1500);
+      return;
+    }
+    doRestTick();
+    G.rest.tick++;
+    if (G.rest.tick >= G.rest.maxTicks) {
+      clearInterval(restTimer);
+      restTimer = null;
+      completeRest();
+    }
+  }, G.rest.tickDuration);
+}
+
+function completeRest() {
+  if (restTimer) {
+    clearInterval(restTimer);
+    restTimer = null;
+  }
+  const healerName = getHealerName();
+  G.p.hp = G.p.mhp;
+  G.p.mp = G.p.mmp;
+  for (let p of G.party) {
+    if (p.on) p.hp = p.mhp;
+  }
+  G.p.buffs = G.p.buffs.filter(b => b.t > 0);
+  G.currentDialogue = null;
+  G.ambushWarning = null;
+  const siteName = G.rest.selectedSite ? G.rest.selectedSite.name : 'camp';
+  lg('✨ Rest complete at ' + siteName + '!');
+  lg('💚 ' + healerName + ' has restored everyone to full health.');
+  // Affinity gain for resting together
+  for (let p of G.party) { if (p.on) updateAffinity(p.n, 2); }
+  // Track rest_with quest progress
+  for(let q of G.quests){
+    if(!q.done && !q.expired && q.t==='rest_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
+      q.c++;
+      if(q.c>=q.need){
+        q.done=true;
+        G.p.xp+=q.rw.xp;
+        G.p.gold+=q.rw.g;
+        G.p.quests++;
+        lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');
+        lvlup();
+      }
+    }
+  }
+  G.rest.active = false;
+  G.rest.selectedSite = null;
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
+  render();
+}
+
+function cancelRest() {
+  if (!G.rest.active) return;
+  if (restTimer) {
+    clearInterval(restTimer);
+    restTimer = null;
+  }
+  const pct = G.rest.tick / G.rest.maxTicks;
+  const hpRestore = Math.floor(G.p.mhp * pct * 0.5);
+  const mpRestore = Math.floor(G.p.mmp * pct * 0.5);
+  G.p.hp = Math.min(G.p.mhp, G.p.hp + hpRestore);
+  G.p.mp = Math.min(G.p.mmp, G.p.mp + mpRestore);
+  for (let p of G.party) {
+    if (p.on) {
+      p.hp = Math.min(p.mhp, p.hp + Math.floor(p.mhp * pct * 0.5));
+    }
+  }
+  G.currentDialogue = null;
+  G.ambushWarning = null;
+  lg('⛔ Rest interrupted! Only partial recovery (' + Math.floor(pct * 100) + '%).');
+  G.rest.active = false;
+  G.rest.selectedSite = null;
+  G.rest.tick = 0;
+  G.rest.ambushPending = false;
+  render();
+}
+
+function doExploreEvent() {
+  const possible = G.exploreEvents.filter(e => Math.random() < e.chance && G.p.lvl >= e.minLv);
+  if(possible.length === 0) return false;
+  const evt = possible[Math.floor(Math.random() * possible.length)];
+  lg('📖 EVENT: ' + evt.n + '!');
+  lg('   ' + evt.d);
+  if(evt.gold) { G.p.gold += evt.gold; lg('💰 +' + evt.gold + 'G'); }
+  if(evt.mp) { G.p.mp = Math.min(G.p.mmp, G.p.mp + evt.mp); lg('💧 +' + evt.mp + ' MP'); }
+  if(evt.item) { addI({...evt.item}); lg('🎁 Found: ' + evt.item.n); }
+  if(evt.items) { for(let it of evt.items) { addI({...it}); lg('🎁 Found: ' + it.n); } }
+  return true;
+}
+
+
+// SECRET AREAS
+function canDiscoverSecret(zoneName) {
+  const hasSenedra = G.party.some(p => p.on && p.n === 'Senedra');
+  if (!hasSenedra) return false;
+  const active = G.party.filter(p => p.on && p.hp > 0).map(p => p.n);
+  active.push('San');
+  if (!active.includes('Soel')) return false;
+  if (!G.secretAreas[zoneName]) return false;
+  return true;
+}
+
+function discoverSecret(zoneName) {
+  const area = G.secretAreas[zoneName];
+  if (!area) return false;
+  G.secretArea.active = true;
+  G.secretArea.zone = zoneName;
+  G.secretArea.choice = null;
+  G.secretArea.result = null;
+  G.state = 'secret';
+  lg('🔍 SECRET AREA: ' + area.name + '!');
+  lg('   ' + area.desc);
+  render();
+  return true;
+}
+
+function rollSecretLoot(zoneName, choiceId) {
+  const area = G.secretAreas[zoneName];
+  const choice = area.choices.find(c => c.id === choiceId);
+  if (!choice) return null;
+  const roll = Math.random();
+  let rarity = 'common';
+  if (roll < choice.loot.rare) rarity = 'rare';
+  else if (roll < choice.loot.rare + choice.loot.uncommon) rarity = 'uncommon';
+  const pool = area.lootPool.filter(l => l.r === rarity);
+  if (pool.length === 0) return null;
+  const totalWeight = pool.reduce((s, l) => s + (l.weight || 1), 0);
+  let wRoll = Math.random() * totalWeight;
+  for (let item of pool) {
+    wRoll -= (item.weight || 1);
+    if (wRoll <= 0) return { ...item, q: item.q || 1 };
+  }
+  return pool[0];
+}
+
+function makeSecretChoice(choiceId) {
+  if (!G.secretArea.active) return;
+  const story = G.secretArea;
+  const area = G.secretAreas[story.zone];
+  const choice = area.choices.find(c => c.id === choiceId);
+  if (!choice) return;
+  story.choice = choiceId;
+  if (choice.ambushChance && Math.random() < choice.ambushChance) {
+    story.result = 'ambush';
+    lg('💥 Ambush! Enemies swarm from the shadows!');
+    story.active = false;
+    G.state = 'combat';
+    render();
+    return;
+  }
+  const loot = rollSecretLoot(story.zone, choiceId);
+  story.result = loot ? 'loot' : 'empty';
+  if (loot) {
+    addI({ ...loot });
+    lg('🎁 Found: ' + loot.n + ' (' + loot.r + ')!');
+  } else {
+    lg('📦 Empty...');
+  }
+  G.p.xp += 10;
+  lg('✨ +10 XP');
+  lvlup();
+  render();
+}
+
+function closeSecretArea() {
+  G.secretArea.active = false;
+  G.secretArea.zone = null;
+  G.secretArea.choice = null;
+  G.secretArea.result = null;
+  G.state = 'explore';
+  render();
+}
+
+
+// SKILL TREES
+function hasSpecEffect(name) {
+  if (!G.playerSpec.path) return false;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (tier && tier.effects && tier.effects[name] !== undefined) return true;
+  }
+  return false;
+}
+
+function getSpecEffect(name) {
+  if (!G.playerSpec.path) return 0;
+  let total = 0;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (tier && tier.effects && tier.effects[name] !== undefined) {
+      total += tier.effects[name];
+    }
+  }
+  return total;
+}
+
+function canUnlockTier(tierIdx) {
+  const path = G.skillTrees[G.playerSpec.path];
+  if (!path) return false;
+  const tier = path.tiers[tierIdx];
+  if (!tier) return false;
+  if (G.playerSpec.tiers.includes(tierIdx)) return false;
+  if (G.p.lvl < tier.level) return false;
+  if (tierIdx > 0 && !G.playerSpec.tiers.includes(tierIdx - 1)) return false;
+  return true;
+}
+
+function unlockSpecTier(tierIdx) {
+  if (!canUnlockTier(tierIdx)) return false;
+  G.playerSpec.tiers.push(tierIdx);
+  const path = G.skillTrees[G.playerSpec.path];
+  const tier = path.tiers[tierIdx];
+  lg('🔥 ' + path.icon + ' UNLOCKED: ' + tier.name + '!');
+  lg('   ' + tier.desc);
+  applySpecEffects();
+  render();
+  return true;
+}
+
+function chooseSpecPath(pathKey) {
+  if (G.playerSpec.path) return false;
+  if (!G.skillTrees[pathKey]) return false;
+  G.playerSpec.path = pathKey;
+  G.playerSpec.tiers = [];
+  const path = G.skillTrees[pathKey];
+  lg('🌳 SPECIALIZATION: ' + path.icon + ' ' + path.name + '!');
+  lg('   ' + path.desc);
+  render();
+  return true;
+}
+
+function respecPath() {
+  if (!G.playerSpec.path) return false;
+  const cost = 50 + (G.playerSpec.respecCount * 50);
+  if (G.p.gold < cost) { lg('❌ Need ' + cost + 'G to respec!'); return false; }
+  G.p.gold -= cost;
+  G.playerSpec.respecCount++;
+  G.playerSpec.path = null;
+  G.playerSpec.tiers = [];
+  const fb = G.p.skills.find(s => s.n === 'Fireball'); if (fb) fb.c = 25;
+  const ms = G.p.skills.find(s => s.n === 'Meteor Swarm'); if (ms) ms.c = 60;
+  const ls = G.p.skills.find(s => s.n === 'Lightning Strike'); if (ls) ls.c = 35;
+  lg('🔄 Respec complete! Cost: ' + cost + 'G');
+  render();
+  return true;
+}
+
+function applySpecEffects() {
+  if (!G.playerSpec.path) return;
+  const fb = G.p.skills.find(s => s.n === 'Fireball'); if (fb) fb.c = 25;
+  const ms = G.p.skills.find(s => s.n === 'Meteor Swarm'); if (ms) ms.c = 60;
+  const ls = G.p.skills.find(s => s.n === 'Lightning Strike'); if (ls) ls.c = 35;
+  for (let tierIdx of G.playerSpec.tiers) {
+    const tier = G.skillTrees[G.playerSpec.path].tiers[tierIdx];
+    if (!tier || !tier.effects) continue;
+    const eff = tier.effects;
+    if (eff.fireballCostReduction && fb) fb.c = Math.max(5, 25 - eff.fireballCostReduction);
+    if (eff.fireballCostReduction && ms) ms.c = Math.max(15, 60 - eff.fireballCostReduction);
+    if (eff.lightningCostReduction && ls) ls.c = Math.max(10, 35 - eff.lightningCostReduction);
+  }
+}
+
+
+// MINI-STORIES
+function checkMiniStory(zoneName) {
+  const seenCount = Object.keys(G.currentMiniStory?.completed || {}).length || 0;
+  const adjustedChance = Math.max(0.02, 0.10 - (seenCount * 0.02));
+  if (Math.random() > adjustedChance) return false;
+  const eligible = G.miniStories.filter(story => {
+    if (!story.zones.includes(zoneName)) return false;
+    if (story.reqParty && !G.party.some(p => p.on && p.n === story.reqParty)) return false;
+    if (G.currentMiniStory && G.currentMiniStory.completed && G.currentMiniStory.completed[story.id]) return false;
+    return true;
+  });
+  if (eligible.length === 0) return false;
+  const story = eligible[Math.floor(Math.random() * eligible.length)];
+  G.currentMiniStory = { ...story, choice: null, result: null, completed: G.currentMiniStory?.completed || {} };
+  G.state = 'ministory';
+  lg('🗣️ ENCOUNTER: ' + story.name + ' — ' + story.title);
+  render();
+  return true;
+}
+
+function makeMiniStoryChoice(choiceIdx) {
+  if (!G.currentMiniStory) return;
+  const story = G.currentMiniStory;
+  const choice = story.choices[choiceIdx];
+  if (!choice) return;
+  story.choice = choiceIdx;
+  if (choice.req && !G.party.some(p => p.on && p.n === choice.req)) {
+    lg('❌ Requires ' + choice.req + ' in party!'); return;
+  }
+  if (choice.cost) {
+    if (choice.cost.gold && G.p.gold < choice.cost.gold) { lg('❌ Need ' + choice.cost.gold + 'G'); return; }
+    if (choice.cost.item) {
+      const item = G.p.inv.find(i => i.n === choice.cost.item);
+      if (!item || item.q < (choice.cost.qty || 1)) { lg('❌ Missing: ' + choice.cost.item); return; }
+    }
+  }
+  if (choice.cost) {
+    if (choice.cost.gold) { G.p.gold -= choice.cost.gold; lg('💰 -' + choice.cost.gold + 'G'); }
+    if (choice.cost.item) {
+      const item = G.p.inv.find(i => i.n === choice.cost.item);
+      if (item) { item.q -= (choice.cost.qty || 1); if (item.q <= 0) G.p.inv.splice(G.p.inv.indexOf(item), 1); }
+    }
+  }
+  if (choice.reward) {
+    if (choice.reward.xp) { G.p.xp += choice.reward.xp; lg('✨ +' + choice.reward.xp + ' XP'); }
+    if (choice.reward.gold) { G.p.gold += choice.reward.gold; lg('💰 +' + choice.reward.gold + 'G'); }
+    if (choice.reward.affinity) { updateAffinity(choice.reward.affinity, choice.reward.amt); }
+    if (choice.reward.item) { addI({ ...choice.reward.item }); lg('🎁 +' + choice.reward.item.q + ' ' + choice.reward.item.n); }
+  }
+  if (choice.response) lg('   ' + choice.response);
+  story.completed[story.id] = true;
+  story.result = 'done';
+  lvlup();
+  render();
+}
+
+function closeMiniStory() {
+  G.currentMiniStory = null;
+  G.state = 'explore';
+  render();
+}
+
+
+// STORY MODE
+function startStoryMode() {
+  G.storyMode.active = true;
+  G.storyMode.currentChapter = 0;
+  G.storyMode.currentScene = 0;
+  G.storyMode.choices = [];
+  G.state = 'storymode';
+  render();
+}
+
+function advanceStoryScene() {
+  if (!G.storyMode.active) return;
+  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
+  if (!chapter) { endStoryMode(); return; }
+  G.storyMode.currentScene++;
+  if (G.storyMode.currentScene >= chapter.scenes.length) {
+    // Show choices
+    render();
+    return;
+  }
+  render();
+}
+
+function makeStoryChoice(choiceIdx) {
+  if (!G.storyMode.active) return;
+  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
+  if (!chapter || !chapter.choices[choiceIdx]) return;
+  const choice = chapter.choices[choiceIdx];
+  G.storyMode.choices.push({ chapter: G.storyMode.currentChapter, choice: choiceIdx });
+
+  // Apply rewards
+  if (choice.affinity) { updateAffinity(choice.affinity, choice.amt); }
+  if (choice.xp) { G.p.xp += choice.xp; lg('✨ +' + choice.xp + ' XP'); }
+  if (choice.gold) { G.p.gold += choice.gold; lg('💰 +' + choice.gold + 'G'); }
+  if (choice.karma) { G.p.karma = (G.p.karma || 0) + choice.karma; }
+  if (choice.item) { addI({ ...choice.item }); lg('🎁 +' + choice.item.n); }
+
+  if (choice.reset) {
+    G.storyMode.currentChapter = 0;
+    G.storyMode.currentScene = 0;
+    G.storyMode.choices = [];
+    lg('📖 Story reset. Beginning again...');
+  } else if (choice.end) {
+    endStoryMode();
+    return;
+  } else if (choice.nextChapter !== undefined) {
+    G.storyMode.currentChapter = choice.nextChapter;
+    G.storyMode.currentScene = 0;
+  }
+
+  lvlup();
+  render();
+}
+
+function endStoryMode() {
+  G.storyMode.active = false;
+  G.storyMode.currentChapter = 0;
+  G.storyMode.currentScene = 0;
+  G.state = 'rest';
+  lg('📖 Story mode ended. Welcome back.');
+  render();
+}
+
+function sc(zi) {
+  const z=G.zones[zi];
+  // 30% chance for explore event before combat
+  if(Math.random() < 0.3 && doExploreEvent()) {
+    G.state='explore';
+    render();
+    return;
+  }
+  checkNPCUnlocks();
+  if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
+    if (discoverSecret(z.n)) return;
+  }
+  if (checkMiniStory(z.n)) return;
+  G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
+  // Boss fight: only when player is 2+ levels above zone minimum
+  const bossChance = Math.random();
+  let isBoss = false;
+  if (bossChance < 0.08 && G.p.lvl >= z.lv + 2) {
+    const boss = G.bosses.find(b => b.zone === z.n);
+    if (boss) {
+      isBoss = true;
+      G.currentBoss = JSON.parse(JSON.stringify(boss));
+      G.currentBoss.id = 99;
+      G.cbt.en.push(G.currentBoss);
+      lg('⚠️ BOSS APPEARS: ' + boss.n + '!');
+      lg('   ' + boss.desc);
+    }
+  }
+
+  if (!isBoss) {
+    const ec=Math.floor(Math.random()*2)+1+Math.floor(z.lv/3);
+    for(let i=0;i<ec;i++){
+      const t=z.en[Math.floor(Math.random()*z.en.length)];
+    let e={n:t,hp:0,mhp:0,atk:0,def:0,xp:0,g:0};
+    if(t=='Goblin')e={...e,hp:25,mhp:25,atk:5,def:2,xp:12,g:5,elem:'none'};
+    else if(t=='Wolf')e={...e,hp:20,mhp:20,atk:7,def:1,xp:10,g:3};
+    else if(t=='Slime')e={...e,hp:15,mhp:15,atk:3,def:3,xp:8,g:2};
+    else if(t=='Skeleton')e={...e,hp:30,mhp:30,atk:6,def:3,xp:18,g:6};
+    else if(t=='Zombie')e={...e,hp:40,mhp:40,atk:5,def:1,xp:20,g:5};
+    else if(t=='Ghost')e={...e,hp:20,mhp:20,atk:8,def:0,xp:25,g:10};
+    else if(t=='Fire Imp')e={...e,hp:35,mhp:35,atk:9,def:2,xp:35,g:12,elem:'fire'};
+    else if(t=='Lava Slug')e={...e,hp:50,mhp:50,atk:6,def:5,xp:30,g:8,elem:'fire'};
+    else if(t=='Ash Wraith')e={...e,hp:30,mhp:30,atk:11,def:1,xp:45,g:18,elem:'fire'};
+    else if(t=='Ice Elemental')e={...e,hp:60,mhp:60,atk:10,def:6,xp:70,g:25,elem:'ice'};
+    else if(t=='Frost Wolf')e={...e,hp:45,mhp:45,atk:12,def:3,xp:55,g:18,elem:'ice'};
+    else if(t=='Frozen Knight')e={...e,hp:80,mhp:80,atk:14,def:8,xp:100,g:40,elem:'ice'};
+    else if(t=='Void Beast')e={...e,hp:100,mhp:100,atk:16,def:5,xp:150,g:60,elem:'void'};
+    else if(t=='Shadow Demon')e={...e,hp:80,mhp:80,atk:18,def:3,xp:130,g:50,elem:'void'};
+    else if(t=='Abyssal Horror')e={...e,hp:150,mhp:150,atk:20,def:8,xp:300,g:100,elem:'void'};
+    else if(t=='Crystal Spider')e={...e,hp:28,mhp:28,atk:6,def:2,xp:15,g:6};
+    else if(t=='Gem Golem')e={...e,hp:40,mhp:40,atk:5,def:6,xp:20,g:8};
+    else if(t=='Shimmer Bat')e={...e,hp:18,mhp:18,atk:7,def:1,xp:12,g:4};
+    else if(t=='Storm Wraith')e={...e,hp:45,mhp:45,atk:11,def:3,xp:35,g:15,elem:'lightning'};
+    else if(t=='Lightning Hound')e={...e,hp:35,mhp:35,atk:13,def:2,xp:30,g:12,elem:'lightning'};
+    else if(t=='Thunder Knight')e={...e,hp:70,mhp:70,atk:12,def:7,xp:55,g:25,elem:'lightning'};
+    else if(t=='Drowned Sailor')e={...e,hp:50,mhp:50,atk:10,def:4,xp:40,g:16};
+    else if(t=='Sea Serpent')e={...e,hp:65,mhp:65,atk:14,def:3,xp:50,g:22};
+    else if(t=='Coral Golem')e={...e,hp:80,mhp:80,atk:9,def:8,xp:55,g:20};
+    else if(t=='Dragon Whelp')e={...e,hp:80,mhp:80,atk:15,def:5,xp:80,g:35};
+    else if(t=='Ash Drake')e={...e,hp:100,mhp:100,atk:17,def:6,xp:100,g:50};
+    else if(t=='Elder Wyrm')e={...e,hp:180,mhp:180,atk:22,def:10,xp:200,g:100};
+    else if(t=='Star Sentinel')e={...e,hp:120,mhp:120,atk:18,def:8,xp:120,g:60};
+    else if(t=='Celestial Knight')e={...e,hp:140,mhp:140,atk:20,def:10,xp:150,g:80};
+    else if(t=='Astral Lord')e={...e,hp:250,mhp:250,atk:25,def:12,xp:300,g:150};
+      e.id=i; e.status=[]; G.cbt.en.push(e);
+    }
+    lg('Entered '+z.n+'! '+ec+' enemies appear!');
+  }
+  triggerSoelCommentary('explore');
+  // Track explore_with quest progress
+  for(let q of G.quests){
+    if(!q.done && !q.expired && q.t==='explore_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
+      q.c++;
+      if(q.c>=q.need){
+        q.done=true;
+        G.p.xp+=q.rw.xp;
+        G.p.gold+=q.rw.g;
+        G.p.quests++;
+        lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');
+        lvlup();
+      }
+    }
+  }
+  G.cbt.sk=0; G.cbt.tg=0; render();
+}
+
+
+// AUTO-COMBAT SYSTEM
+function getBestSkill() {
+  const available = G.p.skills.filter(s => s.on && G.p.mp >= s.c && !s.buff);
+  if (available.length === 0) return null;
+  // Pick highest damage skill we can afford
+  available.sort((a, b) => {
+    const dmgA = pd(a.dmg, 0) || 0;
+    const dmgB = pd(b.dmg, 0) || 0;
+    return dmgB - dmgA;
+  });
+  return available[0];
+}
+
+function getWeakestEnemy() {
+  const alive = G.cbt.en.filter(e => e.hp > 0);
+  if (alive.length === 0) return null;
+  alive.sort((a, b) => a.hp - b.hp);
+  return alive[0];
+}
+
+function getEnemyIndex(enemy) {
+  return G.cbt.en.findIndex(e => e === enemy);
+}
+
+function doAutoCombatTick() {
+  if (!G.cbt.on || !G.cbt.autoCombat) return;
+  // Check if combat is over
+  if (G.cbt.en.every(e => e.hp <= 0)) {
+    G.cbt.autoCombat = false;
+    return;
+  }
+  if (G.p.hp <= 1) {
+    G.cbt.autoCombat = false;
+    G.cbt.autoFlee = true;
+    lg('🤖 Auto-combat: HP critical! Forcing retreat...');
+    return;
+  }
+  const skill = getBestSkill();
+  if (!skill) {
+    // No attack skill available, try to use mana potion
+    const manaPot = G.p.inv.find(i => i.t === 'pot' && i.eff === 'mana');
+    if (manaPot && G.p.mp < 20) {
+      const idx = G.p.inv.indexOf(manaPot);
+      useI(idx);
+      lg('🤖 Auto-combat: Used Mana Potion!');
+      setTimeout(doAutoCombatTick, 800);
+      return;
+    }
+    // Still no skill, just pass turn
+    lg('🤖 Auto-combat: No MP for attacks. Passing turn...');
+    eturn();
+    G.cbt.turn++;
+    render();
+    setTimeout(doAutoCombatTick, 1000);
+    return;
+  }
+  const target = getWeakestEnemy();
+  if (!target) {
+    G.cbt.autoCombat = false;
+    return;
+  }
+  const skillIdx = G.p.skills.indexOf(skill);
+  const targetIdx = getEnemyIndex(target);
+  G.cbt.sk = skillIdx;
+  G.cbt.tg = targetIdx;
+  lg('🤖 Auto-combat: ' + skill.n + ' → ' + target.n);
+  pa(skillIdx, targetIdx);
+  // Check if combat ended after pa()
+  if (!G.cbt.on) {
+    G.cbt.autoCombat = false;
+    return;
+  }
+  // Schedule next tick
+  setTimeout(doAutoCombatTick, 1200);
+}
+
+function toggleAutoCombat() {
+  if (!G.cbt.on) return;
+  G.cbt.autoCombat = !G.cbt.autoCombat;
+  if (G.cbt.autoCombat) {
+    lg('🤖 Auto-combat ENABLED!');
+    doAutoCombatTick();
+  } else {
+    lg('🤖 Auto-combat DISABLED. Manual control restored.');
+  }
+  render();
+}
+
+function pa(si,ti){
+  const sk=G.p.skills[si], tg=G.cbt.en[ti];
+  if(!tg||tg.hp<=0) return;
+  if(G.p.mp<sk.c){lg('Not enough MP!');return;}
+  G.p.mp-=sk.c;
+
+  if(sk.buff){
+    if(sk.n=='Frost Shield'){G.p.buffs.push({n:'Frost Shield',t:3,def:5});lg('Frost Shield! DEF +5 for 3 turns.');}
+    else if(sk.n=='Mana Surge'){G.p.mp=Math.min(G.p.mmp,G.p.mp+20);lg('Mana Surge! Restored 20 MP.');}
+  } else {
+    if (isImmune(tg.n, sk.elem)) {
+      lg(sk.n + ' has no effect — ' + tg.n + ' is immune to ' + sk.elem + '!');
+    } else {
+      const hit=r20()+Math.floor(G.p.stats.int/3);
+      if(hit>=10+tg.def){
+        let dmg=pd(sk.dmg,Math.floor(G.p.stats.int/2));
+        dmg+=G.p.eq.w?G.p.eq.w.atk:0;
+        if(G.party[2].on)dmg=Math.floor(dmg*1.15);
+        dmg = applySynergyDamage(dmg, 'spell');
+        // Elemental weakness multiplier
+        const weakMult = getWeaknessMultiplier(sk.elem, tg.elem);
+        if(weakMult > 1) { dmg = Math.floor(dmg * weakMult); lg('⚡ ' + sk.elem + ' is super effective against ' + tg.n + '! x' + weakMult); }
+        else if(weakMult < 1) { dmg = Math.floor(dmg * weakMult); lg('⬇️ ' + sk.elem + ' is weak against ' + tg.n + '! x' + weakMult); }
+        dmg=Math.max(1,dmg-Math.floor(tg.def/2));
+        // Critical hit check (includes synergy bonuses)
+        const isCrit = Math.random() < getTotalCritChance();
+        if(isCrit) { dmg = Math.floor(dmg * 2); lg('💥 CRITICAL HIT! x2 damage!'); }
+        tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
+        // Apply status effect if skill has one
+        if(sk.status && tg.hp > 0 && Math.random() < sk.status.chance){
+          const existing = tg.status.find(s => s.type === sk.status.type);
+          if(!existing){
+            tg.status.push({...sk.status, turns: sk.status.turns});
+            lg('🔥 ' + tg.n + ' is ' + sk.status.type + 'ed!');
+          }
+        }
+        if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;checkBountyKill(tg.n);
+        // Bestiary tracking
+        if(!G.bestiary[tg.n]) G.bestiary[tg.n] = {kills:0,firstSeen:Date.now()};
+        G.bestiary[tg.n].kills++;
+        G.bestiary[tg.n].lastSeen = Date.now();
+        G.bestiary[tg.n].elem = tg.elem || 'none';
+        G.bestiary[tg.n].mhp = tg.mhp;
+        G.bestiary[tg.n].atk = tg.atk;
+        G.bestiary[tg.n].def = tg.def;
+      }
+      }else lg('Missed '+tg.n+'!');
+    }
+  }
+
+  for(let p of G.party){
+    if(!p.on||p.hp<=0)continue;
+    const ae=G.cbt.en.filter(e=>e.hp>0);
+    if(ae.length==0)break;
+    const et=ae[Math.floor(Math.random()*ae.length)];
+    const h=r20()+Math.floor(p.atk/3);
+    if(h>=10+et.def){
+      let d=rdc(1,6)+Math.floor(p.atk/2);
+      d=Math.max(1,d-Math.floor(et.def/3));
+      et.hp-=d; lg(p.n+' hits '+et.n+' for '+d+'!');
+      if(et.hp<=0){lg(et.n+' falls!');et.hp=0;checkBountyKill(et.n);
+        if(!G.bestiary[et.n]) G.bestiary[et.n] = {kills:0,firstSeen:Date.now()};
+        G.bestiary[et.n].kills++;
+        G.bestiary[et.n].lastSeen = Date.now();
+        G.bestiary[et.n].elem = et.elem || 'none';
+        G.bestiary[et.n].mhp = et.mhp;
+        G.bestiary[et.n].atk = et.atk;
+        G.bestiary[et.n].def = et.def;
+      }
+    }else lg(p.n+' misses!');
+  }
+  eturn();
+  // Check auto-flee
+  if(G.cbt.autoFlee){
+    G.cbt.autoFlee = false;
+    G.p.hp = Math.max(1, G.p.hp + 5);
+    for(let p of G.party){ if(p.on && p.hp>0) p.hp = Math.min(p.mhp, p.hp+3); }
+    lg('🚨 CRITICAL! San is barely conscious! Auto-retreating!');
+    lg('💨 You escape with your life... barely.');
+    G.currentBoss=null;
+    G.cbt.on=false;
+    G.state='menu';
+    render();
+    return;
+  }
+  // Boss mechanics: resurrect and phases
+  for (let e of G.cbt.en) {
+    if (e.hp <= 0 && e.mechanic === 'resurrect' && e.resurrectCount > 0) {
+      e.resurrectCount--;
+      e.hp = Math.floor(e.mhp * 0.5);
+      lg('💀 ' + e.n + ' RESURRECTS! HP restored to ' + e.hp + '! (' + e.resurrectCount + ' lives left)');
+    }
+    if (e.hp > 0 && e.mechanic === 'phase') {
+      const phaseThreshold = e.mhp - (e.currentPhase * e.phaseHp);
+      if (e.hp <= phaseThreshold && e.currentPhase < e.phases) {
+        e.currentPhase++;
+        lg('💎 ' + e.n + ' shifts to PHASE ' + e.currentPhase + '! Defenses change!');
+        e.def += 3;
+        e.atk += 2;
+      }
+    }
+  }
+
+  if(G.cbt.en.every(e=>e.hp<=0)){
+    const txp=G.cbt.en.reduce((s,e)=>s+e.xp,0);
+    let tg2=G.cbt.en.reduce((s,e)=>s+e.g,0);
+    if(G.party[1].on)tg2=Math.floor(tg2*1.2);
+    const goldBonus = getSynergyGoldBonus();
+    if(goldBonus > 0) {
+      tg2 = Math.floor(tg2 * (1 + goldBonus));
+      lg('💰 Synergy bonus: +' + Math.floor(goldBonus*100) + '% gold!');
+    }
+    G.p.xp+=txp; G.p.gold+=tg2; G.p.kills+=G.cbt.en.length;
+    lg('Victory! +'+txp+' XP, +'+tg2+' Gold!');
+    // Track Aisyah's Ledger quest progress
+    const aisyahQuest = G.quests.find(q=>q.t==='aisyah_battle'&&!q.done);
+    if(aisyahQuest && G.party.find(p=>p.on&&p.n==='Aisyah')){
+      aisyahQuest.c += G.cbt.en.length;
+      if(aisyahQuest.c >= aisyahQuest.need) checkQ();
+    }
+    // Track Joel's Shield Oath quest progress
+    const joelQuest = G.quests.find(q=>q.t==='joel_battle'&&!q.done);
+    if(joelQuest && G.party.find(p=>p.on&&p.n==='Joel')){
+      joelQuest.c += G.cbt.en.length;
+      if(joelQuest.c >= joelQuest.need) checkQ();
+    }
+    // Affinity gain for active party
+    for(let p of G.party){
+      if(p.on && p.hp > 0) updateAffinity(p.n, 1);
+    }
+    const z=G.zones.find(z=>z.en.includes(G.cbt.en[0].n));
+    if(z){
+      const l=z.loot[Math.floor(Math.random()*z.loot.length)];
+      addI({n:l,t:'mat',q:1,r:'common'});
+      lg('Found: '+l);
+      const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
+      const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
+      if (campSite && !campSite.unlocked) {
+        campSite.unlocked = true;
+        lg('🏕️ Campsite discovered in ' + z.n + '!');
+      }
+      if (tavernSite && !tavernSite.unlocked && G.p.lvl >= tavernSite.zoneLv) {
+        tavernSite.unlocked = true;
+        lg('🍺 Tavern discovered: ' + tavernSite.name + '!');
+      }
+    }
+    lvlup(); checkQ();
+    G.currentBoss=null;
+    G.cbt.autoCombat = false;
+    G.cbt.on=false; G.state='explore';
+  }else if(G.p.hp<=0){
+    G.p.hp=1; 
+    for(let p of G.party){
+      if(p.hp <= 0){
+        p.hp = 1;
+        p.on = true;
+        lg('🆘 ' + p.n + ' barely clings to life with 1 HP!');
+      }
+    }
+    lg('Defeated! Retreating...');
+    G.cbt.autoCombat = false;
+    G.cbt.on=false; G.state='menu';
+  }
+  G.cbt.turn++; render();
+}
+
+function eturn(){
+  for(let e of G.cbt.en){
+    if(e.hp<=0)continue;
+    // Process status effects
+    if(e.status && e.status.length > 0){
+      for(let s of e.status){
+        if(s.type === 'burn' && s.dmg){
+          e.hp -= s.dmg;
+          lg('🔥 ' + e.n + ' takes ' + s.dmg + ' burn damage!');
+        }
+        if(s.type === 'poison' && s.dmg){
+          e.hp -= s.dmg;
+          lg('☠️ ' + e.n + ' takes ' + s.dmg + ' poison damage!');
+        }
+        if(s.type === 'shock'){
+          lg('⚡ ' + e.n + ' is shocked and skips this turn!');
+        }
+        s.turns--;
+      }
+      e.status = e.status.filter(s => s.turns > 0);
+      if(e.hp <= 0){ lg(e.n + ' falls to status damage!'); e.hp = 0; checkBountyKill(e.n);
+          // Track quest progress for status effect kills
+          const aisyahQuest2 = G.quests.find(q=>q.t==='aisyah_battle'&&!q.done);
+          if(aisyahQuest2 && G.party.find(p=>p.on&&p.n==='Aisyah')) aisyahQuest2.c++;
+          const joelQuest2 = G.quests.find(q=>q.t==='joel_battle'&&!q.done);
+          if(joelQuest2 && G.party.find(p=>p.on&&p.n==='Joel')) joelQuest2.c++;
+          continue;
+        }
+      if(e.status.find(s => s.type === 'shock')) continue; // Skip turn if shocked
+    }
+
+    // Boss mechanics
+    if (e.mechanic) {
+      G.cbt.turn = G.cbt.turn || 0;
+      if (e.mechanic === 'rampage' && G.cbt.turn >= e.rampageTurn) {
+        lg('🔥 ' + e.n + ' ENRAGES! All party members take ' + e.rampageDmg + ' damage!');
+        G.p.hp = Math.max(1, G.p.hp - e.rampageDmg);
+        for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - e.rampageDmg); }
+      }
+      if (e.mechanic === 'inferno' && G.cbt.turn >= e.infernoTurn) {
+        lg('🔥 ' + e.n + ' unleashes INFERNO! Party takes ' + e.infernoDmg + ' damage!');
+        G.p.hp = Math.max(1, G.p.hp - e.infernoDmg);
+        for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - e.infernoDmg); }
+      }
+      if (e.mechanic === 'freeze' && Math.random() < e.freezeChance) {
+        const targets = [G.p, ...G.party.filter(p=>p.on&&p.hp>0)];
+        const target = targets[Math.floor(Math.random()*targets.length)];
+        lg('❄️ ' + e.n + ' freezes ' + (target.n||'you') + '! Skip next turn!');
+        target.frozen = true;
+      }
+      if (e.mechanic === 'devour' && G.cbt.turn >= e.devourTurn) {
+        const targets = G.party.filter(p=>p.on&&p.hp>0);
+        if (targets.length > 0) {
+          const victim = targets[Math.floor(Math.random()*targets.length)];
+          lg('🌑 ' + e.n + ' DEVOURS ' + victim.n + '!');
+          victim.hp = 0;
+          lg(victim.n + ' has been devoured!');
+        }
+      }
+      if (e.mechanic === 'apocalypse' && G.cbt.turn >= e.apocalypseTurn) {
+        lg('💥 ' + e.n + ' uses APOCALYPSE! Total party wipe!');
+        G.p.hp = 1;
+        for (let p of G.party) { if (p.on) p.hp = 0; }
+      }
+    }
+
+    let t=G.p;
+    if(Math.random()>0.5){
+      const ap=G.party.filter(p=>p.on&&p.hp>0);
+      if(ap.length>0)t=ap[Math.floor(Math.random()*ap.length)];
+    }
+    const hit=r20()+Math.floor(e.atk/3);
+    let td=t==G.p?(G.p.eq.a?G.p.eq.a.def:0):t.def;
+    if(t==G.p)td+=G.p.buffs.reduce((s,b)=>s+(b.def||0),0);
+    if(hit>=10+td){
+      let d=rdc(1,6)+Math.floor(e.atk/2);
+      d=Math.max(1,d-Math.floor(td/2));
+      d = applySynergyDefense(d);
+      t.hp-=d; lg(e.n+' hits '+(t.n||'you')+' for '+d+'!');
+      if(t.hp<=0){
+        if(t!==G.p && t.passive==='guardian_spirit'){
+          t.hp=1; lg('✨ '+t.n+"'s Guardian Spirit shines! She endures at 1 HP!");
+        }else{
+          t.hp=0; lg((t.n||'You')+' unconscious!');
+        }
+      }
+    }else lg(e.n+' misses!');
+  }
+  // Zone hazard check - environmental dangers
+  if (G.cbt.on && G.cbt.en.length > 0 && G.cbt.en.some(e => e.hp > 0)) {
+    const zone = G.zones.find(z => z.en.includes(G.cbt.en[0].n));
+    if (zone && G.zoneHazards[zone.n]) {
+      const hazard = G.zoneHazards[zone.n];
+      if (Math.random() < hazard.chance) {
+        lg('🌋 HAZARD: ' + hazard.msg);
+        if (hazard.type === 'damage') {
+          G.p.hp = Math.max(1, G.p.hp - hazard.dmg);
+          lg('   🔥 ' + G.p.name + ' takes ' + hazard.dmg + ' ' + hazard.elem + ' damage!');
+          for (let p of G.party) {
+            if (p.on && p.hp > 0) {
+              p.hp = Math.max(1, p.hp - hazard.dmg);
+              lg('   🔥 ' + p.n + ' takes ' + hazard.dmg + ' ' + hazard.elem + ' damage!');
+            }
+          }
+        } else if (hazard.type === 'freeze') {
+          const targets = [G.p, ...G.party.filter(p => p.on && p.hp > 0)];
+          const target = targets[Math.floor(Math.random() * targets.length)];
+          target.frozen = true;
+          lg('   ❄️ ' + (target.n || target.name) + ' is frozen by the ' + hazard.name + '! Skip next turn!');
+        } else if (hazard.type === 'mana_drain') {
+          G.p.mp = Math.max(0, G.p.mp - hazard.drain);
+          lg('   🌑 ' + G.p.name + ' loses ' + hazard.drain + ' MP to void corruption!');
+          for (let p of G.party) {
+            if (p.on && p.hp > 0) {
+              // Party members don't have MP, but we could add it later
+              // For now, just log the effect
+            }
+          }
+        }
+      }
+    }
+  }
+
+  for(let b of G.p.buffs)b.t--;
+  G.p.buffs=G.p.buffs.filter(b=>b.t>0);
+  // Clear frozen status after boss turn
+  for (let p of G.party) { if (p.frozen) { p.frozen = false; } }
+  if (G.p.frozen) { G.p.frozen = false; }
+  // AUTO-FLEE: If player HP drops to 1, mark for retreat
+  if(G.p.hp <= 1 && G.p.hp > 0){
+    G.cbt.autoFlee = true;
+  }
+}
+
+function lvlup(){
+  while(G.p.xp>=G.p.xpN){
+    G.p.xp-=G.p.xpN; G.p.lvl++;
+    G.p.xpN=Math.floor(G.p.xpN*1.5);
+    G.p.mhp+=10; G.p.mmp+=15; G.p.hp=G.p.mhp; G.p.mp=G.p.mmp;
+    G.p.stats.int+=2; G.p.stats.con+=1;
+    lg('LEVEL UP! Now Level '+G.p.lvl+'!');
+    for(let s of G.p.skills){if(!s.on&&s.ul<=G.p.lvl){s.on=true;lg('Learned: '+s.n+'!');}}
+    for(let p of G.party){if(!p.on&&p.ul<=G.p.lvl){p.on=true;p.hp=p.mhp;lg(p.n+' '+p.t+' joins!');}}
+    unlockRestSites();
+    checkNPCUnlocks();
+    checkStoryline();
+    checkStoryUnlock();
+  }
+}
+
+function checkQ(){
+  for(let q of G.quests){
+    if(q.done)continue;
+    if(q.hidden && !q.revealed)continue;
+    if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
+    if(q.t=='aisyah_battle'&&q.c>=q.need)q.c=q.need;
+    if(q.t=='joel_battle'&&q.c>=q.need)q.c=q.need;
+    if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();lvlup();}
+  }
+}
+
+function checkQuestChains(){
+  for(let q of G.quests){
+    if(q.hidden && !q.revealed && q.reqQuest){
+      const req=G.quests.find(rq=>rq.id===q.reqQuest);
+      if(req && req.done){
+        q.revealed=true;
+        q.hidden=false;
+        lg('🔓 Hidden quest unlocked: '+q.n+'!');
+        lg('   '+q.d);
+      }
+    }
+  }
+}
+
+function addI(it){
+  const ex=G.p.inv.find(i=>i.n==it.n&&i.t==it.t);
+  if(ex)ex.q+=it.q||1;
+  else G.p.inv.push({...it,q:it.q||1});
+}
+
+function useI(ix){
+  const it=G.p.inv[ix];
+  if(!it)return;
+  if(it.t=='pot'){
+    if(it.eff=='heal'){G.p.hp=Math.min(G.p.mhp,G.p.hp+it.v);lg('Used '+it.n+'. +'+it.v+' HP.');}
+    else if(it.eff=='mana'){G.p.mp=Math.min(G.p.mmp,G.p.mp+it.v);lg('Used '+it.n+'. +'+it.v+' MP.');}
+    it.q--; if(it.q<=0)G.p.inv.splice(ix,1);
+    render();
+  } else if(it.t=='revive'){
+    const dead=getDeadParty();
+    if(dead.length===0){lg('❌ No fallen companions to revive!');return;}
+    const target=dead[0];
+    target.hp=Math.floor(target.mhp*(it.v/100));
+    target.on=true;
+    lg('🔥 '+it.n+' burns with sacred flame!');
+    lg('✨ '+target.n+' revived with '+target.hp+' HP!');
+    it.q--; if(it.q<=0)G.p.inv.splice(ix,1);
+    render();
+  }
+}
+
+function craft(ri){
+  const r=G.recipes[ri];
+  for(let [mn,mq] of Object.entries(r.m)){
+    const iv=G.p.inv.find(x=>x.n==mn);
+    if(!iv||iv.q<mq){lg('Missing mats for '+r.n);return;}
+  }
+  for(let [mn,mq] of Object.entries(r.m)){
+    const iv=G.p.inv.find(x=>x.n==mn);
+    iv.q-=mq; if(iv.q<=0){const ix=G.p.inv.indexOf(iv);G.p.inv.splice(ix,1);}
+  }
+  addI({...r.res}); lg('Crafted: '+r.n+'!');
+  const pq=G.quests.find(q=>q.t=='craft');
+  if(pq&&!pq.done){pq.c++;checkQ();}
+  render();
+}
+
+function eqI(ix){
+  const it=G.p.inv[ix];
+  if(!it||(it.t!='wep'&&it.t!='arm'&&it.t!='acc'))return;
+  const sl=it.t=='wep'?'w':it.t=='arm'?'a':'acc';
+  const old=G.p.eq[sl];
+  if(old)addI(old);
+  G.p.eq[sl]={...it};
+  G.p.inv.splice(ix,1);
+  lg('Equipped '+it.n+'!'); render();
+}
+
+let ft=null;
+function sf(){
+  G.state='focus'; G.fs=Date.now(); G.fd=25*60*1000;
+  triggerSoelCommentary('focus');
+  lg('Focus started! 25 min...'); render();
+  ft=setInterval(()=>{
+    const el=Date.now()-G.fs, rm=G.fd-el;
+    if(G.state!='focus'){clearInterval(ft);return;}
+    if(rm<=0){
+      clearInterval(ft); G.p.fstreak++; G.p.xp+=100; G.p.gold+=50;
+      const fq=G.quests.find(q=>q.t=='focus');
+      if(fq&&!fq.done){fq.c++;checkQ();}
+      lg('Focus complete! +100XP +50G Streak:'+G.p.fstreak);
+      lvlup(); G.state='menu'; render();
+    }else{
+      const el2=document.getElementById('ft');
+      if(el2){const m=Math.floor(rm/60000),s=Math.floor((rm%60000)/1000);el2.textContent=m+':'+s.toString().padStart(2,'0');}
+    }
+  },1000);
+}
+
+function cf(){if(ft)clearInterval(ft);setS('menu');lg('Focus cancelled.');render();}
+
+function lg(msg){
+  G.log.push(msg); if(G.log.length>50)G.log.shift();
+  const el=document.getElementById('log');
+  if(el){el.innerHTML=G.log.map(m=>'<div class="le">'+m+'</div>').join('');el.scrollTop=el.scrollHeight;}
+}
+
+function setS(s){
+  if (s === 'quest') triggerSoelCommentary('quest_view');
+  if (s === 'craft') triggerSoelCommentary('craft');
+  if (s === 'skills') triggerSoelCommentary('skills');
+  if (s === 'rest') triggerSoelCommentary('rest');
+  if (s === 'party') triggerSoelCommentary('party');
+  G.state=s;render();
+}
+function flee(){
+  if(G.currentBoss){
+    if(Math.random()>0.3){
+      lg('🏃 Escaped from ' + G.currentBoss.n + '!');
+      lg('💀 Penalty: Party loses 25% HP from retreat!');
+      G.p.hp = Math.max(1, Math.floor(G.p.hp * 0.75));
+      for(let p of G.party){ if(p.on) p.hp = Math.max(1, Math.floor(p.hp * 0.75)); }
+      G.currentBoss=null; G.cbt.on=false; G.state='explore';
+    }else{
+      lg('Flee failed! ' + G.currentBoss.n + ' blocks your path!');
+      eturn();
+    }
+  }else{
+    if(Math.random()>0.5){lg('Fled!');G.currentBoss=null;G.cbt.on=false;G.state='explore';}
+    else{lg('Flee failed!');eturn();}
+  }
+  render();
+}
+
+function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
+function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
+function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
+function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
+
+const SAVE_KEY = 'ldb_save_v4';
+
+function saveGame() {
+  const saveData = {
+    lastSaveTime: Date.now(),
+    player: {
+      name: G.p.name, cls: G.p.cls, lvl: G.p.lvl, xp: G.p.xp, xpN: G.p.xpN,
+      hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
+      stats: G.p.stats,
+      skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff, elem: s.elem })),
+      equipment: { w: G.p.eq.w, a: G.p.eq.a, acc: G.p.eq.acc },
+      inventory: G.p.inv,
+      buffs: G.p.buffs,
+      kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
+    },
+    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col })),
+    quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
+    rest: {
+      sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
+    },
+    log: G.log,
+    affinity: G.affinity,
+    affinity: G.affinity,
+    bestiary: G.bestiary,
+    partySynergies: G.partySynergies,
+    autoCombat: G.cbt.autoCombat,
+    state: G.state
+  };
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+    lg('Game saved!');
+    return true;
+  } catch(e) {
+    lg('Save failed: ' + e.message);
+    return false;
+  }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+
+    // OFFLINE REGEN: Calculate HP/MP recovery based on time away
+    if (data.lastSaveTime) {
+      const now = Date.now();
+      const minutesAway = Math.floor((now - data.lastSaveTime) / (1000 * 60));
+      if (minutesAway > 0) {
+        const hpRegen = Math.min(minutesAway, data.player.mhp); // 1 HP per minute, cap at max
+        const mpRegen = Math.min(minutesAway, data.player.mmp); // 1 MP per minute, cap at max
+        data.player.hp = Math.min(data.player.mhp, data.player.hp + hpRegen);
+        data.player.mp = Math.min(data.player.mmp, data.player.mp + mpRegen);
+        if (hpRegen > 0 || mpRegen > 0) {
+          lg('💤 While you were away (' + minutesAway + ' min): +' + hpRegen + ' HP, +' + mpRegen + ' MP');
+        }
+      }
+    }
+
+    G.p.lvl = data.player.lvl;
+    G.p.xp = data.player.xp;
+    G.p.xpN = data.player.xpN;
+    G.p.hp = data.player.hp;
+    G.p.mhp = data.player.mhp;
+    G.p.mp = data.player.mp;
+    G.p.mmp = data.player.mmp;
+    G.p.gold = data.player.gold;
+    G.p.stats = data.player.stats;
+    G.p.inv = data.player.inventory;
+    G.p.buffs = data.player.buffs || [];
+    G.p.kills = data.player.kills;
+    G.p.quests = data.player.quests;
+    G.p.fstreak = data.player.fstreak;
+
+    for (let s of G.p.skills) {
+      const saved = data.player.skills.find(ss => ss.n === s.n);
+      if (saved) s.on = saved.on;
+    }
+
+    G.p.eq = data.player.equipment;
+
+    for (let p of G.party) {
+      const saved = data.party.find(sp => sp.n === p.n);
+      if (saved) {
+        p.on = saved.on;
+        p.mhp = saved.mhp;
+        // Offline regen for party too
+        if (data.lastSaveTime) {
+          const now = Date.now();
+          const minutesAway = Math.floor((now - data.lastSaveTime) / (1000 * 60));
+          const hpRegen = Math.min(minutesAway, saved.mhp);
+          p.hp = Math.min(saved.mhp, saved.hp + hpRegen);
+        } else {
+          p.hp = saved.hp;
+        }
+      }
+    }
+
+    for (let q of G.quests) {
+      const saved = data.quests.find(sq => sq.id === q.id);
+      if (saved) {
+        q.c = saved.c;
+        q.done = saved.done;
+      }
+    }
+
+    if (data.rest && data.rest.sites) {
+      for (let s of G.rest.sites) {
+        const saved = data.rest.sites.find(ss => ss.id === s.id);
+        if (saved) {
+          s.unlocked = saved.unlocked;
+        }
+      }
+    }
+
+    if (data.affinity) {
+      for (let name in data.affinity) {
+        if (G.affinity[name]) {
+          G.affinity[name].val = data.affinity[name].val;
+          G.affinity[name].lastInteract = data.affinity[name].lastInteract;
+        }
+      }
+    }
+    if (data.bestiary) {
+      G.bestiary = data.bestiary;
+    }
+    if (data.affinity) {
+      for (let name in data.affinity) {
+        if (G.affinity[name]) {
+          G.affinity[name].val = data.affinity[name].val;
+          G.affinity[name].lastInteract = data.affinity[name].lastInteract;
+        }
+      }
+    }
+    if (data.bestiary) {
+      G.bestiary = data.bestiary;
+    }
+    if (data.soelCommentCooldown !== undefined) {
+      G.soelCommentCooldown = data.soelCommentCooldown;
+    }
+    if (data.npcs) {
+      for (let n of G.npcs) {
+        const saved = data.npcs.find(sn => sn.n === n.n);
+        if (saved) {
+          n.unlocked = saved.unlocked;
+          n.visitCount = saved.visitCount || 0;
+        }
+      }
+    }
+    if (data.bounties) {
+      for (let i = 0; i < G.bounties.length; i++) {
+        if (data.bounties[i]) {
+          G.bounties[i].c = data.bounties[i].c;
+          G.bounties[i].done = data.bounties[i].done;
+          G.bounties[i].refreshDay = data.bounties[i].refreshDay;
+        }
+      }
+    }
+    if (data.storyline) {
+      for (let i = 0; i < G.storyline.length; i++) {
+        if (data.storyline[i]) {
+          G.storyline[i].done = data.storyline[i].done;
+          G.storyline[i].unlocked = data.storyline[i].unlocked;
+        }
+      }
+    }
+    if (data.currentBoss !== undefined) {
+      G.currentBoss = data.currentBoss;
+    }
+    G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
+    lg('Game loaded!');
+    return true;
+  } catch(e) {
+    console.error('Load failed:', e);
+    return false;
+  }
+}
+
+function resetGame() {
+  if (confirm('Are you sure? ALL progress will be lost forever!')) {
+    localStorage.removeItem(SAVE_KEY);
+    location.reload();
+  }
+}
+
+function exportSave() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { lg('No save data to export.'); return; }
+  const blob = new Blob([raw], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'legends-daybreak-save.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  lg('Save exported!');
+}
+
+function importSave() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        JSON.parse(ev.target.result);
+        localStorage.setItem(SAVE_KEY, ev.target.result);
+        loadGame();
+        render();
+        lg('Save imported!');
+      } catch(err) {
+        lg('Invalid save file!');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+setInterval(saveGame, 30000);
+setInterval(updateTimedQuests, 60000);
+setInterval(checkAffinityDecay, 60000);
+setInterval(refreshBounties, 60000);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveGame();
+});
+
+function rNPC() {
+  let h = '<div class="npc-view"><h2 class="st">🧳 Traders & Allies</h2>';
+
+  // Traders section
+  const traders = G.npcs.filter(n => n.t === 'trader');
+  if (traders.length > 0) {
+    h += '<div style="margin-bottom:20px;"><h3 style="font-size:14px;color:#fbbf24;margin-bottom:10px;">🧳 Wandering Traders</h3>';
+    for (let npc of traders) {
+      h += '<div class="npc-card ' + (npc.unlocked ? '' : 'locked') + '" style="border-color:' + (npc.unlocked ? '#fbbf24' : 'var(--border)') + ';">';
+      h += '<div class="npc-ava" style="background:' + npc.col + '20;border-color:' + npc.col + '">' + npc.icon + '</div>';
+      h += '<div class="npc-info">';
+      h += '<div class="npc-name">' + npc.n + ' <span class="npc-type npc-type-trader">' + npc.title + '</span></div>';
+      if (!npc.unlocked) {
+        h += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">🔒 Unlocked at ' + npc.zone + ' (Lv.' + npc.zoneLv + ')</div>';
+      } else {
+        h += '<div class="npc-desc">' + npc.d + '</div>';
+        h += '<div class="npc-stock">';
+        for (let j = 0; j < npc.stock.length; j++) {
+          const item = npc.stock[j];
+          h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + item.n + ' (' + item.price + 'G)</span>';
+        }
+        h += '</div>';
+        h += '<div style="margin-top:8px;">';
+        for (let j = 0; j < npc.stock.length; j++) {
+          const item = npc.stock[j];
+          const canAfford = G.p.gold >= item.price;
+          h += '<button class="npc-buy ' + (canAfford ? 'ib-u' : 'ib-e') + '" data-npc="' + npc.n + '" data-item="' + j + '" style="margin-right:4px;">' + (canAfford ? 'Buy ' + item.n + ' (' + item.price + 'G)' : 'Need ' + item.price + 'G') + '</button>';
+        }
+        h += '</div>';
+      }
+      h += '</div></div>';
+    }
+    h += '</div>';
+  }
+
+  // Allies section
+  const allies = G.npcs.filter(n => n.t === 'ally');
+  if (allies.length > 0) {
+    h += '<div><h3 style="font-size:14px;color:#8b5cf6;margin-bottom:10px;">🌙 Allies</h3>';
+    for (let npc of allies) {
+      const aff = G.affinity[npc.reqMember];
+      h += '<div class="npc-card ' + (npc.unlocked ? '' : 'locked') + '" style="border-color:' + (npc.unlocked ? '#8b5cf6' : 'var(--border)') + ';">';
+      h += '<div class="npc-ava" style="background:' + npc.col + '20;border-color:' + npc.col + '">' + npc.icon + '</div>';
+      h += '<div class="npc-info">';
+      h += '<div class="npc-name">' + npc.n + ' <span class="npc-type npc-type-ally">' + npc.title + '</span></div>';
+      if (!npc.unlocked) {
+        h += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">🔒 Requires ' + npc.reqMember + ' affinity ' + npc.affinityReq + '+ (currently ' + (aff ? aff.val : 0) + ')</div>';
+        if (aff) {
+          h += '<div class="affinity-bar"><div class="affinity-fill ' + getAffinityColor(aff.val) + '" style="width:' + (aff.val / aff.max * 100) + '%"></div></div>';
+          h += '<div class="affinity-label">' + (aff.val >= 70 ? '💕 Close' : aff.val >= 40 ? '💛 Friendly' : aff.val >= 20 ? '💔 Distant' : '💀 Strained') + ' (' + aff.val + '/' + aff.max + ')</div>';
+        }
+      } else {
+        h += '<div class="npc-desc">' + npc.d + '</div>';
+        h += '<div style="font-size:11px;color:var(--success);margin-top:4px;">' + npc.ability + '</div>';
+      }
+      h += '</div></div>';
+    }
+    h += '</div>';
+  }
+
+  h += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;">Traders unlock by zone level. Allies unlock through party affinity.</div>';
+  h += '</div>';
+  return h;
+}
+
+function showStory() {
+  if(!G.story.active || G.story.shown) return;
+  const chapter = G.storyChapters[G.story.chapter];
+  if(!chapter) return;
+  if(chapter.unlockLevel && G.p.lvl < chapter.unlockLevel) return;
+  G.state = 'story';
+  render();
+}
+
+function advanceStory() {
+  const chapter = G.storyChapters[G.story.chapter];
+  if(!chapter) { G.story.shown = true; setS('menu'); return; }
+  G.story.scene++;
+  if(G.story.scene >= chapter.scenes.length) {
+    G.story.shown = true;
+    G.story.chapter++;
+    G.story.scene = 0;
+    setS('menu');
+  } else {
+    render();
+  }
+}
+
+function checkStoryUnlock() {
+  if(G.story.shown) return;
+  const nextChapter = G.storyChapters[G.story.chapter];
+  if(!nextChapter) return;
+  if(nextChapter.unlockLevel && G.p.lvl >= nextChapter.unlockLevel) {
+    G.story.shown = false;
+    G.story.scene = 0;
+    showStory();
+  }
+}
+
+function render(){
+  const a=document.getElementById('app'); if(!a)return;
+  let h='';
+  h+='<div class="hdr"><div class="hdr-l"><div class="pname">'+G.p.name+' <span class="cls">'+G.p.cls+'</span></div><div class="lvl">Lv.'+G.p.lvl+'</div></div>';
+  h+='<div class="hdr-r"><div class="sb"><span class="si">HP</span><div class="bar"><div class="bf bf-hp" style="width:'+((G.p.hp/G.p.mhp)*100)+'%"></div></div><span class="bt">'+G.p.hp+'/'+G.p.mhp+'</span></div>';
+  h+='<div class="sb"><span class="si">MP</span><div class="bar"><div class="bf bf-mp" style="width:'+((G.p.mp/G.p.mmp)*100)+'%"></div></div><span class="bt">'+G.p.mp+'/'+G.p.mmp+'</span></div>';
+  h+='<div class="sb"><span class="si">XP</span><div class="bar"><div class="bf bf-xp" style="width:'+((G.p.xp/G.p.xpN)*100)+'%"></div></div><span class="bt">'+G.p.xp+'/'+G.p.xpN+'</span></div>';
+  h+='<div class="gold">GOLD: '+G.p.gold+'</div></div></div>';
+  if(G.p.buffs.length>0)h+='<div class="buffs">'+G.p.buffs.map(b=>'<span class="bp">'+b.n+' ('+b.t+')</span>').join('')+'</div>';
+  const activeSyns = getActiveSynergies();
+  if(activeSyns.length > 0 && G.state === 'combat'){
+    h += '<div class="buffs">' + activeSyns.map(s => '<span class="bp" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">'+s.icon+' '+s.name+'</span>').join('') + '</div>';
+  }
+  h+='<div class="content">';
+  if(G.state=='menu')h+=rMenu();
+  else if(G.state=='story')h+=rStory();
+  else if(G.state=='bestiary')h+=rBestiary();
+  else if(G.state=='explore')h+=rExp();
+  else if(G.state=='combat')h+=rCbt();
+  else if(G.state=='party')h+=rParty();
+  else if(G.state=='skills')h+=rSkills();
+  else if(G.state=='inventory')h+=rInv();
+  else if(G.state=='craft')h+=rCraft();
+  else if(G.state=='quest')h+=rQuest();
+  else if(G.state=='focus')h+=rFocus();
+  else if(G.state=='rest')h+=rRest();
+  else if(G.state=='secret')h+=rSecret();
+  else if(G.state=='skilltree')h+=rSkillTree();
+  else if(G.state=='ministory')h+=rMiniStory();
+  else if(G.state=='storymode')h+=rStoryMode();
+  else if(G.state=='npc')h+=rNPC();
+  h+='</div>';
+  h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
+  h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
+  h+='<button class="nb '+(G.state=='explore'?'on':'')+'" data-t="exp" data-a="explore">Explore</button>';
+  h+='<button class="nb '+(G.state=='party'?'on':'')+'" data-t="party" data-a="party">Party</button>';
+  h+='<button class="nb '+(G.state=='quest'?'on':'')+'" data-t="quest" data-a="quest">Quests</button>';
+  h+='<button class="nb '+(G.state=='craft'?'on':'')+'" data-t="craft" data-a="craft">Craft</button>';
+  h+='<button class="nb '+(G.state=='inventory'?'on':'')+'" data-t="inv" data-a="inventory">Items</button>';
+  h+='<button class="nb '+(G.state=='npc'?'on':'')+'" data-t="npc" data-a="npc">Traders</button></div>';
+  a.innerHTML=h;
+  attachEvents();
+  const l=document.getElementById('log'); if(l)l.scrollTop=l.scrollHeight;
+}
+
+function attachEvents() {
+  document.querySelectorAll('.card[data-a]').forEach(el=>{
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
+    else if(a=='skilltree')setS('skilltree');
+    else if(a=='storymode')startStoryMode();});
+  });
+  document.querySelectorAll('.story-view .abtn').forEach(el=>{
+    el.addEventListener('click',advanceStory);
+  });
+  const btnSave=document.getElementById('btn-save');if(btnSave)btnSave.addEventListener('click',()=>{saveGame();});
+  const btnExport=document.getElementById('btn-export');if(btnExport)btnExport.addEventListener('click',exportSave);
+  const btnImport=document.getElementById('btn-import');if(btnImport)btnImport.addEventListener('click',importSave);
+  const btnReset=document.getElementById('btn-reset');if(btnReset)btnReset.addEventListener('click',resetGame);
+  document.querySelectorAll('.zcard:not(.locked)').forEach(el=>{
+    el.addEventListener('click',()=>{const i=parseInt(el.getAttribute('data-i'));sc(i);});
+  });
+  document.querySelectorAll('.ecard:not(.dead)').forEach(el=>{
+    el.addEventListener('click',()=>{G.cbt.tg=parseInt(el.getAttribute('data-i'));render();});
+  });
+  document.querySelectorAll('.sbtn:not(.dis)').forEach(el=>{
+    el.addEventListener('click',()=>{G.cbt.sk=parseInt(el.getAttribute('data-i'));render();});
+  });
+  const abtn=document.querySelector('.abtn:not(.dis)');
+  if(abtn){
+    abtn.addEventListener('click',()=>{
+      const si=parseInt(abtn.getAttribute('data-si'));
+      const ti=parseInt(abtn.getAttribute('data-ti'));
+      pa(si,ti);
+    });
+  }
+  const fbtn=document.querySelector('.fbtn');
+  if(fbtn)fbtn.addEventListener('click',flee);
+  document.querySelectorAll('.ib-u').forEach(el=>{
+    el.addEventListener('click',(e)=>{e.stopPropagation();useI(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.ib-e').forEach(el=>{
+    el.addEventListener('click',(e)=>{e.stopPropagation();eqI(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.cb:not(.dis)').forEach(el=>{
+    el.addEventListener('click',()=>{craft(parseInt(el.getAttribute('data-i')));});
+  });
+  document.querySelectorAll('.nb').forEach(el=>{
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');setS(a);});
+  });
+  const cfb=document.querySelector('.cfb');
+  if(cfb)cfb.addEventListener('click',cf);
+  const btnAuto=document.getElementById('btn-auto');
+  if(btnAuto)btnAuto.addEventListener('click',toggleAutoCombat);
+  document.querySelectorAll('.secret-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeSecretChoice(el.getAttribute('data-choice')); render(); });
+  });
+  const btnCloseSecret=document.getElementById('btn-close-secret');
+  if(btnCloseSecret)btnCloseSecret.addEventListener('click',closeSecretArea);
+  document.querySelectorAll('.spec-card').forEach(el=>{
+    el.addEventListener('click',()=>{ if(G.p.lvl>=3) { const spec=el.getAttribute('data-spec'); if(chooseSpecPath(spec)) render(); } });
+  });
+  document.querySelectorAll('.spec-unlock-btn').forEach(el=>{
+    el.addEventListener('click',()=>{ const tier=parseInt(el.getAttribute('data-tier')); if(unlockSpecTier(tier)) render(); });
+  });
+  const btnRespec=document.getElementById('btn-respec');
+  if(btnRespec)btnRespec.addEventListener('click',respecPath);
+  document.querySelectorAll('.ministory-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeMiniStoryChoice(parseInt(el.getAttribute('data-choice'))); });
+  });
+  const btnCloseMini=document.getElementById('btn-close-ministory');
+  if(btnCloseMini)btnCloseMini.addEventListener('click',closeMiniStory);
+  const btnAdvanceStory=document.getElementById('btn-advance-story');
+  if(btnAdvanceStory)btnAdvanceStory.addEventListener('click',advanceStoryScene);
+  document.querySelectorAll('.story-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeStoryChoice(parseInt(el.getAttribute('data-choice'))); });
+  });
+  const btnEndStory=document.getElementById('btn-end-story');
+  if(btnEndStory)btnEndStory.addEventListener('click',endStoryMode);
+
+  document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
+    el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
+  });
+  const cancelRestBtn=document.getElementById('cancel-rest');
+  if(cancelRestBtn)cancelRestBtn.addEventListener('click',cancelRest);
+  document.querySelectorAll('.npc-buy').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      buyFromNPC(el.getAttribute('data-npc'),parseInt(el.getAttribute('data-item')));
+    });
+  });
+  document.querySelectorAll('.tr-btn:not(.dis)').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      reviveMember(el.getAttribute('data-m'));
+    });
+  });
+}
+
+function rSecret(){
+  const area = G.secretAreas[G.secretArea.zone];
+  if (!area) return '<div>Error</div>';
+  let h = '<div style="padding:20px;text-align:center;">';
+  h += '<h2 style="color:var(--accent-light);">🔍 ' + area.name + '</h2>';
+  h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:20px;">' + area.desc + '</div>';
+  if (!G.secretArea.choice && G.secretArea.result !== 'done') {
+    for (let choice of area.choices) {
+      const isRisky = choice.risk === 'high';
+      h += '<button class="secret-choice" data-choice="' + choice.id + '" style="display:block;width:100%;max-width:300px;margin:10px auto;padding:14px;border-radius:14px;border:2px solid '+(isRisky?'var(--danger)':'var(--accent)')+';background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;">';
+      h += choice.label + (isRisky ? ' ⚠️' : '') + '</button>';
+    }
+  } else if (G.secretArea.result === 'ambush') {
+    h += '<div style="color:var(--danger);font-size:18px;margin:20px;">💥 Ambush!</div>';
+    h += '<button class="abtn" onclick="render()">Fight!</button>';
+  } else {
+    h += '<div style="margin:20px;">' + (G.secretArea.result === 'loot' ? '🎁 Found something!' : '📦 Empty...') + '</div>';
+    h += '<button class="abtn" id="btn-close-secret">Continue</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function rSkillTree(){
+  let h = '<div style="padding:16px;">';
+  h += '<h2 class="st">🌳 Skill Trees</h2>';
+  if (!G.playerSpec.path) {
+    h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:20px;text-align:center;">Choose your specialization at Level 3.</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:12px;">';
+    for (let [key, path] of Object.entries(G.skillTrees)) {
+      const canChoose = G.p.lvl >= 3;
+      h += '<div class="spec-card" data-spec="' + key + '" style="background:var(--bg-card);border:2px solid '+(canChoose?path.color:'#555')+';border-radius:16px;padding:16px;cursor:'+(canChoose?'pointer':'not-allowed')+';opacity:'+(canChoose?'1':'0.5')+';">';
+      h += '<span style="font-size:32px;">' + path.icon + '</span>';
+      h += '<div style="font-size:16px;font-weight:700;color:'+path.color+';">' + path.name + '</div>';
+      h += '<div style="font-size:11px;color:var(--text-dim);">' + path.desc + '</div>';
+      for (let i = 0; i < path.tiers.length; i++) {
+        const tier = path.tiers[i];
+        h += '<div style="font-size:12px;padding:8px;background:#242236;border-radius:8px;margin-top:8px;">';
+        h += '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:'+path.color+'20;color:'+path.color+';">Lv.' + tier.level + '</span> ';
+        h += '<b>' + tier.name + '</b> — ' + tier.desc + '</div>';
+      }
+      if (!canChoose) h += '<div style="margin-top:10px;font-size:11px;color:var(--danger);text-align:center;">🔒 Requires Level 3</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  } else {
+    const path = G.skillTrees[G.playerSpec.path];
+    h += '<div style="text-align:center;margin-bottom:20px;">';
+    h += '<span style="font-size:48px;">' + path.icon + '</span>';
+    h += '<div style="font-size:20px;font-weight:700;color:'+path.color+';">' + path.name + '</div>';
+    h += '</div>';
+    for (let i = 0; i < path.tiers.length; i++) {
+      const tier = path.tiers[i];
+      const unlocked = G.playerSpec.tiers.includes(i);
+      const canUnlock = canUnlockTier(i);
+      h += '<div style="background:var(--bg-card);border:2px solid '+(unlocked?path.color:canUnlock?path.color+'60':'#555')+';border-radius:14px;padding:14px;margin-bottom:12px;">';
+      h += '<div style="font-weight:700;color:'+(unlocked?path.color:'var(--text-dim)')+';">' + (unlocked?'✅':canUnlock?'🔓':'🔒') + ' ' + tier.name + '</div>';
+      h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">' + tier.desc + '</div>';
+      if (unlocked) h += '<div style="font-size:11px;color:var(--success);font-weight:600;">✨ ACTIVE</div>';
+      else if (canUnlock) h += '<button class="spec-unlock-btn" data-tier="' + i + '" style="width:100%;padding:10px;border-radius:10px;border:none;background:'+path.color+';color:white;font-size:13px;font-weight:600;cursor:pointer;">Unlock ' + tier.name + '</button>';
+      else if (G.p.lvl < tier.level) h += '<div style="font-size:11px;color:var(--danger);">🔒 Requires Level ' + tier.level + '</div>';
+      else h += '<div style="font-size:11px;color:var(--text-dim);">🔒 Complete previous tier</div>';
+      h += '</div>';
+    }
+    const respecCost = 50 + (G.playerSpec.respecCount * 50);
+    const canRespec = G.p.gold >= respecCost;
+    h += '<button id="btn-respec" style="width:100%;padding:10px;border-radius:10px;border:1px solid '+(canRespec?'var(--danger)':'#555')+';background:transparent;color:'+(canRespec?'var(--danger)':'#555')+';font-size:12px;font-weight:600;cursor:'+(canRespec?'pointer':'not-allowed')+';">🔄 Respec (' + respecCost + 'G)</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function rMiniStory(){
+  const story = G.currentMiniStory;
+  if (!story) return '<div>Error</div>';
+  let h = '<div style="padding:20px;text-align:center;">';
+  h += '<div style="font-size:48px;margin-bottom:12px;">' + story.icon + '</div>';
+  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Random Encounter</div>';
+  h += '<h2 style="font-family:Cinzel,serif;font-size:20px;margin-bottom:8px;">' + story.name + '</h2>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:20px;">' + story.title + '</div>';
+  for (let line of story.dialogue) {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;text-align:left;">';
+    h += '<div style="font-size:11px;color:var(--accent-light);font-weight:600;margin-bottom:6px;">' + line.speaker + '</div>';
+    h += '<div style="font-size:14px;line-height:1.7;">' + line.text + '</div></div>';
+  }
+  if (!story.choice && story.result !== 'done') {
+    h += '<div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto;">';
+    for (let i = 0; i < story.choices.length; i++) {
+      const ch = story.choices[i];
+      let canChoose = true, reason = '';
+      if (ch.req && !G.party.some(p => p.on && p.n === ch.req)) { canChoose = false; reason = 'Requires ' + ch.req; }
+      if (ch.cost && ch.cost.gold && G.p.gold < ch.cost.gold) { canChoose = false; reason = 'Need ' + ch.cost.gold + 'G'; }
+      if (ch.cost && ch.cost.item) { const item = G.p.inv.find(inv => inv.n === ch.cost.item); if (!item || item.q < (ch.cost.qty || 1)) { canChoose = false; reason = 'Need ' + (ch.cost.qty || 1) + ' ' + ch.cost.item; } }
+      h += '<button class="ministory-choice" data-choice="' + i + '" style="padding:14px 18px;border-radius:14px;border:2px solid '+(canChoose?'var(--accent)':'#555')+';background:'+(canChoose?'var(--bg-card)':'#1a1825')+';color:'+(canChoose?'var(--text)':'#555')+';font-size:13px;font-weight:600;cursor:'+(canChoose?'pointer':'not-allowed')+';user-select:none;text-align:left;">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
+      h += '<span>' + ch.label + '</span>';
+      if (!canChoose) h += '<span style="font-size:10px;color:var(--danger);">🔒 ' + reason + '</span>';
+      h += '</div>';
+      if (ch.cost && (ch.cost.gold || ch.cost.item)) {
+        h += '<div style="font-size:10px;color:var(--danger);margin-top:4px;">Cost: ';
+        if (ch.cost.gold) h += ch.cost.gold + 'G ';
+        if (ch.cost.item) h += (ch.cost.qty || 1) + '× ' + ch.cost.item;
+        h += '</div>';
+      }
+      if (ch.reward) {
+        h += '<div style="font-size:10px;color:var(--success);margin-top:4px;">Reward: ';
+        const rewards = [];
+        if (ch.reward.xp) rewards.push(ch.reward.xp + ' XP');
+        if (ch.reward.gold) rewards.push(ch.reward.gold + 'G');
+        if (ch.reward.affinity) rewards.push('+' + ch.reward.amt + ' ' + ch.reward.affinity + ' affinity');
+        if (ch.reward.item) rewards.push(ch.reward.item.n);
+        h += rewards.join(', ') + '</div>';
+      }
+      h += '</button>';
+    }
+    h += '</div>';
+  } else if (story.result === 'done') {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin:20px auto;max-width:400px;">';
+    h += '<div style="font-size:24px;margin-bottom:8px;">✨</div>';
+    h += '<div style="font-size:14px;color:var(--text-dim);line-height:1.6;">' + story.choices[story.choice].response + '</div></div>';
+    h += '<button class="abtn" id="btn-close-ministory" style="max-width:200px;margin:0 auto;display:block;">Continue</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function rStoryMode(){
+  if (!G.storyMode.active) return '<div>Story mode error</div>';
+  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
+  if (!chapter) return '<div>Chapter not found</div>';
+
+  let h = '<div style="padding:20px;text-align:center;max-width:500px;margin:0 auto;">';
+  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;">📖 Story Mode</div>';
+  h += '<h2 style="font-family:Cinzel,serif;font-size:22px;margin-bottom:4px;">' + chapter.icon + ' ' + chapter.title + '</h2>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:24px;">Chapter ' + (G.storyMode.currentChapter + 1) + ' of ' + G.storyModeChapters.length + '</div>';
+
+  // Progress bar
+  const progress = ((G.storyMode.currentChapter) / G.storyModeChapters.length) * 100;
+  h += '<div style="width:100%;height:4px;background:#242236;border-radius:2px;margin-bottom:24px;">';
+  h += '<div style="width:' + progress + '%;height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div></div>';
+
+  // Current scene
+  const scene = chapter.scenes[G.storyMode.currentScene];
+  if (scene) {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;text-align:left;">';
+    h += '<div style="font-size:15px;line-height:1.8;color:var(--text);font-style:italic;">' + scene.text + '</div>';
+    h += '</div>';
+    h += '<button class="abtn" id="btn-advance-story" style="max-width:200px;margin:0 auto;display:block;">Continue →</button>';
+  } else {
+    // Show choices
+    h += '<div style="font-size:14px;color:var(--text-dim);margin-bottom:16px;">What do you do?</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;">';
+    for (let i = 0; i < chapter.choices.length; i++) {
+      const ch = chapter.choices[i];
+      h += '<button class="story-choice" data-choice="' + i + '" style="padding:16px 20px;border-radius:14px;border:2px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;">';
+      h += '<div style="margin-bottom:6px;">' + ch.label + '</div>';
+      if (ch.affinity) h += '<div style="font-size:10px;color:var(--success);">+' + ch.amt + ' ' + ch.affinity + ' affinity</div>';
+      if (ch.xp) h += '<div style="font-size:10px;color:var(--success);">+' + ch.xp + ' XP</div>';
+      if (ch.gold) h += '<div style="font-size:10px;color:var(--success);">+' + ch.gold + 'G</div>';
+      if (ch.item) h += '<div style="font-size:10px;color:var(--success);">+' + ch.item.n + '</div>';
+      h += '</button>';
+    }
+    h += '</div>';
+  }
+
+  h += '<button id="btn-end-story" style="margin-top:24px;padding:8px 16px;border-radius:8px;border:1px solid #555;background:transparent;color:#555;font-size:11px;cursor:pointer;">Exit Story Mode</button>';
+  h += '</div>';
+  return h;
+}
+
+function rStory(){
+  const chapter = G.storyChapters[G.story.chapter];
+  const scene = chapter.scenes[G.story.scene];
+  let h='<div class="story-view" style="text-align:center;padding:20px;">';
+  h+='<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Chapter '+(G.story.chapter+1)+': '+chapter.title+'</div>';
+  h+='<div class="dialogue-box" style="margin-bottom:24px;">';
+  h+='<div class="d-speaker">'+scene.speaker+'</div>';
+  h+='<div class="d-text" style="font-size:15px;line-height:1.7;">'+scene.text+'</div>';
+  h+='</div>';
+  h+='<button class="abtn" style="max-width:200px;margin:0 auto;display:block;">Continue</button>';
+  h+='<div style="margin-top:16px;font-size:11px;color:var(--text-dim);">'+(G.story.scene+1)+' / '+chapter.scenes.length+'</div>';
+  h+='</div>';
+  return h;
+}
+
+function rBestiary(){
+  let h='<div class="bestiary-view"><h2 class="st">📖 Bestiary</h2>';
+  const entries = Object.entries(G.bestiary).sort((a,b)=>b[1].kills-a[1].kills);
+  if(entries.length===0){
+    h+='<div style="text-align:center;padding:40px;color:var(--text-dim);">No creatures catalogued yet.<br>Defeat enemies to fill the bestiary.</div>';
+  }else{
+    h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:12px;">'+entries.length+' species discovered</div>';
+    h+='<div class="zlist">';
+    for(let [name,data] of entries){
+      const elemIcon = data.elem==='fire'?'🔥':data.elem==='ice'?'❄️':data.elem==='lightning'?'⚡':data.elem==='void'?'🌑':'✦';
+      h+='<div class="zcard" style="cursor:default;">';
+      h+='<div class="zh"><span class="zn">'+ee(name)+' '+name+'</span><span class="zl">'+data.kills+' kills</span></div>';
+      h+='<div style="display:flex;gap:12px;font-size:12px;color:var(--text-dim);margin-top:6px;">';
+      h+='<span>HP: '+data.mhp+'</span><span>ATK: '+data.atk+'</span><span>DEF: '+data.def+'</span><span>'+elemIcon+' '+data.elem+'</span>';
+      h+='</div>';
+      h+='<div style="font-size:10px;color:#555;margin-top:4px;">First seen: '+new Date(data.firstSeen).toLocaleDateString()+'</div>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function rMenu(){
+  const items=[
+    {i:'⚔️',l:'Adventure',d:'Explore zones and fight',a:'explore'},
+    {i:'👥',l:'Party',d:'Manage companions',a:'party'},
+    {i:'✨',l:'Skills',d:'View mage abilities',a:'skills'},
+    {i:'⚒️',l:'Crafting',d:'Brew potions, forge gear',a:'craft'},
+    {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
+    {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
+    {i:'📖',l:'Bestiary',d:'Catalogue of defeated foes',a:'bestiary'},
+    {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
+    {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
+    {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
+    {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
+    {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
+  ];
+  let h='<div class="grid2">';
+  for(let m of items)h+='<div class="card" data-a="'+m.a+'"><div class="cicon">'+m.i+'</div><div class="clabel">'+m.l+'</div><div class="cdesc">'+m.d+'</div></div>';
+  h+='</div>';
+  h+='<div style="margin-top:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;">';
+  h+='<h3 style="font-size:14px;margin-bottom:10px;color:var(--accent-light);">Save Data</h3>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;" id="btn-save">Save Now</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:#374151;" id="btn-export">Export</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:#374151;" id="btn-import">Import</button>';
+  h+='<button class="cb" style="width:auto;padding:8px 16px;font-size:12px;background:var(--danger);" id="btn-reset">Reset</button>';
+  h+='</div>';
+  h+='<div style="margin-top:8px;font-size:11px;color:var(--text-dim);">Auto-saves every 30 seconds</div>';
+  h+='</div>';
+  return h;
+}
+
+function rExp(){
+  let h='<div class="explore-view"><h2 class="st">Adventure Zones</h2><div class="zlist">';
+  for(let i=0;i<G.zones.length;i++){
+    const z=G.zones[i],lk=G.p.lvl<z.lv;
+    const dc=z.dg=='low'?'#22c55e':z.dg=='medium'?'#eab308':z.dg=='high'?'#f97316':z.dg=='very high'?'#ef4444':'#a855f7';
+    const hazard = G.zoneHazards[z.n];
+    h+='<div class="zcard '+(lk?'locked':'')+'" data-i="'+i+'"><div class="zh"><span class="zn">'+z.n+'</span><span class="zl">Lv.'+z.lv+(lk?' 🔒':'')+'</span></div><div class="zd">'+z.d+'</div>';
+    if(hazard){
+      h+='<div style="font-size:10px;color:#f59e0b;margin-bottom:6px;">⚠️ Hazard: '+hazard.desc+'</div>';
+    }
+    h+='<div class="zm"><span class="db" style="background:'+dc+'20;color:'+dc+'">'+z.dg+'</span><span class="xb">'+z.xp+' XP</span></div></div>';
+  }
+  h+='</div></div>'; return h;
+}
+
+function rCbt(){
+  let h='<div class="combat-view"><h2 class="st">'+(G.currentBoss?'⚔️ BOSS FIGHT':'Combat')+'</h2>';
+  const synDesc = getSynergyDesc();
+  if(synDesc){
+    h += '<div style="background:#7c3aed15;border:1px solid var(--accent);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--accent-light);">';
+    h += '✨ ' + synDesc + '</div>';
+  }
+  // Auto-combat toggle button
+  h += '<button id="btn-auto" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid '+(G.cbt.autoCombat?'#22c55e':'#555')+';background:'+(G.cbt.autoCombat?'#22c55e15':'transparent')+';color:'+(G.cbt.autoCombat?'#22c55e':'var(--text-dim)')+';font-size:12px;font-weight:600;cursor:pointer;margin-bottom:12px;user-select:none;">';
+  h += (G.cbt.autoCombat?'🤖 AUTO ON — Tap to take control':'🤖 Auto-Combat — Let AI fight')+'</button>';
+  // Show zone hazard warning in combat
+  const zone = G.zones.find(z => z.en.includes(G.cbt.en[0]?.n));
+  if(zone && G.zoneHazards[zone.n]){
+    const haz = G.zoneHazards[zone.n];
+    h+='<div style="background:#f59e0b15;border:1px solid #f59e0b;border-radius:12px;padding:8px;margin-bottom:12px;font-size:11px;color:#f59e0b;">';
+    h+='⚠️ Zone Hazard: '+haz.name+' — '+haz.desc+'</div>';
+  }
+  if(G.currentBoss){
+    h+='<div style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--danger);">';
+    h+='🔥 '+G.currentBoss.desc+'</div>';
+  }
+  h+='<div class="erow">';
+  for(let i=0;i<G.cbt.en.length;i++){
+    const e=G.cbt.en[i],d=e.hp<=0,s=G.cbt.tg==i&&!d?'sel':'';
+    const immuneFire=['Fire Imp','Lava Slug','Ash Wraith'].includes(e.n);
+    const immuneIce=['Ice Elemental','Frost Wolf','Frozen Knight'].includes(e.n);
+    const isBoss=e.mechanic?true:false;
+    h+='<div class="ecard '+(d?'dead':'')+' '+s+'" data-i="'+i+'" style="'+(isBoss?'border-color:var(--danger);box-shadow:0 0 10px #ef444440;':'')+'"><div class="eicon">'+(d?'💀':ee(e.n))+'</div><div class="ename">'+e.n+(isBoss?' 👑':'')+'</div>';
+    if(!d && e.elem && e.elem !== 'none'){
+      const elemIcon = e.elem==='fire'?'🔥':e.elem==='ice'?'❄️':e.elem==='lightning'?'⚡':e.elem==='void'?'🌑':'✦';
+      h+='<div style="font-size:10px;color:#f59e0b;margin-top:2px;">'+elemIcon+' '+e.elem+'</div>';
+    }
+    if(!d && e.status && e.status.length > 0){
+      const statusIcons = e.status.map(s => s.type==='burn'?'🔥':s.type==='poison'?'☠️':s.type==='shock'?'⚡':'✦').join('');
+      h+='<div style="font-size:10px;color:var(--danger);margin-top:2px;">'+statusIcons+' ('+e.status[0].turns+'t)</div>';
+    }
+    if(!d && (immuneFire || immuneIce)){
+      h+='<div class="e-immune">'+(immuneFire?'🔥 Fire Immune':(immuneIce?'❄️ Ice Immune':''))+'</div>';
+    }
+    if(!d && e.mechanic==='resurrect'){
+      h+='<div style="font-size:10px;color:var(--danger);">💀 Lives: '+(e.resurrectCount+1)+'</div>';
+    }
+    if(!d && e.mechanic==='phase'){
+      h+='<div style="font-size:10px;color:var(--accent-light);">💎 Phase '+e.currentPhase+'/'+e.phases+'</div>';
+    }
+    h+=(d?'<div class="dt">DEFEATED</div>':'<div class="hps"><div class="bf bf-hp" style="width:'+((e.hp/e.mhp)*100)+'%"></div></div><div class="hpt">'+e.hp+'/'+e.mhp+'</div>')+'</div>';
+  }
+  h+='</div><div class="pstat"><div class="mst"><span class="md" style="background:#7c3aed"></span>San '+G.p.hp+'/'+G.p.mhp+'</div>';
+  for(let p of G.party)if(p.on)h+='<div class="mst"><span class="md" style="background:'+p.col+'"></span>'+p.n+' '+p.hp+'/'+p.mhp+'</div>';
+  h+='</div><div class="skills"><h3>Select Skill</h3><div class="slist">';
+  const ls=G.p.skills.filter(s=>s.on);
+  for(let i=0;i<ls.length;i++){
+    const s=ls[i],u=G.p.mp>=s.c&&!G.cbt.autoCombat,sel=G.cbt.sk==i&&!G.cbt.autoCombat?'sel':'';
+    const critPct = Math.floor(getTotalCritChance() * 100);
+  h+='<div class="sbtn '+(u?'':'dis')+' '+sel+'" data-i="'+i+'" '+(G.cbt.autoCombat?'style="opacity:0.4;cursor:not-allowed;"':'')+'><div class="sn">'+s.n+'</div><div class="sc">'+s.c+' MP · '+critPct+'% Crit'+(G.cbt.autoCombat?' · 🤖 AUTO':'')+'</div><div class="sd">'+s.d+'</div></div>';
+  }
+  h+='</div>';
+  const sk=ls[G.cbt.sk],ca=sk&&G.p.mp>=sk.c&&!G.cbt.autoCombat;
+  const si=G.p.skills.indexOf(sk);
+  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'" '+(G.cbt.autoCombat?'disabled style="opacity:0.4;"':'')+'>Cast '+(sk?sk.n:'...')+'</button>';
+  h+='<button class="fbtn" '+(G.cbt.autoCombat?'disabled style="opacity:0.4;"':'')+'>Flee</button></div></div>';
+  return h;
+}
+
+function rParty(){
+  let h='<div class="party-view"><h2 class="st">Party</h2>';
+  const activeSyns = getActiveSynergies();
+  if(activeSyns.length > 0){
+    h += '<div style="background:var(--bg-card);border:1px solid var(--accent);border-radius:14px;padding:12px;margin-bottom:16px;">';
+    h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:8px;">✨ Active Synergies</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:8px;">';
+    for(let syn of activeSyns){
+      h += '<div style="display:flex;align-items:center;gap:8px;font-size:12px;">';
+      h += '<span style="font-size:16px;">' + syn.icon + '</span>';
+      h += '<div style="flex:1;"><div style="font-weight:600;">' + syn.name + '</div>';
+      h += '<div style="font-size:10px;color:var(--text-dim);">' + syn.desc + '</div></div>';
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '<div class="plist">';
+  for(let p of G.party){
+    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')+'</div></div>';
+  }
+  h+='</div></div>'; return h;
+}
+
+function rSkills(){
+  let h='<div class="skills-view"><h2 class="st">Mage Skills</h2><div class="sklist">';
+  for(let s of G.p.skills){
+    const st=s.on?'LEARNED':'Unlocks Lv.'+s.ul;
+    h+='<div class="skcard '+(s.on?'':'locked')+'"><div class="skh"><span class="ski">'+(s.buff?'🛡️':'⚡')+'</span><span class="skt">'+s.n+'</span><span class="sks">'+st+'</span></div><div class="skd"><span class="dp">'+s.c+' MP</span><span class="dp">'+(s.dmg||'Buff')+'</span></div><div class="skdsc">'+s.d+'</div></div>';
+  }
+  h+='</div><div class="stb"><h3>Character Stats</h3>';
+  for(let [k,v] of Object.entries(G.p.stats))h+='<div class="str"><span class="stn">'+k.toUpperCase()+'</span><span class="stv">'+v+'</span></div>';
+  h+='</div></div>'; return h;
+}
+
+function rInv(){
+  let h='<div class="inventory-view"><h2 class="st">Inventory</h2>';
+  h+='<div class="eqs"><h3>Equipped</h3><div class="eqg">';
+  const sn={w:'Weapon',a:'Armor',acc:'Accessory'};
+  for(let sl of ['w','a','acc']){
+    const it=G.p.eq[sl];
+    h+='<div class="esl"><div class="esn">'+sn[sl]+'</div>'+(it?'<div class="eit" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="est">'+(it.atk?'ATK +'+it.atk:it.def?'DEF +'+it.def:it.int?'INT +'+it.int:'')+'</div>':'<div class="ese">Empty</div>')+'</div>';
+  }
+  h+='</div></div>';
+  h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
+  for(let i=0;i<G.p.inv.length;i++){
+    const it=G.p.inv[i];
+    h+='<div class="ic"><div class="ii">'+ie(it)+'</div><div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="iq">x'+it.q+'</div><div class="ia">'+(it.t=='pot'?'<button class="ib ib-u" data-i="'+i+'">Use</button>':'')+((it.t=='wep'||it.t=='arm'||it.t=='acc')?'<button class="ib ib-e" data-i="'+i+'">Equip</button>':'')+'</div></div>';
+  }
+  if(G.p.inv.length==0)h+='<div class="ei">Your pack is empty.</div>';
+  h+='</div></div></div>'; return h;
+}
+
+function rCraft(){
+  let h='<div class="craft-view"><h2 class="st">Crafting</h2><div class="rlist">';
+  for(let i=0;i<G.recipes.length;i++){
+    const r=G.recipes[i]; let ok=true,ms='';
+    for(let [mn,mq] of Object.entries(r.m)){
+      const iv=G.p.inv.find(x=>x.n==mn);
+      const hv=iv?iv.q:0,en=hv>=mq;
+      if(!en)ok=false;
+      ms+='<span class="mp '+(en?'ok':'miss')+'">'+mn+': '+hv+'/'+mq+'</span>';
+    }
+    h+='<div class="rc"><div class="rr"><span class="ri">'+ie(r.res)+'</span><span class="rn" style="color:'+rc(r.res.r)+'">'+r.n+'</span><span class="rd">'+r.d+'</span></div><div class="rms">'+ms+'</div><button class="cb '+(ok?'':'dis')+'" data-i="'+i+'">Forge</button></div>';
+  }
+  h+='</div></div>'; return h;
+}
+
+function rQuest(){
+  let h='<div class="quest-view">';
+  // Storyline section
+  h+='<h2 class="st">📖 Storyline</h2><div class="qlist">';
+  for(let s of G.storyline){
+    if(!s.unlocked) continue;
+    const pc=Math.min(100,(G.p.lvl/s.need)*100);
+    h+='<div class="qc '+(s.done?'done':'')+'" style="border-color:var(--accent-light);"><div class="qh"><span class="qn">'+(s.done?'✅ ':'')+'Ch.'+s.chapter+': '+s.n+'</span><span class="qr">'+s.rw.xp+' XP | '+s.rw.g+' G</span></div>';
+    h+='<div class="qd">'+s.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">Lv.'+G.p.lvl+'/'+s.need+'</span></div></div>';
+  }
+  h+='</div>';
+  // Active quests section
+  h+='<h2 class="st" style="margin-top:20px;">📜 Active Quests</h2><div class="qlist">';
+  for(let q of G.quests){
+    if(q.hidden && !q.revealed) continue;
+    const pc=Math.min(100,(q.c/q.need)*100);
+    const timerStatus=getTimerStatus(q);
+    let cardClass=q.done?'done':(q.expired?'expired':(timerStatus?(timerStatus.cls==='timer-urgent'?'timed-urgent':'timed'):''));
+    h+='<div class="qc '+cardClass+'"><div class="qh"><span class="qn">'+(q.done?'✅ ':(q.expired?'❌ ':''))+q.n+'</span><span class="qr">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div>';
+    if(q.chain){
+      h+='<div style="font-size:10px;color:var(--accent-light);margin-bottom:4px;">🔗 Chain: '+q.chain+'</div>';
+    }
+    if(q.reqQuest && !q.revealed){
+      const req=G.quests.find(rq=>rq.id===q.reqQuest);
+      h+='<div style="font-size:10px;color:var(--text-dim);font-style:italic;margin-bottom:4px;">🔒 Requires: '+(req?req.n:'Unknown')+'</div>';
+    }
+    h+='<div class="qd">'+q.d+'</div>';
+    if(timerStatus){
+      h+='<div class="timer-bar"><div class="timer-fill '+timerStatus.cls+'" style="width:'+timerStatus.pct+'%"></div></div>';
+      h+='<div class="timer-label">⏰ '+timerStatus.label+'</div>';
+    }
+    h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
+  }
+  h+='</div>';
+  // Bounties section
+  h+='<h2 class="st" style="margin-top:20px;">💰 Bounties (Daily)</h2><div class="qlist">';
+  for(let b of G.bounties){
+    if(b.done) continue;
+    const pc=Math.min(100,(b.c/b.need)*100);
+    h+='<div class="qc"><div class="qh"><span class="qn">'+b.n+'</span><span class="qr">'+b.rw.xp+' XP | '+b.rw.g+' G</span></div>';
+    h+='<div class="qd">'+b.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+b.c+'/'+b.need+'</span></div></div>';
+  }
+  h+='</div>';
+  h+='<div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
+  return h;
+}
+
+function rFocus(){
+  const el=Date.now()-(G.fs||Date.now()),rm=Math.max(0,G.fd-el);
+  const m=Math.floor(rm/60000),s=Math.floor((rm%60000)/1000);
+  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
+}
+
+function rTemple() {
+  const dead = getDeadParty();
+  let h2 = '<div class="rest-view">';
+  h2 += '<h2 class="st">⛪ Temple of Resurrection</h2>';
+  h2 += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">Ancient magic restores fallen companions. Cost: 50G each.</div>';
+  if(dead.length === 0){
+    h2 += '<div style="text-align:center;padding:20px;color:var(--success);">✨ All companions are alive!</div>';
+  }else{
+    h2 += '<div style="margin-bottom:12px;">';
+    for(let p of G.party){
+      const isDead = p.hp <= 0;
+      const canAfford = G.p.gold >= 50;
+      h2 += '<div class="temple-revive ' + (isDead ? 'dead' : 'alive') + '">';
+      h2 += '<div class="tr-ava" style="background:' + p.col + '20;border-color:' + p.col + '">' + (isDead ? '💀' : re(p.r)) + '</div>';
+      h2 += '<div class="tr-info">';
+      h2 += '<div class="tr-name">' + p.n + '</div>';
+      h2 += '<div class="tr-status ' + (isDead ? '' : 'alive') + '">' + (isDead ? '💀 FALLEN' : '✅ Alive ' + p.hp + '/' + p.mhp) + '</div>';
+      h2 += '</div>';
+      if(isDead) h2 += '<button class="tr-btn ' + (canAfford ? '' : 'dis') + '" data-m="' + p.n + '">' + (canAfford ? 'Revive (50G)' : 'Need 50G') + '</button>';
+      h2 += '</div>';
+    }
+    h2 += '</div>';
+  }
+  h2 += '</div>';
+  return h2;
+}
+
+function rRest() {
+  const dead = getDeadParty();
+  if(dead.length > 0 && !G.rest.active) return rTemple();
+
+  if (G.rest.active && G.rest.selectedSite) {
+    const site = G.rest.selectedSite;
+    const currentTick = G.rest.tick;
+    const maxTicks = G.rest.maxTicks;
+    const pct = (currentTick / maxTicks) * 100;
+    const healerName = getHealerName();
+    let h2 = '<div class="rest-view">';
+    h2 += '<h2 class="st">🔥 Resting at ' + site.name + '</h2>';
+    if (G.ambushWarning) {
+      h2 += '<div class="ambush-warning">';
+      h2 += '<div class="aw-text">⚠️ ' + G.ambushWarning.text + '</div>';
+      h2 += '</div>';
+    }
+    if (G.currentDialogue && !G.ambushWarning) {
+      h2 += '<div class="dialogue-box">';
+      h2 += '<div class="d-speaker">' + G.currentDialogue.speaker + '</div>';
+      h2 += '<div class="d-text">' + G.currentDialogue.text + '</div>';
+      h2 += '</div>';
+    }
+    h2 += '<div class="tick-track">';
+    for (let i = 1; i <= maxTicks; i++) {
+      let tickClass = '';
+      let tickIcon = '○';
+      if (i < currentTick) {
+        tickClass = 'done';
+        tickIcon = '✓';
+      } else if (i === currentTick) {
+        tickClass = 'current';
+        tickIcon = '🔥';
+      }
+      h2 += '<div class="tick ' + tickClass + '">' + tickIcon + '</div>';
+    }
+    h2 += '</div>';
+    h2 += '<div class="tick-label">Tick ' + currentTick + '/' + maxTicks + '</div>';
+    h2 += '<div class="rest-progress" style="margin-top:16px;">';
+    h2 += '<div class="rest-bar"><div class="rest-fill" style="width:' + pct + '%"></div></div>';
+    h2 += '<div class="rest-healer ok">💚 ' + healerName + ' is tending to the party</div>';
+    h2 += '</div>';
+    h2 += '<button class="rest-cancel" id="cancel-rest">Cancel Rest (Partial Recovery)</button>';
+    h2 += '</div>';
+    return h2;
+  }
+
+  const healerOk = hasHealer();
+  const healerName = getHealerName();
+  let h2 = '<div class="rest-view">';
+  h2 += '<h2 class="st">💤 Rest</h2>';
+  if (healerOk) {
+    h2 += '<div class="rest-healer ok" style="background:#22c55e15;border:1px solid var(--success);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
+    h2 += '<div style="font-size:13px;font-weight:600;color:var(--success);">💚 Healer Available: ' + healerName + '</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">5 ticks, 1.5s each. Dialogue every tick. Ambush chance: 15% camp / 5% tavern.</div>';
+    h2 += '</div>';
+  } else {
+    h2 += '<div class="rest-healer fail" style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">';
+    h2 += '<div style="font-size:13px;font-weight:600;color:var(--danger);">❌ No Healer in Party</div>';
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest safely.</div>';
+    h2 += '</div>';
+  }
+  h2 += '<div class="rest-sites">';
+  const zones = {};
+  for (let site of G.rest.sites) {
+    if (!zones[site.zone]) zones[site.zone] = [];
+    zones[site.zone].push(site);
+  }
+  for (let zoneName in zones) {
+    const sites = zones[zoneName];
+    const anyUnlocked = sites.some(s => s.unlocked);
+    if (!anyUnlocked) continue;
+    h2 += '<div style="margin-bottom:12px;">';
+    h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
+    for (let site of sites) {
+      const locked = !site.unlocked;
+      const canAfford = !site.cost || G.p.gold >= site.cost;
+      const canRest = healerOk && !locked && canAfford;
+      h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
+      h2 += '<div class="rs-head">';
+      h2 += '<span class="rs-name">' + site.icon + ' ' + site.name + '</span>';
+      h2 += '<span class="rs-type ' + site.type + '">' + site.type.toUpperCase() + '</span>';
+      h2 += '</div>';
+      h2 += '<div class="rs-desc">' + site.desc + '</div>';
+      if (locked) {
+        h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
+      } else if (site.cost) {
+        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G · Ambush: 5% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+      } else {
+        h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+      }
+      h2 += '</div>';
+    }
+    h2 += '</div>';
+  }
+  h2 += '</div>';
+  h2 += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Rest takes ~7.5 seconds. Party banter every tick. Taverns cost gold but are safer.</div>';
+  h2 += '</div>';
+  return h2;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const hasSave = loadGame();
+  if (!hasSave) {
+    lg('Welcome to Legends of Daybreak, San.');
+    lg('Tap Adventure to start your journey!');
+    showStory();
+  }
+  render();
+});
+</script>
+</body>
+</html>
+.card:hover, .card:active { border-color: var(--accent); background: var(--bg-hover); transform: translateY(-2px); }
+.cicon { font-size: 28px; margin-bottom: 6px; }
+.clabel { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+.cdesc { font-size: 11px; color: var(--text-dim); line-height: 1.3; }
+.st { font-family: 'Cinzel', serif; font-weight: 700; margin-bottom: 12px; font-size: 18px; }
+.zlist { display: flex; flex-direction: column; gap: 10px; }
+.zcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s; user-select: none; }
+.zcard:hover:not(.locked) { border-color: var(--accent); }
+.zcard.locked { opacity: 0.5; cursor: not-allowed; }
+.zh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.zn { font-weight: 600; font-size: 15px; }
+.zl { font-size: 12px; color: var(--text-dim); }
+.zd { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.zm { display: flex; gap: 8px; }
+.db, .xb { font-size: 10px; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.xb { background: #eab30820; color: var(--xp); }
+.erow { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.ecard { background: var(--bg-card); border: 2px solid var(--border); border-radius: 14px; padding: 12px; min-width: 90px; text-align: center; cursor: pointer; transition: all 0.2s; user-select: none; }
+.ecard.sel { border-color: var(--danger); box-shadow: 0 0 0 3px #ef444430; }
+.ecard.dead { opacity: 0.4; border-color: #333; cursor: default; }
+.eicon { font-size: 32px; margin-bottom: 4px; }
+.ename { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.hps { height: 6px; background: #2e2c42; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.hpt { font-size: 10px; color: var(--text-dim); }
+.dt { font-size: 10px; color: #666; font-style: italic; }
+.pstat { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.mst { font-size: 11px; display: flex; align-items: center; gap: 4px; background: #242236; padding: 4px 10px; border-radius: 10px; }
+.md { width: 8px; height: 8px; border-radius: 50%; }
+.skills h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.slist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.sbtn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; user-select: none; }
+.sbtn:hover:not(.dis) { border-color: var(--accent); }
+.sbtn.sel { border-color: var(--accent); background: #7c3aed15; }
+.sbtn.dis { opacity: 0.4; cursor: not-allowed; }
+.sn { font-weight: 600; font-size: 13px; }
+.sc { font-size: 11px; color: var(--mp); }
+.sd { font-size: 11px; color: var(--text-dim); }
+.abtn, .fbtn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 8px; user-select: none; }
+.abtn { background: linear-gradient(135deg, var(--accent), #6d28d9); color: white; }
+.abtn.dis { opacity: 0.4; cursor: not-allowed; }
+.fbtn { background: #374151; color: var(--text); }
+.plist { display: flex; flex-direction: column; gap: 10px; }
+.pcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; gap: 14px; align-items: flex-start; }
+.pcard.locked { opacity: 0.5; }
+.pava { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 20px; }
+.pinfo { flex: 1; }
+.pn { font-weight: 700; font-size: 15px; }
+.pt { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+.pr { font-size: 12px; font-weight: 600; margin: 2px 0; }
+.pd { font-size: 11px; color: var(--text-dim); line-height: 1.4; margin-bottom: 4px; }
+.pb { font-size: 11px; color: var(--success); font-weight: 500; }
+.ps { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+.sklist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.skcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.skcard.locked { opacity: 0.5; }
+.skh { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ski { font-size: 20px; }
+.skt { font-weight: 700; font-size: 14px; flex: 1; }
+.sks { font-size: 10px; padding: 3px 10px; border-radius: 10px; background: var(--success); color: white; }
+.skcard.locked .sks { background: #6b7280; }
+.skd { display: flex; gap: 8px; margin-bottom: 6px; }
+.dp { font-size: 11px; background: #242236; padding: 3px 10px; border-radius: 8px; color: var(--text-dim); }
+.skdsc { font-size: 12px; color: var(--text-dim); }
+.stb { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.stb h3 { font-size: 14px; margin-bottom: 10px; }
+.str { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.str:last-child { border-bottom: none; }
+.stn { color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.stv { font-weight: 700; color: var(--accent-light); }
+.eqs, .its { margin-bottom: 16px; }
+.eqs h3, .its h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.eqg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.esl { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.esn { font-size: 10px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 4px; }
+.eit { font-size: 12px; font-weight: 600; }
+.est { font-size: 11px; color: var(--success); }
+.ese { font-size: 11px; color: #555; font-style: italic; }
+.ig { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.ic { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.ii { font-size: 24px; margin-bottom: 4px; }
+.in { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.iq { font-size: 11px; color: var(--text-dim); }
+.ia { margin-top: 6px; }
+.ib { padding: 4px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; margin: 2px; user-select: none; }
+.ib-u { background: var(--success); color: white; }
+.ib-e { background: var(--mp); color: white; }
+.ei { color: #555; font-style: italic; padding: 20px; text-align: center; grid-column: span 2; }
+.rlist { display: flex; flex-direction: column; gap: 10px; }
+.rc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.rr { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.ri { font-size: 24px; }
+.rn { font-weight: 700; font-size: 14px; }
+.rd { font-size: 11px; color: var(--text-dim); }
+.rms { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mp { font-size: 10px; padding: 3px 10px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.mp.ok { background: #22c55e20; color: var(--success); }
+.mp.miss { background: #ef444420; color: var(--danger); }
+.cb { width: 100%; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--accent); color: white; user-select: none; }
+.cb.dis { opacity: 0.4; cursor: not-allowed; }
+.qlist { display: flex; flex-direction: column; gap: 10px; }
+.qc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.qc.done { border-color: var(--success); }
+.qh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.qn { font-weight: 600; font-size: 14px; }
+.qr { font-size: 11px; color: var(--gold); }
+.qd { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.qp { display: flex; align-items: center; gap: 10px; }
+.pbar { flex: 1; height: 8px; background: #2e2c42; border-radius: 4px; overflow: hidden; }
+.pfill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s; }
+.ptxt { font-size: 11px; color: var(--text-dim); min-width: 40px; text-align: right; }
+.sum { display: flex; gap: 10px; margin-top: 16px; }
+.si2 { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.sv { font-size: 20px; font-weight: 700; color: var(--accent-light); display: block; }
+.sl { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
+.fv { text-align: center; padding: 20px; }
+.fc { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 24px; }
+.ft { font-size: 36px; font-weight: 700; color: var(--accent-light); font-family: 'Cinzel', serif; }
+.fl { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+.ftips { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; text-align: left; }
+.ftips h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.ftips ul { list-style: none; padding: 0; }
+.ftips li { font-size: 13px; color: var(--text-dim); padding: 6px 0; border-bottom: 1px solid var(--border); }
+.ftips li:last-child { border-bottom: none; }
+.ftips li::before { content: "→ "; color: var(--accent); font-weight: 700; }
+.cfb { padding: 12px 24px; border-radius: 12px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 14px; font-weight: 600; cursor: pointer; user-select: none; }
+.log { background: #0a0912; border-top: 1px solid var(--border); padding: 10px 16px; max-height: 120px; overflow-y: auto; font-size: 12px; line-height: 1.5; flex-shrink: 0; }
+.le { padding: 2px 0; color: var(--text-dim); border-bottom: 1px solid #1a1825; }
+.le:last-child { border-bottom: none; }
+.nav { display: flex; justify-content: space-around; background: #1a1825; border-top: 1px solid var(--border); padding: 6px 0; position: sticky; bottom: 0; z-index: 10; flex-shrink: 0; }
+.nb { background: none; border: none; color: var(--text-dim); font-size: 11px; font-weight: 500; padding: 6px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.2s; user-select: none; flex: 1; }
+.nb::before { font-size: 18px; display: block; }
+.nb[data-t="home"]::before { content: "🏠"; }
+.nb[data-t="exp"]::before { content: "🗺️"; }
+.nb[data-t="party"]::before { content: "👥"; }
+.nb[data-t="quest"]::before { content: "📜"; }
+.nb[data-t="craft"]::before { content: "⚒️"; }
+.nb[data-t="inv"]::before { content: "🎒"; }
+.nb[data-t="npc"]::before { content: "🧳"; }
+.nb:hover, .nb.on { color: var(--accent-light); }
+
+/* REST SYSTEM STYLES */
+.rest-view { text-align: center; }
+.rest-sites { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.rs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.2s; user-select: none; text-align: left; }
+.rs-card:hover:not(.locked) { border-color: var(--rest); background: #10b98110; }
+.rs-card.locked { opacity: 0.4; cursor: not-allowed; }
+.rs-card.active { border-color: var(--rest); background: #10b98115; }
+.rs-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.rs-name { font-weight: 600; font-size: 15px; }
+.rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.rs-type.camp { background: #10b98120; color: var(--rest); }
+.rs-type.tavern { background: #f59e0b20; color: var(--gold); }
+.rs-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.rs-req { font-size: 11px; color: var(--text-dim); }
+.rs-req.ok { color: var(--success); }
+.rs-req.fail { color: var(--danger); }
+.rest-progress { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.rest-timer { font-size: 48px; font-weight: 700; color: var(--rest); font-family: 'Cinzel', serif; margin-bottom: 8px; }
+.rest-label { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+.rest-bar { height: 12px; background: #2e2c42; border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 0.3s ease; }
+.rest-healer { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+.rest-healer.ok { color: var(--success); }
+.rest-healer.fail { color: var(--danger); }
+.rest-cancel { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 13px; font-weight: 600; cursor: pointer; }
+.rest-result { background: var(--bg-card); border: 1px solid var(--rest); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
+.rest-result p { font-size: 13px; color: var(--text-dim); }
+
+/* CAMPFIRE REST - TICK STYLES */
+.tick-track { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.tick { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.3s; }
+.tick.done { background: var(--rest); border-color: var(--rest); color: white; }
+.tick.current { border-color: var(--rest); box-shadow: 0 0 0 3px #10b98140; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px #10b98140; } 50% { box-shadow: 0 0 0 6px #10b98120; } }
+.tick-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+/* DIALOGUE STYLES */
+.dialogue-box { background: #1a1825; border: 1px solid var(--dialogue); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: fadeIn 0.5s ease; }
+.dialogue-box .d-speaker { font-size: 12px; font-weight: 700; color: var(--dialogue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.dialogue-box .d-text { font-size: 13px; color: var(--text); line-height: 1.5; font-style: italic; }
+.dialogue-box .d-tick { font-size: 10px; color: var(--text-dim); margin-top: 6px; text-align: right; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* AMBUSH WARNING */
+.ambush-warning { background: #ef444415; border: 1px solid var(--danger); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: left; animation: shake 0.5s ease; }
+.ambush-warning .aw-text { font-size: 13px; color: var(--danger); font-weight: 600; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* ELEMENTAL IMMUNITY INDICATOR */
+.e-immune { font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 2px; }
+.rs-type.temple { background: #7c3aed20; color: var(--accent-light); }
+.temple-revive { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: center; }
+.temple-revive.dead { border-color: var(--danger); background: #ef444410; }
+.temple-revive.alive { opacity: 0.5; }
+.tr-ava { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 18px; }
+.tr-info { flex: 1; text-align: left; }
+.tr-name { font-weight: 600; font-size: 14px; }
+.tr-status { font-size: 11px; color: var(--danger); }
+.tr-status.alive { color: var(--success); }
+.tr-btn { padding: 8px 14px; border-radius: 10px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; }
+.tr-btn.dis { opacity: 0.4; cursor: not-allowed; background: #555; }
+
+/* NPC / TRADER STYLES */
+.npc-view { padding: 0; }
+.npc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; transition: all 0.2s; }
+.npc-card:hover:not(.locked) { border-color: var(--accent); }
+.npc-card.locked { opacity: 0.5; }
+.npc-ava { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 22px; }
+.npc-info { flex: 1; }
+.npc-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.npc-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: var(--accent); color: white; font-weight: 600; margin-left: 6px; }
+.npc-type-trader { background: #fbbf24; color: #000; }
+.npc-type-ally { background: #8b5cf6; color: white; }
+.npc-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; margin-bottom: 8px; }
+.npc-stock { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.npc-item { font-size: 11px; padding: 3px 10px; border-radius: 8px; background: #242236; }
+.npc-buy { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin: 2px; }
+.affinity-bar { height: 6px; background: #2e2c42; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.affinity-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.affinity-high { background: #ec4899; }
+.affinity-mid { background: #eab308; }
+.affinity-low { background: #6b7280; }
+.affinity-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+.timer-bar { height: 6px; background: #2e2c42; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.timer-fill { height: 100%; border-radius: 3px; }
+.timer-ok { background: var(--accent); }
+.timer-urgent { background: var(--danger); }
+.timer-expired { background: #6b7280; }
+.timer-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+const G = {
+  state: 'menu',
+  p: {
+    name: 'San', cls: 'Sorcerer', lvl: 1, xp: 0, xpN: 100,
+    hp: 80, mhp: 80, mp: 120, mmp: 120, gold: 50,
+    stats: { str: 4, dex: 6, con: 5, int: 12, wis: 10, cha: 8 },
+    skills: [
+      { n: 'Arcane Bolt', c: 10, dmg: '1d8', on: true, d: 'Basic magic missile', elem: 'arcane' },
+      { n: 'Fireball', c: 25, dmg: '2d6', on: false, ul: 3, d: 'Area fire damage', elem: 'fire', status: { type: 'burn', chance: 0.3, dmg: 3, turns: 3 } },
+      { n: 'Frost Shield', c: 15, on: false, ul: 2, d: '+5 AC for 3 turns', buff: true, elem: 'ice' },
+      { n: 'Lightning Strike', c: 35, dmg: '3d8', on: false, ul: 5, d: 'Devastating single target', elem: 'lightning', status: { type: 'shock', chance: 0.2, turns: 1 } },
+      { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true, elem: 'arcane' },
+      { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction', elem: 'fire', status: { type: 'burn', chance: 0.5, dmg: 5, turns: 3 } }
+    ],
+    eq: { w: { n: 'Apprentice Staff', atk: 2, r: 'common', lvl: 1 }, a: { n: 'Novice Robes', def: 2, r: 'common', lvl: 1 }, acc: null },
+    inv: [
+      { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 3, r: 'common' },
+      { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 2, r: 'common' },
+      { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' },
+      { n: 'Goblin Tooth', t: 'mat', q: 2, r: 'common' },
+      { n: 'Iron Ore', t: 'mat', q: 3, r: 'common' },
+      { n: 'Herb Bundle', t: 'mat', q: 4, r: 'common' }
+    ],
+    buffs: [], kills: 0, quests: 0, fstreak: 0
+  },
+  party: [
+    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
+    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669' },
+    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2' },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit' },
+    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
+    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
+    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal companion. Brings fortune to the party.', b: '+10% All stats', col: '#7c2d12' }
+  ],
+
+  partySynergies: [
+    { members: ['Joel', 'Aisyah'], name: 'Shield & Blade', desc: 'Childhood bond. +15% DEF for all.', bonus: { defPct: 0.15 }, icon: '🛡️🗡️' },
+    { members: ['Joel', 'San'], name: 'Partners in Storm', desc: 'Unwavering trust. +10% Max HP for party.', bonus: { hpPct: 0.10 }, icon: '💜' },
+    { members: ['Aisyah', 'San'], name: 'Sisterblade Bond', desc: 'Shared blood. +20% Gold from combat.', bonus: { goldPct: 0.20 }, icon: '💚' },
+    { members: ['Mezstorm', 'Eliz'], name: 'Storm & Light', desc: 'Magic harmony. +10% spell damage, +15% healing.', bonus: { spellDmgPct: 0.10, healPct: 0.15 }, icon: '⚡💚' },
+    { members: ['Senedra', 'Soel'], name: 'Scout & Familiar', desc: 'Keen senses. +25% crit chance, find secret loot.', bonus: { critPct: 0.25, secretLoot: true }, icon: '🏹🐱' },
+    { members: ['Zaki', 'Joel'], name: 'Warrior Wall', desc: 'Two shields. +20% DEF, damage reduction.', bonus: { defPct: 0.20, dmgRed: 0.10 }, icon: '🛡️⚔️' },
+    { members: ['Soel', 'San'], name: 'Familiar Bond', desc: 'Soul-linked. +5% all stats.', bonus: { allStatsPct: 0.05 }, icon: '🐱💜' },
+    { members: ['Eliz', 'San'], name: "Healer's Grace", desc: "San's aura soothes. +20% healing potency.", bonus: { healPct: 0.20 }, icon: '💚💜' }
+  ],
+
+  secretAreas: {
+    'Whispering Woods': {
+      name: 'Moss-Covered Ruin',
+      desc: 'Senedra spots crumbling stonework beneath the ivy. Something glints inside.',
+      choices: [
+        { id: 'careful', label: 'Search Carefully', risk: 'low', loot: { common: 0.7, uncommon: 0.25, rare: 0.05 } },
+        { id: 'rush', label: 'Rush In', risk: 'high', loot: { common: 0.3, uncommon: 0.45, rare: 0.25 }, ambushChance: 0.35 }
+      ],
+      lootPool: [
+        { n: 'Ancient Herb', t: 'mat', q: 1, r: 'common', weight: 3 },
+        { n: 'Moss Agate', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
+        { n: "Dryad's Ring", t: 'acc', int: 2, r: 'rare', weight: 1 }
+      ]
+    },
+    'Ember Peak': {
+      name: 'Forgotten Forge',
+      desc: 'Senedra shields her eyes from the heat. An anvil stands in the lava glow, tools still warm.',
+      choices: [
+        { id: 'careful', label: 'Wait for Cooldown', risk: 'low', loot: { common: 0.4, uncommon: 0.4, rare: 0.2 } },
+        { id: 'rush', label: 'Grab and Run', risk: 'high', loot: { common: 0.1, uncommon: 0.3, rare: 0.6 }, ambushChance: 0.45 }
+      ],
+      lootPool: [
+        { n: 'Slag Metal', t: 'mat', q: 2, r: 'common', weight: 3 },
+        { n: 'Ember Coal', t: 'mat', q: 1, r: 'uncommon', weight: 2 },
+        { n: "Forge Master's Hammer", t: 'wep', atk: 12, r: 'rare', weight: 1 }
+      ]
+    }
+  },
+
+  skillTrees: {
+    pyromancer: {
+      name: 'Pyromancer',
+      icon: '🔥',
+      desc: 'Mastery of flame. Burn the world clean.',
+      color: '#ef4444',
+      tiers: [
+        { level: 3, name: 'Inferno Touch', desc: 'Fireball cost -5 MP. Burn chance +20%.', effects: { fireballCostReduction: 5, burnChanceBonus: 0.20 } },
+        { level: 5, name: 'Wildfire', desc: 'Fire spells have 25% chance to chain to adjacent enemy.', effects: { wildfireChance: 0.25, wildfireDmg: 0.5 } },
+        { level: 8, name: 'Phoenix Rising', desc: 'When HP drops below 20%, auto-cast Meteor Swarm once per combat.', effects: { phoenixRising: true, phoenixHpThreshold: 0.20 } }
+      ]
+    },
+    cryomancer: {
+      name: 'Cryomancer',
+      icon: '❄️',
+      desc: 'Mastery of ice. Freeze time itself.',
+      color: '#3b82f6',
+      tiers: [
+        { level: 3, name: 'Frozen Core', desc: 'Frost Shield duration +2 turns. +3 DEF while active.', effects: { frostShieldDuration: 2, frostShieldDefBonus: 3 } },
+        { level: 5, name: 'Absolute Zero', desc: 'Ice spells have 30% chance to freeze enemy (skip 2 turns).', effects: { freezeChance: 0.30, freezeTurns: 2 } },
+        { level: 8, name: 'Glacial Aegis', desc: 'When hit, 20% chance to auto-cast Frost Shield (free, once per 3 turns).', effects: { glacialAegisChance: 0.20, glacialAegisCooldown: 3 } }
+      ]
+    },
+    stormcaller: {
+      name: 'Stormcaller',
+      icon: '⚡',
+      desc: 'Mastery of lightning. Strike before they blink.',
+      color: '#eab308',
+      tiers: [
+        { level: 3, name: 'Static Charge', desc: 'Lightning Strike cost -8 MP. Shock duration +1 turn.', effects: { lightningCostReduction: 8, shockDurationBonus: 1 } },
+        { level: 5, name: 'Chain Lightning', desc: 'Lightning spells hit 2 enemies (50% dmg to second).', effects: { chainLightning: true, chainLightningDmg: 0.5 } },
+        { level: 8, name: 'Thunderlord', desc: 'Crit chance +15%. Crits with lightning refund 50% MP.', effects: { thunderlordCritBonus: 0.15, thunderlordMpRefund: 0.5 } }
+      ]
+    }
+  },
+
+  miniStories: [
+    {
+      id: 'varn_merchant',
+      name: 'Varn',
+      title: 'Lost Merchant',
+      icon: '🧳',
+      zones: ['Whispering Woods', 'Cursed Catacombs'],
+      chance: 0.12,
+      dialogue: [
+        { speaker: 'Varn', text: "A shivering merchant huddles by a dead campfire. 'Took a wrong turn at the crossroads. Name's Varn. You... you look like you've seen worse.'" }
+      ],
+      choices: [
+        { label: 'Share your rations', cost: { item: 'Herb Bundle', qty: 1 }, reward: { affinity: 'Joel', amt: 20, xp: 15 }, response: "Varn's eyes soften. 'Not many would. Your friend there — the big one — he's lucky to have you.'" },
+        { label: 'Trade for information', cost: { gold: 10 }, reward: { xp: 25, info: 'hazard_hint' }, response: "Varn leans close. 'The Catacombs? Stay near the walls. The dead don't like tight spaces.'" },
+        { label: 'Keep moving', cost: {}, reward: {}, response: "Varn nods, unsurprised. 'Survival first. I'll remember your face.'" }
+      ]
+    },
+    {
+      id: 'mira_child',
+      name: 'Mira',
+      title: 'Lost Child',
+      icon: '👧',
+      zones: ['Whispering Woods', 'Cursed Catacombs'],
+      chance: 0.15,
+      dialogue: [
+        { speaker: 'Mira', text: "A small girl sits on a mossy log, hugging a wooden doll. 'Mama said wait here. She went to find water. That was...' She counts on her fingers. '...a lot of sleeps ago.'" }
+      ],
+      choices: [
+        { label: 'Give her your cloak', cost: {}, reward: { affinity: 'Aisyah', amt: 30, xp: 25 }, response: "Mira wraps the cloak around herself like armor. 'It smells like outside. Like before.' She hands you the doll. 'Keep Mr. Buttons safe. He's brave, but he gets scared.'" },
+        { label: 'Escort her to safety', cost: {}, reward: { xp: 50, gold: 20, karma: 1 }, response: "You walk her to the forest edge. A search party finds you — tearful, grateful. The reward is small. The look on her mother's face is not." },
+        { label: 'Ignore her', cost: {}, reward: { karma: -1 }, response: "You walk past. Mira doesn't call out. She's used to being invisible. Soel hisses at you from your pack. Even he knows better." }
+      ]
+    },
+    {
+      id: 'soel_ghost',
+      name: '???',
+      title: "The Familiar's Echo",
+      icon: '🐱',
+      zones: ['Frostspire Ruins', 'Starlight Spire'],
+      chance: 0.05,
+      reqParty: 'Soel',
+      dialogue: [
+        { speaker: '???', text: "The air shimmers. A cat that is not Soel — but looks like him, older, translucent — sits on a frost-covered throne. 'You took good care of him,' the echo says. 'Better than I expected. Better than I did.' The not-Soel blinks slowly. 'He chose you. That's rare. That's... everything.'" }
+      ],
+      choices: [
+        { label: 'Ask who you are', cost: {}, reward: { xp: 60, affinity: 'Soel', amt: 40 }, response: "The echo fades, smiling. 'Someone who failed. Someone who hopes you won't. Tell him... tell him the warm spots were worth it. All of them.' The throne is empty. Soel purrs louder than usual for hours." },
+        { label: 'Reach for him', cost: {}, reward: { item: { n: 'Starlight Tear', t: 'mat', q: 1, r: 'rare' }, xp: 40 }, response: "Your hand passes through, but something warm lingers. A single crystal tear falls into your palm. 'For the days when you forget why you fight,' the echo whispers. Then silence." },
+        { label: 'Stay silent', cost: {}, reward: { xp: 30 }, response: "The echo nods, as if you answered perfectly. 'Good. He chose well. Silence is a kind of love too.' The frost melts where he sat. Soel jumps into your arms, trembling. You hold him until he stops." }
+      ]
+    }
+  ],
+
   storyChapters: [
     {
       title: 'The Awakening',
