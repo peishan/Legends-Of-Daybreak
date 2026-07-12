@@ -2029,41 +2029,22 @@ function toggleAutoCombat() {
 function pa(si,ti){
   const sk=G.p.skills[si], tg=G.cbt.en[ti];
   if(!tg||tg.hp<=0) return;
-  if(G.p.mp<sk.c){lg('Not enough MP!');return;}
-  G.p.mp-=sk.c;
-
-  if(sk.buff){
-    if(sk.n=='Frost Shield'){G.p.buffs.push({n:'Frost Shield',t:3,def:5});lg('Frost Shield! DEF +5 for 3 turns.');}
-    else if(sk.n=='Mana Surge'){G.p.mp=Math.min(G.p.mmp,G.p.mp+20);lg('Mana Surge! Restored 20 MP.');}
-  } else {
-    if (isImmune(tg.n, sk.elem)) {
-      lg(sk.n + ' has no effect — ' + tg.n + ' is immune to ' + sk.elem + '!');
-    } else {
-      const hit=r20()+Math.floor(G.p.stats.int/3);
-      if(hit>=10+tg.def){
-        let dmg=pd(sk.dmg,Math.floor(G.p.stats.int/2));
-        dmg+=G.p.eq.w?G.p.eq.w.atk:0;
-        if(G.party[2].on)dmg=Math.floor(dmg*1.15);
-        dmg = applySynergyDamage(dmg, 'spell');
-        // Elemental weakness multiplier
-        const weakMult = getWeaknessMultiplier(sk.elem, tg.elem);
-        if(weakMult > 1) { dmg = Math.floor(dmg * weakMult); lg('⚡ ' + sk.elem + ' is super effective against ' + tg.n + '! x' + weakMult); }
-        else if(weakMult < 1) { dmg = Math.floor(dmg * weakMult); lg('⬇️ ' + sk.elem + ' is weak against ' + tg.n + '! x' + weakMult); }
-        dmg=Math.max(1,dmg-Math.floor(tg.def/2));
-        // Critical hit check (includes synergy bonuses)
-        const isCrit = Math.random() < getTotalCritChance();
-        if(isCrit) { dmg = Math.floor(dmg * 2); lg('💥 CRITICAL HIT! x2 damage!'); }
-        tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
-        // Apply status effect if skill has one
-        if(sk.status && tg.hp > 0 && Math.random() < sk.status.chance){
-          const existing = tg.status.find(s => s.type === sk.status.type);
-          if(!existing){
-            tg.status.push({...sk.status, turns: sk.status.turns});
-            lg('🔥 ' + tg.n + ' is ' + sk.status.type + 'ed!');
-          }
-        }
-        if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;checkBountyKill(tg.n);
-        // Bestiary tracking
+  if(G.p.mp<sk.c){
+    // Out of mana — San does a basic physical attack with their staff
+    lg('💨 Not enough MP! San swings their staff instead!');
+    const hit = r20() + Math.floor(G.p.stats.str / 3);
+    if(hit >= 10 + tg.def){
+      let dmg = rdc(1, 4) + Math.floor(G.p.stats.str / 2);
+      dmg += G.p.eq.w ? Math.floor(G.p.eq.w.atk / 2) : 0;
+      dmg = Math.max(1, dmg - Math.floor(tg.def / 2));
+      const isCrit = Math.random() < getTotalCritChance();
+      if(isCrit) { dmg = Math.floor(dmg * 2); lg('💥 CRITICAL HIT! x2 damage!'); }
+      tg.hp -= dmg;
+      lg('Staff swing hits ' + tg.n + ' for ' + dmg + '!');
+      if(tg.hp <= 0){
+        lg(tg.n + ' defeated!');
+        tg.hp = 0;
+        checkBountyKill(tg.n);
         if(!G.bestiary[tg.n]) G.bestiary[tg.n] = {kills:0,firstSeen:Date.now()};
         G.bestiary[tg.n].kills++;
         G.bestiary[tg.n].lastSeen = Date.now();
@@ -2072,7 +2053,54 @@ function pa(si,ti){
         G.bestiary[tg.n].atk = tg.atk;
         G.bestiary[tg.n].def = tg.def;
       }
-      }else lg('Missed '+tg.n+'!');
+    } else {
+      lg('Staff swing misses ' + tg.n + '!');
+    }
+  } else {
+    G.p.mp -= sk.c;
+
+    if(sk.buff){
+      if(sk.n=='Frost Shield'){G.p.buffs.push({n:'Frost Shield',t:3,def:5});lg('Frost Shield! DEF +5 for 3 turns.');}
+      else if(sk.n=='Mana Surge'){G.p.mp=Math.min(G.p.mmp,G.p.mp+20);lg('Mana Surge! Restored 20 MP.');}
+    } else {
+      if (isImmune(tg.n, sk.elem)) {
+        lg(sk.n + ' has no effect — ' + tg.n + ' is immune to ' + sk.elem + '!');
+      } else {
+        const hit=r20()+Math.floor(G.p.stats.int/3);
+        if(hit>=10+tg.def){
+          let dmg=pd(sk.dmg,Math.floor(G.p.stats.int/2));
+          dmg+=G.p.eq.w?G.p.eq.w.atk:0;
+          if(G.party[2].on)dmg=Math.floor(dmg*1.15);
+          dmg = applySynergyDamage(dmg, 'spell');
+          // Elemental weakness multiplier
+          const weakMult = getWeaknessMultiplier(sk.elem, tg.elem);
+          if(weakMult > 1) { dmg = Math.floor(dmg * weakMult); lg('⚡ ' + sk.elem + ' is super effective against ' + tg.n + '! x' + weakMult); }
+          else if(weakMult < 1) { dmg = Math.floor(dmg * weakMult); lg('⬇️ ' + sk.elem + ' is weak against ' + tg.n + '! x' + weakMult); }
+          dmg=Math.max(1,dmg-Math.floor(tg.def/2));
+          // Critical hit check (includes synergy bonuses)
+          const isCrit = Math.random() < getTotalCritChance();
+          if(isCrit) { dmg = Math.floor(dmg * 2); lg('💥 CRITICAL HIT! x2 damage!'); }
+          tg.hp-=dmg; lg(sk.n+' hits '+tg.n+' for '+dmg+'!');
+          // Apply status effect if skill has one
+          if(sk.status && tg.hp > 0 && Math.random() < sk.status.chance){
+            const existing = tg.status.find(s => s.type === sk.status.type);
+            if(!existing){
+              tg.status.push({...sk.status, turns: sk.status.turns});
+              lg('🔥 ' + tg.n + ' is ' + sk.status.type + 'ed!');
+            }
+          }
+          if(tg.hp<=0){lg(tg.n+' defeated!');tg.hp=0;checkBountyKill(tg.n);
+          // Bestiary tracking
+          if(!G.bestiary[tg.n]) G.bestiary[tg.n] = {kills:0,firstSeen:Date.now()};
+          G.bestiary[tg.n].kills++;
+          G.bestiary[tg.n].lastSeen = Date.now();
+          G.bestiary[tg.n].elem = tg.elem || 'none';
+          G.bestiary[tg.n].mhp = tg.mhp;
+          G.bestiary[tg.n].atk = tg.atk;
+          G.bestiary[tg.n].def = tg.def;
+          }
+        }else lg('Missed '+tg.n+'!');
+      }
     }
   }
 
