@@ -437,6 +437,83 @@ const G = {
     }
   ],
 
+  storyChapters: [
+    {
+      title: 'The Awakening',
+      icon: '🌅',
+      scenes: [
+        { text: "You wake in a field of silver grass. The sky is wrong — two moons, one bleeding red. A voice whispers your name. Not San. Something older." },
+        { text: "Joel finds you first. 'You were gone three days,' he says, voice tight. 'We thought the storm took you.' He doesn't mention the mark on your wrist. Neither do you." },
+        { text: "Aisyah runs toward you, blade half-drawn, then sheaths it when she sees your face. 'Don't ever do that again,' she says. Her hands shake." },
+        { text: "Soel curls around your ankles, purring loud enough to drown out the silence. Even he knew something was wrong." }
+      ],
+      choices: [
+        { label: 'Tell them about the voice', nextChapter: 1, affinity: 'Joel', amt: 10 },
+        { label: 'Hide the mark', nextChapter: 1, affinity: 'Aisyah', amt: 5 },
+        { label: 'Say nothing', nextChapter: 1 }
+      ]
+    },
+    {
+      title: 'The First Shard',
+      icon: '💎',
+      scenes: [
+        { text: "The mark burns when you sleep. In dreams, you walk through a city of crystal and bone. A figure waits at the end of every street. You never reach them." },
+        { text: "Mezstorm studies the mark with spells you don't recognize. 'It's not a curse,' he says finally. 'It's a key. But a key to what, I cannot say.'" },
+        { text: "Eliz presses her hands to yours. Her healing magic sinks into the mark and vanishes, swallowed whole. 'It doesn't want to be healed,' she whispers. 'It wants to be fed.'" },
+        { text: "Senedra finds you practicing magic in the dark. 'You're stronger,' she says. Not a compliment. A warning." }
+      ],
+      choices: [
+        { label: 'Ask Mezstorm to teach you more', nextChapter: 2, affinity: 'Mezstorm', amt: 15 },
+        { label: 'Let Eliz try again', nextChapter: 2, affinity: 'Eliz', amt: 10 },
+        { label: 'Train alone', nextChapter: 2, xp: 20 }
+      ]
+    },
+    {
+      title: 'The Hollow King',
+      icon: '👑',
+      scenes: [
+        { text: "The dreams change. The figure turns. You see their face — empty, smiling, wearing your expression like a mask. 'Welcome home,' they say. You wake screaming." },
+        { text: "Zaki stands watch outside your tent. 'You cried out in your sleep,' he says. 'About a king. About a throne.' He pauses. 'I know that throne. I've seen it in the Abyssal Depths.'" },
+        { text: "Soel won't leave your side. He hisses at shadows that aren't there, stares at corners of rooms where nothing moves. 'He sees them too,' Eliz says quietly. 'The things between worlds.'" },
+        { text: "The mark spreads. Veins of silver light crawl up your arm, pulsing with a rhythm that matches no heartbeat you've ever heard." }
+      ],
+      choices: [
+        { label: 'Ask Zaki about the Abyss', nextChapter: 3, affinity: 'Zaki', amt: 15 },
+        { label: 'Let Soel guide you', nextChapter: 3, affinity: 'Soel', amt: 20 },
+        { label: 'Study the mark yourself', nextChapter: 3, xp: 30 }
+      ]
+    },
+    {
+      title: 'The Choice',
+      icon: '⚖️',
+      scenes: [
+        { text: "The Hollow King waits in the deepest dream. 'You could stay,' they offer. 'Rule here. No more loss. No more goodbyes. Everyone you love, safe forever. Frozen. Perfect.'" },
+        { text: "You see them — Joel, Aisyah, Soel, all of them, suspended in crystal, smiling, unchanging. Safe. Dead in every way that matters." },
+        { text: "'Or you could wake up,' the King says, and for the first time, their voice sounds almost kind. 'And lose them one by one, the way mortals do. The way you already know you will.'" },
+        { text: "The mark screams. The choice screams louder." }
+      ],
+      choices: [
+        { label: 'Reject the King — wake up', nextChapter: 4, affinity: 'Joel', amt: 25, xp: 50 },
+        { label: 'Accept the offer', nextChapter: 4, karma: -5, gold: 100 },
+        { label: 'Find a third way', nextChapter: 4, xp: 40, item: { n: 'Void-Touched Crystal', t: 'mat', q: 1, r: 'rare' } }
+      ]
+    },
+    {
+      title: 'Aftermath',
+      icon: '🌙',
+      scenes: [
+        { text: "You wake. The mark is still there, but quieter now. A scar, not a wound. A memory, not a prophecy." },
+        { text: "Joel squeezes your shoulder. 'Breakfast,' he says, like nothing happened. Like you didn't almost end the world in your sleep." },
+        { text: "Aisyah smiles — rare, precious, real. 'You chose us,' she says. 'Every time, you choose us.'" },
+        { text: "Soel purrs on your chest, kneading soft circles into your heart. The sun rises. The story continues. Not ended. Just paused." }
+      ],
+      choices: [
+        { label: 'Begin again', nextChapter: 0, reset: true, xp: 10 },
+        { label: 'Return to camp', nextChapter: -1, end: true }
+      ]
+    }
+  ],
+
   cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
@@ -594,6 +671,7 @@ const G = {
   secretArea: { active: false, zone: null, choice: null, result: null },
   playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
   currentMiniStory: null,
+  storyMode: { active: false, currentChapter: 0, currentScene: 0, choices: [] },
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
@@ -1525,6 +1603,70 @@ function makeMiniStoryChoice(choiceIdx) {
 function closeMiniStory() {
   G.currentMiniStory = null;
   G.state = 'explore';
+  render();
+}
+
+
+// STORY MODE
+function startStoryMode() {
+  G.storyMode.active = true;
+  G.storyMode.currentChapter = 0;
+  G.storyMode.currentScene = 0;
+  G.storyMode.choices = [];
+  G.state = 'storymode';
+  render();
+}
+
+function advanceStoryScene() {
+  if (!G.storyMode.active) return;
+  const chapter = G.storyChapters[G.storyMode.currentChapter];
+  if (!chapter) { endStoryMode(); return; }
+  G.storyMode.currentScene++;
+  if (G.storyMode.currentScene >= chapter.scenes.length) {
+    // Show choices
+    render();
+    return;
+  }
+  render();
+}
+
+function makeStoryChoice(choiceIdx) {
+  if (!G.storyMode.active) return;
+  const chapter = G.storyChapters[G.storyMode.currentChapter];
+  if (!chapter || !chapter.choices[choiceIdx]) return;
+  const choice = chapter.choices[choiceIdx];
+  G.storyMode.choices.push({ chapter: G.storyMode.currentChapter, choice: choiceIdx });
+
+  // Apply rewards
+  if (choice.affinity) { updateAffinity(choice.affinity, choice.amt); }
+  if (choice.xp) { G.p.xp += choice.xp; lg('✨ +' + choice.xp + ' XP'); }
+  if (choice.gold) { G.p.gold += choice.gold; lg('💰 +' + choice.gold + 'G'); }
+  if (choice.karma) { G.p.karma = (G.p.karma || 0) + choice.karma; }
+  if (choice.item) { addI({ ...choice.item }); lg('🎁 +' + choice.item.n); }
+
+  if (choice.reset) {
+    G.storyMode.currentChapter = 0;
+    G.storyMode.currentScene = 0;
+    G.storyMode.choices = [];
+    lg('📖 Story reset. Beginning again...');
+  } else if (choice.end) {
+    endStoryMode();
+    return;
+  } else if (choice.nextChapter !== undefined) {
+    G.storyMode.currentChapter = choice.nextChapter;
+    G.storyMode.currentScene = 0;
+  }
+
+  lvlup();
+  render();
+}
+
+function endStoryMode() {
+  G.storyMode.active = false;
+  G.storyMode.currentChapter = 0;
+  G.storyMode.currentScene = 0;
+  G.state = 'rest';
+  lg('📖 Story mode ended. Welcome back.');
   render();
 }
 
@@ -2517,6 +2659,7 @@ function render(){
   else if(G.state=='secret')h+=rSecret();
   else if(G.state=='skilltree')h+=rSkillTree();
   else if(G.state=='ministory')h+=rMiniStory();
+  else if(G.state=='storymode')h+=rStoryMode();
   else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
@@ -2535,7 +2678,8 @@ function render(){
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
     el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
-    else if(a=='skilltree')setS('skilltree');});
+    else if(a=='skilltree')setS('skilltree');
+    else if(a=='storymode')startStoryMode();});
   });
   document.querySelectorAll('.story-view .abtn').forEach(el=>{
     el.addEventListener('click',advanceStory);
@@ -2597,6 +2741,13 @@ function attachEvents() {
   });
   const btnCloseMini=document.getElementById('btn-close-ministory');
   if(btnCloseMini)btnCloseMini.addEventListener('click',closeMiniStory);
+  const btnAdvanceStory=document.getElementById('btn-advance-story');
+  if(btnAdvanceStory)btnAdvanceStory.addEventListener('click',advanceStoryScene);
+  document.querySelectorAll('.story-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeStoryChoice(parseInt(el.getAttribute('data-choice'))); });
+  });
+  const btnEndStory=document.getElementById('btn-end-story');
+  if(btnEndStory)btnEndStory.addEventListener('click',endStoryMode);
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -2743,6 +2894,50 @@ function rMiniStory(){
   return h;
 }
 
+function rStoryMode(){
+  if (!G.storyMode.active) return '<div>Story mode error</div>';
+  const chapter = G.storyChapters[G.storyMode.currentChapter];
+  if (!chapter) return '<div>Chapter not found</div>';
+
+  let h = '<div style="padding:20px;text-align:center;max-width:500px;margin:0 auto;">';
+  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;">📖 Story Mode</div>';
+  h += '<h2 style="font-family:Cinzel,serif;font-size:22px;margin-bottom:4px;">' + chapter.icon + ' ' + chapter.title + '</h2>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:24px;">Chapter ' + (G.storyMode.currentChapter + 1) + ' of ' + G.storyChapters.length + '</div>';
+
+  // Progress bar
+  const progress = ((G.storyMode.currentChapter) / G.storyChapters.length) * 100;
+  h += '<div style="width:100%;height:4px;background:#242236;border-radius:2px;margin-bottom:24px;">';
+  h += '<div style="width:' + progress + '%;height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div></div>';
+
+  // Current scene
+  const scene = chapter.scenes[G.storyMode.currentScene];
+  if (scene) {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;text-align:left;">';
+    h += '<div style="font-size:15px;line-height:1.8;color:var(--text);font-style:italic;">' + scene.text + '</div>';
+    h += '</div>';
+    h += '<button class="abtn" id="btn-advance-story" style="max-width:200px;margin:0 auto;display:block;">Continue →</button>';
+  } else {
+    // Show choices
+    h += '<div style="font-size:14px;color:var(--text-dim);margin-bottom:16px;">What do you do?</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;">';
+    for (let i = 0; i < chapter.choices.length; i++) {
+      const ch = chapter.choices[i];
+      h += '<button class="story-choice" data-choice="' + i + '" style="padding:16px 20px;border-radius:14px;border:2px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;">';
+      h += '<div style="margin-bottom:6px;">' + ch.label + '</div>';
+      if (ch.affinity) h += '<div style="font-size:10px;color:var(--success);">+' + ch.amt + ' ' + ch.affinity + ' affinity</div>';
+      if (ch.xp) h += '<div style="font-size:10px;color:var(--success);">+' + ch.xp + ' XP</div>';
+      if (ch.gold) h += '<div style="font-size:10px;color:var(--success);">+' + ch.gold + 'G</div>';
+      if (ch.item) h += '<div style="font-size:10px;color:var(--success);">+' + ch.item.n + '</div>';
+      h += '</button>';
+    }
+    h += '</div>';
+  }
+
+  h += '<button id="btn-end-story" style="margin-top:24px;padding:8px 16px;border-radius:8px;border:1px solid #555;background:transparent;color:#555;font-size:11px;cursor:pointer;">Exit Story Mode</button>';
+  h += '</div>';
+  return h;
+}
+
 function rStory(){
   const chapter = G.storyChapters[G.story.chapter];
   const scene = chapter.scenes[G.story.scene];
@@ -2792,6 +2987,7 @@ function rMenu(){
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'📖',l:'Bestiary',d:'Catalogue of defeated foes',a:'bestiary'},
     {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
+    {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
