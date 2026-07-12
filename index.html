@@ -1181,6 +1181,7 @@ function sc(zi) {
     render();
     return;
   }
+  checkNPCUnlocks();
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
