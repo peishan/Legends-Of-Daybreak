@@ -385,6 +385,58 @@ const G = {
     }
   },
 
+  miniStories: [
+    {
+      id: 'varn_merchant',
+      name: 'Varn',
+      title: 'Lost Merchant',
+      icon: '🧳',
+      zones: ['Whispering Woods', 'Cursed Catacombs'],
+      chance: 0.12,
+      dialogue: [
+        { speaker: 'Varn', text: "A shivering merchant huddles by a dead campfire. 'Took a wrong turn at the crossroads. Name's Varn. You... you look like you've seen worse.'" }
+      ],
+      choices: [
+        { label: 'Share your rations', cost: { item: 'Herb Bundle', qty: 1 }, reward: { affinity: 'Joel', amt: 20, xp: 15 }, response: "Varn's eyes soften. 'Not many would. Your friend there — the big one — he's lucky to have you.'" },
+        { label: 'Trade for information', cost: { gold: 10 }, reward: { xp: 25, info: 'hazard_hint' }, response: "Varn leans close. 'The Catacombs? Stay near the walls. The dead don't like tight spaces.'" },
+        { label: 'Keep moving', cost: {}, reward: {}, response: "Varn nods, unsurprised. 'Survival first. I'll remember your face.'" }
+      ]
+    },
+    {
+      id: 'mira_child',
+      name: 'Mira',
+      title: 'Lost Child',
+      icon: '👧',
+      zones: ['Whispering Woods', 'Cursed Catacombs'],
+      chance: 0.15,
+      dialogue: [
+        { speaker: 'Mira', text: "A small girl sits on a mossy log, hugging a wooden doll. 'Mama said wait here. She went to find water. That was...' She counts on her fingers. '...a lot of sleeps ago.'" }
+      ],
+      choices: [
+        { label: 'Give her your cloak', cost: {}, reward: { affinity: 'Aisyah', amt: 30, xp: 25 }, response: "Mira wraps the cloak around herself like armor. 'It smells like outside. Like before.' She hands you the doll. 'Keep Mr. Buttons safe. He's brave, but he gets scared.'" },
+        { label: 'Escort her to safety', cost: {}, reward: { xp: 50, gold: 20, karma: 1 }, response: "You walk her to the forest edge. A search party finds you — tearful, grateful. The reward is small. The look on her mother's face is not." },
+        { label: 'Ignore her', cost: {}, reward: { karma: -1 }, response: "You walk past. Mira doesn't call out. She's used to being invisible. Soel hisses at you from your pack. Even he knows better." }
+      ]
+    },
+    {
+      id: 'soel_ghost',
+      name: '???',
+      title: "The Familiar's Echo",
+      icon: '🐱',
+      zones: ['Frostspire Ruins', 'Starlight Spire'],
+      chance: 0.05,
+      reqParty: 'Soel',
+      dialogue: [
+        { speaker: '???', text: "The air shimmers. A cat that is not Soel — but looks like him, older, translucent — sits on a frost-covered throne. 'You took good care of him,' the echo says. 'Better than I expected. Better than I did.' The not-Soel blinks slowly. 'He chose you. That's rare. That's... everything.'" }
+      ],
+      choices: [
+        { label: 'Ask who you are', cost: {}, reward: { xp: 60, affinity: 'Soel', amt: 40 }, response: "The echo fades, smiling. 'Someone who failed. Someone who hopes you won't. Tell him... tell him the warm spots were worth it. All of them.' The throne is empty. Soel purrs louder than usual for hours." },
+        { label: 'Reach for him', cost: {}, reward: { item: { n: 'Starlight Tear', t: 'mat', q: 1, r: 'rare' }, xp: 40 }, response: "Your hand passes through, but something warm lingers. A single crystal tear falls into your palm. 'For the days when you forget why you fight,' the echo whispers. Then silence." },
+        { label: 'Stay silent', cost: {}, reward: { xp: 30 }, response: "The echo nods, as if you answered perfectly. 'Good. He chose well. Silence is a kind of love too.' The frost melts where he sat. Soel jumps into your arms, trembling. You hold him until he stops." }
+      ]
+    }
+  ],
+
   cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
@@ -541,6 +593,7 @@ const G = {
   currentBoss: null,
   secretArea: { active: false, zone: null, choice: null, result: null },
   playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
+  currentMiniStory: null,
 
   lastSoelComment: null,
   soelCommentCooldown: 0,
@@ -1412,6 +1465,69 @@ function applySpecEffects() {
   }
 }
 
+
+// MINI-STORIES
+function checkMiniStory(zoneName) {
+  const seenCount = Object.keys(G.currentMiniStory?.completed || {}).length || 0;
+  const adjustedChance = Math.max(0.02, 0.10 - (seenCount * 0.02));
+  if (Math.random() > adjustedChance) return false;
+  const eligible = G.miniStories.filter(story => {
+    if (!story.zones.includes(zoneName)) return false;
+    if (story.reqParty && !G.party.some(p => p.on && p.n === story.reqParty)) return false;
+    if (G.currentMiniStory && G.currentMiniStory.completed && G.currentMiniStory.completed[story.id]) return false;
+    return true;
+  });
+  if (eligible.length === 0) return false;
+  const story = eligible[Math.floor(Math.random() * eligible.length)];
+  G.currentMiniStory = { ...story, choice: null, result: null, completed: G.currentMiniStory?.completed || {} };
+  G.state = 'ministory';
+  lg('🗣️ ENCOUNTER: ' + story.name + ' — ' + story.title);
+  render();
+  return true;
+}
+
+function makeMiniStoryChoice(choiceIdx) {
+  if (!G.currentMiniStory) return;
+  const story = G.currentMiniStory;
+  const choice = story.choices[choiceIdx];
+  if (!choice) return;
+  story.choice = choiceIdx;
+  if (choice.req && !G.party.some(p => p.on && p.n === choice.req)) {
+    lg('❌ Requires ' + choice.req + ' in party!'); return;
+  }
+  if (choice.cost) {
+    if (choice.cost.gold && G.p.gold < choice.cost.gold) { lg('❌ Need ' + choice.cost.gold + 'G'); return; }
+    if (choice.cost.item) {
+      const item = G.p.inv.find(i => i.n === choice.cost.item);
+      if (!item || item.q < (choice.cost.qty || 1)) { lg('❌ Missing: ' + choice.cost.item); return; }
+    }
+  }
+  if (choice.cost) {
+    if (choice.cost.gold) { G.p.gold -= choice.cost.gold; lg('💰 -' + choice.cost.gold + 'G'); }
+    if (choice.cost.item) {
+      const item = G.p.inv.find(i => i.n === choice.cost.item);
+      if (item) { item.q -= (choice.cost.qty || 1); if (item.q <= 0) G.p.inv.splice(G.p.inv.indexOf(item), 1); }
+    }
+  }
+  if (choice.reward) {
+    if (choice.reward.xp) { G.p.xp += choice.reward.xp; lg('✨ +' + choice.reward.xp + ' XP'); }
+    if (choice.reward.gold) { G.p.gold += choice.reward.gold; lg('💰 +' + choice.reward.gold + 'G'); }
+    if (choice.reward.affinity) { updateAffinity(choice.reward.affinity, choice.reward.amt); }
+    if (choice.reward.item) { addI({ ...choice.reward.item }); lg('🎁 +' + choice.reward.item.q + ' ' + choice.reward.item.n); }
+  }
+  if (choice.response) lg('   ' + choice.response);
+  story.completed[story.id] = true;
+  story.result = 'done';
+  lvlup();
+  render();
+}
+
+function closeMiniStory() {
+  G.currentMiniStory = null;
+  G.state = 'explore';
+  render();
+}
+
 function sc(zi) {
   const z=G.zones[zi];
   // 30% chance for explore event before combat
@@ -1424,6 +1540,7 @@ function sc(zi) {
   if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
     if (discoverSecret(z.n)) return;
   }
+  if (checkMiniStory(z.n)) return;
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
@@ -2399,6 +2516,7 @@ function render(){
   else if(G.state=='rest')h+=rRest();
   else if(G.state=='secret')h+=rSecret();
   else if(G.state=='skilltree')h+=rSkillTree();
+  else if(G.state=='ministory')h+=rMiniStory();
   else if(G.state=='npc')h+=rNPC();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
@@ -2474,6 +2592,11 @@ function attachEvents() {
   });
   const btnRespec=document.getElementById('btn-respec');
   if(btnRespec)btnRespec.addEventListener('click',respecPath);
+  document.querySelectorAll('.ministory-choice').forEach(el=>{
+    el.addEventListener('click',()=>{ makeMiniStoryChoice(parseInt(el.getAttribute('data-choice'))); });
+  });
+  const btnCloseMini=document.getElementById('btn-close-ministory');
+  if(btnCloseMini)btnCloseMini.addEventListener('click',closeMiniStory);
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -2561,6 +2684,60 @@ function rSkillTree(){
     const respecCost = 50 + (G.playerSpec.respecCount * 50);
     const canRespec = G.p.gold >= respecCost;
     h += '<button id="btn-respec" style="width:100%;padding:10px;border-radius:10px;border:1px solid '+(canRespec?'var(--danger)':'#555')+';background:transparent;color:'+(canRespec?'var(--danger)':'#555')+';font-size:12px;font-weight:600;cursor:'+(canRespec?'pointer':'not-allowed')+';">🔄 Respec (' + respecCost + 'G)</button>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function rMiniStory(){
+  const story = G.currentMiniStory;
+  if (!story) return '<div>Error</div>';
+  let h = '<div style="padding:20px;text-align:center;">';
+  h += '<div style="font-size:48px;margin-bottom:12px;">' + story.icon + '</div>';
+  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Random Encounter</div>';
+  h += '<h2 style="font-family:Cinzel,serif;font-size:20px;margin-bottom:8px;">' + story.name + '</h2>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:20px;">' + story.title + '</div>';
+  for (let line of story.dialogue) {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;text-align:left;">';
+    h += '<div style="font-size:11px;color:var(--accent-light);font-weight:600;margin-bottom:6px;">' + line.speaker + '</div>';
+    h += '<div style="font-size:14px;line-height:1.7;">' + line.text + '</div></div>';
+  }
+  if (!story.choice && story.result !== 'done') {
+    h += '<div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto;">';
+    for (let i = 0; i < story.choices.length; i++) {
+      const ch = story.choices[i];
+      let canChoose = true, reason = '';
+      if (ch.req && !G.party.some(p => p.on && p.n === ch.req)) { canChoose = false; reason = 'Requires ' + ch.req; }
+      if (ch.cost && ch.cost.gold && G.p.gold < ch.cost.gold) { canChoose = false; reason = 'Need ' + ch.cost.gold + 'G'; }
+      if (ch.cost && ch.cost.item) { const item = G.p.inv.find(inv => inv.n === ch.cost.item); if (!item || item.q < (ch.cost.qty || 1)) { canChoose = false; reason = 'Need ' + (ch.cost.qty || 1) + ' ' + ch.cost.item; } }
+      h += '<button class="ministory-choice" data-choice="' + i + '" style="padding:14px 18px;border-radius:14px;border:2px solid '+(canChoose?'var(--accent)':'#555')+';background:'+(canChoose?'var(--bg-card)':'#1a1825')+';color:'+(canChoose?'var(--text)':'#555')+';font-size:13px;font-weight:600;cursor:'+(canChoose?'pointer':'not-allowed')+';user-select:none;text-align:left;">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">';
+      h += '<span>' + ch.label + '</span>';
+      if (!canChoose) h += '<span style="font-size:10px;color:var(--danger);">🔒 ' + reason + '</span>';
+      h += '</div>';
+      if (ch.cost && (ch.cost.gold || ch.cost.item)) {
+        h += '<div style="font-size:10px;color:var(--danger);margin-top:4px;">Cost: ';
+        if (ch.cost.gold) h += ch.cost.gold + 'G ';
+        if (ch.cost.item) h += (ch.cost.qty || 1) + '× ' + ch.cost.item;
+        h += '</div>';
+      }
+      if (ch.reward) {
+        h += '<div style="font-size:10px;color:var(--success);margin-top:4px;">Reward: ';
+        const rewards = [];
+        if (ch.reward.xp) rewards.push(ch.reward.xp + ' XP');
+        if (ch.reward.gold) rewards.push(ch.reward.gold + 'G');
+        if (ch.reward.affinity) rewards.push('+' + ch.reward.amt + ' ' + ch.reward.affinity + ' affinity');
+        if (ch.reward.item) rewards.push(ch.reward.item.n);
+        h += rewards.join(', ') + '</div>';
+      }
+      h += '</button>';
+    }
+    h += '</div>';
+  } else if (story.result === 'done') {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin:20px auto;max-width:400px;">';
+    h += '<div style="font-size:24px;margin-bottom:8px;">✨</div>';
+    h += '<div style="font-size:14px;color:var(--text-dim);line-height:1.6;">' + story.choices[story.choice].response + '</div></div>';
+    h += '<button class="abtn" id="btn-close-ministory" style="max-width:200px;margin:0 auto;display:block;">Continue</button>';
   }
   h += '</div>';
   return h;
