@@ -317,6 +317,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .timer-expired { background: #6b7280; }
 .timer-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
 
+
+.achievements-view .ach-card { transition: all 0.2s; }
+.achievements-view .ach-card:hover { transform: translateX(4px); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -409,7 +412,7 @@ const G = {
       { n: 'Iron Ore', t: 'mat', q: 3, r: 'common' },
       { n: 'Herb Bundle', t: 'mat', q: 4, r: 'common' }
     ],
-    buffs: [], kills: 0, quests: 0, fstreak: 0
+    buffs: [], kills: 0, quests: 0, fstreak: 0, bossKills: 0, crafts: 0, survivedCritical: false
   },
   party: [
     { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
@@ -688,6 +691,30 @@ const G = {
     { id: 'b8', n: 'Ice Breaker', d: 'Defeat 3 Ice Elementals', t: 'kill_specific', target: 'Ice Elemental', c: 0, need: 3, rw: { xp: 150, g: 90 }, done: false, refreshDay: 0 },
     { id: 'b9', n: 'Void Hunter', d: 'Defeat 2 Void Beasts', t: 'kill_specific', target: 'Void Beast', c: 0, need: 2, rw: { xp: 200, g: 120 }, done: false, refreshDay: 0 },
     { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0 }
+  ],
+
+  achievements: [
+    { id: 'first_blood', n: 'First Blood', d: 'Defeat your first monster', icon: '🩸', t: 'kills', need: 1, rw: { xp: 25, g: 10 }, done: false, secret: false },
+    { id: 'seasoned_hunter', n: 'Seasoned Hunter', d: 'Defeat 50 monsters', icon: '⚔️', t: 'kills', need: 50, rw: { xp: 100, g: 50 }, done: false, secret: false },
+    { id: 'monster_slayer', n: 'Monster Slayer', d: 'Defeat 100 monsters', icon: '💀', t: 'kills', need: 100, rw: { xp: 250, g: 100 }, done: false, secret: false },
+    { id: 'first_boss', n: 'Boss Bane', d: 'Defeat your first boss', icon: '👑', t: 'boss', need: 1, rw: { xp: 200, g: 100 }, done: false, secret: false },
+    { id: 'dragon_slayer', n: 'Dragon Slayer', d: 'Defeat the Elder Dragon', icon: '🐲', t: 'boss_specific', target: 'Elder Dragon', need: 1, rw: { xp: 1000, g: 500 }, done: false, secret: false },
+    { id: 'novice', n: 'Novice Sorcerer', d: 'Reach Level 5', icon: '✨', t: 'level', need: 5, rw: { xp: 50, g: 25 }, done: false, secret: false },
+    { id: 'adept', n: 'Adept Mage', d: 'Reach Level 10', icon: '🔮', t: 'level', need: 10, rw: { xp: 200, g: 100 }, done: false, secret: false },
+    { id: 'archmage', n: 'Archmage', d: 'Reach Level 15', icon: '⭐', t: 'level', need: 15, rw: { xp: 500, g: 250 }, done: false, secret: false },
+    { id: 'first_quest', n: 'Quest Beginner', d: 'Complete your first quest', icon: '📜', t: 'quests', need: 1, rw: { xp: 30, g: 15 }, done: false, secret: false },
+    { id: 'quest_master', n: 'Quest Master', d: 'Complete 20 quests', icon: '🏆', t: 'quests', need: 20, rw: { xp: 300, g: 150 }, done: false, secret: false },
+    { id: 'joel_bond', n: 'Shield Oath', d: 'Reach 70 affinity with Joel', icon: '💜', t: 'affinity', target: 'Joel', need: 70, rw: { xp: 100, g: 50 }, done: false, secret: false },
+    { id: 'aisyah_bond', n: 'Sisterblade Bond', d: 'Reach 70 affinity with Aisyah', icon: '💚', t: 'affinity', target: 'Aisyah', need: 70, rw: { xp: 100, g: 50 }, done: false, secret: false },
+    { id: 'soel_bond', n: 'Familiar Love', d: 'Reach max affinity with Soel', icon: '🐱', t: 'affinity', target: 'Soel', need: 100, rw: { xp: 200, g: 100 }, done: false, secret: false },
+    { id: 'full_party', n: 'Full Circle', d: 'Unlock all 7 party members', icon: '👥', t: 'party', need: 7, rw: { xp: 300, g: 150 }, done: false, secret: false },
+    { id: 'first_craft', n: 'Apprentice Crafter', d: 'Craft your first item', icon: '⚒️', t: 'craft', need: 1, rw: { xp: 25, g: 15 }, done: false, secret: false },
+    { id: 'wealthy', n: 'Wealthy', d: 'Accumulate 500 gold', icon: '💰', t: 'gold', need: 500, rw: { xp: 100, g: 0 }, done: false, secret: false },
+    { id: 'rich', n: 'Filthy Rich', d: 'Accumulate 2000 gold', icon: '💎', t: 'gold', need: 2000, rw: { xp: 300, g: 0 }, done: false, secret: false },
+    { id: 'survivor', n: 'Survivor', d: 'Win a battle with 1 HP remaining', icon: '🩹', t: 'survivor', need: 1, rw: { xp: 75, g: 30 }, done: false, secret: false },
+    { id: 'perfectionist', n: 'Perfectionist', d: 'Complete a 25-minute focus session', icon: '🧘', t: 'focus', need: 1, rw: { xp: 150, g: 75 }, done: false, secret: false },
+    { id: 'secret_lover', n: 'Secret Admirer', d: 'Reach max affinity with a certain familiar...', icon: '❓', t: 'affinity', target: 'Soel', need: 100, rw: { xp: 500, g: 200 }, done: false, secret: true },
+    { id: 'void_touched', n: 'Void Touched', d: 'Survive the deepest darkness', icon: '❓', t: 'boss_specific', target: 'Abyssal Horror', need: 1, rw: { xp: 500, g: 250 }, done: false, secret: true }
   ],
 
   storyline: [
@@ -1433,6 +1460,82 @@ function pd(ds, bonus) {
 
 
 
+
+function checkAchievements() {
+  let newUnlocks = 0;
+  for (let ach of G.achievements) {
+    if (ach.done) continue;
+    if (ach.secret && !ach.revealed) continue;
+
+    let earned = false;
+    switch (ach.t) {
+      case 'kills':
+        if (G.p.kills >= ach.need) earned = true;
+        break;
+      case 'boss':
+        if ((G.p.bossKills || 0) >= ach.need) earned = true;
+        break;
+      case 'boss_specific':
+        if (G.bestiary[ach.target] && G.bestiary[ach.target].kills >= ach.need) earned = true;
+        break;
+      case 'level':
+        if (G.p.lvl >= ach.need) earned = true;
+        break;
+      case 'quests':
+        if (G.p.quests >= ach.need) earned = true;
+        break;
+      case 'affinity':
+        if (G.affinity[ach.target] && G.affinity[ach.target].val >= ach.need) earned = true;
+        break;
+      case 'party':
+        const unlockedCount = G.party.filter(p => p.on || p.hp > 0).length;
+        if (unlockedCount >= ach.need) earned = true;
+        break;
+      case 'craft':
+        if ((G.p.crafts || 0) >= ach.need) earned = true;
+        break;
+      case 'gold':
+        if (G.p.gold >= ach.need) earned = true;
+        break;
+      case 'survivor':
+        if (G.p.survivedCritical || false) earned = true;
+        break;
+      case 'focus':
+        if (G.p.fstreak >= ach.need) earned = true;
+        break;
+    }
+
+    if (earned) {
+      ach.done = true;
+      G.p.xp += ach.rw.xp;
+      G.p.gold += ach.rw.g;
+      lg('🏆 ACHIEVEMENT UNLOCKED: ' + ach.n + '! ' + ach.icon);
+      if (ach.secret) {
+        lg('   ' + ach.d);
+        ach.revealed = true;
+      }
+      lvlup();
+      newUnlocks++;
+    }
+  }
+  return newUnlocks;
+}
+
+function revealSecretAchievements() {
+  for (let ach of G.achievements) {
+    if (ach.secret && !ach.revealed && !ach.done) {
+      if (ach.t === 'affinity' && G.affinity[ach.target] && G.affinity[ach.target].val >= ach.need * 0.5) {
+        ach.revealed = true;
+        lg('🔓 Secret achievement hint unlocked...');
+      }
+      if (ach.t === 'boss_specific' && G.p.lvl >= 8) {
+        ach.revealed = true;
+        lg('🔓 Secret achievement hint unlocked...');
+      }
+    }
+  }
+}
+
 function updateAffinity(partyMemberName, amount) {
   if (!G.affinity[partyMemberName]) return;
   G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
@@ -1440,6 +1543,8 @@ function updateAffinity(partyMemberName, amount) {
   if (amount > 0) {
     lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
   }
+  checkAchievements();
+  revealSecretAchievements();
   checkAffinityDecay();
 }
 
@@ -1492,6 +1597,8 @@ function updateAffinity(partyMemberName, amount) {
   if (amount > 0) {
     lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
   }
+  checkAchievements();
+  revealSecretAchievements();
 }
 
 function checkAffinityDecay() {
@@ -2162,6 +2269,9 @@ function handleVictory() {
   G.p.xp += txp;
   G.p.gold += tg2;
   G.p.kills += G.cbt.en.length;
+  if (G.currentBoss) { G.p.bossKills = (G.p.bossKills || 0) + 1; }
+  if (G.p.hp === 1) { G.p.survivedCritical = true; }
+  checkAchievements();
   
   lg('🎉 VICTORY! +' + txp + ' XP, +' + tg2 + ' Gold!');
   triggerSoelCommentary('combat_win');
@@ -3314,6 +3424,7 @@ function lvlup(){
     lg('LEVEL UP! Now Level '+G.p.lvl+'!');
     for(let s of G.p.skills){if(!s.on&&s.ul<=G.p.lvl){s.on=true;lg('Learned: '+s.n+'!');}}
     for(let p of G.party){if(!p.on&&p.ul<=G.p.lvl){p.on=true;p.hp=p.mhp;lg(p.n+' '+p.t+' joins!');}}
+    checkAchievements();
     unlockRestSites();
     checkNPCUnlocks();
     checkStoryline();
@@ -3328,7 +3439,7 @@ function checkQ(){
     if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
     if(q.t=='aisyah_battle'&&q.c>=q.need)q.c=q.need;
     if(q.t=='joel_battle'&&q.c>=q.need)q.c=q.need;
-    if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();lvlup();}
+    if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();checkAchievements();lvlup();}
   }
 }
 
@@ -3384,6 +3495,8 @@ function craft(ri){
     iv.q-=mq; if(iv.q<=0){const ix=G.p.inv.indexOf(iv);G.p.inv.splice(ix,1);}
   }
   addI({...r.res}); lg('Crafted: '+r.n+'!');
+  G.p.crafts = (G.p.crafts || 0) + 1;
+  checkAchievements();
   const pq=G.quests.find(q=>q.t=='craft');
   if(pq&&!pq.done){pq.c++;checkQ();}
   render();
@@ -3407,6 +3520,7 @@ function sf(){
       const fq=G.quests.find(q=>q.t=='focus');
       if(fq&&!fq.done){fq.c++;checkQ();}
       lg('Focus complete! +100XP +50G Streak:'+G.p.fstreak);
+      checkAchievements();
       lvlup(); G.state='menu'; render();
     }else{
       const el2=document.getElementById('ft');
@@ -3478,6 +3592,7 @@ function saveGame() {
     log: G.log,
     affinity: G.affinity,
     affinity: G.affinity,
+    achievements: G.achievements.map(a => ({ id: a.id, done: a.done, revealed: a.revealed })),
     bestiary: G.bestiary,
     partySynergies: G.partySynergies,
     autoCombat: G.cbt.autoCombat,
@@ -3589,6 +3704,15 @@ function loadGame() {
         }
       }
     }
+    if (data.achievements) {
+      for (let savedAch of data.achievements) {
+        const ach = G.achievements.find(a => a.id === savedAch.id);
+        if (ach) {
+          ach.done = savedAch.done;
+          ach.revealed = savedAch.revealed;
+        }
+      }
+    }
     if (data.bestiary) {
       G.bestiary = data.bestiary;
     }
@@ -3597,6 +3721,15 @@ function loadGame() {
         if (G.affinity[name]) {
           G.affinity[name].val = data.affinity[name].val;
           G.affinity[name].lastInteract = data.affinity[name].lastInteract;
+        }
+      }
+    }
+    if (data.achievements) {
+      for (let savedAch of data.achievements) {
+        const ach = G.achievements.find(a => a.id === savedAch.id);
+        if (ach) {
+          ach.done = savedAch.done;
+          ach.revealed = savedAch.revealed;
         }
       }
     }
@@ -3795,6 +3928,65 @@ function checkStoryUnlock() {
   }
 }
 
+
+function rAchievements() {
+  let h = '<div class="achievements-view" style="padding:16px;">';
+  h += '<h2 class="st">🏆 Achievements</h2>';
+
+  const earned = G.achievements.filter(a => a.done);
+  const total = G.achievements.length;
+  const secret = G.achievements.filter(a => a.secret);
+  const secretEarned = secret.filter(a => a.done);
+
+  h += '<div style="text-align:center;margin-bottom:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;">';
+  h += '<div style="font-size:36px;font-weight:700;color:var(--gold);">' + earned.length + '/' + total + '</div>';
+  h += '<div style="font-size:12px;color:var(--text-dim);">Achievements Unlocked</div>';
+  if (secret.length > 0) {
+    h += '<div style="font-size:11px;color:var(--accent-light);margin-top:4px;">🔒 ' + secretEarned.length + '/' + secret.length + ' Secret</div>';
+  }
+  h += '</div>';
+
+  h += '<div style="display:flex;flex-direction:column;gap:10px;">';
+  for (let ach of G.achievements) {
+    if (ach.secret && !ach.revealed && !ach.done) {
+      h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;opacity:0.6;">';
+      h += '<div style="font-size:28px;width:40px;text-align:center;">❓</div>';
+      h += '<div style="flex:1;">';
+      h += '<div style="font-weight:600;font-size:14px;color:var(--text-dim);">Secret Achievement</div>';
+      h += '<div style="font-size:11px;color:var(--disabled);">Keep playing to discover...</div>';
+      h += '</div></div>';
+      continue;
+    }
+
+    const done = ach.done;
+    h += '<div style="background:var(--bg-card);border:1px solid ' + (done ? 'var(--success)' : 'var(--border)') + ';border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;' + (done ? 'background:#22c55e10;' : '') + '">';
+    h += '<div style="font-size:28px;width:40px;text-align:center;">' + (done ? ach.icon : '🔒') + '</div>';
+    h += '<div style="flex:1;">';
+    h += '<div style="font-weight:600;font-size:14px;">' + (done ? '✅ ' : '') + ach.n + '</div>';
+    h += '<div style="font-size:12px;color:var(--text-dim);line-height:1.4;">' + ach.d + '</div>';
+    if (!done) {
+      let progress = '';
+      switch (ach.t) {
+        case 'kills': progress = G.p.kills + '/' + ach.need; break;
+        case 'boss': progress = (G.p.bossKills || 0) + '/' + ach.need; break;
+        case 'level': progress = G.p.lvl + '/' + ach.need; break;
+        case 'quests': progress = G.p.quests + '/' + ach.need; break;
+        case 'affinity': progress = (G.affinity[ach.target] ? G.affinity[ach.target].val : 0) + '/' + ach.need; break;
+        case 'gold': progress = G.p.gold + '/' + ach.need; break;
+        case 'craft': progress = (G.p.crafts || 0) + '/' + ach.need; break;
+        case 'focus': progress = G.p.fstreak + '/' + ach.need; break;
+        default: progress = '???';
+      }
+      h += '<div style="font-size:11px;color:var(--accent-light);margin-top:4px;">' + progress + '</div>';
+    } else {
+      h += '<div style="font-size:11px;color:var(--success);margin-top:4px;">+' + ach.rw.xp + ' XP, +' + ach.rw.g + 'G</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+
 function render(){
   const a=document.getElementById('app'); if(!a)return;
   let h='';
@@ -3810,6 +4002,7 @@ function render(){
   }
   h+='<div class="content">';
   if(G.state=='menu')h+=rMenu();
+  else if(G.state=='achievements')h+=rAchievements();
   else if(G.state=='story')h+=rStory();
   else if(G.state=='bestiary')h+=rBestiary();
   else if(G.state=='explore')h+=rExp();
@@ -3842,7 +4035,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
     else if(a=='storymode')startStoryMode();});
   });
@@ -4156,6 +4349,7 @@ function rMenu(){
     {i:'📜',l:'Quests',d:'View active quests',a:'quest'},
     {i:'🎒',l:'Inventory',d:'Manage items',a:'inventory'},
     {i:'📖',l:'Bestiary',d:'Catalogue of defeated foes',a:'bestiary'},
+    {i:'🏆',l:'Achievements',d:'Track your milestones',a:'achievements'},
     {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
