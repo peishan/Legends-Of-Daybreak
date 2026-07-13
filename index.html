@@ -68,7 +68,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
-.hdr { background: linear-gradient(135deg, var(--nav-bg), #242236); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
+.hdr { background: linear-gradient(135deg, var(--nav-bg), var(--bg-hover)); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
 .hdr-l { display: flex; align-items: center; gap: 10px; }
 .pname { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; }
 .cls { font-size: 10px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
@@ -105,14 +105,14 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .erow { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
 .ecard { background: var(--bg-card); border: 2px solid var(--border); border-radius: 14px; padding: 12px; min-width: 90px; text-align: center; cursor: pointer; transition: all 0.2s; user-select: none; }
 .ecard.sel { border-color: var(--danger); box-shadow: 0 0 0 3px #ef444430; }
-.ecard.dead { opacity: 0.4; border-color: #333; cursor: default; }
+.ecard.dead { opacity: 0.4; border-color: var(--disabled); cursor: default; }
 .eicon { font-size: 32px; margin-bottom: 4px; }
 .ename { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
 .hps { height: 6px; background: var(--timer-bg); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
 .hpt { font-size: 10px; color: var(--text-dim); }
 .dt { font-size: 10px; color: #666; font-style: italic; }
 .pstat { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
-.mst { font-size: 11px; display: flex; align-items: center; gap: 4px; background: #242236; padding: 4px 10px; border-radius: 10px; }
+.mst { font-size: 11px; display: flex; align-items: center; gap: 4px; background: var(--bg-hover); padding: 4px 10px; border-radius: 10px; }
 .md { width: 8px; height: 8px; border-radius: 50%; }
 .skills h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
 .slist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
@@ -147,7 +147,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .sks { font-size: 10px; padding: 3px 10px; border-radius: 10px; background: var(--success); color: white; }
 .skcard.locked .sks { background: #6b7280; }
 .skd { display: flex; gap: 8px; margin-bottom: 6px; }
-.dp { font-size: 11px; background: #242236; padding: 3px 10px; border-radius: 8px; color: var(--text-dim); }
+.dp { font-size: 11px; background: var(--bg-hover); padding: 3px 10px; border-radius: 8px; color: var(--text-dim); }
 .skdsc { font-size: 12px; color: var(--text-dim); }
 .stb { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .stb h3 { font-size: 14px; margin-bottom: 10px; }
@@ -180,7 +180,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rn { font-weight: 700; font-size: 14px; }
 .rd { font-size: 11px; color: var(--text-dim); }
 .rms { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.mp { font-size: 10px; padding: 3px 10px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.mp { font-size: 10px; padding: 3px 10px; border-radius: 8px; background: var(--bg-hover); color: var(--text-dim); }
 .mp.ok { background: #22c55e20; color: var(--success); }
 .mp.miss { background: #ef444420; color: var(--danger); }
 .cb { width: 100%; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--accent); color: white; user-select: none; }
@@ -235,7 +235,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rs-card.active { border-color: var(--rest); background: #10b98115; }
 .rs-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .rs-name { font-weight: 600; font-size: 15px; }
-.rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: #242236; color: var(--text-dim); }
+.rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: var(--bg-hover); color: var(--text-dim); }
 .rs-type.camp { background: #10b98120; color: var(--rest); }
 .rs-type.tavern { background: #f59e0b20; color: var(--gold); }
 .rs-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
@@ -302,7 +302,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .npc-type-ally { background: #8b5cf6; color: white; }
 .npc-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; margin-bottom: 8px; }
 .npc-stock { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.npc-item { font-size: 11px; padding: 3px 10px; border-radius: 8px; background: #242236; }
+.npc-item { font-size: 11px; padding: 3px 10px; border-radius: 8px; background: var(--bg-hover); }
 .npc-buy { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; margin: 2px; }
 .affinity-bar { height: 6px; background: var(--timer-bg); border-radius: 3px; overflow: hidden; margin-top: 4px; }
 .affinity-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
@@ -611,7 +611,7 @@ const G = {
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
     { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
     { id: 4, n: "Joel's Shield Oath", d: 'Win 5 battles with Joel in your party', t: 'joel_battle', c: 0, need: 5, rw: { xp: 80, g: 40 }, done: false, chain: 'joel', reqQuest: null, reqParty: 'Joel' },
-    { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false },
+
     { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
     { id: 7, n: "Senedra's Scout Report", d: 'Explore 3 different zones with Senedra before time runs out', t: 'explore_with', c: 0, need: 3, rw: { xp: 90, g: 45 }, done: false, timed: true, timer: 240, timerMax: 240, reqParty: 'Senedra' },
     { id: 8, n: "Aisyah's Ledger", d: 'Defeat 10 enemies in any zone with Aisyah to recover her lost trading notes', t: 'aisyah_battle', c: 0, need: 10, rw: { xp: 150, g: 100 }, done: false, hidden: true, revealed: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah' }
@@ -1317,17 +1317,17 @@ function showIdleModal(gains) {
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-        <div style="background: #242236; border-radius: 12px; padding: 14px;">
+        <div style="background: var(--bg-hover); border-radius: 12px; padding: 14px;">
           <div style="font-size: 24px; font-weight: 700; color: #eab308;">+${gains.xp}</div>
           <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase;">XP</div>
         </div>
-        <div style="background: #242236; border-radius: 12px; padding: 14px;">
+        <div style="background: var(--bg-hover); border-radius: 12px; padding: 14px;">
           <div style="font-size: 24px; font-weight: 700; color: #f59e0b;">+${gains.gold}</div>
           <div style="font-size: 10px; color: #9ca3af; text-transform: uppercase;">Gold</div>
         </div>
       </div>
 
-      <div style="background: #242236; border-radius: 12px; padding: 14px; margin-bottom: 20px; text-align: left;">
+      <div style="background: var(--bg-hover); border-radius: 12px; padding: 14px; margin-bottom: 20px; text-align: left;">
         <div style="font-size: 11px; color: #9ca3af; text-transform: uppercase; margin-bottom: 8px;">Materials Found</div>
         <div style="font-size: 13px; line-height: 1.8;">${matList}</div>
       </div>
@@ -3096,7 +3096,7 @@ function rSkillTree(){
       h += '<div style="font-size:11px;color:var(--text-dim);">' + path.desc + '</div>';
       for (let i = 0; i < path.tiers.length; i++) {
         const tier = path.tiers[i];
-        h += '<div style="font-size:12px;padding:8px;background:#242236;border-radius:8px;margin-top:8px;">';
+        h += '<div style="font-size:12px;padding:8px;background:var(--bg-hover);border-radius:8px;margin-top:8px;">';
         h += '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:'+path.color+'20;color:'+path.color+';">Lv.' + tier.level + '</span> ';
         h += '<b>' + tier.name + '</b> — ' + tier.desc + '</div>';
       }
@@ -3197,7 +3197,7 @@ function rStoryMode(){
 
   // Progress bar
   const progress = ((G.storyMode.currentChapter) / G.storyModeChapters.length) * 100;
-  h += '<div style="width:100%;height:4px;background:#242236;border-radius:2px;margin-bottom:24px;">';
+  h += '<div style="width:100%;height:4px;background:var(--bg-hover);border-radius:2px;margin-bottom:24px;">';
   h += '<div style="width:' + progress + '%;height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div></div>';
 
   // Current scene
