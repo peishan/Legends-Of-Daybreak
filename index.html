@@ -2027,7 +2027,9 @@ function toggleAutoCombat() {
 }
 
 function pa(si,ti){
-  const sk=G.p.skills[si], tg=G.cbt.en[ti];
+  const isBasicAttack = si === -1;
+  const sk = isBasicAttack ? { n: 'Staff Swing', c: 0, dmg: '1d4', elem: 'none', buff: false } : G.p.skills[si];
+  const tg=G.cbt.en[ti];
   if(!tg||tg.hp<=0) return;
   if(G.p.mp<sk.c){
     // Out of mana — San does a basic physical attack with their staff
@@ -2904,12 +2906,17 @@ function attachEvents() {
     el.addEventListener('click',()=>{G.cbt.tg=parseInt(el.getAttribute('data-i'));render();});
   });
   document.querySelectorAll('.sbtn:not(.dis)').forEach(el=>{
-    el.addEventListener('click',()=>{G.cbt.sk=parseInt(el.getAttribute('data-i'));render();});
+    el.addEventListener('click',()=>{
+      const raw = el.getAttribute('data-i');
+      G.cbt.sk = raw === '-1' ? -1 : parseInt(raw);
+      render();
+    });
   });
   const abtn=document.querySelector('.abtn:not(.dis)');
   if(abtn){
     abtn.addEventListener('click',()=>{
-      const si=parseInt(abtn.getAttribute('data-si'));
+      const siRaw=abtn.getAttribute('data-si');
+      const si=siRaw==='-1'?-1:parseInt(siRaw);
       const ti=parseInt(abtn.getAttribute('data-ti'));
       pa(si,ti);
     });
@@ -3282,6 +3289,9 @@ function rCbt(){
   h+='</div><div class="pstat"><div class="mst"><span class="md" style="background:#7c3aed"></span>San '+G.p.hp+'/'+G.p.mhp+'</div>';
   for(let p of G.party)if(p.on)h+='<div class="mst"><span class="md" style="background:'+p.col+'"></span>'+p.n+' '+p.hp+'/'+p.mhp+'</div>';
   h+='</div><div class="skills"><h3>Select Skill</h3><div class="slist">';
+  // Basic Attack — always available, costs 0 MP
+  const basicSel = G.cbt.sk === -1 && !G.cbt.autoCombat ? 'sel' : '';
+  h+='<div class="sbtn ' + basicSel + '" data-i="-1" '+(G.cbt.autoCombat?'style="opacity:0.4;cursor:not-allowed;"':'')+'><div class="sn">🪄 Staff Swing</div><div class="sc">0 MP · Physical</div><div class="sd">Basic attack when out of mana</div></div>';
   const ls=G.p.skills.filter(s=>s.on);
   for(let i=0;i<ls.length;i++){
     const s=ls[i],u=G.p.mp>=s.c&&!G.cbt.autoCombat,sel=G.cbt.sk==i&&!G.cbt.autoCombat?'sel':'';
@@ -3289,9 +3299,11 @@ function rCbt(){
   h+='<div class="sbtn '+(u?'':'dis')+' '+sel+'" data-i="'+i+'" '+(G.cbt.autoCombat?'style="opacity:0.4;cursor:not-allowed;"':'')+'><div class="sn">'+s.n+'</div><div class="sc">'+s.c+' MP · '+critPct+'% Crit'+(G.cbt.autoCombat?' · 🤖 AUTO':'')+'</div><div class="sd">'+s.d+'</div></div>';
   }
   h+='</div>';
-  const sk=ls[G.cbt.sk],ca=sk&&G.p.mp>=sk.c&&!G.cbt.autoCombat;
-  const si=G.p.skills.indexOf(sk);
-  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'" '+(G.cbt.autoCombat?'disabled style="opacity:0.4;"':'')+'>Cast '+(sk?sk.n:'...')+'</button>';
+  const isBasic = G.cbt.sk === -1;
+  const sk = isBasic ? null : ls[G.cbt.sk];
+  const ca = isBasic ? (G.cbt.tg >= 0 && !G.cbt.autoCombat) : (sk && G.p.mp >= sk.c && !G.cbt.autoCombat);
+  const si = isBasic ? -1 : G.p.skills.indexOf(sk);
+  h+='<button class="abtn '+(ca?'':'dis')+'" data-si="'+si+'" data-ti="'+G.cbt.tg+'" '+(G.cbt.autoCombat?'disabled style="opacity:0.4;"':'')+'>'+(isBasic?'🪄 Staff Swing':'Cast '+(sk?sk.n:'...'))+'</button>';
   h+='<button class="fbtn" '+(G.cbt.autoCombat?'disabled style="opacity:0.4;"':'')+'>Flee</button></div></div>';
   return h;
 }
