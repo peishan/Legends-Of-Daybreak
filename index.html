@@ -391,7 +391,16 @@ const G = {
       { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true, elem: 'arcane' },
       { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction', elem: 'fire', status: { type: 'burn', chance: 0.5, dmg: 5, turns: 3 } }
     ],
-    eq: { w: { n: 'Apprentice Staff', atk: 2, r: 'common', lvl: 1 }, a: { n: 'Novice Robes', def: 2, r: 'common', lvl: 1 }, acc: null },
+    eq: {
+    weapon: { n: 'Apprentice Staff', slot: 'weapon', atk: 2, int: 1, r: 'common', ilvl: 1, d: 'A worn wooden staff crackling with faint arcane energy.' },
+    armor: { n: 'Novice Robes', slot: 'armor', def: 2, int: 1, r: 'common', ilvl: 1, d: 'Threadbare robes stained with old spell components.' },
+    head: null,
+    hands: null,
+    feet: null,
+    ring1: null,
+    ring2: null,
+    amulet: null
+  },
     inv: [
       { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 3, r: 'common' },
       { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 2, r: 'common' },
@@ -731,6 +740,38 @@ const G = {
         { n: 'Luck Charm', t: 'acc', q: 1, r: 'uncommon', price: 50, cha: 2 }
       ],
       unlocked: true, zone: 'Whispering Woods', zoneLv: 1, visitCount: 0 },
+    { n: 'Ribald', t: 'trader', title: 'Adventurers Mart', icon: '', col: '#dc2626', zone: 'Cursed Catacombs', zoneLv: 2,
+      d: 'A grizzled merchant who sets up shop in the darkest corners. His wares have seen blood.',
+      stock: [
+        { n: 'Flaming Longsword', t: 'wep', q: 1, r: 'rare', price: 120, atk: 8, fireDmg: 4 },
+        { n: 'Cloak of Protection', t: 'arm', q: 1, r: 'rare', price: 150, def: 4, wis: 2 },
+        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Larloch', t: 'trader', title: 'Vecna Artifacts', icon: '', col: '#7c2d12', zone: 'Abyssal Depths', zoneLv: 8,
+      d: 'A skeletal figure wrapped in tattered robes. His wares whisper secrets that should stay buried.',
+      stock: [
+        { n: 'Robe of Vecna', t: 'arm', q: 1, r: 'legendary', price: 800, def: 8, int: 5, voidDmg: 5 },
+        { n: 'Vecnas Hand', t: 'acc', q: 1, r: 'epic', price: 500, str: 3, lifeSteal: 0.15 },
+        { n: 'Eye of Vecna', t: 'acc', q: 1, r: 'epic', price: 500, wis: 4, voidRes: 0.25 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Deidre', t: 'trader', title: 'Exotic Wares', icon: '', col: '#0891b2', zone: 'Frostspire Ruins', zoneLv: 6,
+      d: 'A frost-touched merchant with an eye for the extraordinary. Her breath does not fog in the cold.',
+      stock: [
+        { n: 'Frostbrand', t: 'wep', q: 1, r: 'rare', price: 200, atk: 10, iceDmg: 5 },
+        { n: 'Icingdeath Scimitar', t: 'wep', q: 1, r: 'epic', price: 350, atk: 12, dex: 3, iceDmg: 4 },
+        { n: 'Belt of Hill Giant Strength', t: 'acc', q: 1, r: 'rare', price: 250, str: 4, con: 2 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Nym', t: 'trader', title: 'Targos Quartermaster', icon: '', col: '#16a34a', zone: 'Stormhold', zoneLv: 5,
+      d: 'A gnomish quartermaster with a nose for quality gear. His prices are fair — his jokes are not.',
+      stock: [
+        { n: 'Gnome Hooked Hammer', t: 'wep', q: 1, r: 'uncommon', price: 80, atk: 6, str: 1 },
+        { n: 'Leather Armor +1', t: 'arm', q: 1, r: 'uncommon', price: 90, def: 4, dex: 1 },
+        { n: 'Gnomish Goggles', t: 'acc', q: 1, r: 'rare', price: 120, int: 2, critChance: 0.05 }
+      ],
+      unlocked: false, visitCount: 0 },
     { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
       d: 'A tinkerer who sets up shop near Ember Peak. Deals in mechanical parts and weapon upgrades.',
       stock: [
@@ -776,8 +817,7 @@ const G = {
   currentMiniStory: null,
   storyMode: { active: false, currentChapter: 0, currentScene: 0, choices: [] },
 
-  lastSoelComment: null,
-  soelCommentCooldown: 0,
+
 
   rest: {
     active: false,
@@ -950,6 +990,289 @@ const G = {
 
 // ============================================================
 // D&D DICE ROLL SYSTEM
+
+// ============================================================
+// EQUIPMENT & LOOT SYSTEM
+// ============================================================
+
+const EQUIPMENT_SLOTS = {
+  weapon: { name: 'Weapon', icon: '⚔️', stat: 'atk', desc: 'Main hand' },
+  armor:  { name: 'Armor',  icon: '🛡️', stat: 'def', desc: 'Body' },
+  head:   { name: 'Head',   icon: '🎓', stat: 'def', desc: 'Helm/Hat' },
+  hands:  { name: 'Hands',  icon: '🧤', stat: 'atk', desc: 'Gloves' },
+  feet:   { name: 'Feet',   icon: '👢', stat: 'def', desc: 'Boots' },
+  ring1:  { name: 'Ring',   icon: '💍', stat: null,  desc: 'Finger' },
+  ring2:  { name: 'Ring',   icon: '💍', stat: null,  desc: 'Finger' },
+  amulet: { name: 'Amulet', icon: '📿', stat: null,  desc: 'Neck' }
+};
+
+const ITEM_RARITY = {
+  common:    { color: '#9ca3af', name: 'Common',    mult: 1.0,  prefixChance: 0 },
+  uncommon:  { color: '#22c55e', name: 'Uncommon',  mult: 1.2,  prefixChance: 0.3 },
+  rare:      { color: '#3b82f6', name: 'Rare',      mult: 1.5,  prefixChance: 0.6 },
+  epic:      { color: '#a855f7', name: 'Epic',      mult: 2.0,  prefixChance: 0.8 },
+  legendary: { color: '#f59e0b', name: 'Legendary', mult: 3.0,  prefixChance: 1.0 }
+};
+
+const ITEM_PREFIXES = {
+  // Stat boost prefixes
+  'Sharp':      { stat: 'atk', val: 2, desc: '+2 ATK' },
+  'Reinforced': { stat: 'def', val: 2, desc: '+2 DEF' },
+  'Arcane':     { stat: 'int', val: 2, desc: '+2 INT' },
+  'Wise':       { stat: 'wis', val: 2, desc: '+2 WIS' },
+  'Swift':      { stat: 'dex', val: 2, desc: '+2 DEX' },
+  'Sturdy':     { stat: 'con', val: 2, desc: '+2 CON' },
+  'Charming':   { stat: 'cha', val: 2, desc: '+2 CHA' },
+  'Strong':     { stat: 'str', val: 2, desc: '+2 STR' },
+  // Special prefixes
+  'Flaming':    { stat: 'fireDmg', val: 3, desc: '+3 Fire DMG' },
+  'Frozen':     { stat: 'iceDmg', val: 3, desc: '+3 Ice DMG' },
+  'Shocking':   { stat: 'lightDmg', val: 3, desc: '+3 Lightning DMG' },
+  'Vampiric':   { stat: 'lifeSteal', val: 0.1, desc: '10% Life Steal' },
+  'Lucky':      { stat: 'critChance', val: 0.05, desc: '+5% Crit' },
+  'Brisk':      { stat: 'mpRegen', val: 2, desc: '+2 MP/turn' },
+};
+
+const ITEM_SUFFIXES = {
+  'of Power':      { stat: 'atk', val: 3, desc: '+3 ATK' },
+  'of Warding':    { stat: 'def', val: 3, desc: '+3 DEF' },
+  'of the Mind':   { stat: 'int', val: 3, desc: '+3 INT' },
+  'of the Body':   { stat: 'con', val: 3, desc: '+3 CON' },
+  'of Speed':      { stat: 'dex', val: 3, desc: '+3 DEX' },
+  'of Will':       { stat: 'wis', val: 3, desc: '+3 WIS' },
+  'of Charms':     { stat: 'cha', val: 3, desc: '+3 CHA' },
+  'of Might':      { stat: 'str', val: 3, desc: '+3 STR' },
+  'of Flames':     { stat: 'fireRes', val: 0.2, desc: '+20% Fire Resist' },
+  'of Frost':      { stat: 'iceRes', val: 0.2, desc: '+20% Ice Resist' },
+  'of Storms':     { stat: 'lightRes', val: 0.2, desc: '+20% Lightning Resist' },
+  'of the Void':   { stat: 'voidRes', val: 0.2, desc: '+20% Void Resist' },
+  'of Healing':    { stat: 'hpRegen', val: 3, desc: '+3 HP/turn' },
+  'of Mana':       { stat: 'mpRegen', val: 3, desc: '+3 MP/turn' },
+  'of Fortune':    { stat: 'goldFind', val: 0.15, desc: '+15% Gold Find' },
+};
+
+// Base item templates by slot and level range
+const LOOT_TABLES = {
+  weapon: [
+    { n: 'Worn Dagger',       ilvl: 1,  atk: 2, dex: 1 },
+    { n: 'Apprentice Staff',  ilvl: 1,  atk: 2, int: 1 },
+    { n: 'Iron Sword',        ilvl: 2,  atk: 4, str: 1 },
+    { n: 'Crystal Wand',      ilvl: 3,  atk: 5, int: 2 },
+    { n: 'Steel Longsword',   ilvl: 4,  atk: 7, str: 2 },
+    { n: 'Flamebrand',        ilvl: 5,  atk: 9, int: 2, fireDmg: 2 },
+    { n: 'Frostbite Blade',   ilvl: 6,  atk: 10, dex: 2, iceDmg: 3 },
+    { n: 'Stormcaller Staff', ilvl: 7,  atk: 12, int: 3, lightDmg: 3 },
+    { n: 'Void Reaver',       ilvl: 8,  atk: 15, str: 3, voidDmg: 4 },
+    { n: 'Dragonfang',        ilvl: 9,  atk: 18, str: 4, fireDmg: 5 },
+    { n: 'Starlight Blade',   ilvl: 10, atk: 22, int: 5, lightDmg: 6 },
+  ],
+  armor: [
+    { n: 'Tattered Cloth',    ilvl: 1,  def: 1 },
+    { n: 'Novice Robes',      ilvl: 1,  def: 2, int: 1 },
+    { n: 'Leather Vest',      ilvl: 2,  def: 3, dex: 1 },
+    { n: 'Chain Shirt',       ilvl: 3,  def: 4, con: 1 },
+    { n: 'Scale Mail',        ilvl: 4,  def: 6, str: 1 },
+    { n: 'Enchanted Robes',   ilvl: 5,  def: 5, int: 3, mpRegen: 1 },
+    { n: 'Frostweave Cloak',  ilvl: 6,  def: 7, int: 2, iceRes: 0.15 },
+    { n: 'Thunder Plate',     ilvl: 7,  def: 9, con: 2, lightRes: 0.15 },
+    { n: 'Abyssal Mail',      ilvl: 8,  def: 11, str: 2, voidRes: 0.2 },
+    { n: 'Dragonscale Armor', ilvl: 9,  def: 13, con: 3, fireRes: 0.2 },
+    { n: 'Celestial Vestment',ilvl: 10, def: 15, wis: 4, hpRegen: 3 },
+  ],
+  head: [
+    { n: 'Cloth Hood',        ilvl: 1,  def: 1, wis: 1 },
+    { n: 'Leather Cap',       ilvl: 2,  def: 2, dex: 1 },
+    { n: 'Iron Helm',         ilvl: 3,  def: 3, str: 1 },
+    { n: 'Scholars Hat',    ilvl: 4,  def: 2, int: 2 },
+    { n: 'Crown of Thought',  ilvl: 6,  def: 4, int: 3, mpRegen: 1 },
+    { n: 'Dragon Helm',       ilvl: 8,  def: 6, con: 2, fireRes: 0.1 },
+  ],
+  hands: [
+    { n: 'Cloth Wraps',       ilvl: 1,  def: 1, dex: 1 },
+    { n: 'Leather Gloves',    ilvl: 2,  def: 1, atk: 1 },
+    { n: 'Iron Gauntlets',    ilvl: 3,  def: 2, str: 1 },
+    { n: 'Spellweaver Gloves',ilvl: 5,  def: 2, int: 2, mpRegen: 1 },
+    { n: 'Void Grips',        ilvl: 7,  def: 3, atk: 2, voidDmg: 2 },
+  ],
+  feet: [
+    { n: 'Worn Boots',        ilvl: 1,  def: 1, con: 1 },
+    { n: 'Swift Boots',       ilvl: 2,  def: 1, dex: 2 },
+    { n: 'Iron Greaves',      ilvl: 3,  def: 2, str: 1 },
+    { n: 'Arcane Slippers',   ilvl: 4,  def: 1, int: 2 },
+    { n: 'Winged Boots',      ilvl: 6,  def: 2, dex: 3 },
+    { n: 'Void Walkers',      ilvl: 8,  def: 3, dex: 2, voidRes: 0.1 },
+  ],
+  ring: [
+    { n: 'Copper Ring',       ilvl: 1,  con: 1 },
+    { n: 'Silver Band',       ilvl: 2,  wis: 1 },
+    { n: 'Gold Signet',       ilvl: 3,  cha: 2 },
+    { n: 'Ruby Ring',         ilvl: 4,  str: 2 },
+    { n: 'Sapphire Ring',     ilvl: 5,  int: 2, mpRegen: 1 },
+    { n: 'Emerald Ring',      ilvl: 6,  dex: 2, critChance: 0.03 },
+    { n: 'Void Band',         ilvl: 8,  int: 3, voidDmg: 2 },
+  ],
+  amulet: [
+    { n: 'String Charm',      ilvl: 1,  wis: 1 },
+    { n: 'Silver Pendant',    ilvl: 2,  con: 1 },
+    { n: 'Crystal Amulet',    ilvl: 3,  int: 2 },
+    { n: 'Dragon Tooth',      ilvl: 5,  str: 2, fireRes: 0.1 },
+    { n: 'Starlight Pendant', ilvl: 7,  wis: 3, hpRegen: 2 },
+    { n: 'Abyssal Locket',    ilvl: 9,  int: 4, voidDmg: 3 },
+  ]
+};
+
+function rollRarity(zoneLevel, luckBonus = 0) {
+  const roll = Math.random() + luckBonus;
+  const tier = Math.min(zoneLevel, 10);
+  if (roll > 0.995 - (tier * 0.005)) return 'legendary';
+  if (roll > 0.95 - (tier * 0.01))  return 'epic';
+  if (roll > 0.80 - (tier * 0.015)) return 'rare';
+  if (roll > 0.50 - (tier * 0.02))  return 'uncommon';
+  return 'common';
+}
+
+function generateItem(slot, zoneLevel, forceRarity) {
+  const table = LOOT_TABLES[slot === 'ring1' || slot === 'ring2' ? 'ring' : slot];
+  if (!table) return null;
+
+  // Find appropriate base item by ilvl
+  const candidates = table.filter(i => i.ilvl <= zoneLevel + 2);
+  const base = candidates.length > 0 
+    ? candidates[Math.floor(Math.random() * candidates.length)]
+    : table[0];
+
+  const rarity = forceRarity || rollRarity(zoneLevel);
+  const rarityData = ITEM_RARITY[rarity];
+
+  const item = {
+    n: base.n,
+    slot: slot,
+    r: rarity,
+    ilvl: base.ilvl,
+    d: base.d || 'A piece of adventuring gear.',
+    ...base
+  };
+
+  // Apply rarity multiplier to core stats
+  if (item.atk) item.atk = Math.floor(item.atk * rarityData.mult);
+  if (item.def) item.def = Math.floor(item.def * rarityData.mult);
+
+  // Roll for prefix
+  if (Math.random() < rarityData.prefixChance) {
+    const prefixes = Object.keys(ITEM_PREFIXES);
+    const pName = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const pData = ITEM_PREFIXES[pName];
+    item.prefix = pName;
+    item.prefixData = pData;
+    item.n = pName + ' ' + item.n;
+    item[pData.stat] = (item[pData.stat] || 0) + pData.val;
+  }
+
+  // Roll for suffix
+  if (Math.random() < rarityData.prefixChance * 0.7) {
+    const suffixes = Object.keys(ITEM_SUFFIXES);
+    const sName = suffixes[Math.floor(Math.random() * suffixes.length)];
+    const sData = ITEM_SUFFIXES[sName];
+    item.suffix = sName;
+    item.suffixData = sData;
+    item.n = item.n + ' ' + sName;
+    item[sData.stat] = (item[sData.stat] || 0) + sData.val;
+  }
+
+  // Calculate sell value
+  item.value = Math.floor((base.ilvl * 5 + (rarityData.mult * 10)) * (1 + Math.random() * 0.5));
+
+  return item;
+}
+
+function getEquippedStats() {
+  const stats = { atk: 0, def: 0, str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0,
+                  fireDmg: 0, iceDmg: 0, lightDmg: 0, voidDmg: 0,
+                  fireRes: 0, iceRes: 0, lightRes: 0, voidRes: 0,
+                  lifeSteal: 0, critChance: 0, mpRegen: 0, hpRegen: 0, goldFind: 0 };
+
+  for (let slot in G.p.eq) {
+    const item = G.p.eq[slot];
+    if (!item) continue;
+    for (let key in stats) {
+      if (item[key]) stats[key] += item[key];
+    }
+  }
+  return stats;
+}
+
+function getTotalAC() {
+  const eqStats = getEquippedStats();
+  const dexMod = DICE.abilityMod(G.p.stats.dex + eqStats.dex);
+  let baseAC = 10 + dexMod;
+  if (G.p.eq.armor) {
+    baseAC = 10 + Math.min(dexMod, 2) + (G.p.eq.armor.def || 0);
+  }
+  baseAC += eqStats.def;
+  const shieldBonus = G.p.buffs.reduce((s, b) => s + (b.def || 0), 0);
+  return baseAC + shieldBonus;
+}
+
+function equipItem(invIndex) {
+  const item = G.p.inv[invIndex];
+  if (!item || !item.slot) return;
+
+  const slot = item.slot;
+  const slotKey = slot === 'ring' ? (G.p.eq.ring1 ? 'ring2' : 'ring1') : slot;
+
+  // Unequip current
+  const old = G.p.eq[slotKey];
+  if (old) {
+    addI(old);
+    lg('Unequipped: ' + old.n);
+  }
+
+  // Equip new
+  G.p.eq[slotKey] = { ...item };
+  G.p.inv.splice(invIndex, 1);
+  lg('Equipped: ' + item.n + ' (' + ITEM_RARITY[item.r].name + ')');
+
+  // Recalculate derived stats
+  const eqStats = getEquippedStats();
+  G.p.mhp = 80 + (G.p.lvl - 1) * 10 + (eqStats.con * 2);
+  G.p.mmp = 120 + (G.p.lvl - 1) * 15 + (eqStats.int * 2);
+  G.p.hp = Math.min(G.p.hp, G.p.mhp);
+  G.p.mp = Math.min(G.p.mp, G.p.mmp);
+
+  render();
+}
+
+function unequipItem(slot) {
+  const item = G.p.eq[slot];
+  if (!item) return;
+  addI({ ...item });
+  lg('Unequipped: ' + item.n);
+  G.p.eq[slot] = null;
+
+  // Recalculate
+  const eqStats = getEquippedStats();
+  G.p.mhp = 80 + (G.p.lvl - 1) * 10 + (eqStats.con * 2);
+  G.p.mmp = 120 + (G.p.lvl - 1) * 15 + (eqStats.int * 2);
+  G.p.hp = Math.min(G.p.hp, G.p.mhp);
+  G.p.mp = Math.min(G.p.mp, G.p.mmp);
+
+  render();
+}
+
+function addLootFromCombat(zoneName) {
+  const zone = G.zones.find(z => z.n === zoneName);
+  if (!zone) return;
+
+  const slots = ['weapon', 'armor', 'head', 'hands', 'feet', 'ring', 'amulet'];
+  const slot = slots[Math.floor(Math.random() * slots.length)];
+  const item = generateItem(slot, zone.lv);
+
+  if (item) {
+    addI(item);
+    lg('🎁 Loot: ' + item.n + ' (' + ITEM_RARITY[item.r].name + ')!');
+  }
+}
+
 // ============================================================
 
 const DICE = {
@@ -1230,11 +1553,25 @@ function buyFromNPC(npcName, itemIdx) {
     return;
   }
   G.p.gold -= item.price;
-  const boughtItem = { n: item.n, t: item.t, q: item.q || 1, r: item.r };
-  if (item.atk) boughtItem.atk = item.atk;
-  if (item.def) boughtItem.def = item.def;
-  if (item.int) boughtItem.int = item.int;
-  if (item.cha) boughtItem.cha = item.cha;
+  // Map type to equipment slot
+  const slotMap = { 'wep': 'weapon', 'arm': 'armor', 'acc': 'amulet' };
+  const boughtItem = { 
+    n: item.n, 
+    t: item.t, 
+    slot: slotMap[item.t] || item.t,
+    q: item.q || 1, 
+    r: item.r,
+    ilvl: item.ilvl || 1,
+    d: item.d || 'A purchased item.'
+  };
+  // Copy all stat properties
+  const statProps = ['atk', 'def', 'str', 'dex', 'con', 'int', 'wis', 'cha', 
+                     'fireDmg', 'iceDmg', 'lightDmg', 'voidDmg',
+                     'fireRes', 'iceRes', 'lightRes', 'voidRes',
+                     'lifeSteal', 'critChance', 'mpRegen', 'hpRegen', 'goldFind'];
+  for (let prop of statProps) {
+    if (item[prop] !== undefined) boughtItem[prop] = item[prop];
+  }
   addI(boughtItem);
   npc.visitCount++;
   lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
@@ -1402,15 +1739,7 @@ const THEME_KEY = 'ldb_theme';
 // ============================================================
 
 function getPlayerAC() {
-  let baseAC = 10;
-  const dexMod = DICE.abilityMod(G.p.stats.dex);
-  baseAC += dexMod;
-  if (G.p.eq.a) {
-    baseAC = 10 + Math.min(dexMod, 2) + (G.p.eq.a.def || 0);
-  }
-  const shieldBonus = G.p.buffs.reduce((s, b) => s + (b.def || 0), 0);
-  baseAC += shieldBonus;
-  return baseAC;
+  return getTotalAC();
 }
 
 function getEnemyAC(enemy) {
@@ -1478,11 +1807,12 @@ function trackBestiary(enemy) {
 
 function doPhysicalAttack(target) {
   const advInfo = getAttackAdvantage(G.p, target, false);
+  const eqStats = getEquippedStats();
   const attackResult = DICE.attackRoll({
     attackerLevel: G.p.lvl,
-    abilityScore: G.p.stats.str,
+    abilityScore: G.p.stats.str + eqStats.str,
     proficiency: false,
-    bonus: G.p.eq.w ? Math.floor(G.p.eq.w.atk / 2) : 0,
+    bonus: Math.floor((G.p.eq.weapon?.atk || 0) / 2) + eqStats.atk,
     targetAC: getEnemyAC(target),
     advantage: advInfo.advantage
   });
@@ -1500,7 +1830,7 @@ function doPhysicalAttack(target) {
     diceExpr: '1d4',
     abilityScore: G.p.stats.str,
     isCrit: attackResult.isCrit,
-    bonus: G.p.eq.w ? Math.floor(G.p.eq.w.atk / 2) : 0
+    bonus: G.p.eq.weapon ? Math.floor(G.p.eq.weapon.atk / 2) : 0
   });
   
   let finalDamage = Math.max(1, damageResult.total - Math.floor((target.def || 0) / 2));
@@ -1626,7 +1956,7 @@ function doEnemyAttack(enemy) {
   
   let finalDamage = damageResult.total;
   const targetDef = target === G.p 
-    ? (G.p.eq.a ? G.p.eq.a.def : 0) + G.p.buffs.reduce((s, b) => s + (b.def || 0), 0)
+    ? (G.p.eq.armor ? G.p.eq.armor.def : 0) + G.p.buffs.reduce((s, b) => s + (b.def || 0), 0)
     : (target.def || 0);
   
   finalDamage = Math.max(1, finalDamage - Math.floor(targetDef / 2));
@@ -1854,9 +2184,15 @@ function handleVictory() {
   
   const z = G.zones.find(z => z.en.includes(G.cbt.en[0]?.n));
   if (z) {
+    // Old material loot
     const l = z.loot[Math.floor(Math.random() * z.loot.length)];
     addI({ n: l, t: 'mat', q: 1, r: 'common' });
     lg('🎁 Found: ' + l);
+
+    // New equipment loot (50% chance)
+    if (Math.random() < 0.5) {
+      addLootFromCombat(z.n);
+    }
     
     const campSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'camp');
     const tavernSite = G.rest.sites.find(s => s.zone === z.n && s.type === 'tavern');
@@ -1962,11 +2298,12 @@ function pa(si, ti) {
   }
   
   const advInfo = getAttackAdvantage(G.p, tg, true);
+  const eqStats2 = getEquippedStats();
   const attackResult = DICE.attackRoll({
     attackerLevel: G.p.lvl,
-    abilityScore: G.p.stats.int,
+    abilityScore: G.p.stats.int + eqStats2.int,
     proficiency: true,
-    bonus: G.p.eq.w ? Math.floor(G.p.eq.w.atk / 2) : 0,
+    bonus: Math.floor((G.p.eq.weapon?.atk || 0) / 2) + eqStats2.atk,
     targetAC: getEnemyAC(tg),
     advantage: advInfo.advantage
   });
@@ -2002,7 +2339,7 @@ function pa(si, ti) {
     diceExpr: sk.dmg,
     abilityScore: G.p.stats.int,
     isCrit: isCrit,
-    bonus: G.p.eq.w ? G.p.eq.w.atk : 0
+    bonus: G.p.eq.weapon ? G.p.eq.weapon.atk : 0
   });
   
   let finalDamage = damageResult.total;
@@ -3053,14 +3390,8 @@ function craft(ri){
 }
 
 function eqI(ix){
-  const it=G.p.inv[ix];
-  if(!it||(it.t!='wep'&&it.t!='arm'&&it.t!='acc'))return;
-  const sl=it.t=='wep'?'w':it.t=='arm'?'a':'acc';
-  const old=G.p.eq[sl];
-  if(old)addI(old);
-  G.p.eq[sl]={...it};
-  G.p.inv.splice(ix,1);
-  lg('Equipped '+it.n+'!'); render();
+  // Legacy equip - redirect to new system
+  equipItem(ix);
 }
 
 let ft=null;
@@ -3134,7 +3465,7 @@ function saveGame() {
       hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
       stats: G.p.stats,
       skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff, elem: s.elem })),
-      equipment: { w: G.p.eq.w, a: G.p.eq.a, acc: G.p.eq.acc },
+      equipment: G.p.eq,
       inventory: G.p.inv,
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
@@ -3203,7 +3534,18 @@ function loadGame() {
       if (saved) s.on = saved.on;
     }
 
-    G.p.eq = data.player.equipment;
+    // Migrate old equipment format to new
+    const oldEq = data.player.equipment;
+    if (oldEq.w || oldEq.a || oldEq.acc) {
+      // Old format detected - migrate
+      G.p.eq = {
+        weapon: oldEq.w ? {...oldEq.w, slot: 'weapon'} : null,
+        armor: oldEq.a ? {...oldEq.a, slot: 'armor'} : null,
+        head: null, hands: null, feet: null, ring1: null, ring2: null, amulet: null
+      };
+    } else {
+      G.p.eq = oldEq;
+    };
 
     for (let p of G.party) {
       const saved = data.party.find(sp => sp.n === p.n);
@@ -3539,7 +3881,7 @@ function attachEvents() {
     el.addEventListener('click',(e)=>{e.stopPropagation();useI(parseInt(el.getAttribute('data-i')));});
   });
   document.querySelectorAll('.ib-e').forEach(el=>{
-    el.addEventListener('click',(e)=>{e.stopPropagation();eqI(parseInt(el.getAttribute('data-i')));});
+    el.addEventListener('click',(e)=>{e.stopPropagation();equipItem(parseInt(el.getAttribute('data-i')));});
   });
   document.querySelectorAll('.cb:not(.dis)').forEach(el=>{
     el.addEventListener('click',()=>{craft(parseInt(el.getAttribute('data-i')));});
@@ -3882,15 +4224,21 @@ function rCbt() {
   }
   
   const playerAC = getPlayerAC();
+  const eqStats = getEquippedStats();
   h += '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">';
   h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:11px;">';
   h += '<span style="color:var(--text-dim);">AC </span><span style="font-weight:700;color:var(--accent-light);">' + playerAC + '</span>';
+  if(eqStats.def > 0) h += '<span style="font-size:9px;color:var(--success);"> +' + eqStats.def + 'eq</span>';
   h += '</div>';
   h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:11px;">';
   h += '<span style="color:var(--text-dim);">PROF </span><span style="font-weight:700;color:var(--gold);">+' + DICE.proficiencyBonus(G.p.lvl) + '</span>';
   h += '</div>';
   h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:11px;">';
+  h += '<span style="color:var(--text-dim);">ATK </span><span style="font-weight:700;color:var(--hp);">+' + (eqStats.atk + (G.p.eq.weapon?.atk||0)) + '</span>';
+  h += '</div>';
+  h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:11px;">';
   h += '<span style="color:var(--text-dim);">CRIT </span><span style="font-weight:700;color:var(--danger);">' + Math.floor(getTotalCritChance() * 100) + '%</span>';
+  if(eqStats.critChance > 0) h += '<span style="font-size:9px;color:var(--success);"> +' + Math.floor(eqStats.critChance*100) + '%eq</span>';
   h += '</div>';
   h += '</div>';
   
@@ -4036,20 +4384,72 @@ function rSkills(){
 
 function rInv(){
   let h='<div class="inventory-view"><h2 class="st">Inventory</h2>';
-  h+='<div class="eqs"><h3>Equipped</h3><div class="eqg">';
-  const sn={w:'Weapon',a:'Armor',acc:'Accessory'};
-  for(let sl of ['w','a','acc']){
+
+  // Equipment Stats Summary
+  const eqStats = getEquippedStats();
+  h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:16px;">';
+  h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:8px;">⚔️ Equipment Bonuses</div>';
+  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:10px;">';
+  const statLabels = {atk:'ATK',def:'DEF',str:'STR',dex:'DEX',con:'CON',int:'INT',wis:'WIS',cha:'CHA',
+                      fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',
+                      lifeSteal:'🩸Leech',critChance:'💥Crit',mpRegen:'💧MP+',hpRegen:'💚HP+',goldFind:'💰Gold'};
+  for(let k in statLabels){
+    if(eqStats[k] > 0){
+      const val = k === 'critChance' || k.includes('Res') ? (eqStats[k]*100)+'%' : (k.includes('Regen') ? '+'+eqStats[k]+'/turn' : '+'+eqStats[k]);
+      h += '<span style="background:var(--bg-hover);padding:3px 8px;border-radius:8px;">'+statLabels[k]+' '+val+'</span>';
+    }
+  }
+  h += '</div></div>';
+
+  // Equipped Gear
+  h+='<div class="eqs"><h3>Equipped Gear</h3><div class="eqg">';
+  const slotOrder = ['weapon','armor','head','hands','feet','ring1','ring2','amulet'];
+  const slotIcons = {weapon:'⚔️',armor:'🛡️',head:'🎓',hands:'🧤',feet:'👢',ring1:'💍',ring2:'💍',amulet:'📿'};
+  for(let sl of slotOrder){
     const it=G.p.eq[sl];
-    h+='<div class="esl"><div class="esn">'+sn[sl]+'</div>'+(it?'<div class="eit" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="est">'+(it.atk?'ATK +'+it.atk:it.def?'DEF +'+it.def:it.int?'INT +'+it.int:'')+'</div>':'<div class="ese">Empty</div>')+'</div>';
+    const slotName = EQUIPMENT_SLOTS[sl].name;
+    h+='<div class="esl" style="cursor:pointer;" onclick="unequipItem(\'"+sl+"\')">';
+    h+='<div class="esn">'+slotIcons[sl]+' '+slotName+'</div>';
+    if(it){
+      h+='<div class="eit" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+      h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
+      let stats = [];
+      if(it.atk) stats.push('ATK+'+it.atk);
+      if(it.def) stats.push('DEF+'+it.def);
+      if(it.int) stats.push('INT+'+it.int);
+      if(it.str) stats.push('STR+'+it.str);
+      if(it.dex) stats.push('DEX+'+it.dex);
+      if(it.con) stats.push('CON+'+it.con);
+      if(it.wis) stats.push('WIS+'+it.wis);
+      if(it.cha) stats.push('CHA+'+it.cha);
+      if(it.prefix) stats.push(it.prefixData.desc);
+      if(it.suffix) stats.push(it.suffixData.desc);
+      h+='<div class="est">'+stats.join(' · ')+'</div>';
+    }else{
+      h+='<div class="ese">Empty</div>';
+    }
+    h+='</div>';
   }
   h+='</div></div>';
+
+  // Inventory Items
   h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
   for(let i=0;i<G.p.inv.length;i++){
     const it=G.p.inv[i];
-    h+='<div class="ic"><div class="ii">'+ie(it)+'</div><div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div><div class="iq">x'+it.q+'</div><div class="ia">'+(it.t=='pot'?'<button class="ib ib-u" data-i="'+i+'">Use</button>':'')+((it.t=='wep'||it.t=='arm'||it.t=='acc')?'<button class="ib ib-e" data-i="'+i+'">Equip</button>':'')+'</div></div>';
+    const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive';
+    h+='<div class="ic">';
+    h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️') : ie(it))+'</div>';
+    h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+    if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
+    h+='<div class="iq">'+(it.q > 1 ? 'x'+it.q : (it.value ? it.value+'G' : ''))+'</div>';
+    h+='<div class="ia">';
+    if(it.t=='pot') h+='<button class="ib ib-u" data-i="'+i+'">Use</button>';
+    if(isEquip) h+='<button class="ib ib-e" data-i="'+i+'">Equip</button>';
+    h+='</div></div>';
   }
   if(G.p.inv.length==0)h+='<div class="ei">Your pack is empty.</div>';
-  h+='</div></div></div>'; return h;
+  h+='</div></div></div>';
+  return h;
 }
 
 function rCraft(){
