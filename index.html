@@ -340,7 +340,7 @@ const G = {
       { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true, elem: 'arcane' },
       { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction', elem: 'fire', status: { type: 'burn', chance: 0.5, dmg: 5, turns: 3 } }
     ],
-    eq: { w: { n: 'Apprentice Staff', atk: 2, r: 'common', lvl: 1 }, a: { n: 'Novice Robes', def: 2, r: 'common', lvl: 1 }, acc: null },
+    eq: { w: { n: 'Apprentice Staff', atk: 2, r: 'common', lvl: 1, tier: 0 }, a: { n: 'Novice Robes', def: 2, r: 'common', lvl: 1, tier: 0 }, acc: null },
     inv: [
       { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 3, r: 'common' },
       { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 2, r: 'common' },
@@ -606,6 +606,34 @@ const G = {
     { n: 'Frost Ring', m: { 'Ice Crystal': 2, 'Frost Gem': 1, 'Iron Ore': 1 }, res: { n: 'Frost Ring', t: 'acc', int: 3, r: 'rare' }, d: 'INT +3, Frost spells cost -5 MP' },
     { n: 'Phoenix Feather', m: { 'Fire Essence': 3, 'Obsidian': 2, 'Gem Dust': 1 }, res: { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' }, d: 'Revives fallen companion with 50% HP' }
   ],
+
+  // EQUIPMENT UPGRADE SYSTEM
+  upgradeConfig: {
+    maxTier: 5,
+    rarityMult: { common: 1, uncommon: 1.5, rare: 2, epic: 3, legendary: 5 },
+    costs: [
+      { gold: 10, mats: { 'Iron Ore': 1 } },
+      { gold: 25, mats: { 'Iron Ore': 2, 'Bone Shard': 1 } },
+      { gold: 60, mats: { 'Iron Ore': 3, 'Crystal Shard': 2 } },
+      { gold: 150, mats: { 'Crystal Shard': 3, 'Fire Essence': 2 } },
+      { gold: 400, mats: { 'Fire Essence': 3, 'Void Essence': 1 } },
+    ],
+    weaponGain: { atk: 2 },
+    armorGain: { def: 2 },
+    accessoryGain: { int: 1, cha: 1 },
+    tierNames: ['+0', '+1', '+2', '+3', '+4', '+5'],
+    tierColors: ['#9ca3af', '#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444'],
+  },
+
+  smith: {
+    name: 'Ribald',
+    title: "Adventurers Mart Proprietor",
+    icon: '🏪',
+    desc: 'A shrewd merchant with connections to every corner of Faerun.',
+    unlocked: true,
+    canUpgrade: true,
+  },
+
   quests: [
     { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
@@ -899,6 +927,128 @@ const G = {
 
 
 
+// ========== EQUIPMENT UPGRADE SYSTEM ==========
+
+function getUpgradeCost(item) {
+  if (!item || item.tier === undefined || item.tier >= G.upgradeConfig.maxTier) return null;
+  const tier = item.tier;
+  const baseCost = G.upgradeConfig.costs[tier];
+  if (!baseCost) return null;
+  const mult = G.upgradeConfig.rarityMult[item.r] || 1;
+  const cost = {
+    gold: Math.floor(baseCost.gold * mult),
+    mats: {}
+  };
+  for (let mat in baseCost.mats) {
+    cost.mats[mat] = Math.ceil(baseCost.mats[mat] * mult);
+  }
+  return cost;
+}
+
+function canUpgrade(slot) {
+  const item = G.p.eq[slot];
+  if (!item) return { ok: false, reason: 'No item equipped' };
+  if (item.tier >= G.upgradeConfig.maxTier) return { ok: false, reason: 'Max tier reached' };
+  const cost = getUpgradeCost(item);
+  if (!cost) return { ok: false, reason: 'Cannot upgrade' };
+  if (G.p.gold < cost.gold) return { ok: false, reason: 'Need ' + cost.gold + 'G' };
+  for (let mat in cost.mats) {
+    const inv = G.p.inv.find(function(i) { return i.n === mat; });
+    if (!inv || inv.q < cost.mats[mat]) return { ok: false, reason: 'Need ' + cost.mats[mat] + ' ' + mat };
+  }
+  return { ok: true, cost: cost };
+}
+
+function doUpgrade(slot) {
+  const check = canUpgrade(slot);
+  if (!check.ok) { lg('❌ ' + check.reason); return; }
+  const item = G.p.eq[slot];
+  const cost = check.cost;
+  G.p.gold -= cost.gold;
+  for (let mat in cost.mats) {
+    const inv = G.p.inv.find(function(i) { return i.n === mat; });
+    if (inv) {
+      inv.q -= cost.mats[mat];
+      if (inv.q <= 0) {
+        const ix = G.p.inv.indexOf(inv);
+        G.p.inv.splice(ix, 1);
+      }
+    }
+  }
+  item.tier = (item.tier || 0) + 1;
+  const gain = slot === 'w' ? G.upgradeConfig.weaponGain : slot === 'a' ? G.upgradeConfig.armorGain : G.upgradeConfig.accessoryGain;
+  for (let stat in gain) {
+    item[stat] = (item[stat] || 0) + gain[stat];
+  }
+  const tierName = G.upgradeConfig.tierNames[item.tier];
+  lg('🔨 ' + item.n + ' upgraded to ' + tierName + '!');
+  render();
+}
+
+function getItemTierDisplay(item) {
+  if (!item || item.tier === undefined || item.tier === 0) return '';
+  const tierName = G.upgradeConfig.tierNames[item.tier] || '+' + item.tier;
+  const tierColor = G.upgradeConfig.tierColors[item.tier] || '#9ca3af';
+  return '<span style="color:' + tierColor + ';font-weight:700;">' + tierName + '</span>';
+}
+
+function rEnhance() {
+  let h = '<div style="padding:16px;">';
+  h += '<h2 class="st">🔨 Smiths Forge</h2>';
+  h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start;">';
+  h += '<div style="font-size:36px;">🏪</div>';
+  h += '<div>';
+  h += '<div style="font-weight:700;font-size:15px;">' + G.smith.name + '</div>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">' + G.smith.title + '</div>';
+  h += '<div style="font-size:12px;color:var(--text-dim);line-height:1.4;">' + G.smith.desc + '</div>';
+  h += '</div></div>';
+  const slots = { w: 'Weapon', a: 'Armor', acc: 'Accessory' };
+  for (let slot in slots) {
+    const item = G.p.eq[slot];
+    const label = slots[slot];
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;">';
+    h += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">' + label + '</div>';
+    if (!item) {
+      h += '<div style="font-size:13px;color:var(--disabled);font-style:italic;">Empty slot</div>';
+    } else {
+      const tierDisplay = getItemTierDisplay(item);
+      const check = canUpgrade(slot);
+      const cost = check.ok ? check.cost : getUpgradeCost(item);
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+      h += '<div style="font-weight:600;">' + item.n + ' ' + tierDisplay + '</div>';
+      h += '<div style="font-size:11px;color:' + rc(item.r) + '">' + item.r.toUpperCase() + '</div>';
+      h += '</div>';
+      h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">';
+      if (item.atk) h += 'ATK: ' + item.atk + ' ';
+      if (item.def) h += 'DEF: ' + item.def + ' ';
+      if (item.int) h += 'INT: ' + item.int + ' ';
+      if (item.cha) h += 'CHA: ' + item.cha + ' ';
+      h += '</div>';
+      if (item.tier >= G.upgradeConfig.maxTier) {
+        h += '<div style="font-size:12px;color:var(--gold);font-weight:600;">⭐ MAX TIER</div>';
+      } else if (cost) {
+        h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">Next upgrade:</div>';
+        h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">';
+        h += '<span style="font-size:11px;padding:3px 10px;border-radius:8px;background:var(--bg-hover);color:var(--gold);">💰 ' + cost.gold + 'G</span>';
+        for (let mat in cost.mats) {
+          const inv = G.p.inv.find(function(i) { return i.n === mat; });
+          const have = inv ? inv.q : 0;
+          const need = cost.mats[mat];
+          const ok = have >= need;
+          h += '<span style="font-size:11px;padding:3px 10px;border-radius:8px;background:' + (ok ? '#22c55e15' : '#ef444415') + ';color:' + (ok ? 'var(--success)' : 'var(--danger)') + ';">' + (ok ? '✅' : '❌') + ' ' + mat + ': ' + have + '/' + need + '</span>';
+        }
+        h += '</div>';
+        h += '<button class="abtn ' + (check.ok ? '' : 'dis') + '" data-slot="' + slot + '" style="width:auto;padding:10px 20px;font-size:13px;">' + (check.ok ? '🔨 Upgrade (' + G.upgradeConfig.tierNames[(item.tier||0)+1] + ')' : check.reason) + '</button>';
+      }
+    }
+    h += '</div>';
+  }
+  h += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:8px;">Upgrade costs scale with item rarity.</div>';
+  h += '</div>';
+  return h;
+}
+
+
 function updateAffinity(partyMemberName, amount) {
   if (!G.affinity[partyMemberName]) return;
   G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
@@ -949,49 +1099,6 @@ function getTimerStatus(q) {
   if (q.timer <= 0) return { cls: 'timer-expired', label: 'EXPIRED', pct: 0 };
   if (pct < 25) return { cls: 'timer-urgent', label: q.timer + ' ticks left', pct: pct };
   return { cls: 'timer-ok', label: q.timer + ' ticks left', pct: pct };
-}
-
-function updateAffinity(partyMemberName, amount) {
-  if (!G.affinity[partyMemberName]) return;
-  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
-  G.affinity[partyMemberName].lastInteract = Date.now();
-  if (amount > 0) {
-    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
-  }
-}
-
-function checkAffinityDecay() {
-  const now = Date.now();
-  for (let name in G.affinity) {
-    const aff = G.affinity[name];
-    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
-    if (hoursSince > 24) {
-      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
-      aff.val = Math.max(0, aff.val - decay);
-      if (decay > 0) {
-        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
-      }
-      aff.lastInteract = now;
-    }
-  }
-}
-
-function getAffinityColor(val) {
-  if (val >= 70) return 'affinity-high';
-  if (val >= 40) return 'affinity-mid';
-  return 'affinity-low';
-}
-
-function triggerSoelCommentary(triggerType) {
-  if (!G.party[6].on) return;
-  if (G.soelCommentCooldown > 0) { G.soelCommentCooldown--; return; }
-  if (Math.random() > 0.35) return;
-  const relevant = G.soelCommentary.filter(c => c.trigger === triggerType);
-  if (relevant.length === 0) return;
-  const comment = relevant[Math.floor(Math.random() * relevant.length)];
-  G.lastSoelComment = comment;
-  G.soelCommentCooldown = 3;
-  lg('🐱 Soel: ' + comment.text);
 }
 
 function checkNPCUnlocks() {
@@ -2521,9 +2628,10 @@ function eqI(ix){
   const sl=it.t=='wep'?'w':it.t=='arm'?'a':'acc';
   const old=G.p.eq[sl];
   if(old)addI(old);
-  G.p.eq[sl]={...it};
+  G.p.eq[sl]={...it, tier: it.tier || 0};
   G.p.inv.splice(ix,1);
-  lg('Equipped '+it.n+'!'); render();
+  const tierDisplay = it.tier ? ' ' + G.upgradeConfig.tierNames[it.tier] : '';
+  lg('Equipped '+it.n+tierDisplay+'!'); render();
 }
 
 let ft=null;
@@ -2597,7 +2705,7 @@ function saveGame() {
       hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
       stats: G.p.stats,
       skills: G.p.skills.map(s => ({ n: s.n, c: s.c, dmg: s.dmg, on: s.on, ul: s.ul, d: s.d, buff: s.buff, elem: s.elem })),
-      equipment: { w: G.p.eq.w, a: G.p.eq.a, acc: G.p.eq.acc },
+      equipment: { w: G.p.eq.w ? { ...G.p.eq.w } : null, a: G.p.eq.a ? { ...G.p.eq.a } : null, acc: G.p.eq.acc ? { ...G.p.eq.acc } : null },
       inventory: G.p.inv,
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
@@ -2666,7 +2774,11 @@ function loadGame() {
       if (saved) s.on = saved.on;
     }
 
-    G.p.eq = data.player.equipment;
+    G.p.eq = {
+      w: data.player.equipment.w ? { ...data.player.equipment.w } : null,
+      a: data.player.equipment.a ? { ...data.player.equipment.a } : null,
+      acc: data.player.equipment.acc ? { ...data.player.equipment.acc } : null
+    };
 
     for (let p of G.party) {
       const saved = data.party.find(sp => sp.n === p.n);
@@ -2937,7 +3049,7 @@ function render(){
   else if(G.state=='combat')h+=rCbt();
   else if(G.state=='party')h+=rParty();
   else if(G.state=='skills')h+=rSkills();
-  else if(G.state=='inventory')h+=rInv();
+  else if(G.state=='inventory')h+=rInvWithEnhance();
   else if(G.state=='craft')h+=rCraft();
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
@@ -2947,6 +3059,7 @@ function render(){
   else if(G.state=='ministory')h+=rMiniStory();
   else if(G.state=='storymode')h+=rStoryMode();
   else if(G.state=='npc')h+=rNPC();
+  else if(G.state=='enhance')h+=rEnhance();
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
   h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
@@ -3056,6 +3169,15 @@ function attachEvents() {
       e.stopPropagation();
       reviveMember(el.getAttribute('data-m'));
     });
+  });
+  document.querySelectorAll('[data-a="enhance"]').forEach(el=>{
+    el.addEventListener('click',()=>{setS('enhance');});
+  });
+  document.querySelectorAll('[data-enhance]').forEach(el=>{
+    el.addEventListener('click',(e)=>{e.stopPropagation();doUpgrade(el.getAttribute('data-enhance'));});
+  });
+  document.querySelectorAll('[data-slot]').forEach(el=>{
+    el.addEventListener('click',()=>{doUpgrade(el.getAttribute('data-slot'));});
   });
 }
 
@@ -3280,6 +3402,7 @@ function rMenu(){
     {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
+    {i:'🔨',l:"Smiths Forge",d:'Upgrade your equipment',a:'enhance'},
     {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
   ];
@@ -3440,6 +3563,41 @@ function rInv(){
   if(G.p.inv.length==0)h+='<div class="ei">Your pack is empty.</div>';
   h+='</div></div></div>'; return h;
 }
+
+function rInvWithEnhance() {
+  let h = '<div class="inventory-view"><h2 class="st">Inventory</h2>';
+  h += '<div style="margin-bottom:16px;">';
+  h += '<button class="abtn" data-a="enhance" style="width:100%;margin-bottom:10px;">🔨 Visit Smiths Forge</button>';
+  h += '</div>';
+  h += '<div class="eqs"><h3>Equipped</h3><div class="eqg">';
+  const sn = { w: 'Weapon', a: 'Armor', acc: 'Accessory' };
+  for (let sl of ['w', 'a', 'acc']) {
+    const it = G.p.eq[sl];
+    h += '<div class="esl"><div class="esn">' + sn[sl] + '</div>';
+    if (it) {
+      const tierDisplay = getItemTierDisplay(it);
+      h += '<div class="eit" style="color:' + rc(it.r) + '">' + it.n + ' ' + tierDisplay + '</div>';
+      h += '<div class="est">' + (it.atk ? 'ATK +' + it.atk : it.def ? 'DEF +' + it.def : it.int ? 'INT +' + it.int : '') + '</div>';
+      if (it.tier < G.upgradeConfig.maxTier) {
+        const check = canUpgrade(sl);
+        h += '<button class="ib ib-e" data-enhance="' + sl + '" style="margin-top:6px;font-size:10px;">' + (check.ok ? '🔨 Upgrade' : '🔒 ' + check.reason) + '</button>';
+      }
+    } else {
+      h += '<div class="ese">Empty</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div></div>';
+  h += '<div class="its"><h3>Items (' + G.p.inv.length + ')</h3><div class="ig">';
+  for (let i = 0; i < G.p.inv.length; i++) {
+    const it = G.p.inv[i];
+    h += '<div class="ic"><div class="ii">' + ie(it) + '</div><div class="in" style="color:' + rc(it.r) + '">' + it.n + '</div><div class="iq">x' + it.q + '</div><div class="ia">' + (it.t == 'pot' ? '<button class="ib ib-u" data-i="' + i + '">Use</button>' : '') + ((it.t == 'wep' || it.t == 'arm' || it.t == 'acc') ? '<button class="ib ib-e" data-i="' + i + '">Equip</button>' : '') + '</div></div>';
+  }
+  if (G.p.inv.length == 0) h += '<div class="ei">Your pack is empty.</div>';
+  h += '</div></div></div>';
+  return h;
+}
+
 
 function rCraft(){
   let h='<div class="craft-view"><h2 class="st">Crafting</h2><div class="rlist">';
