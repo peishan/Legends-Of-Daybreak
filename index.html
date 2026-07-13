@@ -1678,7 +1678,7 @@ function buyFromNPC(npcName, itemIdx) {
   const boughtItem = { 
     n: item.n, 
     t: item.t, 
-    slot: slotMap[item.t] || item.t,
+    slot: ['pot','food','drink','revive','mat'].includes(item.t) ? undefined : (slotMap[item.t] || item.t),
     q: item.q || 1, 
     r: item.r,
     ilvl: item.ilvl || 1,
@@ -1701,7 +1701,9 @@ function buyFromNPC(npcName, itemIdx) {
   if (npc.visitCount === 1) {
     lg('   ' + npc.n + ': "Pleasure doing business, mage."');
   }
-  r
+  render();
+}
+
 function sellToAmad(invIndex) {
   const npc = G.npcs.find(n => n.n === 'Amad');
   if (!npc || !npc.unlocked || npc.t !== 'trader') return;
@@ -1736,8 +1738,6 @@ function sellToAmad(invIndex) {
   lg('💰 Sold ' + item.n + ' to Amad for ' + sellPrice + 'G!');
   lg('   ' + flavor);
   render();
-}
-ender();
 }
 
 function getDayNumber() {
@@ -4721,14 +4721,14 @@ function rInv(){
   h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
   for(let i=0;i<G.p.inv.length;i++){
     const it=G.p.inv[i];
-    const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive';
+    const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
     h+='<div class="ic">';
     h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️') : ie(it))+'</div>';
     h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
     if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
     h+='<div class="iq">'+(it.q > 1 ? 'x'+it.q : (it.value ? it.value+'G' : ''))+'</div>';
     h+='<div class="ia">';
-    if(it.t=='pot') h+='<button class="ib ib-u" data-i="'+i+'">Use</button>';
+    if(it.t=='pot' || it.t=='food' || it.t=='drink') h+='<button class="ib ib-u" data-i="'+i+'">Use</button>';
     if(isEquip) h+='<button class="ib ib-e" data-i="'+i+'">Equip</button>';
     h+='</div></div>';
   }
