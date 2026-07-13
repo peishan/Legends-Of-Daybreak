@@ -421,7 +421,7 @@ const G = {
     { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit' },
     { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
     { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
-    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal companion. Brings fortune to the party.', b: '+10% All stats', col: '#7c2d12' }
+    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true }
   ],
 
   partySynergies: [
@@ -814,7 +814,20 @@ const G = {
     { n: 'Aisy', t: 'ally', title: 'The Shadow Walker', icon: '🌙', col: '#6366f1',
       d: 'A wandering spirit who aids those she deems worthy. Enhances stealth and evasion.',
       ability: 'Shadow Step: 20% chance to avoid enemy attacks entirely.',
-      unlocked: false, ul: 7, affinityReq: 50, reqMember: 'Aisyah' }
+      unlocked: false, ul: 7, affinityReq: 50, reqMember: 'Aisyah' },
+    { n: 'Amad', t: 'trader', title: 'Brunei Food Merchant', icon: '🍜', col: '#16a34a', zone: 'Whispering Woods', zoneLv: 1,
+      d: 'A warm-hearted vendor from Bandar Seri Begawan. Sells authentic Brunei comfort food and drinks. He will buy anything you have — drops, loot, used gear — at fair prices.',
+      stock: [
+        { n: 'Nasi Katok', t: 'food', eff: 'heal', v: 25, q: 1, r: 'common', price: 12, d: 'Bruneian rice with sambal and fried chicken. Restores 25 HP.' },
+        { n: 'Nasi Lemak', t: 'food', eff: 'heal', v: 35, q: 1, r: 'common', price: 18, d: 'Coconut rice with anchovies, peanuts, egg and sambal. Restores 35 HP.' },
+        { n: 'Salad', t: 'food', eff: 'heal', v: 20, q: 1, r: 'common', price: 10, d: 'Fresh greens with tangy dressing. Restores 20 HP.' },
+        { n: 'Mee Goreng', t: 'food', eff: 'heal', v: 30, q: 1, r: 'common', price: 15, d: 'Stir-fried noodles with spice and soul. Restores 30 HP.' },
+        { n: 'Cauli Rice', t: 'food', eff: 'heal', v: 40, q: 1, r: 'uncommon', price: 22, d: 'Low-carb cauliflower rice bowl. Restores 40 HP.' },
+        { n: 'Teh Tarik', t: 'drink', eff: 'mana', v: 20, q: 1, r: 'common', price: 10, d: 'Pulled milk tea, sweet and creamy. Restores 20 MP.' },
+        { n: 'Kopi O', t: 'drink', eff: 'mana', v: 30, q: 1, r: 'common', price: 14, d: 'Strong black coffee, Brunei style. Restores 30 MP.' },
+        { n: 'Fresh Juice', t: 'drink', eff: 'mana', v: 25, q: 1, r: 'common', price: 12, d: 'Tropical fruit blend, freshly squeezed. Restores 25 MP.' }
+      ],
+      unlocked: true, visitCount: 0, buysAnything: true }
   ],
 
   bosses: [
@@ -1679,13 +1692,52 @@ function buyFromNPC(npcName, itemIdx) {
   for (let prop of statProps) {
     if (item[prop] !== undefined) boughtItem[prop] = item[prop];
   }
+  // Copy effect properties for consumables (food/drink/pot)
+  if (item.eff !== undefined) boughtItem.eff = item.eff;
+  if (item.v !== undefined) boughtItem.v = item.v;
   addI(boughtItem);
   npc.visitCount++;
   lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
   if (npc.visitCount === 1) {
     lg('   ' + npc.n + ': "Pleasure doing business, mage."');
   }
+  r
+function sellToAmad(invIndex) {
+  const npc = G.npcs.find(n => n.n === 'Amad');
+  if (!npc || !npc.unlocked || npc.t !== 'trader') return;
+  const item = G.p.inv[invIndex];
+  if (!item) return;
+
+  // Calculate sell value: 50% of item value, or base price for materials
+  let sellPrice = 0;
+  if (item.value) {
+    sellPrice = Math.floor(item.value * 0.5);
+  } else if (item.t === 'mat') {
+    sellPrice = Math.floor((item.ilvl || 1) * 3 + 2);
+  } else if (item.t === 'pot' || item.t === 'food' || item.t === 'drink') {
+    sellPrice = Math.floor((item.v || 10) * 0.3);
+  } else {
+    sellPrice = Math.floor((item.ilvl || 1) * 4);
+  }
+  sellPrice = Math.max(1, sellPrice);
+
+  G.p.gold += sellPrice;
+  G.p.inv.splice(invIndex, 1);
+
+  const flavorLines = [
+    'Amad inspects the ' + item.n + '. "Ah, this has seen some adventure. I will take it."',
+    '"Hmm, a bit worn, but I know a collector who wants this," says Amad.',
+    'Amad weighs the ' + item.n + ' in his hand. "Fair trade, friend."',
+    '"My cousin in Gadong would pay good money for this," Amad grins.',
+    'Amad tucks the ' + item.n + ' under his counter. "Terima kasih!"'
+  ];
+  const flavor = flavorLines[Math.floor(Math.random() * flavorLines.length)];
+
+  lg('💰 Sold ' + item.n + ' to Amad for ' + sellPrice + 'G!');
+  lg('   ' + flavor);
   render();
+}
+ender();
 }
 
 function getDayNumber() {
@@ -2078,6 +2130,9 @@ function doEnemyAttack(enemy) {
     if (target !== G.p && target.passive === 'guardian_spirit') {
       target.hp = 1;
       lg('✨ ' + target.n + "'s Guardian Spirit shines! She endures at 1 HP!");
+    } else if (target !== G.p && target.n === 'Soel') {
+      target.hp = 1;
+      lg('🔥 Soel flickers like a spirit flame! He cannot be killed — he reforms at 1 HP!');
     } else {
       target.hp = 0;
       lg('💀 ' + (target.n || 'You') + ' fall unconscious!');
@@ -3466,9 +3521,9 @@ function addI(it){
 function useI(ix){
   const it=G.p.inv[ix];
   if(!it)return;
-  if(it.t=='pot'){
-    if(it.eff=='heal'){G.p.hp=Math.min(G.p.mhp,G.p.hp+it.v);lg('Used '+it.n+'. +'+it.v+' HP.');}
-    else if(it.eff=='mana'){G.p.mp=Math.min(G.p.mmp,G.p.mp+it.v);lg('Used '+it.n+'. +'+it.v+' MP.');}
+  if(it.t=='pot' || it.t=='food' || it.t=='drink'){
+    if(it.eff=='heal'){G.p.hp=Math.min(G.p.mhp,G.p.hp+it.v);lg('🍽️ Enjoyed '+it.n+'. +'+it.v+' HP.');}
+    else if(it.eff=='mana'){G.p.mp=Math.min(G.p.mmp,G.p.mp+it.v);lg('🥤 Sipped '+it.n+'. +'+it.v+' MP.');}
     it.q--; if(it.q<=0)G.p.inv.splice(ix,1);
     render();
   } else if(it.t=='revive'){
@@ -3567,7 +3622,7 @@ function flee(){
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
 function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
-function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
+function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='food')return'🍽️';if(i.t=='drink')return'🥤';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
 const SAVE_KEY = 'ldb_save_v4';
 
@@ -3848,7 +3903,8 @@ function rNPC() {
         h += '<div class="npc-stock">';
         for (let j = 0; j < npc.stock.length; j++) {
           const item = npc.stock[j];
-          h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + item.n + ' (' + item.price + 'G)</span>';
+          const icon = item.t === 'food' ? '🍽️' : item.t === 'drink' ? '🥤' : '';
+          h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + icon + ' ' + item.n + ' (' + item.price + 'G)</span>';
         }
         h += '</div>';
         h += '<div style="margin-top:8px;">';
@@ -3858,6 +3914,35 @@ function rNPC() {
           h += '<button class="npc-buy ' + (canAfford ? 'ib-u' : 'ib-e') + '" data-npc="' + npc.n + '" data-item="' + j + '" style="margin-right:4px;">' + (canAfford ? 'Buy ' + item.n + ' (' + item.price + 'G)' : 'Need ' + item.price + 'G') + '</button>';
         }
         h += '</div>';
+        // Amad's sell section
+        if (npc.n === 'Amad' && npc.buysAnything) {
+          const sellableItems = G.p.inv.filter(i => i.t !== 'revive'); // Can't sell revives
+          if (sellableItems.length > 0) {
+            h += '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">';
+            h += '<div style="font-size:12px;font-weight:600;color:#fbbf24;margin-bottom:8px;">💰 Sell to Amad (50% value)</div>';
+            h += '<div style="display:flex;flex-direction:column;gap:6px;">';
+            for (let j = 0; j < G.p.inv.length; j++) {
+              const item = G.p.inv[j];
+              if (item.t === 'revive') continue;
+              let sellPrice = 0;
+              if (item.value) sellPrice = Math.floor(item.value * 0.5);
+              else if (item.t === 'mat') sellPrice = Math.floor((item.ilvl || 1) * 3 + 2);
+              else if (item.t === 'pot' || item.t === 'food' || item.t === 'drink') sellPrice = Math.floor((item.v || 10) * 0.3);
+              else sellPrice = Math.floor((item.ilvl || 1) * 4);
+              sellPrice = Math.max(1, sellPrice);
+              const itemIcon = ie(item);
+              h += '<button class="amad-sell" data-index="' + j + '" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-hover);color:var(--text);font-size:11px;font-weight:600;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;">';
+              h += '<span>' + itemIcon + ' ' + item.n + (item.q > 1 ? ' x' + item.q : '') + '</span>';
+              h += '<span style="color:#fbbf24;">' + sellPrice + 'G</span>';
+              h += '</button>';
+            }
+            h += '</div></div>';
+          } else {
+            h += '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">';
+            h += '<div style="font-size:11px;color:var(--text-dim);">💰 Your pack is empty — nothing to sell to Amad.</div>';
+            h += '</div>';
+          }
+        }
       }
       h += '</div></div>';
     }
@@ -4121,6 +4206,12 @@ function attachEvents() {
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       buyFromNPC(el.getAttribute('data-npc'),parseInt(el.getAttribute('data-item')));
+    });
+  });
+  document.querySelectorAll('.amad-sell').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      sellToAmad(parseInt(el.getAttribute('data-index')));
     });
   });
   document.querySelectorAll('.tr-btn:not(.dis)').forEach(el=>{
