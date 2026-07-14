@@ -387,12 +387,12 @@ const G = {
     hp: 80, mhp: 80, mp: 120, mmp: 120, gold: 50,
     stats: { str: 4, dex: 6, con: 5, int: 12, wis: 10, cha: 8 },
     skills: [
-      { n: 'Arcane Bolt', c: 10, dmg: '1d8', on: true, d: 'Basic magic missile', elem: 'arcane' },
-      { n: 'Fireball', c: 25, dmg: '2d6', on: false, ul: 3, d: 'Area fire damage', elem: 'fire', status: { type: 'burn', chance: 0.3, dmg: 3, turns: 3 } },
-      { n: 'Frost Shield', c: 15, on: false, ul: 2, d: '+5 AC for 3 turns', buff: true, elem: 'ice' },
-      { n: 'Lightning Strike', c: 35, dmg: '3d8', on: false, ul: 5, d: 'Devastating single target', elem: 'lightning', status: { type: 'shock', chance: 0.2, turns: 1 } },
-      { n: 'Mana Surge', c: 5, on: false, ul: 4, d: 'Restore 20 MP', buff: true, elem: 'arcane' },
-      { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction', elem: 'fire', status: { type: 'burn', chance: 0.5, dmg: 5, turns: 3 } }
+      { n: 'Magic Missile', c: 10, dmg: '1d8', on: true, d: 'A flurry of arcane darts.', elem: 'arcane' },
+      { n: 'Fireball', c: 25, dmg: '2d6', on: false, ul: 3, d: 'Classic D&D fireball.', elem: 'fire', status: { type: 'burn', chance: 0.3, dmg: 3, turns: 3 } },
+      { n: 'Fireshield (Blue)', c: 15, on: false, ul: 2, d: '+5 AC for 3 turns, chilling attackers.', buff: true, elem: 'ice' },
+      { n: 'Lightning Bolt', c: 35, dmg: '3d8', on: false, ul: 5, d: 'A crackling bolt of lightning.', elem: 'lightning', status: { type: 'shock', chance: 0.2, turns: 1 } },
+      { n: 'Wondrous Recall', c: 5, on: false, ul: 4, d: 'Regain a used spell slot, drawing expended magic back into your mind.', buff: true, elem: 'arcane' },
+      { n: 'Meteor Swarm', c: 60, dmg: '4d10', on: false, ul: 8, d: 'Ultimate destruction.', elem: 'fire', status: { type: 'burn', chance: 0.5, dmg: 5, turns: 3 } }
     ],
     eq: {
     weapon: { n: 'Apprentice Staff', slot: 'weapon', atk: 2, int: 1, r: 'common', ilvl: 1, d: 'A worn wooden staff crackling with faint arcane energy.' },
@@ -1314,6 +1314,37 @@ function addLootFromCombat(zoneName) {
 }
 
 // ============================================================
+
+
+
+// === Spell slot helpers ===
+function getSpellSlotKey(sk){
+  const tier = Number(sk?.slotTier || 1);
+  return 't' + Math.min(5, Math.max(1, tier));
+}
+function getSpellCostLabel(sk){
+  const tier = Number(sk?.slotTier || 1);
+  const cost = Math.max(1, Number(sk?.slotCost || 1));
+  const ord = tier === 1 ? '1st'
+             : tier === 2 ? '2nd'
+             : tier === 3 ? '3rd'
+             : tier + 'th';
+  return ord + '-level spell slot x' + cost;
+}
+function canCastSkill(sk){
+  if (!sk) return false;
+  const key = getSpellSlotKey(sk);
+  const cost = Math.max(1, Number(sk?.slotCost || 1));
+  return Number(G.p.spellSlots?.[key] || 0) >= cost;
+}
+function spendSpellCost(sk){
+  if (!sk) return false;
+  const key = getSpellSlotKey(sk);
+  const cost = Math.max(1, Number(sk?.slotCost || 1));
+  if (Number(G.p.spellSlots?.[key] || 0) < cost) return false;
+  G.p.spellSlots[key] -= cost;
+  return true;
+}
 
 const DICE = {
   d(sides) { return Math.floor(Math.random() * sides) + 1; },
@@ -4583,19 +4614,26 @@ function rCbt() {
   h += '<div class="sbtn ' + basicSel + '" data-i="-1" ' + (G.cbt.autoCombat ? 'style="opacity:0.4;cursor:not-allowed;"' : '') + '>';
   h += '<div class="sn">🪄 Staff Swing</div>';
   h += '<div class="sc">0 MP · Physical · 1d4 + STR</div>';
-  h += '<div class="sd">Basic attack when out of mana</div>';
+  h += '<div class="sd">Swing your staff when your spell slots are spent.</div>';
   h += '</div>';
   
-  const ls = G.p.skills.filter(s => s.on);
+    const ls = G.p.skills.filter(s => s.on);
   for (let i = 0; i < ls.length; i++) {
     const s = ls[i];
+    const costLabel = typeof getSpellCostLabel === 'function'
+      ? getSpellCostLabel(s)
+      : (s.c + ' MP');
     const u = G.p.mp >= s.c && !G.cbt.autoCombat;
     const sel = G.cbt.sk == i && !G.cbt.autoCombat ? 'sel' : '';
     const critPct = Math.floor(getTotalCritChance() * 100);
+    const highTier = Number(s.slotTier || 1) >= 4;
+    const nameStyle = highTier ? ' style="color:#ef4444;font-weight:700;"' : '';
     
-    h += '<div class="sbtn ' + (u ? '' : 'dis') + ' ' + sel + '" data-i="' + i + '" ' + (G.cbt.autoCombat ? 'style="opacity:0.4;cursor:not-allowed;"' : '') + '>';
-    h += '<div class="sn">' + (s.buff ? '🛡️' : '⚡') + ' ' + s.n + '</div>';
-    h += '<div class="sc">' + s.c + ' MP · ' + (s.dmg || 'Buff') + ' · ' + critPct + '% Crit' + (G.cbt.autoCombat ? ' · 🤖 AUTO' : '') + '</div>';
+    h += '<div class="sbtn ' + (u ? '' : 'dis') + ' ' + sel + '" data-i="' + i + '" ' +
+         (G.cbt.autoCombat ? 'style="opacity:0.4;cursor:not-allowed;"' : '') + '>';
+    h += '<div class="sn"' + nameStyle + '>' + (s.buff ? '🛡️' : '⚡') + ' ' + s.n + '</div>';
+    h += '<div class="sc">' + costLabel + ' · ' + (s.dmg || 'Buff') + ' · ' +
+         critPct + '% Crit' + (G.cbt.autoCombat ? ' · 🤖 AUTO' : '') + '</div>';
     h += '<div class="sd">' + s.d + '</div>';
     if (s.elem) {
       const weakAgainst = s.elem === 'fire' ? 'Ice' : s.elem === 'ice' ? 'Fire' : s.elem === 'lightning' ? 'Void' : '';
