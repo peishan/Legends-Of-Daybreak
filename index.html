@@ -4262,7 +4262,7 @@ function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='food')return'🍽️';if(i.t=='drink')return'🥤';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
-const SAVE_KEY = 'ldb_save_v4';
+const SAVE_KEY = 'ldb_save_v5';
 
 function saveGame() {
   const saveData = {
@@ -4289,7 +4289,14 @@ function saveGame() {
     bestiary: G.bestiary,
     partySynergies: G.partySynergies,
     autoCombat: G.cbt.autoCombat,
-    state: G.state
+    state: G.state,
+    // Phase 2 data
+    talents: G.talents,
+    runes: G.runes,
+    riftCounter: G.riftCounter,
+    currentRift: G.currentRift,
+    riftFightsRemaining: G.riftFightsRemaining,
+    riftTriggerAt: G.riftTriggerAt
   };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -4304,8 +4311,49 @@ function saveGame() {
 function loadGame() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
-    const data = JSON.parse(raw);
+    // Phase 2 migration: try v4 if v5 not found
+    let data = null;
+    if (!raw) {
+      const v4raw = localStorage.getItem('ldb_save_v4');
+      if (v4raw) {
+        data = JSON.parse(v4raw);
+        data._migrated = true;
+        lg('💾 Migrated save from v4 to v5');
+      } else {
+        return false;
+      }
+    } else {
+      data = JSON.parse(raw);
+    }
+
+    // Phase 2: Initialize missing fields
+    if (!data.player) return false;
+    if (!data.player.talents) data.player.talents = [];
+    if (!data.player.runes) data.player.runes = [];
+    if (data.player.riftCounter === undefined) data.player.riftCounter = 0;
+    if (data.player.currentRift === undefined) data.player.currentRift = null;
+    if (data.player.riftFightsRemaining === undefined) data.player.riftFightsRemaining = 0;
+    if (data.player.riftTriggerAt === undefined) data.player.riftTriggerAt = 3 + Math.floor(Math.random() * 3);
+
+    // Migrate old equipment: add sockets to Lv 10+ items
+    function migrateItemSockets(item) {
+      if (!item || item.sockets) return;
+      const ilvl = item.ilvl || 1;
+      if (ilvl >= 10) {
+        const count = ilvl >= 20 ? 3 : ilvl >= 15 ? 2 : 1;
+        item.sockets = new Array(count).fill(null);
+      }
+    }
+    if (data.player.equipment) {
+      for (let slot in data.player.equipment) {
+        migrateItemSockets(data.player.equipment[slot]);
+      }
+    }
+    if (data.player.inventory) {
+      for (let item of data.player.inventory) {
+        migrateItemSockets(item);
+      }
+    }
 
     // OFFLINE REGEN: Calculate HP/MP recovery based on time away
     if (data.lastSaveTime) {
@@ -4321,6 +4369,14 @@ function loadGame() {
         }
       }
     }
+
+    // Apply migrated Phase 2 data
+    G.talents = data.player.talents || [];
+    G.runes = data.player.runes || [];
+    G.riftCounter = data.player.riftCounter || 0;
+    G.currentRift = data.player.currentRift || null;
+    G.riftFightsRemaining = data.player.riftFightsRemaining || 0;
+    G.riftTriggerAt = data.player.riftTriggerAt || (3 + Math.floor(Math.random() * 3));
 
     G.p.lvl = data.player.lvl;
     G.p.xp = data.player.xp;
