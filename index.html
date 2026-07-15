@@ -712,7 +712,7 @@ const G = {
   quests: [
     { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
-    { id: 3, n: 'Focus Warrior', d: 'Complete a 25-minute focus session', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
+    { id: 3, n: 'Focus Warrior', d: 'Complete any focus session (5–25 min)', t: 'focus', c: 0, need: 1, rw: { xp: 100, g: 50 }, done: false },
     { id: 4, n: "Joel's Shield Oath", d: 'Win 5 battles with Joel in your party', t: 'joel_battle', c: 0, need: 5, rw: { xp: 80, g: 40 }, done: false, chain: 'joel', reqQuest: null, reqParty: 'Joel' },
     { id: 5, n: "Aisyah's Hidden Blade", d: 'Defeat 3 Skeletons in the Catacombs with Aisyah', t: 'aisyah_kill', c: 0, need: 3, rw: { xp: 120, g: 60 }, done: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah', hidden: true, revealed: false },
     { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
@@ -3722,18 +3722,22 @@ function eqI(ix){
 }
 
 let ft=null;
-function sf(){
-  G.state='focus'; G.fs=Date.now(); G.fd=25*60*1000;
+function sf(minutes){
+  const validMinutes = [5, 10, 15, 20, 25].includes(minutes) ? minutes : 25;
+  G.state='focus'; G.fs=Date.now(); G.fd=validMinutes*60*1000; G.focusDuration = validMinutes;
   triggerSoelCommentary('focus');
-  lg('Focus started! 25 min...'); render();
+  lg('Focus started! ' + validMinutes + ' min...'); render();
   ft=setInterval(()=>{
     const el=Date.now()-G.fs, rm=G.fd-el;
     if(G.state!='focus'){clearInterval(ft);return;}
     if(rm<=0){
-      clearInterval(ft); G.p.fstreak++; G.p.xp+=100; G.p.gold+=50;
+      clearInterval(ft);
+      const baseXp = G.focusDuration * 4;
+      const baseGold = G.focusDuration * 2;
+      G.p.fstreak++; G.p.xp+=baseXp; G.p.gold+=baseGold;
       const fq=G.quests.find(q=>q.t=='focus');
       if(fq&&!fq.done){fq.c++;checkQ();}
-      lg('Focus complete! +100XP +50G Streak:'+G.p.fstreak);
+      lg('Focus complete! +' + baseXp + 'XP +' + baseGold + 'G Streak:'+G.p.fstreak);
       checkAchievements();
       lvlup(); G.state='menu'; render();
     }else{
@@ -4327,6 +4331,9 @@ function attachEvents() {
     el.addEventListener('click',()=>{const a=el.getAttribute('data-a');setS(a);});
   });
   const cfb=document.querySelector('.cfb');
+  document.querySelectorAll('.focus-session-btn').forEach(el=>{
+    el.addEventListener('click',()=>{sf(parseInt(el.getAttribute('data-min')));});
+  });
   if(cfb)cfb.addEventListener('click',cf);
   const btnAuto=document.getElementById('btn-auto');
   if(btnAuto)btnAuto.addEventListener('click',toggleAutoCombat);
@@ -4603,7 +4610,7 @@ function rMenu(){
     {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
-    {i:'🧘',l:'Focus Mode',d:'25-min ADHD timer',a:'focus'},
+    {i:'🧘',l:'Focus Mode',d:'5–25 min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
   ];
   let h='<div class="grid2">';
@@ -4741,7 +4748,7 @@ function rCbt() {
   const basicSel = G.cbt.sk === -1 && !G.cbt.autoCombat ? 'sel' : '';
   h += '<div class="sbtn ' + basicSel + '" data-i="-1" ' + (G.cbt.autoCombat ? 'style="opacity:0.4;cursor:not-allowed;"' : '') + '>';
   h += '<div class="sn">🪄 Staff Swing</div>';
-  h += '<div class="sc">· Physical · 1d4 + STR</div>';
+  h += '<div class="sc">0 MP · Physical · 1d4 + STR</div>';
   h += '<div class="sd">Swing your staff when your spell slots are spent.</div>';
   h += '</div>';
   
@@ -4966,9 +4973,35 @@ function rQuest(){
 }
 
 function rFocus(){
+  // If focus is not active, show the session picker
+  if (!G.fs || G.state !== 'focus') {
+    let h = '<div class="fv">';
+    h += '<div style="font-size:42px;margin-bottom:8px;">🧘</div>';
+    h += '<div class="fl" style="font-size:18px;font-weight:700;margin-bottom:4px;">Focus Mode</div>';
+    h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:20px;">Pick a session length</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto;">';
+    const sessions = [
+      {m:5, xp:20, g:10, label:'Quick Sprint'},
+      {m:10, xp:40, g:20, label:'Short Burst'},
+      {m:15, xp:60, g:30, label:'Deep Work'},
+      {m:20, xp:80, g:40, label:'Extended Flow'},
+      {m:25, xp:100, g:50, label:'Full Pomodoro'}
+    ];
+    for (let s of sessions) {
+      h += '<button class="focus-session-btn" data-min="' + s.m + '" style="padding:14px 18px;border-radius:14px;border:2px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;">';
+      h += '<span>' + s.m + ' min — ' + s.label + '</span>';
+      h += '<span style="font-size:11px;color:var(--success);">+' + s.xp + 'XP +' + s.g + 'G</span>';
+      h += '</button>';
+    }
+    h += '</div>';
+    h += '<div class="ftips" style="margin-top:20px;"><h3>ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward scales with session length!</li></ul></div>';
+    h += '</div>';
+    return h;
+  }
+  // Active focus session
   const el=Date.now()-(G.fs||Date.now()),rm=Math.max(0,G.fd-el);
   const m=Math.floor(rm/60000),s=Math.floor((rm%60000)/1000);
-  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode</div></div><div class="ftips"><h3>ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +100 XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
+  return '<div class="fv"><div class="fc"><div class="ft" id="ft">'+m+':'+s.toString().padStart(2,'0')+'</div><div class="fl">Focus Mode — ' + (G.focusDuration || 25) + ' min</div></div><div class="ftips"><h3>ADHD Tips</h3><ul><li>One task at a time. No multitasking.</li><li>Put your phone face down.</li><li>Break the task into tiny steps.</li><li>Reward: +' + ((G.focusDuration||25)*4) + ' XP when done!</li></ul></div><button class="cfb">Cancel</button></div>';
 }
 
 function rTemple() {
