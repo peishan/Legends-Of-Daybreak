@@ -906,11 +906,11 @@ const G = {
       mechanic: 'freeze', freezeChance: 0.3, desc: '30% chance to freeze a party member each turn.' },
     { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 1500, g: 1000,
       mechanic: 'devour', devourTurn: 5, desc: 'Devours a party member on turn 5 if not staggered by all attackers.' },
-    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 2500, g: 2000,
+    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 350, mhp: 350, atk: 40, def: 25, xp: 2500, g: 2000,
       mechanic: 'apocalypse', apocalypseTurn: 6, desc: 'Ultimate attack on turn 6. Must kill before then.' },
-    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 5000, g: 5000,
+    { n: 'Starlord', zone: 'Starlight Spire', hp: 450, mhp: 450, atk: 50, def: 30, xp: 5000, g: 5000,
       mechanic: 'cosmic', cosmicPhase: 1, desc: 'The final boss. Shifts cosmic phases. Requires perfect coordination.' },
-    { n: 'The Planarch', zone: 'Arcane Planar Tower', hp: 3000, mhp: 3000, atk: 55, def: 32, xp: 6000, g: 6000,
+    { n: 'The Planarch', zone: 'Arcane Planar Tower', hp: 550, mhp: 550, atk: 55, def: 32, xp: 6000, g: 6000,
       mechanic: 'planar_shift', shiftTurn: 3, phases: 5, currentPhase: 1, desc: 'A being of pure planar energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning rifts, and warping the battlefield. Survive 5 planar shifts to win.' }
   ],
 
@@ -1186,36 +1186,49 @@ const LOOT_TABLES = {
   weapon: [
     { n: 'Worn Dagger',       ilvl: 1,  atk: 2, dex: 1 },
     { n: 'Apprentice Staff',  ilvl: 1,  atk: 2, int: 1 },
-    { n: 'Iron Sword',        ilvl: 2,  atk: 4, str: 1 },
-    { n: 'Crystal Wand',      ilvl: 3,  atk: 5, int: 2 },
-    { n: 'Steel Longsword',   ilvl: 4,  atk: 7, str: 2 },
-    { n: 'Flamebrand',        ilvl: 5,  atk: 9, int: 2, fireDmg: 2 },
-    { n: 'Frostbite Blade',   ilvl: 6,  atk: 10, dex: 2, iceDmg: 3 },
-    { n: 'Stormcaller Staff', ilvl: 7,  atk: 12, int: 3, lightDmg: 3 },
-    { n: 'Void Reaver',       ilvl: 8,  atk: 15, str: 3, voidDmg: 4 },
-    { n: 'Dragonfang',        ilvl: 9,  atk: 18, str: 4, fireDmg: 5 },
-    { n: 'Starlight Blade',   ilvl: 10, atk: 22, int: 5, lightDmg: 6 },
+    { n: 'Iron Sword',        ilvl: 2,  atk: 5, str: 1 },
+    { n: 'Crystal Wand',      ilvl: 3,  atk: 7, int: 2 },
+    { n: 'Steel Longsword',   ilvl: 4,  atk: 10, str: 2 },
+    { n: 'Flamebrand',        ilvl: 5,  atk: 14, int: 2, fireDmg: 3 },
+    { n: 'Frostbite Blade',   ilvl: 6,  atk: 18, dex: 2, iceDmg: 4 },
+    { n: 'Stormcaller Staff', ilvl: 7,  atk: 22, int: 3, lightDmg: 5 },
+    { n: 'Void Reaver',       ilvl: 8,  atk: 28, str: 3, voidDmg: 6 },
+    { n: 'Dragonfang',        ilvl: 9,  atk: 35, str: 4, fireDmg: 8 },
+    { n: 'Starlight Blade',   ilvl: 10, atk: 45, int: 5, lightDmg: 10 },
+    { n: 'Planar Edge',       ilvl: 11, atk: 55, int: 6, arcaneDmg: 12 },
+    { n: 'Nexus Blade',       ilvl: 12, atk: 68, str: 7, voidDmg: 15 },
+    { n: 'Cosmic Staff',      ilvl: 13, atk: 82, int: 8, lightDmg: 18 },
+    { n: 'Eternity Edge',     ilvl: 14, atk: 95, dex: 8, iceDmg: 20 },
+    { n: 'Ascendant Wand',    ilvl: 15, atk: 110, int: 10, arcaneDmg: 25 },
   ],
   armor: [
     { n: 'Tattered Cloth',    ilvl: 1,  def: 1 },
     { n: 'Novice Robes',      ilvl: 1,  def: 2, int: 1 },
-    { n: 'Leather Vest',      ilvl: 2,  def: 3, dex: 1 },
-    { n: 'Chain Shirt',       ilvl: 3,  def: 4, con: 1 },
-    { n: 'Scale Mail',        ilvl: 4,  def: 6, str: 1 },
-    { n: 'Enchanted Robes',   ilvl: 5,  def: 5, int: 3, mpRegen: 1 },
-    { n: 'Frostweave Cloak',  ilvl: 6,  def: 7, int: 2, iceRes: 0.15 },
-    { n: 'Thunder Plate',     ilvl: 7,  def: 9, con: 2, lightRes: 0.15 },
-    { n: 'Abyssal Mail',      ilvl: 8,  def: 11, str: 2, voidRes: 0.2 },
-    { n: 'Dragonscale Armor', ilvl: 9,  def: 13, con: 3, fireRes: 0.2 },
-    { n: 'Celestial Vestment',ilvl: 10, def: 15, wis: 4, hpRegen: 3 },
+    { n: 'Leather Vest',      ilvl: 2,  def: 4, dex: 1 },
+    { n: 'Chain Shirt',       ilvl: 3,  def: 6, con: 1 },
+    { n: 'Scale Mail',        ilvl: 4,  def: 9, str: 1 },
+    { n: 'Enchanted Robes',   ilvl: 5,  def: 12, int: 3, mpRegen: 2 },
+    { n: 'Frostweave Cloak',  ilvl: 6,  def: 15, int: 2, iceRes: 0.15 },
+    { n: 'Thunder Plate',     ilvl: 7,  def: 18, con: 2, lightRes: 0.15 },
+    { n: 'Abyssal Mail',      ilvl: 8,  def: 22, str: 2, voidRes: 0.2 },
+    { n: 'Dragonscale Armor', ilvl: 9,  def: 26, con: 3, fireRes: 0.2 },
+    { n: 'Celestial Vestment',ilvl: 10, def: 30, wis: 4, hpRegen: 4 },
+    { n: 'Planar Weave',      ilvl: 11, def: 35, int: 5, arcaneRes: 0.25 },
+    { n: 'Nexus Plate',       ilvl: 12, def: 40, con: 5, voidRes: 0.25 },
+    { n: 'Cosmic Robes',      ilvl: 13, def: 46, wis: 6, mpRegen: 5 },
+    { n: 'Eternity Mail',     ilvl: 14, def: 52, str: 6, fireRes: 0.3 },
+    { n: 'Ascendant Vestment',ilvl: 15, def: 58, int: 7, hpRegen: 6, mpRegen: 6 },
   ],
   head: [
     { n: 'Cloth Hood',        ilvl: 1,  def: 1, wis: 1 },
     { n: 'Leather Cap',       ilvl: 2,  def: 2, dex: 1 },
     { n: 'Iron Helm',         ilvl: 3,  def: 3, str: 1 },
-    { n: 'Scholars Hat',    ilvl: 4,  def: 2, int: 2 },
+    { n: 'Scholars Hat',      ilvl: 4,  def: 2, int: 2 },
     { n: 'Crown of Thought',  ilvl: 6,  def: 4, int: 3, mpRegen: 1 },
     { n: 'Dragon Helm',       ilvl: 8,  def: 6, con: 2, fireRes: 0.1 },
+    { n: 'Planar Crown',      ilvl: 11, def: 8, int: 4, arcaneRes: 0.15 },
+    { n: 'Nexus Hood',        ilvl: 13, def: 10, wis: 5, mpRegen: 3 },
+    { n: 'Ascendant Diadem',  ilvl: 15, def: 12, int: 6, arcaneDmg: 5 },
   ],
   hands: [
     { n: 'Cloth Wraps',       ilvl: 1,  def: 1, dex: 1 },
@@ -1223,6 +1236,9 @@ const LOOT_TABLES = {
     { n: 'Iron Gauntlets',    ilvl: 3,  def: 2, str: 1 },
     { n: 'Spellweaver Gloves',ilvl: 5,  def: 2, int: 2, mpRegen: 1 },
     { n: 'Void Grips',        ilvl: 7,  def: 3, atk: 2, voidDmg: 2 },
+    { n: 'Planar Grips',      ilvl: 11, def: 4, int: 3, arcaneDmg: 3 },
+    { n: 'Nexus Gauntlets',   ilvl: 13, def: 5, str: 3, atk: 4 },
+    { n: 'Ascendant Wraps',   ilvl: 15, def: 6, dex: 4, critChance: 0.05 },
   ],
   feet: [
     { n: 'Worn Boots',        ilvl: 1,  def: 1, con: 1 },
@@ -1231,6 +1247,9 @@ const LOOT_TABLES = {
     { n: 'Arcane Slippers',   ilvl: 4,  def: 1, int: 2 },
     { n: 'Winged Boots',      ilvl: 6,  def: 2, dex: 3 },
     { n: 'Void Walkers',      ilvl: 8,  def: 3, dex: 2, voidRes: 0.1 },
+    { n: 'Planar Treads',     ilvl: 11, def: 4, int: 3, mpRegen: 2 },
+    { n: 'Nexus Boots',       ilvl: 13, def: 5, dex: 4 },
+    { n: 'Ascendant Walkers', ilvl: 15, def: 6, con: 4, hpRegen: 3 },
   ],
   ring: [
     { n: 'Copper Ring',       ilvl: 1,  con: 1 },
@@ -1240,6 +1259,9 @@ const LOOT_TABLES = {
     { n: 'Sapphire Ring',     ilvl: 5,  int: 2, mpRegen: 1 },
     { n: 'Emerald Ring',      ilvl: 6,  dex: 2, critChance: 0.03 },
     { n: 'Void Band',         ilvl: 8,  int: 3, voidDmg: 2 },
+    { n: 'Planar Band',       ilvl: 11, int: 4, arcaneDmg: 3 },
+    { n: 'Nexus Ring',        ilvl: 13, wis: 4, mpRegen: 3 },
+    { n: 'Ascendant Signet',  ilvl: 15, int: 5, con: 3, hpRegen: 2 },
   ],
   amulet: [
     { n: 'String Charm',      ilvl: 1,  wis: 1 },
@@ -1248,6 +1270,9 @@ const LOOT_TABLES = {
     { n: 'Dragon Tooth',      ilvl: 5,  str: 2, fireRes: 0.1 },
     { n: 'Starlight Pendant', ilvl: 7,  wis: 3, hpRegen: 2 },
     { n: 'Abyssal Locket',    ilvl: 9,  int: 4, voidDmg: 3 },
+    { n: 'Planar Pendant',    ilvl: 11, int: 5, arcaneDmg: 4 },
+    { n: 'Nexus Amulet',      ilvl: 13, wis: 5, con: 3, voidRes: 0.2 },
+    { n: 'Ascendant Charm',   ilvl: 15, int: 6, wis: 4, hpRegen: 3, mpRegen: 3 },
   ]
 };
 
@@ -1576,6 +1601,16 @@ const DICE = {
 };
 
 window.DICE = DICE;
+// Spell cost reduction based on level (rebalance fix)
+function getReducedSpellCost(baseCost, spellName) {
+  const level = G.p.lvl;
+  let reduction = 0;
+  if (level >= 10) reduction = Math.floor(baseCost * 0.25); // 25% reduction at Lv 10+
+  if (level >= 15) reduction = Math.floor(baseCost * 0.40); // 40% reduction at Lv 15+
+  if (level >= 20) reduction = Math.floor(baseCost * 0.50); // 50% reduction at Lv 20+
+  return Math.max(1, baseCost - reduction);
+}
+
 
 // --- Backward compatibility ---
 function rd(sides) { return DICE.d(sides); }
@@ -2734,6 +2769,15 @@ function eturn() {
   
   for (let p of G.party) { if (p.frozen) p.frozen = false; }
   if (G.p.frozen) G.p.frozen = false;
+
+  // MP REGENERATION (rebalance fix)
+  const baseMpRegen = 3;
+  const intMpRegen = Math.floor(G.p.stats.int / 5);
+  const eqMpRegen = getEquippedStats().mpRegen || 0;
+  const totalMpRegen = baseMpRegen + intMpRegen + eqMpRegen;
+  if (totalMpRegen > 0 && G.p.mp < G.p.mmp) {
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + totalMpRegen);
+  }
 }
 
 function getBestSkill() {
@@ -3620,15 +3664,15 @@ function sc(zi) {
     else if(t=='Dragon Whelp')e={...e,hp:80,mhp:80,atk:15,def:5,xp:80,g:35};
     else if(t=='Ash Drake')e={...e,hp:100,mhp:100,atk:17,def:6,xp:100,g:50};
     else if(t=='Elder Wyrm')e={...e,hp:180,mhp:180,atk:22,def:10,xp:200,g:100};
-    else if(t=='Star Sentinel')e={...e,hp:120,mhp:120,atk:18,def:8,xp:120,g:60};
-    else if(t=='Celestial Knight')e={...e,hp:140,mhp:140,atk:20,def:10,xp:150,g:80};
-    else if(t=='Astral Lord')e={...e,hp:250,mhp:250,atk:25,def:12,xp:300,g:150};
-    else if(t=='Planar Wisp')e={...e,hp:200,mhp:200,atk:20,def:10,xp:120,g:60,elem:'arcane'};
-    else if(t=='Rift Stalker')e={...e,hp:220,mhp:220,atk:22,def:12,xp:140,g:70,elem:'void'};
-    else if(t=='Aether Golem')e={...e,hp:280,mhp:280,atk:18,def:18,xp:160,g:80,elem:'arcane'};
-    else if(t=='Chronomancer')e={...e,hp:180,mhp:180,atk:25,def:8,xp:180,g:90,elem:'arcane'};
-    else if(t=='Void Weaver')e={...e,hp:240,mhp:240,atk:24,def:14,xp:200,g:100,elem:'void'};
-    else if(t=='Planar Leviathan')e={...e,hp:400,mhp:400,atk:30,def:20,xp:350,g:150,elem:'arcane'};
+    else if(t=='Star Sentinel')e={...e,hp:100,mhp:100,atk:18,def:8,xp:120,g:60};
+    else if(t=='Celestial Knight')e={...e,hp:120,mhp:120,atk:20,def:10,xp:150,g:80};
+    else if(t=='Astral Lord')e={...e,hp:150,mhp:150,atk:25,def:12,xp:300,g:150};
+    else if(t=='Planar Wisp')e={...e,hp:130,mhp:130,atk:20,def:10,xp:120,g:60,elem:'arcane'};
+    else if(t=='Rift Stalker')e={...e,hp:150,mhp:150,atk:22,def:12,xp:140,g:70,elem:'void'};
+    else if(t=='Aether Golem')e={...e,hp:180,mhp:180,atk:18,def:18,xp:160,g:80,elem:'arcane'};
+    else if(t=='Chronomancer')e={...e,hp:140,mhp:140,atk:25,def:8,xp:180,g:90,elem:'arcane'};
+    else if(t=='Void Weaver')e={...e,hp:160,mhp:160,atk:24,def:14,xp:200,g:100,elem:'void'};
+    else if(t=='Planar Leviathan')e={...e,hp:220,mhp:220,atk:30,def:20,xp:350,g:150,elem:'arcane'};
       e.id=i; e.status=[]; G.cbt.en.push(e);
     }
     lg('Entered '+z.n+'! '+ec+' enemies appear!');
@@ -4772,16 +4816,17 @@ function rCbt() {
   const basicSel = G.cbt.sk === -1 && !G.cbt.autoCombat ? 'sel' : '';
   h += '<div class="sbtn ' + basicSel + '" data-i="-1" ' + (G.cbt.autoCombat ? 'style="opacity:0.4;cursor:not-allowed;"' : '') + '>';
   h += '<div class="sn">🪄 Staff Swing</div>';
-  h += '<div class="sc">Physical · 1d4 + STR</div>';
+  h += '<div class="sc">0 MP · Physical · 1d4 + STR</div>';
   h += '<div class="sd">Swing your staff when your spell slots are spent.</div>';
   h += '</div>';
   
     const ls = G.p.skills.filter(s => s.on);
   for (let i = 0; i < ls.length; i++) {
     const s = ls[i];
-    const costLabel = typeof getSpellCostLabel === 'function'
-      ? getSpellCostLabel(s)
-      : (s.c + ' MP');
+    const reducedCost = getReducedSpellCost(s.c, s.n);
+    const costLabel = reducedCost < s.c 
+      ? reducedCost + ' MP (' + s.c + ' base)'
+      : (typeof getSpellCostLabel === 'function' ? getSpellCostLabel(s) : (s.c + ' MP'));
     const u = G.p.mp >= s.c && !G.cbt.autoCombat;
     const sel = G.cbt.sk == i && !G.cbt.autoCombat ? 'sel' : '';
     const critPct = Math.floor(getTotalCritChance() * 100);
