@@ -436,7 +436,7 @@ const G = {
     { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
     { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669' },
     { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2' },
-    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit', resurrect: { name: 'Breath of Life', cooldown: 0, maxCooldown: 5, healPct: 0.5, desc: 'Revives a fallen ally with 50% HP. 5-turn cooldown.' } },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit' },
     { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
     { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
     { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true }
@@ -843,8 +843,7 @@ const G = {
       stock: [
         { n: 'Flaming Longsword', t: 'wep', q: 1, r: 'rare', price: 120, atk: 8, fireDmg: 4 },
         { n: 'Cloak of Protection', t: 'arm', q: 1, r: 'rare', price: 150, def: 4, wis: 2 },
-        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 },
-        { n: 'Rod of Resurrection', t: 'revive', q: 1, r: 'epic', price: 250, eff: 'revive', v: 75, d: 'A gleaming rod that channels divine energy to restore life. Revives fallen ally with 75% HP.' }
+        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Larloch', t: 'trader', title: 'Vecna Artifacts', icon: '', col: '#7c2d12', zone: 'Abyssal Depths', zoneLv: 8,
@@ -2614,40 +2613,7 @@ function doPhysicalAttack(target) {
   return true;
 }
 
-
-function doElizResurrect(member) {
-  // Check if Eliz has resurrect ability and it's off cooldown
-  if (!member.resurrect) return false;
-  if (member.resurrect.cooldown > 0) {
-    member.resurrect.cooldown--;
-    return false;
-  }
-
-  // Find dead party members (excluding Eliz herself)
-  const deadMembers = G.party.filter(p => p.on && p.hp <= 0 && p.n !== 'Eliz');
-  if (deadMembers.length === 0) return false;
-
-  // Prioritize: San (player) first, then others
-  let target = deadMembers.find(p => p.n === 'San');
-  if (!target) target = deadMembers[0];
-
-  // Perform resurrection
-  const healAmount = Math.floor(target.mhp * member.resurrect.healPct);
-  target.hp = Math.max(1, healAmount);
-  member.resurrect.cooldown = member.resurrect.maxCooldown;
-
-  lg('💚 ' + member.n + ' casts ' + member.resurrect.name + '!');
-  lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP!');
-
-  return true;
-}
-
 function doPartyAttack(member) {
-
-  // Eliz prioritizes resurrection over attacking
-  if (member.n === 'Eliz' && member.hp > 0) {
-    if (doElizResurrect(member)) return;
-  }
   const aliveEnemies = G.cbt.en.filter(e => e.hp > 0);
   if (aliveEnemies.length === 0) return;
   
@@ -3055,12 +3021,6 @@ function handleZoneHazards() {
 }
 
 function finishPlayerTurn() {
-  // Reduce Eliz's resurrect cooldown each turn
-  const eliz = G.party.find(p => p.on && p.n === 'Eliz');
-  if (eliz && eliz.resurrect && eliz.resurrect.cooldown > 0) {
-    eliz.resurrect.cooldown--;
-  }
-
   for (let p of G.party) {
     if (p.on && p.hp > 0) doPartyAttack(p);
   }
@@ -5098,7 +5058,9 @@ function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
     el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
-    else if(a=='storymode')startStoryMode();});
+    else if(a=='storymode')startStoryMode();
+    else if(a=='runes')setS('runes');
+    else if(a=='talents')setS('talents');});
   });
   document.querySelectorAll('.story-view .abtn').forEach(el=>{
     el.addEventListener('click',advanceStory);
@@ -5819,12 +5781,8 @@ function rCbt() {
 
   // Potion button
   const potions = getCombatPotions();
-  const usablePotions = potions.filter(p => {
-    if (p.t === 'revive') return getDeadParty().length > 0;
-    return true;
-  });
-  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (usablePotions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (usablePotions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
-  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + usablePotions.length + ' usable)') + '</button>';
+  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (potions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (potions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
+  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + potions.length + ')') + '</button>';
 
   // Potion menu
   if (G.potionMenu && potions.length > 0) {
@@ -5833,7 +5791,6 @@ function rCbt() {
     h += '<div style="display:flex;flex-direction:column;gap:6px;">';
     for (let i = 0; i < G.p.inv.length; i++) {
       const it = G.p.inv[i];
-      // Regular potions (heal/mana)
       if ((it.t === 'pot' || it.t === 'food' || it.t === 'drink') && (it.eff === 'heal' || it.eff === 'mana')) {
         const isHeal = it.eff === 'heal';
         const icon = isHeal ? '❤️' : '💧';
@@ -5843,17 +5800,6 @@ function rCbt() {
         h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + (full ? 'var(--disabled)' : color) + ';font-size:12px;font-weight:600;cursor:' + (full ? 'not-allowed' : 'pointer') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (full ? '0.5' : '1') + ';">';
         h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
         h += '<span>' + (full ? 'FULL' : '+' + it.v + ' ' + (isHeal ? 'HP' : 'MP')) + ' · ' + current + '</span>';
-        h += '</button>';
-      }
-      // Revive items (Phoenix Feather, etc.)
-      else if (it.t === 'revive') {
-        const deadMembers = getDeadParty();
-        const hasDead = deadMembers.length > 0;
-        const color = hasDead ? '#f59e0b' : 'var(--disabled)';
-        const icon = '🔥';
-        h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + color + ';font-size:12px;font-weight:600;cursor:' + (hasDead ? 'pointer' : 'not-allowed') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (hasDead ? '1' : '0.5') + ';">';
-        h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
-        h += '<span>' + (hasDead ? 'Revive 50% HP' : 'No one to revive') + ' · ' + deadMembers.length + ' down</span>';
         h += '</button>';
       }
     }
@@ -6356,41 +6302,6 @@ function togglePotionMenu() {
 function usePotionInCombat(invIndex) {
   const it = G.p.inv[invIndex];
   if (!it) return;
-
-  // Handle revive items (Phoenix Feather, Rod of Resurrection, etc.)
-  if (it.t === 'revive') {
-    const deadMembers = getDeadParty();
-    if (deadMembers.length === 0) {
-      lg('❌ No fallen allies to revive!');
-      G.potionMenu = false;
-      render();
-      return;
-    }
-
-    // Prioritize: San (player) first, then party members
-    let target = deadMembers.find(p => p.n === 'San');
-    if (!target) target = deadMembers[0];
-
-    // Use item's v value for revive percentage (50% for Phoenix Feather, 75% for Rod of Resurrection)
-    const revivePct = it.v || 50;
-    const healAmount = Math.floor(target.mhp * (revivePct / 100));
-    target.hp = Math.max(1, healAmount);
-    target.on = true;
-
-    lg('🔥 ' + it.n + ' radiates with sacred light!');
-    lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP (' + revivePct + '%)!');
-
-    it.q--;
-    if (it.q <= 0) {
-      G.p.inv.splice(invIndex, 1);
-    }
-
-    G.potionMenu = false;
-    render();
-    return;
-  }
-
-  // Regular potions only
   if (it.t !== 'pot' && it.t !== 'food' && it.t !== 'drink') return;
 
   if (it.eff === 'heal') {
@@ -6417,8 +6328,7 @@ function usePotionInCombat(invIndex) {
 function getCombatPotions() {
   return G.p.inv.filter(it => 
     (it.t === 'pot' || it.t === 'food' || it.t === 'drink') &&
-    (it.eff === 'heal' || it.eff === 'mana') ||
-    it.t === 'revive'
+    (it.eff === 'heal' || it.eff === 'mana')
   );
 }
 </script>
