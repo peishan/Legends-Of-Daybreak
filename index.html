@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<he
+    if (data.potionMenu !== undefined) G.potionMenu = data.potionMenu;ad>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src https: fonts.gstatic.com;">
@@ -673,15 +674,15 @@ const G = {
     { n: 'Starlight Spire', lv: 10, d: 'A tower that touches the sky. The final challenge.', en: ['Star Sentinel','Celestial Knight','Astral Lord'], loot: ['Star Fragment','Celestial Dust','Astral Core'], xp: 400, dg: 'impossible' },
     { n: 'Arcane Planar Tower', lv: 11, d: 'A spire torn between dimensions. Reality frays here — gravity shifts, time stutters, and the walls breathe with planar magic.', en: ['Planar Wisp','Rift Stalker','Aether Golem','Chronomancer','Void Weaver','Planar Leviathan'], loot: ['Planar Essence','Aether Shard','Chrono Sand','Void Thread','Reality Anchor'], xp: 500, dg: 'impossible' },
     // PHASE 2: PLANAR REALMS (Lv 12-20)
-    { n: 'The Shattered Veil', lv: 12, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 600, dg: 'impossible' },
-    { n: 'Emberfall Dimension', lv: 13, elem: 'fire', d: 'A realm where gravity pulls downward into an infinite inferno. Ash rains upward.', en: ['Ember Drake','Ash Titan','Flame Serpent'], loot: ['Ember Core','Ash Crystal','Inferno Gem'], xp: 750, dg: 'impossible' },
-    { n: 'Frostbound Eternity', lv: 14, elem: 'ice', d: "Time itself freezes here. Every snowflake contains a frozen moment of someone's death.", en: ['Frost Lich','Glacial Behemoth','Snow Revenant'], loot: ['Eternal Ice','Frozen Tear','Glacial Heart'], xp: 900, dg: 'impossible' },
-    { n: "Stormcaller's Cradle", lv: 15, elem: 'lightning', d: "Lightning births new life in this storm-womb. Everything here crackles with potential.", en: ['Storm Titan','Lightning Wraith','Thunderborn'], loot: ['Storm Heart','Conductive Crystal','Thunder Pearl'], xp: 1100, dg: 'impossible' },
-    { n: 'The Void Between', lv: 16, elem: 'void', d: "The space between dimensions. Not empty — hungry. It remembers what you've lost.", en: ['Void Leviathan','Null Elemental','Hungering Maw'], loot: ['Void Essence','Null Shard','Hunger Crystal'], xp: 1400, dg: 'impossible' },
-    { n: 'Chronos Spire', lv: 17, elem: 'arcane', d: 'A tower where past, present, and future exist simultaneously. You fight yourself — or will.', en: ['Time Echo','Chronomancer Lord','Paradox Wraith'], loot: ['Chrono Sand','Time Shard','Paradox Gem'], xp: 1700, dg: 'impossible' },
-    { n: 'Aetherium Gardens', lv: 18, elem: 'arcane', d: 'Floating gardens of pure magic. The flowers sing. The water thinks. Beauty that kills.', en: ['Aether Bloom','Mana Leviathan','Crystal Serpent'], loot: ['Aether Nectar','Mana Bloom','Crystal Lotus'], xp: 2000, dg: 'impossible' },
-    { n: 'The Convergence', lv: 19, elem: 'arcane', d: 'All planar energies meet here. The air shimmers with conflicting resonances. Reality is thin.', en: ['Convergence Avatar','Planar Chimera','Resonance Horror'], loot: ['Convergence Shard','Planar Alloy','Resonance Crystal'], xp: 2500, dg: 'impossible' },
-    { n: 'The Nexus', lv: 20, elem: 'arcane', d: "The heart of all dimensions. The Planarch waits here — or what remains of it. Five phases. No mercy.", en: ['Nexus Guardian','Planar Titan','The Planarch (Phase)'], loot: ['Nexus Core','Planar Crown','Reality Key'], xp: 5000, dg: 'impossible' }
+    { n: 'The Shattered Veil', lv: 12, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 180, dg: 'impossible' },
+    { n: 'Emberfall Dimension', lv: 13, elem: 'fire', d: 'A realm where gravity pulls downward into an infinite inferno. Ash rains upward.', en: ['Ember Drake','Ash Titan','Flame Serpent'], loot: ['Ember Core','Ash Crystal','Inferno Gem'], xp: 220, dg: 'impossible' },
+    { n: 'Frostbound Eternity', lv: 14, elem: 'ice', d: "Time itself freezes here. Every snowflake contains a frozen moment of someone's death.", en: ['Frost Lich','Glacial Behemoth','Snow Revenant'], loot: ['Eternal Ice','Frozen Tear','Glacial Heart'], xp: 260, dg: 'impossible' },
+    { n: "Stormcaller's Cradle", lv: 15, elem: 'lightning', d: "Lightning births new life in this storm-womb. Everything here crackles with potential.", en: ['Storm Titan','Lightning Wraith','Thunderborn'], loot: ['Storm Heart','Conductive Crystal','Thunder Pearl'], xp: 300, dg: 'impossible' },
+    { n: 'The Void Between', lv: 16, elem: 'void', d: "The space between dimensions. Not empty — hungry. It remembers what you've lost.", en: ['Void Leviathan','Null Elemental','Hungering Maw'], loot: ['Void Essence','Null Shard','Hunger Crystal'], xp: 340, dg: 'impossible' },
+    { n: 'Chronos Spire', lv: 17, elem: 'arcane', d: 'A tower where past, present, and future exist simultaneously. You fight yourself — or will.', en: ['Time Echo','Chronomancer Lord','Paradox Wraith'], loot: ['Chrono Sand','Time Shard','Paradox Gem'], xp: 380, dg: 'impossible' },
+    { n: 'Aetherium Gardens', lv: 18, elem: 'arcane', d: 'Floating gardens of pure magic. The flowers sing. The water thinks. Beauty that kills.', en: ['Aether Bloom','Mana Leviathan','Crystal Serpent'], loot: ['Aether Nectar','Mana Bloom','Crystal Lotus'], xp: 420, dg: 'impossible' },
+    { n: 'The Convergence', lv: 19, elem: 'arcane', d: 'All planar energies meet here. The air shimmers with conflicting resonances. Reality is thin.', en: ['Convergence Avatar','Planar Chimera','Resonance Horror'], loot: ['Convergence Shard','Planar Alloy','Resonance Crystal'], xp: 460, dg: 'impossible' },
+    { n: 'The Nexus', lv: 20, elem: 'arcane', d: "The heart of all dimensions. The Planarch waits here — or what remains of it. Five phases. No mercy.", en: ['Nexus Guardian','Planar Titan','The Nexus Planarch'], loot: ['Nexus Core','Planar Crown','Reality Key'], xp: 500, dg: 'impossible' }
   ],
 
   // Zone hazards: environmental dangers that trigger during combat
@@ -691,7 +692,17 @@ const G = {
     'Frostspire Ruins': { name: 'Freezing Wind', chance: 0.15, type: 'freeze', turns: 1, msg: 'A bone-chilling wind sweeps through!', desc: '15% chance per turn: freeze a random member (skip next turn)' },
     'Abyssal Depths': { name: 'Void Corruption', chance: 0.05, type: 'mana_drain', drain: 3, msg: 'The void hungers...', desc: '5% chance per turn: drain 3 MP from all' },
     'Sunken Temple': { name: 'Drowning Pressure', chance: 0.12, type: 'damage', dmg: 4, elem: 'none', msg: 'The water pressure surges!', desc: '12% chance per turn: 4 damage to all (water pressure)' },
-    'Arcane Planar Tower': { name: 'Reality Fracture', chance: 0.18, type: 'damage', dmg: 12, elem: 'arcane', msg: 'Reality tears open — raw planar energy surges through the battlefield!', desc: '18% chance per turn: 12 arcane damage to all (planar bleed)' }
+    'Arcane Planar Tower': { name: 'Reality Fracture', chance: 0.18, type: 'damage', dmg: 12, elem: 'arcane', msg: 'Reality tears open — raw planar energy surges through the battlefield!', desc: '18% chance per turn: 12 arcane damage to all (planar bleed)' },
+    // PHASE 2 REALM HAZARDS
+    'The Shattered Veil': { name: 'Memory Shard', chance: 0.15, type: 'damage', dmg: 6, elem: 'arcane', msg: 'A shard of dead memory cuts through the veil!', desc: '15% chance per turn: 10 arcane damage to all' },
+    'Emberfall Dimension': { name: 'Updraft Ash', chance: 0.20, type: 'damage', dmg: 5, elem: 'fire', msg: 'Ash rains upward, burning from below!', desc: '20% chance per turn: 8 fire damage to all' },
+    'Frostbound Eternity': { name: 'Frozen Moment', chance: 0.10, type: 'freeze', turns: 1, msg: 'Time freezes around you — a moment of death preserved!', desc: '12% chance per turn: freeze random member (skip turn)' },
+    "Stormcaller's Cradle": { name: 'Birth Storm', chance: 0.15, type: 'damage', dmg: 8, elem: 'lightning', msg: 'Lightning births itself from nothing — strikes twice!', desc: '18% chance per turn: 14 lightning damage to random member' },
+    'The Void Between': { name: 'Hunger Gaze', chance: 0.10, type: 'mana_drain', drain: 4, msg: 'The void remembers your name... and hungers for your magic.', desc: '10% chance per turn: drain 8 MP from all' },
+    'Chronos Spire': { name: 'Time Echo', chance: 0.12, type: 'damage', dmg: 6, elem: 'arcane', msg: 'Your past self attacks your present!', desc: '15% chance per turn: 10 arcane damage (temporal paradox)' },
+    'Aetherium Gardens': { name: 'Mana Bloom', chance: 0.10, type: 'mana_drain', drain: 3, msg: 'The flowers sing — and drink your magic.', desc: '12% chance per turn: drain 5 MP from all (mana bloom)' },
+    'The Convergence': { name: 'Resonance Clash', chance: 0.18, type: 'damage', dmg: 10, elem: 'arcane', msg: 'Conflicting planar energies clash — everything shudders!', desc: '22% chance per turn: 16 arcane damage to all (resonance clash)' },
+    'The Nexus': { name: 'Reality Collapse', chance: 0.20, type: 'damage', dmg: 12, elem: 'void', msg: 'The heart of dimensions buckles — reality itself tears!', desc: '25% chance per turn: 20 void damage to all (reality collapse)' }
   },
 
   exploreEvents: [
@@ -728,11 +739,11 @@ const G = {
     { id: 6, n: 'Rest with Eliz', d: 'Rest 3 times with Eliz in your active party before time runs out', t: 'rest_with', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, timed: true, timer: 180, timerMax: 180, reqParty: 'Eliz' },
     { id: 7, n: "Senedra's Scout Report", d: 'Explore 3 different zones with Senedra before time runs out', t: 'explore_with', c: 0, need: 3, rw: { xp: 90, g: 45 }, done: false, timed: true, timer: 240, timerMax: 240, reqParty: 'Senedra' },
     { id: 8, n: "Aisyah's Ledger", d: 'Defeat 10 enemies in any zone with Aisyah to recover her lost trading notes', t: 'aisyah_battle', c: 0, need: 10, rw: { xp: 150, g: 100 }, done: false, hidden: true, revealed: false, chain: 'aisyah', reqQuest: 4, reqParty: 'Aisyah' },
-    { id: 9, n: 'Tower Ascent I: The Threshold', d: 'Reach Level 10 and enter the Arcane Planar Tower', t: 'reach_level', c: 0, need: 10, rw: { xp: 300, g: 200 }, done: false, chain: 'tower' },
+    { id: 9, n: 'Tower Ascent I: The Threshold', d: 'Reach Level 10 and enter the Arcane Planar Tower', t: 'reach_level', c: 0, need: 10, rw: { xp: 90, g: 85 }, done: false, chain: 'tower' },
     { id: 10, n: 'Tower Ascent II: Planar Warden', d: 'Defeat 5 Planar Wisps in the Arcane Planar Tower', t: 'kill_specific', target: 'Planar Wisp', c: 0, need: 5, rw: { xp: 400, g: 250 }, done: false, chain: 'tower', reqQuest: 9 },
     { id: 11, n: 'Tower Ascent III: Rift Sealer', d: 'Defeat 3 Rift Stalkers and 3 Void Weavers', t: 'kill_specific', target: 'Rift Stalker', c: 0, need: 3, rw: { xp: 500, g: 300 }, done: false, chain: 'tower', reqQuest: 10, hidden: true, revealed: false },
-    { id: 12, n: 'Tower Ascent IV: Chronomancer Slayer', d: 'Defeat 3 Chronomancers before time unravels (timed: 300 ticks)', t: 'kill_specific', target: 'Chronomancer', c: 0, need: 3, rw: { xp: 600, g: 400 }, done: false, timed: true, timer: 300, timerMax: 300, chain: 'tower', reqQuest: 11, hidden: true, revealed: false },
-    { id: 13, n: 'Tower Ascent V: The Planarch', d: 'Defeat The Planarch and claim the Arcane Planar Tower', t: 'boss_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 2000, g: 1500 }, done: false, chain: 'tower', reqQuest: 12, hidden: true, revealed: false }
+    { id: 12, n: 'Tower Ascent IV: Chronomancer Slayer', d: 'Defeat 3 Chronomancers before time unravels (timed: 300 ticks)', t: 'kill_specific', target: 'Chronomancer', c: 0, need: 3, rw: { xp: 150, g: 140 }, done: false, timed: true, timer: 300, timerMax: 300, chain: 'tower', reqQuest: 11, hidden: true, revealed: false },
+    { id: 13, n: 'Tower Ascent V: The Planarch', d: 'Defeat The Planarch and claim the Arcane Planar Tower', t: 'boss_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 420, g: 1500 }, done: false, chain: 'tower', reqQuest: 12, hidden: true, revealed: false }
   ],
 
   bounties: [
@@ -770,9 +781,9 @@ const G = {
     { id: 'perfectionist', n: 'Perfectionist', d: 'Complete a 25-minute focus session', icon: '🧘', t: 'focus', need: 1, rw: { xp: 150, g: 75 }, done: false, secret: false },
     { id: 'secret_lover', n: 'Secret Admirer', d: 'Reach max affinity with a certain familiar...', icon: '❓', t: 'affinity', target: 'Soel', need: 100, rw: { xp: 500, g: 200 }, done: false, secret: true },
     { id: 'void_touched', n: 'Void Touched', d: 'Survive the deepest darkness', icon: '❓', t: 'boss_specific', target: 'Abyssal Horror', need: 1, rw: { xp: 500, g: 250 }, done: false, secret: true },
-    { id: 'planar_pioneer', n: 'Planar Pioneer', d: 'Enter the Arcane Planar Tower', icon: '🌀', t: 'reach_level', need: 11, rw: { xp: 300, g: 200 }, done: false, secret: false },
+    { id: 'planar_pioneer', n: 'Planar Pioneer', d: 'Enter the Arcane Planar Tower', icon: '🌀', t: 'reach_level', need: 11, rw: { xp: 90, g: 85 }, done: false, secret: false },
     { id: 'rift_walker', n: 'Rift Walker', d: 'Defeat 20 enemies in the Arcane Planar Tower', icon: '🌌', t: 'kills', need: 20, rw: { xp: 500, g: 300 }, done: false, secret: false },
-    { id: 'planarch_slayer', n: 'Planarch Slayer', d: 'Defeat The Planarch and claim the tower', icon: '👑', t: 'boss_specific', target: 'The Planarch', need: 1, rw: { xp: 2000, g: 1500 }, done: false, secret: false },
+    { id: 'planarch_slayer', n: 'Planarch Slayer', d: 'Defeat The Planarch and claim the tower', icon: '👑', t: 'boss_specific', target: 'The Planarch', need: 1, rw: { xp: 420, g: 1500 }, done: false, secret: false },
     { id: 'planar_master', n: 'Planar Master', d: 'Reach Level 15', icon: '⭐', t: 'level', need: 15, rw: { xp: 1000, g: 600 }, done: false, secret: false }
   ],
 
@@ -780,9 +791,9 @@ const G = {
     { id: 's1', n: 'The Awakening', d: 'Reach Level 3 and defeat your first boss', t: 'reach_level', c: 0, need: 3, rw: { xp: 200, g: 100 }, done: false, unlocked: true, chapter: 1 },
     { id: 's2', n: 'Echoes of the Past', d: 'Reach Level 5 and explore Stormhold', t: 'reach_level', c: 0, need: 5, rw: { xp: 350, g: 200 }, done: false, unlocked: false, chapter: 2 },
     { id: 's3', n: 'The Frozen Crown', d: 'Reach Level 7 and defeat the Frozen Knight', t: 'reach_level', c: 0, need: 7, rw: { xp: 500, g: 300 }, done: false, unlocked: false, chapter: 3 },
-    { id: 's4', n: 'Into the Void', d: 'Reach Level 9 and survive the Abyssal Depths', t: 'reach_level', c: 0, need: 9, rw: { xp: 800, g: 500 }, done: false, unlocked: false, chapter: 4 },
-    { id: 's5', n: 'Starlight Ascension', d: 'Reach Level 10 and conquer the Starlight Spire', t: 'reach_level', c: 0, need: 10, rw: { xp: 1500, g: 1000 }, done: false, unlocked: false, chapter: 5 },
-    { id: 's6', n: 'Planar Convergence', d: 'Reach Level 12 and ascend the Arcane Planar Tower', t: 'reach_level', c: 0, need: 12, rw: { xp: 2000, g: 1200 }, done: false, unlocked: false, chapter: 6 }
+    { id: 's4', n: 'Into the Void', d: 'Reach Level 9 and survive the Abyssal Depths', t: 'reach_level', c: 0, need: 9, rw: { xp: 200, g: 180 }, done: false, unlocked: false, chapter: 4 },
+    { id: 's5', n: 'Starlight Ascension', d: 'Reach Level 10 and conquer the Starlight Spire', t: 'reach_level', c: 0, need: 10, rw: { xp: 300, g: 250 }, done: false, unlocked: false, chapter: 5 },
+    { id: 's6', n: 'Planar Convergence', d: 'Reach Level 12 and ascend the Arcane Planar Tower', t: 'reach_level', c: 0, need: 12, rw: { xp: 420, g: 1200 }, done: false, unlocked: false, chapter: 6 }
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
@@ -902,26 +913,28 @@ const G = {
   ],
 
   bosses: [
-    { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 100, g: 80, 
+    { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 35, g: 35, 
       mechanic: 'rampage', rampageTurn: 3, rampageDmg: 25, desc: 'Enrages after 3 turns. All party members must attack.' },
-    { n: 'Bone Tyrant', zone: 'Cursed Catacombs', hp: 250, mhp: 250, atk: 15, def: 8, xp: 200, g: 150,
+    { n: 'Bone Tyrant', zone: 'Cursed Catacombs', hp: 250, mhp: 250, atk: 15, def: 8, xp: 60, g: 55,
       mechanic: 'resurrect', resurrectCount: 2, desc: 'Resurrects twice. Kill it 3 times.' },
-    { n: 'Crystal Leviathan', zone: 'Crystal Caverns', hp: 300, mhp: 300, atk: 18, def: 10, xp: 300, g: 200,
+    { n: 'Crystal Leviathan', zone: 'Crystal Caverns', hp: 300, mhp: 300, atk: 18, def: 10, xp: 90, g: 85,
       mechanic: 'phase', phases: 3, currentPhase: 1, phaseHp: 100, desc: 'Shifts phases every 100 HP. Changes weaknesses.' },
-    { n: 'Ember Dragon', zone: 'Ember Peak', hp: 400, mhp: 400, atk: 22, def: 12, xp: 450, g: 300,
+    { n: 'Ember Dragon', zone: 'Ember Peak', hp: 400, mhp: 400, atk: 22, def: 12, xp: 120, g: 110,
       mechanic: 'inferno', infernoTurn: 4, infernoDmg: 40, desc: 'Charges inferno for 4 turns. Interrupt or die.' },
-    { n: 'Storm Tyrant', zone: 'Stormhold', hp: 500, mhp: 500, atk: 25, def: 15, xp: 600, g: 400,
+    { n: 'Storm Tyrant', zone: 'Stormhold', hp: 500, mhp: 500, atk: 25, def: 15, xp: 150, g: 140,
       mechanic: 'lightning_rod', rodTurns: 3, desc: 'Lightning strikes weakest member every 3 turns.' },
-    { n: 'Frost Queen', zone: 'Frostspire Ruins', hp: 600, mhp: 600, atk: 28, def: 18, xp: 800, g: 500,
+    { n: 'Frost Queen', zone: 'Frostspire Ruins', hp: 600, mhp: 600, atk: 28, def: 18, xp: 200, g: 180,
       mechanic: 'freeze', freezeChance: 0.3, desc: '30% chance to freeze a party member each turn.' },
-    { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 1500, g: 1000,
+    { n: 'Abyssal Leviathan', zone: 'Abyssal Depths', hp: 1000, mhp: 1000, atk: 35, def: 20, xp: 300, g: 250,
       mechanic: 'devour', devourTurn: 5, desc: 'Devours a party member on turn 5 if not staggered by all attackers.' },
-    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 2500, g: 2000,
+    { n: 'Elder Dragon', zone: "Dragon's Maw", hp: 1500, mhp: 1500, atk: 40, def: 25, xp: 460, g: 2000,
       mechanic: 'apocalypse', apocalypseTurn: 6, desc: 'Ultimate attack on turn 6. Must kill before then.' },
-    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 5000, g: 5000,
+    { n: 'Starlord', zone: 'Starlight Spire', hp: 2500, mhp: 2500, atk: 50, def: 30, xp: 600, g: 500,
       mechanic: 'cosmic', cosmicPhase: 1, desc: 'The final boss. Shifts cosmic phases. Requires perfect coordination.' },
-    { n: 'The Planarch', zone: 'Arcane Planar Tower', hp: 3000, mhp: 3000, atk: 55, def: 32, xp: 6000, g: 6000,
-      mechanic: 'planar_shift', shiftTurn: 3, phases: 5, currentPhase: 1, desc: 'A being of pure planar energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning rifts, and warping the battlefield. Survive 5 planar shifts to win.' }
+    { n: 'The Planarch', zone: 'Arcane Planar Tower', hp: 3000, mhp: 3000, atk: 55, def: 32, xp: 800, g: 600,
+      mechanic: 'planar_shift', shiftTurn: 3, phases: 5, currentPhase: 1, desc: 'A being of pure planar energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning rifts, and warping the battlefield. Survive 5 planar shifts to win.' },
+    { n: 'The Nexus Planarch', zone: 'The Nexus', hp: 2500, mhp: 2500, atk: 60, def: 35, xp: 1200, g: 800,
+      mechanic: 'nexus_planarch', shiftTurn: 4, phases: 5, currentPhase: 1, desc: 'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.', nexus: true }
   ],
 
   currentBoss: null,
@@ -2209,43 +2222,97 @@ function addRuneLoot(zoneName) {
   }
 }
 
-function combineRunes(runeIndices) {
-  if (runeIndices.length !== 3) { lg('❌ Need exactly 3 runes to combine!'); return; }
-  const runes = runeIndices.map(i => G.runes[i]).filter(r => r);
-  if (runes.length !== 3) { lg('❌ Invalid rune selection!'); return; }
-  const types = [...new Set(runes.map(r => r.type))];
-  if (types.length !== 1) { lg('❌ All 3 runes must be the same type!'); return; }
+// Rune combine modal state
+G.runeCombineModal = { open: false, selected: [] };
 
-  // Remove the 3 runes
-  for (let i of runeIndices.sort((a,b) => b-a)) G.runes.splice(i, 1);
+function openCombineModal() {
+  G.runeCombineModal = { open: true, selected: [] };
+  render();
+}
 
-  // Create upgraded rune
+function closeCombineModal() {
+  G.runeCombineModal = { open: false, selected: [] };
+  render();
+}
+
+function toggleCombineRune(runeIndex) {
+  const idx = G.runeCombineModal.selected.indexOf(runeIndex);
+  if (idx > -1) {
+    G.runeCombineModal.selected.splice(idx, 1);
+  } else {
+    if (G.runeCombineModal.selected.length >= 3) {
+      lg('❌ Max 3 runes selected!');
+      return;
+    }
+    G.runeCombineModal.selected.push(runeIndex);
+  }
+  render();
+}
+
+function getCombinePreview() {
+  const selected = G.runeCombineModal.selected.map(i => G.runes[i]).filter(r => r);
+  if (selected.length !== 3) return null;
+  const types = [...new Set(selected.map(r => r.type))];
+  if (types.length !== 1) return { error: 'All 3 must be same type!' };
   const base = RUNE_TYPES[types[0]];
   const upgradeRarity = base.r === 'common' ? 'uncommon' : base.r === 'uncommon' ? 'rare' : 'epic';
   const mult = base.r === 'common' ? 1.5 : 2;
-  const newRune = {
-    type: types[0],
+  return {
     name: base.name + ' +',
     icon: base.icon,
     stat: base.stat,
     val: Math.floor(base.val * mult),
     r: upgradeRarity,
     color: base.color,
-    id: Date.now() + Math.random()
+    pct: base.pct ? Math.min(0.30, base.pct * mult) : null
   };
-  if (base.pct) newRune.pct = Math.min(0.30, base.pct * mult);
-  G.runes.push(newRune);
-  lg('✨ Combined into ' + newRune.icon + ' ' + newRune.name + ' (' + upgradeRarity + ')!');
 }
 
-function socketRune(itemIndex, slot, runeIndex) {
-  const item = G.p.inv[itemIndex];
-  if (!item || !item.sockets) { lg('❌ Item has no sockets!'); return; }
-  const rune = G.runes[runeIndex];
-  if (!rune) { lg('❌ Invalid rune!'); return; }
-  if (item.sockets[slot]) { lg('❌ Socket already filled!'); return; }
+function doCombineRunes() {
+  const preview = getCombinePreview();
+  if (!preview || preview.error) {
+    lg(preview?.error || '❌ Select 3 matching runes!');
+    return;
+  }
+  const selected = [...G.runeCombineModal.selected].sort((a,b) => b-a);
+  for (let i of selected) G.runes.splice(i, 1);
+  G.runes.push({
+    type: preview.name.replace(' +','').toLowerCase().replace('rune of ',''),
+    ...preview,
+    id: Date.now() + Math.random()
+  });
+  lg('✨ Combined into ' + preview.icon + ' ' + preview.name + ' (' + preview.r + ')!');
+  closeCombineModal();
+}
 
-  item.sockets[slot] = rune;
+// Legacy wrapper
+function combineRunes(runeIndices) {
+  openCombineModal();
+}
+
+// Rune socketing modal state
+G.runeSocketModal = { open: false, itemIndex: null, slotIndex: null };
+
+function openSocketModal(itemIndex, slotIndex) {
+  const item = G.p.inv[itemIndex];
+  if (!item || !item.sockets || item.sockets[slotIndex]) return;
+  if (G.runes.length === 0) { lg('❌ No runes available!'); return; }
+  G.runeSocketModal = { open: true, itemIndex, slotIndex };
+  render();
+}
+
+function closeSocketModal() {
+  G.runeSocketModal = { open: false, itemIndex: null, slotIndex: null };
+  render();
+}
+
+function confirmSocketRune(runeIndex) {
+  const { itemIndex, slotIndex } = G.runeSocketModal;
+  const item = G.p.inv[itemIndex];
+  const rune = G.runes[runeIndex];
+  if (!item || !rune || item.sockets[slotIndex]) return;
+
+  item.sockets[slotIndex] = rune;
   G.runes.splice(runeIndex, 1);
   lg('💎 Socketed ' + rune.icon + ' ' + rune.name + ' into ' + item.n + '!');
 
@@ -2256,6 +2323,13 @@ function socketRune(itemIndex, slot, runeIndex) {
     const pctKey = rune.stat + 'Pct';
     item.socketStats[pctKey] = (item.socketStats[pctKey] || 0) + rune.pct;
   }
+
+  closeSocketModal();
+}
+
+// Legacy wrapper for backward compat
+function socketRune(itemIndex, slot, runeIndex) {
+  openSocketModal(itemIndex, slot);
 }
 
 function unsocketRune(itemIndex, slot) {
@@ -2618,6 +2692,13 @@ function doEnemyAttack(enemy) {
       target = activeParty[Math.floor(Math.random() * activeParty.length)];
     }
   }
+
+  // Tank Taunt: Joel 40% chance to intercept attacks on allies
+  const joel = G.party.find(p => p.on && p.n === 'Joel' && p.hp > 0 && p.r === 'Tank');
+  if (joel && target !== joel && Math.random() < 0.40) {
+    lg('🛡️ Joel taunts ' + enemy.n + '! The attack is drawn to his shield!');
+    target = joel;
+  }
   
   const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor((target.def || 0) / 2);
   const attackResult = DICE.attackRoll({
@@ -2792,6 +2873,89 @@ function handleBossMechanics() {
             const riftMinion = { n: 'Planar Rift', hp: 80, mhp: 80, atk: 15, def: 5, xp: 50, g: 30, elem: 'arcane', id: G.cbt.en.length, status: [] };
             G.cbt.en.push(riftMinion);
             lg('   🌀 A Planar Rift opens! A minion emerges!');
+          }
+        }
+        break;
+      case 'nexus_planarch':
+        if (G.cbt.turn > 0 && G.cbt.turn % e.shiftTurn === 0 && e.currentPhase < e.phases) {
+          e.currentPhase++;
+          e.atk += 8;
+          e.def += 5;
+          const nexusPhases = ['ARCANE', 'FIRE', 'ICE', 'LIGHTNING', 'VOID'];
+          const phaseName = nexusPhases[e.currentPhase - 1] || 'UNKNOWN';
+          const phaseElem = ['arcane', 'fire', 'ice', 'lightning', 'void'][e.currentPhase - 1] || 'arcane';
+          e.elem = phaseElem;
+          lg('🌌 ═══════════════════════════════════════');
+          lg('🌌 THE NEXUS PLANARCH SHIFTS TO ' + phaseName + '!');
+          lg('🌌 ═══════════════════════════════════════');
+          lg('   Phase ' + e.currentPhase + '/5 | ATK: ' + e.atk + ' | DEF: ' + e.def + ' | Element: ' + phaseElem.toUpperCase());
+
+          // Phase-specific mechanics
+          if (e.currentPhase === 2) { // FIRE
+            lg('   🔥 INFERNO AURA: All take 15 fire damage!');
+            const fireDmg = 15;
+            G.p.hp = Math.max(1, G.p.hp - fireDmg);
+            for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - fireDmg); }
+            lg('   The dimension burns...');
+          } else if (e.currentPhase === 3) { // ICE
+            lg('   ❄️ GLACIAL PRISON: Freezing a random target!');
+            const targets = [G.p, ...G.party.filter(p => p.on && p.hp > 0)];
+            const victim = targets[Math.floor(Math.random() * targets.length)];
+            victim.frozen = true;
+            lg('   ' + (victim.n || victim.name) + ' is frozen solid! Skip next turn!');
+          } else if (e.currentPhase === 4) { // LIGHTNING
+            lg('   ⚡ CHAIN LIGHTNING: Striking two targets!');
+            const targets = [G.p, ...G.party.filter(p => p.on && p.hp > 0)];
+            if (targets.length > 0) {
+              const t1 = targets[Math.floor(Math.random() * targets.length)];
+              let t2 = targets[Math.floor(Math.random() * targets.length)];
+              while (targets.length > 1 && t2 === t1) t2 = targets[Math.floor(Math.random() * targets.length)];
+              const lightningDmg = 20;
+              t1.hp = Math.max(1, t1.hp - lightningDmg);
+              t2.hp = Math.max(1, t2.hp - lightningDmg);
+              lg('   ⚡ ' + (t1.n || t1.name) + ' and ' + (t2.n || t2.name) + ' take ' + lightningDmg + ' lightning damage!');
+            }
+          } else if (e.currentPhase === 5) { // VOID
+            lg('   🌑 REALITY COLLAPSE: The void hungers for everything!');
+            const voidDmg = 30;
+            G.p.hp = Math.max(1, G.p.hp - voidDmg);
+            for (let p of G.party) {
+              if (p.on) {
+                if (p.passive === 'guardian_spirit') {
+                  p.hp = Math.max(1, p.hp - voidDmg);
+                  if (p.hp === 1) lg('✨ ' + p.n + "'s Guardian Spirit holds against the void!");
+                } else if (p.n === 'Soel') {
+                  p.hp = 1;
+                  lg('🔥 Soel phases through the collapse — unkillable!');
+                } else {
+                  p.hp = Math.max(1, p.hp - voidDmg);
+                }
+              }
+            }
+            lg('   💥 All take ' + voidDmg + ' void damage! The end approaches...');
+          }
+
+          // Spawn Nexus minion every phase shift
+          const minionNames = ['Nexus Shard', 'Planar Construct', 'Reality Fragment', 'Dimensional Echo', 'Void Remnant'];
+          const minionHp = [120, 150, 180, 220, 280];
+          const minionAtk = [18, 22, 26, 30, 35];
+          const idx = Math.min(e.currentPhase - 1, 4);
+          const minion = {
+            n: minionNames[idx],
+            hp: minionHp[idx], mhp: minionHp[idx],
+            atk: minionAtk[idx], def: 8 + (idx * 3),
+            xp: 100 + (idx * 50), g: 80 + (idx * 40),
+            elem: phaseElem,
+            id: G.cbt.en.length,
+            status: []
+          };
+          G.cbt.en.push(minion);
+          lg('   🌀 ' + minion.n + ' manifests! (' + minion.hp + ' HP)');
+
+          // Victory check on final phase death
+          if (e.currentPhase === 5) {
+            lg('   🌑 THE PLANARCH HAS REVEALED ITS TRUE FORM!');
+            lg('   Survive the void. End the rift. Choose your reality.');
           }
         }
         break;
@@ -3045,11 +3209,12 @@ function pa(si, ti) {
   
   const advInfo = getAttackAdvantage(G.p, tg, true);
   const eqStats2 = getEquippedStats();
+  const senedraBonus = G.party.some(p => p.on && p.n === 'Senedra' && p.hp > 0) ? 2 : 0;
   const attackResult = DICE.attackRoll({
     attackerLevel: G.p.lvl,
     abilityScore: G.p.stats.int + eqStats2.int,
     proficiency: true,
-    bonus: Math.floor((G.p.eq.weapon?.atk || 0) / 2) + eqStats2.atk,
+    bonus: Math.floor((G.p.eq.weapon?.atk || 0) / 2) + eqStats2.atk + senedraBonus,
     targetAC: getEnemyAC(tg),
     advantage: advInfo.advantage
   });
@@ -3081,6 +3246,7 @@ function pa(si, ti) {
     lg('✨ Synergy critical! ' + sk.n + ' strikes true!');
   }
   
+  const soelBonus = G.party.some(p => p.on && p.n === 'Soel' && p.hp > 0) ? 1.10 : 1.0;
   const damageResult = DICE.damageRoll({
     diceExpr: sk.dmg,
     abilityScore: G.p.stats.int,
@@ -3088,7 +3254,18 @@ function pa(si, ti) {
     bonus: G.p.eq.weapon ? G.p.eq.weapon.atk : 0
   });
   
-  let finalDamage = damageResult.total;
+  let finalDamage = Math.floor(damageResult.total * soelBonus);
+  if (soelBonus > 1) {
+    lg('🐱 Soel\'s fortune smiles! +10% damage!');
+  }
+
+  // Mezstorm Storm Surge: +15% spell damage
+  const mezstorm = G.party.find(p => p.on && p.n === 'Mezstorm' && p.hp > 0);
+  if (mezstorm) {
+    finalDamage = Math.floor(finalDamage * 1.15);
+    lg('⚡ Mezstorm channels the storm! +15% spell damage!');
+  }
+
   if (weakMult > 1) {
     finalDamage = Math.floor(finalDamage * weakMult);
     lg('⚡ ' + sk.elem + ' is super effective! ×' + weakMult);
@@ -3142,6 +3319,29 @@ function pa(si, ti) {
 }
 
 function eturn() {
+  // Mezstorm Arcane Conduit: +3 MP/turn for San
+  const mezstorm = G.party.find(p => p.on && p.n === 'Mezstorm' && p.hp > 0);
+  if (mezstorm) {
+    const oldMp = G.p.mp;
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + 3);
+    if (G.p.mp > oldMp) lg('⚡ Mezstorm shares arcane energy. +' + (G.p.mp - oldMp) + ' MP.');
+  }
+  // Soel's Spirit Warmth: 5% HP regen to all allies
+  const soel = G.party.find(p => p.on && p.n === 'Soel' && p.hp > 0);
+  if (soel) {
+    const regen = Math.max(1, Math.floor(G.p.mhp * 0.05));
+    const oldHp = G.p.hp;
+    G.p.hp = Math.min(G.p.mhp, G.p.hp + regen);
+    if (G.p.hp > oldHp) lg('🐱 Soel purrs warmly. San +' + (G.p.hp - oldHp) + ' HP.');
+    for (let p of G.party) {
+      if (p.on && p.hp > 0 && p.n !== 'Soel') {
+        const pRegen = Math.max(1, Math.floor(p.mhp * 0.05));
+        const pOld = p.hp;
+        p.hp = Math.min(p.mhp, p.hp + pRegen);
+        if (p.hp > pOld) lg('🐱 Soel curls around ' + p.n + '. +' + (p.hp - pOld) + ' HP.');
+      }
+    }
+  }
   applyVoidBleed(); // Phase 2: Void Bleed damage
   for (let e of G.cbt.en) {
     doEnemyAttack(e);
@@ -3560,6 +3760,7 @@ function startRest(siteId) {
   G.rest.tick = 0;
   G.rest.ambushPending = false;
   G.currentDialogue = null;
+  potionMenu: false,
   G.ambushWarning = null;
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
@@ -4052,33 +4253,33 @@ function sc(zi) {
     else if(t=='Void Weaver')e={...e,hp:240,mhp:240,atk:24,def:14,xp:200,g:100,elem:'void'};
     else if(t=='Planar Leviathan')e={...e,hp:400,mhp:400,atk:30,def:20,xp:350,g:150,elem:'arcane'};
     // PHASE 2 ENEMIES
-    else if(t=='Veil Wraith')e={...e,hp:220,mhp:220,atk:22,def:12,xp:180,g:80,elem:'arcane'};
-    else if(t=='Shardling')e={...e,hp:180,mhp:180,atk:25,def:8,xp:160,g:70,elem:'arcane'};
-    else if(t=='Echo Walker')e={...e,hp:200,mhp:200,atk:20,def:15,xp:170,g:75,elem:'arcane'};
-    else if(t=='Ember Drake')e={...e,hp:280,mhp:280,atk:28,def:14,xp:220,g:100,elem:'fire'};
-    else if(t=='Ash Titan')e={...e,hp:350,mhp:350,atk:24,def:20,xp:240,g:110,elem:'fire'};
-    else if(t=='Flame Serpent')e={...e,hp:250,mhp:250,atk:30,def:10,xp:210,g:95,elem:'fire'};
-    else if(t=='Frost Lich')e={...e,hp:300,mhp:300,atk:26,def:18,xp:280,g:120,elem:'ice'};
-    else if(t=='Glacial Behemoth')e={...e,hp:400,mhp:400,atk:22,def:25,xp:300,g:130,elem:'ice'};
-    else if(t=='Snow Revenant')e={...e,hp:260,mhp:260,atk:28,def:12,xp:250,g:105,elem:'ice'};
-    else if(t=='Storm Titan')e={...e,hp:320,mhp:320,atk:30,def:16,xp:320,g:140,elem:'lightning'};
-    else if(t=='Lightning Wraith')e={...e,hp:280,mhp:280,atk:32,def:10,xp:290,g:125,elem:'lightning'};
-    else if(t=='Thunderborn')e={...e,hp:300,mhp:300,atk:28,def:14,xp:310,g:135,elem:'lightning'};
-    else if(t=='Void Leviathan')e={...e,hp:450,mhp:450,atk:35,def:22,xp:400,g:180,elem:'void'};
-    else if(t=='Null Elemental')e={...e,hp:380,mhp:380,atk:30,def:20,xp:360,g:160,elem:'void'};
-    else if(t=='Hungering Maw')e={...e,hp:420,mhp:420,atk:32,def:18,xp:380,g:170,elem:'void'};
-    else if(t=='Time Echo')e={...e,hp:350,mhp:350,atk:28,def:20,xp:340,g:150,elem:'arcane'};
-    else if(t=='Chronomancer Lord')e={...e,hp:320,mhp:320,atk:35,def:15,xp:360,g:160,elem:'arcane'};
-    else if(t=='Paradox Wraith')e={...e,hp:380,mhp:380,atk:30,def:18,xp:350,g:155,elem:'arcane'};
-    else if(t=='Aether Bloom')e={...e,hp:400,mhp:400,atk:28,def:22,xp:380,g:170,elem:'arcane'};
-    else if(t=='Mana Leviathan')e={...e,hp:500,mhp:500,atk:25,def:28,xp:420,g:190,elem:'arcane'};
-    else if(t=='Crystal Serpent')e={...e,hp:380,mhp:380,atk:32,def:16,xp:370,g:165,elem:'arcane'};
-    else if(t=='Convergence Avatar')e={...e,hp:450,mhp:450,atk:35,def:25,xp:450,g:200,elem:'arcane'};
-    else if(t=='Planar Chimera')e={...e,hp:480,mhp:480,atk:38,def:20,xp:470,g:210,elem:'arcane'};
-    else if(t=='Resonance Horror')e={...e,hp:420,mhp:420,atk:40,def:18,xp:460,g:205,elem:'arcane'};
-    else if(t=='Nexus Guardian')e={...e,hp:600,mhp:600,atk:45,def:30,xp:600,g:300,elem:'arcane'};
-    else if(t=='Planar Titan')e={...e,hp:700,mhp:700,atk:40,def:35,xp:650,g:320,elem:'arcane'};
-    else if(t=='The Planarch (Phase)')e={...e,hp:2500,mhp:2500,atk:55,def:32,xp:5000,g:5000,elem:'arcane',mechanic:'planar_shift',shiftTurn:3,phases:5,currentPhase:1,desc:'A being of pure planar energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning rifts, and warping the battlefield. Survive 5 planar shifts to win.'};
+    else if(t=='Veil Wraith')e={...e,hp:120,mhp:120,atk:14,def:8,xp:100,g:45,elem:'arcane'};
+    else if(t=='Shardling')e={...e,hp:100,mhp:100,atk:16,def:5,xp:90,g:40,elem:'arcane'};
+    else if(t=='Echo Walker')e={...e,hp:110,mhp:110,atk:13,def:9,xp:95,g:42,elem:'arcane'};
+    else if(t=='Ember Drake')e={...e,hp:160,mhp:160,atk:18,def:10,xp:140,g:65,elem:'fire'};
+    else if(t=='Ash Titan')e={...e,hp:200,mhp:200,atk:15,def:14,xp:150,g:70,elem:'fire'};
+    else if(t=='Flame Serpent')e={...e,hp:140,mhp:140,atk:20,def:7,xp:130,g:60,elem:'fire'};
+    else if(t=='Frost Lich')e={...e,hp:180,mhp:180,atk:17,def:12,xp:170,g:80,elem:'ice'};
+    else if(t=='Glacial Behemoth')e={...e,hp:240,mhp:240,atk:14,def:16,xp:180,g:85,elem:'ice'};
+    else if(t=='Snow Revenant')e={...e,hp:150,mhp:150,atk:19,def:8,xp:160,g:75,elem:'ice'};
+    else if(t=='Storm Titan')e={...e,hp:200,mhp:200,atk:20,def:11,xp:200,g:95,elem:'lightning'};
+    else if(t=='Lightning Wraith')e={...e,hp:170,mhp:170,atk:22,def:7,xp:190,g:90,elem:'lightning'};
+    else if(t=='Thunderborn')e={...e,hp:190,mhp:190,atk:18,def:10,xp:195,g:92,elem:'lightning'};
+    else if(t=='Void Leviathan')e={...e,hp:280,mhp:280,atk:22,def:15,xp:260,g:120,elem:'void'};
+    else if(t=='Null Elemental')e={...e,hp:240,mhp:240,atk:19,def:13,xp:240,g:110,elem:'void'};
+    else if(t=='Hungering Maw')e={...e,hp:260,mhp:260,atk:20,def:12,xp:250,g:115,elem:'void'};
+    else if(t=='Time Echo')e={...e,hp:220,mhp:220,atk:18,def:14,xp:220,g:100,elem:'arcane'};
+    else if(t=='Chronomancer Lord')e={...e,hp:200,mhp:200,atk:21,def:10,xp:230,g:105,elem:'arcane'};
+    else if(t=='Paradox Wraith')e={...e,hp:240,mhp:240,atk:17,def:13,xp:225,g:102,elem:'arcane'};
+    else if(t=='Aether Bloom')e={...e,hp:260,mhp:260,atk:18,def:15,xp:250,g:115,elem:'arcane'};
+    else if(t=='Mana Leviathan')e={...e,hp:320,mhp:320,atk:15,def:18,xp:270,g:125,elem:'arcane'};
+    else if(t=='Crystal Serpent')e={...e,hp:240,mhp:240,atk:20,def:11,xp:255,g:112,elem:'arcane'};
+    else if(t=='Convergence Avatar')e={...e,hp:300,mhp:300,atk:22,def:16,xp:300,g:140,elem:'arcane'};
+    else if(t=='Planar Chimera')e={...e,hp:320,mhp:320,atk:24,def:13,xp:310,g:145,elem:'arcane'};
+    else if(t=='Resonance Horror')e={...e,hp:280,mhp:280,atk:25,def:12,xp:305,g:142,elem:'arcane'};
+    else if(t=='Nexus Guardian')e={...e,hp:400,mhp:400,atk:26,def:18,xp:380,g:180,elem:'arcane'};
+    else if(t=='Planar Titan')e={...e,hp:450,mhp:450,atk:24,def:20,xp:400,g:190,elem:'arcane'};
+    else if(t=='The Nexus Planarch')e={...e,hp:1200,mhp:1200,atk:35,def:22,xp:5000,g:4000,elem:'arcane',mechanic:'nexus_planarch',shiftTurn:4,phases:5,currentPhase:1,desc:'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.',nexus:true};
       e.id=i; e.status=[]; G.cbt.en.push(e);
     }
     lg('Entered '+z.n+'! '+ec+' enemies appear!');
@@ -4258,7 +4459,7 @@ function flee(){
 }
 
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
-function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Planar Wisp':'✨','Rift Stalker':'🌀','Aether Golem':'🪨','Chronomancer':'⏳','Void Weaver':'🕸️','Planar Leviathan':'🌌','The Planarch':'🌌','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
+function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Planar Wisp':'✨','Rift Stalker':'🌀','Aether Golem':'🪨','Chronomancer':'⏳','Void Weaver':'🕸️','Planar Leviathan':'🌌','The Planarch':'🌌','Nexus Guardian':'🛡️','Planar Titan':'🗿','The Nexus Planarch':'👁️','Nexus Shard':'💎','Planar Construct':'🤖','Reality Fragment':'🪞','Dimensional Echo':'👤','Void Remnant':'🌑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='food')return'🍽️';if(i.t=='drink')return'🥤';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
@@ -4290,13 +4491,16 @@ function saveGame() {
     partySynergies: G.partySynergies,
     autoCombat: G.cbt.autoCombat,
     state: G.state,
+    potionMenu: G.potionMenu,
     // Phase 2 data
     talents: G.talents,
     runes: G.runes,
     riftCounter: G.riftCounter,
     currentRift: G.currentRift,
     riftFightsRemaining: G.riftFightsRemaining,
-    riftTriggerAt: G.riftTriggerAt
+    riftTriggerAt: G.riftTriggerAt,
+    runeSocketModal: G.runeSocketModal,
+    runeCombineModal: G.runeCombineModal
   };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -4377,6 +4581,8 @@ function loadGame() {
     G.currentRift = data.player.currentRift || null;
     G.riftFightsRemaining = data.player.riftFightsRemaining || 0;
     G.riftTriggerAt = data.player.riftTriggerAt || (3 + Math.floor(Math.random() * 3));
+    G.runeSocketModal = data.player.runeSocketModal || { open: false, itemIndex: null, slotIndex: null };
+    G.runeCombineModal = data.player.runeCombineModal || { open: false, selected: [] };
 
     G.p.lvl = data.player.lvl;
     G.p.xp = data.player.xp;
@@ -4517,6 +4723,7 @@ function loadGame() {
     if (data.currentBoss !== undefined) {
       G.currentBoss = data.currentBoss;
     }
+    G.potionMenu = data.potionMenu || false;
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     lg('Game loaded!');
     return true;
@@ -4865,10 +5072,7 @@ function attachEvents() {
       e.stopPropagation();
       const itemIdx=parseInt(el.getAttribute('data-ii'));
       const slot=parseInt(el.getAttribute('data-si'));
-      // Simple: socket first available rune
-      if(G.runes.length>0) socketRune(itemIdx, slot, 0);
-      else lg('❌ No runes available!');
-      render();
+      openSocketModal(itemIdx, slot);
     });
   });
   document.querySelectorAll('.unsocket-btn').forEach(el=>{
@@ -4880,24 +5084,28 @@ function attachEvents() {
   });
   const btnCombine=document.getElementById('btn-combine');
   if(btnCombine)btnCombine.addEventListener('click',()=>{
-    // Auto-combine first 3 matching runes
-    const types = {};
-    for(let i=0;i<G.runes.length;i++){
-      const t=G.runes[i].type;
-      if(!types[t]) types[t]=[];
-      types[t].push(i);
-    }
-    let combined=false;
-    for(let t in types){
-      if(types[t].length>=3){
-        combineRunes(types[t].slice(0,3));
-        combined=true;
-        break;
-      }
-    }
-    if(!combined) lg('❌ Need 3 matching runes to combine!');
-    render();
+    openCombineModal();
   });
+  // Rune socket modal events
+  document.querySelectorAll('.rune-select-btn').forEach(el=>{
+    el.addEventListener('click',()=>{
+      confirmSocketRune(parseInt(el.getAttribute('data-ri')));
+    });
+  });
+  document.querySelectorAll('.rune-modal-back').forEach(el=>{
+    el.addEventListener('click',()=>{
+      closeSocketModal();
+      closeCombineModal();
+    });
+  });
+  // Rune combine modal events
+  document.querySelectorAll('.rune-combine-select').forEach(el=>{
+    el.addEventListener('click',()=>{
+      toggleCombineRune(parseInt(el.getAttribute('data-ri')));
+    });
+  });
+  const btnConfirmCombine=document.getElementById('btn-confirm-combine');
+  if(btnConfirmCombine)btnConfirmCombine.addEventListener('click',doCombineRunes);
   document.querySelectorAll('.nb').forEach(el=>{
     el.addEventListener('click',()=>{const a=el.getAttribute('data-a');setS(a);});
   });
@@ -5171,28 +5379,46 @@ function rBestiary(){
 
 
 function rRunes(){
+  // If socket modal is open, render that instead
+  if (G.runeSocketModal && G.runeSocketModal.open) {
+    return rRuneSocketModal();
+  }
+  // If combine modal is open, render that instead
+  if (G.runeCombineModal && G.runeCombineModal.open) {
+    return rRuneCombineModal();
+  }
+
   let h='<div style="padding:16px;"><h2 class="st">💎 Rune Socketing</h2>';
 
-  // Rune inventory
+  // Rune inventory with better visual cards
   h+='<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:10px;">Rune Inventory ('+G.runes.length+')</div>';
   if(G.runes.length===0){
     h+='<div style="font-size:12px;color:var(--text-dim);padding:12px;background:var(--bg-card);border-radius:12px;margin-bottom:16px;">No runes yet. Defeat enemies in Lv 10+ zones to find them.</div>';
   }else{
-    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">';
+    h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">';
     for(let i=0;i<G.runes.length;i++){
       const r=G.runes[i];
-      h+='<div class="rune-item" data-ri="'+i+'" style="background:var(--bg-card);border:2px solid '+r.color+';border-radius:10px;padding:8px 12px;cursor:pointer;user-select:none;">';
-      h+='<span style="font-size:16px;">'+r.icon+'</span> <span style="font-size:12px;font-weight:600;">'+r.name+'</span>';
-      h+='<div style="font-size:10px;color:var(--text-dim);">'+r.stat+'+'+r.val+(r.pct?' ('+Math.floor(r.pct*100)+'%)':'')+'</div>';
+      const rarityGlow = r.r==='rare'?'0 0 8px '+r.color+'40':r.r==='epic'?'0 0 12px '+r.color+'60':'';
+      h+='<div class="rune-item" data-ri="'+i+'" style="background:var(--bg-card);border:2px solid '+r.color+';border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;user-select:none;box-shadow:'+rarityGlow+';transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.transform=\'none\'">';
+      h+='<div style="font-size:24px;margin-bottom:4px;">'+r.icon+'</div>';
+      h+='<div style="font-size:11px;font-weight:700;color:'+r.color+';">'+r.name+'</div>';
+      h+='<div style="font-size:10px;color:var(--text-dim);margin-top:4px;">';
+      const statLabel = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[r.stat] || r.stat;
+      h+= statLabel + ' +' + r.val;
+      if(r.pct) h+=' ('+Math.floor(r.pct*100)+'%)';
+      h+='</div>';
+      h+='<div style="font-size:9px;color:var(--disabled);margin-top:2px;text-transform:uppercase;">'+r.r+'</div>';
       h+='</div>';
     }
     h+='</div>';
 
-    // Combine button
-    h+='<button id="btn-combine" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--accent);background:var(--bg-card);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px;">Combine 3 Same Runes</button>';
+    // Combine button — now opens modal
+    h+='<button id="btn-combine" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--accent);background:linear-gradient(135deg,var(--accent),#6d28d9);color:white;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:16px;box-shadow:0 2px 8px var(--shadow-accent);transition:transform 0.2s;" onmouseover="this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.transform=\'none\'">';
+    h+='🔮 Combine Runes';
+    h+='</button>';
   }
 
-  // Socketable gear
+  // Socketable gear with stat preview
   h+='<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:10px;">Socketable Gear</div>';
   const socketable = G.p.inv.filter(it => it.sockets && it.sockets.length > 0);
   if(socketable.length===0){
@@ -5202,15 +5428,53 @@ function rRunes(){
     for(let i=0;i<G.p.inv.length;i++){
       const it=G.p.inv[i];
       if(!it.sockets) continue;
-      h+='<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px;">';
-      h+='<div style="font-weight:600;font-size:13px;color:'+rc(it.r)+';">'+it.n+'</div>';
-      h+=getItemSocketDisplay(it);
-      h+='<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">';
+
+      // Calculate current socket stats
+      let currentStats = [];
+      if (it.socketStats) {
+        for (let k in it.socketStats) {
+          if (k.endsWith('Pct')) continue;
+          const label = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[k] || k;
+          currentStats.push(label + '+' + it.socketStats[k]);
+        }
+      }
+
+      h+='<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+      h+='<div style="font-weight:700;font-size:14px;color:'+rc(it.r)+';">'+it.n+'</div>';
+      h+='<div style="font-size:10px;color:var(--text-dim);background:var(--bg-hover);padding:2px 8px;border-radius:8px;">iLvl '+it.ilvl+'</div>';
+      h+='</div>';
+
+      // Socket display with better visuals
+      h+='<div style="display:flex;gap:8px;margin-bottom:10px;">';
+      for(let s=0;s<it.sockets.length;s++){
+        const socket = it.sockets[s];
+        if(socket){
+          h+='<div style="flex:1;background:'+socket.color+'15;border:2px solid '+socket.color+';border-radius:10px;padding:8px;text-align:center;">';
+          h+='<div style="font-size:20px;">'+socket.icon+'</div>';
+          h+='<div style="font-size:9px;font-weight:600;color:'+socket.color+';">'+socket.name.replace('Rune of ','')+'</div>';
+          h+='</div>';
+        }else{
+          h+='<div style="flex:1;background:var(--bg-hover);border:2px dashed var(--disabled);border-radius:10px;padding:8px;text-align:center;opacity:0.6;">';
+          h+='<div style="font-size:20px;color:var(--disabled);">○</div>';
+          h+='<div style="font-size:9px;color:var(--disabled);">Empty</div>';
+          h+='</div>';
+        }
+      }
+      h+='</div>';
+
+      // Current socket stats summary
+      if(currentStats.length > 0){
+        h+='<div style="font-size:10px;color:var(--success);margin-bottom:8px;padding:6px 10px;background:#22c55e10;border-radius:8px;">✨ Socketed: '+currentStats.join(' · ')+'</div>';
+      }
+
+      // Socket action buttons
+      h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
       for(let s=0;s<it.sockets.length;s++){
         if(!it.sockets[s]){
-          h+='<button class="socket-btn" data-ii="'+i+'" data-si="'+s+'" style="padding:4px 10px;border-radius:8px;border:1px dashed var(--accent);background:transparent;color:var(--accent);font-size:10px;cursor:pointer;">Socket '+s+'</button>';
+          h+='<button class="socket-btn" data-ii="'+i+'" data-si="'+s+'" style="flex:1;padding:8px 10px;border-radius:10px;border:1px dashed var(--accent);background:transparent;color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;">💎 Socket</button>';
         }else{
-          h+='<button class="unsocket-btn" data-ii="'+i+'" data-si="'+s+'" style="padding:4px 10px;border-radius:8px;border:1px solid '+it.sockets[s].color+';background:'+it.sockets[s].color+'20;color:'+it.sockets[s].color+';font-size:10px;cursor:pointer;">'+it.sockets[s].icon+' Remove</button>';
+          h+='<button class="unsocket-btn" data-ii="'+i+'" data-si="'+s+'" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid '+it.sockets[s].color+';background:'+it.sockets[s].color+'15;color:'+it.sockets[s].color+';font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;">'+it.sockets[s].icon+' Remove</button>';
         }
       }
       h+='</div></div>';
@@ -5219,6 +5483,158 @@ function rRunes(){
   }
 
   h+='</div>';
+  return h;
+}
+
+// NEW: Rune Socket Selection Modal
+function rRuneSocketModal() {
+  const { itemIndex, slotIndex } = G.runeSocketModal;
+  const item = G.p.inv[itemIndex];
+  if (!item) return '<div>Error</div>';
+
+  let h = '<div style="padding:16px;">';
+  h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">';
+  h += '<button class="rune-modal-back" style="background:none;border:none;color:var(--accent);font-size:20px;cursor:pointer;padding:4px;">←</button>';
+  h += '<h2 class="st" style="margin:0;">💎 Socket Rune</h2>';
+  h += '</div>';
+
+  h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;">';
+  h += '<div style="font-weight:700;font-size:14px;color:'+rc(item.r)+';">'+item.n+'</div>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Slot '+(slotIndex+1)+' of '+item.sockets.length+'</div>';
+
+  // Show current socket stats on this item
+  let currentStats = [];
+  if (item.socketStats) {
+    for (let k in item.socketStats) {
+      if (k.endsWith('Pct')) continue;
+      const label = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[k] || k;
+      currentStats.push(label + '+' + item.socketStats[k]);
+    }
+  }
+  if(currentStats.length > 0){
+    h += '<div style="font-size:10px;color:var(--success);margin-top:8px;">Current sockets: '+currentStats.join(' · ')+'</div>';
+  }
+  h += '</div>';
+
+  h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:10px;">Choose a Rune ('+G.runes.length+' available)</div>';
+
+  if(G.runes.length===0){
+    h += '<div style="text-align:center;padding:20px;color:var(--text-dim);">No runes available!</div>';
+  }else{
+    h += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">';
+    for(let i=0;i<G.runes.length;i++){
+      const r=G.runes[i];
+      const statLabel = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[r.stat] || r.stat;
+
+      // Calculate preview: what will this rune add?
+      const currentVal = item.socketStats && item.socketStats[r.stat] ? item.socketStats[r.stat] : 0;
+      const newVal = currentVal + r.val;
+
+      h += '<button class="rune-select-btn" data-ri="'+i+'" style="background:var(--bg-card);border:2px solid '+r.color+';border-radius:14px;padding:14px;text-align:left;cursor:pointer;transition:all 0.2s;">';
+      h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">';
+      h += '<span style="font-size:28px;">'+r.icon+'</span>';
+      h += '<div style="flex:1;">';
+      h += '<div style="font-size:13px;font-weight:700;color:'+r.color+';">'+r.name+'</div>';
+      h += '<div style="font-size:9px;color:var(--disabled);text-transform:uppercase;">'+r.r+'</div>';
+      h += '</div>';
+      h += '</div>';
+
+      // Stat preview with before/after
+      h += '<div style="background:var(--bg-hover);border-radius:8px;padding:8px 10px;margin-bottom:6px;">';
+      h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:2px;">'+statLabel+'</div>';
+      h += '<div style="display:flex;align-items:center;gap:6px;">';
+      h += '<span style="font-size:11px;color:var(--text-dim);">'+currentVal+'</span>';
+      h += '<span style="color:var(--success);font-size:12px;">→</span>';
+      h += '<span style="font-size:14px;font-weight:700;color:'+r.color+';">'+newVal+'</span>';
+      if(r.pct) h += '<span style="font-size:10px;color:var(--success);">(+'+Math.floor(r.pct*100)+'%)</span>';
+      h += '</div></div>';
+
+      h += '<div style="font-size:10px;color:var(--accent);text-align:center;font-weight:600;">Tap to Socket</div>';
+      h += '</button>';
+    }
+    h += '</div>';
+  }
+
+  h += '</div>';
+  return h;
+}
+
+// NEW: Rune Combine Modal
+function rRuneCombineModal() {
+  const selected = G.runeCombineModal.selected;
+  const preview = getCombinePreview();
+
+  let h = '<div style="padding:16px;">';
+  h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">';
+  h += '<button class="rune-modal-back" style="background:none;border:none;color:var(--accent);font-size:20px;cursor:pointer;padding:4px;">←</button>';
+  h += '<h2 class="st" style="margin:0;">🔮 Combine Runes</h2>';
+  h += '</div>';
+
+  h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">Select 3 runes of the same type to combine into a stronger version.</div>';
+
+  // Selected runes display
+  h += '<div style="display:flex;gap:8px;margin-bottom:16px;">';
+  for(let i=0;i<3;i++){
+    if(selected[i] !== undefined && G.runes[selected[i]]){
+      const r = G.runes[selected[i]];
+      h += '<div style="flex:1;background:'+r.color+'15;border:2px solid '+r.color+';border-radius:12px;padding:12px;text-align:center;">';
+      h += '<div style="font-size:28px;">'+r.icon+'</div>';
+      h += '<div style="font-size:10px;font-weight:600;color:'+r.color+';">'+r.name+'</div>';
+      h += '</div>';
+    }else{
+      h += '<div style="flex:1;background:var(--bg-hover);border:2px dashed var(--disabled);border-radius:12px;padding:12px;text-align:center;opacity:0.5;">';
+      h += '<div style="font-size:28px;color:var(--disabled);">?</div>';
+      h += '<div style="font-size:10px;color:var(--disabled);">Slot '+(i+1)+'</div>';
+      h += '</div>';
+    }
+  }
+  h += '</div>';
+
+  // Preview result
+  if(preview && !preview.error){
+    h += '<div style="background:linear-gradient(135deg,#7c3aed15,#a78bfa15);border:2px solid var(--accent);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center;">';
+    h += '<div style="font-size:11px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Result Preview</div>';
+    h += '<div style="font-size:36px;margin-bottom:4px;">'+preview.icon+'</div>';
+    h += '<div style="font-size:16px;font-weight:700;color:var(--accent-light);">'+preview.name+'</div>';
+    h += '<div style="font-size:11px;color:var(--success);margin-top:4px;">';
+    const statLabel = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[preview.stat] || preview.stat;
+    h += statLabel + ' +' + preview.val;
+    if(preview.pct) h += ' (+'+Math.floor(preview.pct*100)+'%)';
+    h += '</div>';
+    h += '<div style="font-size:10px;color:var(--gold);margin-top:4px;">'+preview.r.toUpperCase()+'</div>';
+    h += '</div>';
+
+    h += '<button id="btn-confirm-combine" style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#6d28d9);color:white;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 2px 12px var(--shadow-accent);">✨ Combine!</button>';
+  }else if(preview && preview.error){
+    h += '<div style="background:#ef444415;border:1px solid var(--danger);border-radius:12px;padding:12px;margin-bottom:16px;text-align:center;color:var(--danger);font-size:13px;">'+preview.error+'</div>';
+  }else{
+    h += '<div style="background:var(--bg-hover);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:16px;text-align:center;color:var(--text-dim);font-size:13px;">Select 3 matching runes to see the result</div>';
+  }
+
+  // Rune grid for selection
+  h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin:16px 0 10px;">Your Runes</div>';
+  if(G.runes.length===0){
+    h += '<div style="text-align:center;padding:20px;color:var(--text-dim);">No runes to combine.</div>';
+  }else{
+    h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
+    for(let i=0;i<G.runes.length;i++){
+      const r=G.runes[i];
+      const isSelected = selected.includes(i);
+      const statLabel = {atk:'ATK',int:'INT',fireDmg:'🔥Fire',iceDmg:'❄️Ice',lightDmg:'⚡Light',voidDmg:'🌑Void',arcaneDmg:'✨Arcane',hpRegen:'💚HP+',mpRegen:'💧MP+'}[r.stat] || r.stat;
+
+      h += '<button class="rune-combine-select" data-ri="'+i+'" style="background:'+(isSelected?r.color+'30':'var(--bg-card)')+';border:2px solid '+(isSelected?r.color:'var(--border)')+';border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;">';
+      if(isSelected){
+        h += '<div style="position:absolute;top:-6px;right:-6px;background:var(--accent);color:white;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;">✓</div>';
+      }
+      h += '<div style="font-size:22px;margin-bottom:4px;">'+r.icon+'</div>';
+      h += '<div style="font-size:10px;font-weight:600;color:'+(isSelected?r.color:'var(--text)')+';">'+r.name.replace('Rune of ','')+'</div>';
+      h += '<div style="font-size:9px;color:var(--text-dim);margin-top:2px;">'+statLabel+'+'+r.val+'</div>';
+      h += '</button>';
+    }
+    h += '</div>';
+  }
+
+  h += '</div>';
   return h;
 }
 
@@ -5327,6 +5743,33 @@ function rCbt() {
   
   h += '<button id="btn-auto" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (G.cbt.autoCombat ? '#22c55e' : 'var(--disabled)') + ';background:' + (G.cbt.autoCombat ? '#22c55e15' : 'transparent') + ';color:' + (G.cbt.autoCombat ? '#22c55e' : 'var(--text-dim)') + ';font-size:12px;font-weight:600;cursor:pointer;margin-bottom:12px;user-select:none;">';
   h += (G.cbt.autoCombat ? '🤖 AUTO ON — Tap to take control' : '🤖 Auto-Combat — Let AI fight') + '</button>';
+
+  // Potion button
+  const potions = getCombatPotions();
+  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (potions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (potions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
+  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + potions.length + ')') + '</button>';
+
+  // Potion menu
+  if (G.potionMenu && potions.length > 0) {
+    h += '<div style="background:var(--bg-card);border:1px solid #22c55e;border-radius:12px;padding:10px;margin-bottom:12px;">';
+    h += '<div style="font-size:11px;color:#22c55e;margin-bottom:8px;">🧪 Quick Potion Bag</div>';
+    h += '<div style="display:flex;flex-direction:column;gap:6px;">';
+    for (let i = 0; i < G.p.inv.length; i++) {
+      const it = G.p.inv[i];
+      if ((it.t === 'pot' || it.t === 'food' || it.t === 'drink') && (it.eff === 'heal' || it.eff === 'mana')) {
+        const isHeal = it.eff === 'heal';
+        const icon = isHeal ? '❤️' : '💧';
+        const color = isHeal ? '#ef4444' : '#3b82f6';
+        const current = isHeal ? G.p.hp + '/' + G.p.mhp : G.p.mp + '/' + G.p.mmp;
+        const full = isHeal ? G.p.hp >= G.p.mhp : G.p.mp >= G.p.mmp;
+        h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + (full ? 'var(--disabled)' : color) + ';font-size:12px;font-weight:600;cursor:' + (full ? 'not-allowed' : 'pointer') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (full ? '0.5' : '1') + ';">';
+        h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
+        h += '<span>' + (full ? 'FULL' : '+' + it.v + ' ' + (isHeal ? 'HP' : 'MP')) + ' · ' + current + '</span>';
+        h += '</button>';
+      }
+    }
+    h += '</div></div>';
+  }
   
   // Reuse zone variable from resonance check above
   if (zone && G.zoneHazards[zone.n]) {
@@ -5813,6 +6256,46 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }, 300);
 });
+
+
+// === MID-BATTLE POTION SYSTEM ===
+function togglePotionMenu() {
+  G.potionMenu = !G.potionMenu;
+  render();
+}
+
+function usePotionInCombat(invIndex) {
+  const it = G.p.inv[invIndex];
+  if (!it) return;
+  if (it.t !== 'pot' && it.t !== 'food' && it.t !== 'drink') return;
+
+  if (it.eff === 'heal') {
+    const oldHp = G.p.hp;
+    G.p.hp = Math.min(G.p.mhp, G.p.hp + it.v);
+    const healed = G.p.hp - oldHp;
+    lg('🧪 Used ' + it.n + '! +' + healed + ' HP (' + G.p.hp + '/' + G.p.mhp + ')');
+  } else if (it.eff === 'mana') {
+    const oldMp = G.p.mp;
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + it.v);
+    const restored = G.p.mp - oldMp;
+    lg('💧 Used ' + it.n + '! +' + restored + ' MP (' + G.p.mp + '/' + G.p.mmp + ')');
+  }
+
+  it.q--;
+  if (it.q <= 0) {
+    G.p.inv.splice(invIndex, 1);
+  }
+
+  G.potionMenu = false;
+  render();
+}
+
+function getCombatPotions() {
+  return G.p.inv.filter(it => 
+    (it.t === 'pot' || it.t === 'food' || it.t === 'drink') &&
+    (it.eff === 'heal' || it.eff === 'mana')
+  );
+}
 </script>
 </body>
 </html>
