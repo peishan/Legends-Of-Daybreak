@@ -436,7 +436,7 @@ const G = {
     { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
     { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669' },
     { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2' },
-    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit' },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit', resurrect: { name: 'Breath of Life', cooldown: 0, maxCooldown: 5, healPct: 0.5, desc: 'Revives a fallen ally with 50% HP. 5-turn cooldown.' } },
     { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
     { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
     { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true }
@@ -843,7 +843,8 @@ const G = {
       stock: [
         { n: 'Flaming Longsword', t: 'wep', q: 1, r: 'rare', price: 120, atk: 8, fireDmg: 4 },
         { n: 'Cloak of Protection', t: 'arm', q: 1, r: 'rare', price: 150, def: 4, wis: 2 },
-        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 }
+        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 },
+        { n: 'Rod of Resurrection', t: 'revive', q: 1, r: 'epic', price: 250, eff: 'revive', v: 75, d: 'A gleaming rod that channels divine energy to restore life. Revives fallen ally with 75% HP.' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Larloch', t: 'trader', title: 'Vecna Artifacts', icon: '', col: '#7c2d12', zone: 'Abyssal Depths', zoneLv: 8,
@@ -1096,51 +1097,51 @@ const G = {
       { speaker: 'Joel', text: '"Take him," Joel said, not looking at you. "He already chose you anyway."' },
       { speaker: 'Narrator', text: 'Soel rode home in your pack, purring like a motor. Like he had always known the way. Like he had always known you would need him.' }
     ]},
-    { title: 'The Awakening', unlockLevel: 1, scenes: [
+    { title: 'The Awakening', unlockLevel: 18, scenes: [
       { speaker: 'Narrator', text: 'You wake in a field of silver grass. The sky is wrong — two moons, one bleeding red. A voice whispers your name. Not San. Something older.' },
       { speaker: 'Narrator', text: 'Your name is San. You are the youngest of three sisters, born in Brunei Darussalam, raised under the weight of family and duty and love that costs more than it should.' },
       { speaker: 'Narrator', text: 'You are a Sorcerer — or you will be, once you remember what that means. The mark on your wrist pulses with silver light, veins crawling upward like roots seeking sun.' },
       { speaker: 'Soel', text: 'A small cat curls at your feet, purring like he has always known you. His name is Soel. He came with the rain. He chose you. That is rare. That is everything.' },
       { speaker: 'Narrator', text: 'Your journey begins in the Whispering Woods. Survive. Grow. Find what was taken from you. And remember — in Aethon, as in Brunei, family is not a choice you make. It is a gravity you orbit.' }
     ]},
-    { title: 'The First Bond', unlockLevel: 2, scenes: [
+    { title: 'The First Bond', unlockLevel: 19, scenes: [
       { speaker: 'Joel', text: '"You look like you need a shield," a voice says. Joel stands in the doorway, already armored, already certain. The steadfast man from a Philippine village, second of four, breadwinner, stray-feeder, yours.' },
       { speaker: 'Joel', text: '"I do not ask why you are here. I ask if you will let me stand beside you while you find out." He does not look at the mark on your wrist. He looks at your face. He always looks at your face.' },
       { speaker: 'Narrator', text: 'Joel joins your party. His shield is heavy. His loyalty is heavier. In this world, as in the last, he is The Steadfast — the one who stands between you and everything that would harm you.' }
     ]},
-    { title: 'Sisterblade', unlockLevel: 3, scenes: [
+    { title: 'Sisterblade', unlockLevel: 20, scenes: [
       { speaker: 'Aisyah', text: '"Took you long enough," she says, stepping from the shadows. Her daggers glint like teeth. Your eldest sister, fifty-something in the old world, sharp-eyed and sharper-tongued, taught you to trade before she taught you to fight.' },
       { speaker: 'Aisyah', text: '"Mum asked me to check on you. I told her you were fine. Do not make me a liar." Her hands shake, just slightly. She has been looking for you. She always looks for you.' },
       { speaker: 'Narrator', text: 'Aisyah joins your party. Family is complicated. Family with knives is complicated and useful. She taught you the trade routes of Brunei. Now she teaches you the dangerous paths of Aethon.' }
     ]},
-    { title: "The Healer's Light", unlockLevel: 4, scenes: [
+    { title: "The Healer's Light", unlockLevel: 21, scenes: [
       { speaker: 'Eliz', text: '"Your aura is frayed," she whispers, pressing a cool hand to your forehead. You did not hear her approach. She moves like silence, like the space between heartbeats.' },
       { speaker: 'Eliz', text: '"I will mend what I can. But some wounds are not of the body." She is your niece, Mez\'s daughter, autistic in the old world — which here means she experiences magic in textures and colors no one else can perceive.' },
       { speaker: 'Narrator', text: 'Eliz joins your party. Her hands glow with gentle light. Her eyes hold older sorrows. She cannot be reduced below 1 HP — a Guardian Spirit, the game calls it. You call it Eliz being Eliz. The girl who has always endured.' }
     ]},
-    { title: 'The Stormsinger', unlockLevel: 5, scenes: [
+    { title: 'The Stormsinger', unlockLevel: 22, scenes: [
       { speaker: 'Mezstorm', text: 'Lightning cracks the sky. A figure stands in the rain, hands sparking with static. "The ley lines brought me to you," he says. A voice that is almost familiar. Almost.' },
       { speaker: 'Mezstorm', text: '"Something is wrong in Aethon. The magic itself is... afraid." He offers you strange tea. It tastes of copper and regret. You almost remember sharing a room with him, a childhood game, a mother\'s song.' },
       { speaker: 'Narrator', text: 'Mezstorm joins your party. He speaks to the storm. Sometimes, it answers. He was Mez once — your middle sister, estranged, hard, distant. The magic made a mistake. Rendered her male, like Edwin in the old tales. The memories are ghost-images now. Vague. Painful. Present.' }
     ]},
-    { title: 'Shadows of the Past', unlockLevel: 6, scenes: [
+    { title: 'Shadows of the Past', unlockLevel: 23, scenes: [
       { speaker: 'Narrator', text: 'The Cursed Catacombs whisper your name. Not San — something older. Something buried. The estrangement with Mez, the wall you never learned to cross, the niece you loved in the abstract.' },
       { speaker: 'Narrator', text: 'The Bone Tyrant waits below. It has waited a very long time. It knows about sisters who became strangers. It knows about walls built from silence. It has been waiting for you specifically.' }
     ]},
-    { title: 'The Frozen Crown', unlockLevel: 8, scenes: [
+    { title: 'The Frozen Crown', unlockLevel: 24, scenes: [
       { speaker: 'Narrator', text: 'Frostspire Ruins rise against the northern sky. The Frost Queen\'s castle was beautiful once, before the ice took her heart. Before she learned to be hard, to survive, to push away the warmth that might have saved her.' },
       { speaker: 'Narrator', text: 'They say she still dances in the great hall, alone, waiting for a partner who will never come. You think of Mez. You think of the sister you lost before you knew how to keep her. The ice is not her enemy. The ice is her choice.' }
     ]},
-    { title: 'Into the Void', unlockLevel: 10, scenes: [
+    { title: 'Into the Void', unlockLevel: 25, scenes: [
       { speaker: 'Narrator', text: 'The Abyssal Depths do not belong to this world. They are a wound in reality, and something looks back from the other side. The void between sisters. The silence where words should have been.' },
       { speaker: 'Narrator', text: 'The Abyssal Leviathan devours light, memory, hope. It has swallowed cities. It would swallow you without noticing. But you are a breadwinner. You have been swallowed before. You know how to climb back out.' }
     ]},
-    { title: 'Starlight Ascension', unlockLevel: 12, scenes: [
+    { title: 'Starlight Ascension', unlockLevel: 26, scenes: [
       { speaker: 'Narrator', text: 'The Starlight Spire touches the sky. At its peak, the Astral Lord waits — the final gatekeeper, the last question. You have come so far from Brunei. So far from the rain and the kitten and the porch where it all began.' },
       { speaker: 'Narrator', text: 'The hardest truth is always the last one. That love is not a feeling. It is a decision, made daily, made hourly, made in the space between I am tired and I will keep going anyway.' },
       { speaker: 'Soel', text: 'Soel rubs against your leg. "We go together," his eyes seem to say. "Always together." He chose you. In the rain. In the dorm. In the rift. In every world, in every form, he chooses you. That is rare. That is everything.' }
     ]},
-    { title: 'Planar Convergence', unlockLevel: 14, scenes: [
+    { title: 'Planar Convergence', unlockLevel: 27, scenes: [
       { speaker: 'Narrator', text: 'The Arcane Planar Tower tears at the seams of reality. Gravity shifts. Time stutters. The walls breathe with planar magic. This is where the rift began — the tear that pulled you from Brunei, from the ordinary Tuesday, from the life you were still learning to live.' },
       { speaker: 'Narrator', text: 'The Planarch waits at the apex — a being of pure planar energy, shifting dimensions every three turns, warping the battlefield, spawning rifts. It is not evil. It is simply a wound, a place where too many dimensions touched and something woke up.' },
       { speaker: 'Narrator', text: 'You have survived the rain. You have survived the estrangement. You have survived being a breadwinner in a world that takes more than it gives. The Planarch is just another bill to pay. Another mouth to feed. Another reason to keep going.' },
@@ -2613,7 +2614,40 @@ function doPhysicalAttack(target) {
   return true;
 }
 
+
+function doElizResurrect(member) {
+  // Check if Eliz has resurrect ability and it's off cooldown
+  if (!member.resurrect) return false;
+  if (member.resurrect.cooldown > 0) {
+    member.resurrect.cooldown--;
+    return false;
+  }
+
+  // Find dead party members (excluding Eliz herself)
+  const deadMembers = G.party.filter(p => p.on && p.hp <= 0 && p.n !== 'Eliz');
+  if (deadMembers.length === 0) return false;
+
+  // Prioritize: San (player) first, then others
+  let target = deadMembers.find(p => p.n === 'San');
+  if (!target) target = deadMembers[0];
+
+  // Perform resurrection
+  const healAmount = Math.floor(target.mhp * member.resurrect.healPct);
+  target.hp = Math.max(1, healAmount);
+  member.resurrect.cooldown = member.resurrect.maxCooldown;
+
+  lg('💚 ' + member.n + ' casts ' + member.resurrect.name + '!');
+  lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP!');
+
+  return true;
+}
+
 function doPartyAttack(member) {
+
+  // Eliz prioritizes resurrection over attacking
+  if (member.n === 'Eliz' && member.hp > 0) {
+    if (doElizResurrect(member)) return;
+  }
   const aliveEnemies = G.cbt.en.filter(e => e.hp > 0);
   if (aliveEnemies.length === 0) return;
   
@@ -3021,6 +3055,12 @@ function handleZoneHazards() {
 }
 
 function finishPlayerTurn() {
+  // Reduce Eliz's resurrect cooldown each turn
+  const eliz = G.party.find(p => p.on && p.n === 'Eliz');
+  if (eliz && eliz.resurrect && eliz.resurrect.cooldown > 0) {
+    eliz.resurrect.cooldown--;
+  }
+
   for (let p of G.party) {
     if (p.on && p.hp > 0) doPartyAttack(p);
   }
@@ -5779,8 +5819,12 @@ function rCbt() {
 
   // Potion button
   const potions = getCombatPotions();
-  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (potions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (potions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
-  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + potions.length + ')') + '</button>';
+  const usablePotions = potions.filter(p => {
+    if (p.t === 'revive') return getDeadParty().length > 0;
+    return true;
+  });
+  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (usablePotions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (usablePotions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
+  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + usablePotions.length + ' usable)') + '</button>';
 
   // Potion menu
   if (G.potionMenu && potions.length > 0) {
@@ -5789,6 +5833,7 @@ function rCbt() {
     h += '<div style="display:flex;flex-direction:column;gap:6px;">';
     for (let i = 0; i < G.p.inv.length; i++) {
       const it = G.p.inv[i];
+      // Regular potions (heal/mana)
       if ((it.t === 'pot' || it.t === 'food' || it.t === 'drink') && (it.eff === 'heal' || it.eff === 'mana')) {
         const isHeal = it.eff === 'heal';
         const icon = isHeal ? '❤️' : '💧';
@@ -5798,6 +5843,17 @@ function rCbt() {
         h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + (full ? 'var(--disabled)' : color) + ';font-size:12px;font-weight:600;cursor:' + (full ? 'not-allowed' : 'pointer') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (full ? '0.5' : '1') + ';">';
         h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
         h += '<span>' + (full ? 'FULL' : '+' + it.v + ' ' + (isHeal ? 'HP' : 'MP')) + ' · ' + current + '</span>';
+        h += '</button>';
+      }
+      // Revive items (Phoenix Feather, etc.)
+      else if (it.t === 'revive') {
+        const deadMembers = getDeadParty();
+        const hasDead = deadMembers.length > 0;
+        const color = hasDead ? '#f59e0b' : 'var(--disabled)';
+        const icon = '🔥';
+        h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + color + ';font-size:12px;font-weight:600;cursor:' + (hasDead ? 'pointer' : 'not-allowed') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (hasDead ? '1' : '0.5') + ';">';
+        h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
+        h += '<span>' + (hasDead ? 'Revive 50% HP' : 'No one to revive') + ' · ' + deadMembers.length + ' down</span>';
         h += '</button>';
       }
     }
@@ -6300,6 +6356,41 @@ function togglePotionMenu() {
 function usePotionInCombat(invIndex) {
   const it = G.p.inv[invIndex];
   if (!it) return;
+
+  // Handle revive items (Phoenix Feather, Rod of Resurrection, etc.)
+  if (it.t === 'revive') {
+    const deadMembers = getDeadParty();
+    if (deadMembers.length === 0) {
+      lg('❌ No fallen allies to revive!');
+      G.potionMenu = false;
+      render();
+      return;
+    }
+
+    // Prioritize: San (player) first, then party members
+    let target = deadMembers.find(p => p.n === 'San');
+    if (!target) target = deadMembers[0];
+
+    // Use item's v value for revive percentage (50% for Phoenix Feather, 75% for Rod of Resurrection)
+    const revivePct = it.v || 50;
+    const healAmount = Math.floor(target.mhp * (revivePct / 100));
+    target.hp = Math.max(1, healAmount);
+    target.on = true;
+
+    lg('🔥 ' + it.n + ' radiates with sacred light!');
+    lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP (' + revivePct + '%)!');
+
+    it.q--;
+    if (it.q <= 0) {
+      G.p.inv.splice(invIndex, 1);
+    }
+
+    G.potionMenu = false;
+    render();
+    return;
+  }
+
+  // Regular potions only
   if (it.t !== 'pot' && it.t !== 'food' && it.t !== 'drink') return;
 
   if (it.eff === 'heal') {
@@ -6326,7 +6417,8 @@ function usePotionInCombat(invIndex) {
 function getCombatPotions() {
   return G.p.inv.filter(it => 
     (it.t === 'pot' || it.t === 'food' || it.t === 'drink') &&
-    (it.eff === 'heal' || it.eff === 'mana')
+    (it.eff === 'heal' || it.eff === 'mana') ||
+    it.t === 'revive'
   );
 }
 </script>
