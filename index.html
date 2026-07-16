@@ -3081,7 +3081,36 @@ function handleVictory() {
     joelQuest.c += G.cbt.en.length;
     if (joelQuest.c >= joelQuest.need) checkQ();
   }
-  
+
+  // Update kill_specific and boss_specific quest counters
+  for (let q of G.quests) {
+    if (q.done) continue;
+    if (q.hidden && !q.revealed) continue;
+    if (q.t === 'kill_specific') {
+      const killedInThisFight = G.cbt.en.filter(e => e.hp <= 0 && e.n === q.target).length;
+      if (killedInThisFight > 0) {
+        q.c += killedInThisFight;
+        lg('📜 ' + q.n + ': ' + q.c + '/' + q.need + ' ' + q.target + ' defeated');
+        if (q.c >= q.need) checkQ();
+      }
+    }
+    if (q.t === 'boss_specific' && G.currentBoss && G.currentBoss.n === q.target) {
+      q.c++;
+      lg('📜 ' + q.n + ': ' + q.c + '/' + q.need + ' ' + q.target + ' defeated');
+      if (q.c >= q.need) checkQ();
+    }
+  }
+
+  // Update reach_level quest counters (in case level was gained)
+  for (let q of G.quests) {
+    if (q.done) continue;
+    if (q.hidden && !q.revealed) continue;
+    if (q.t === 'reach_level' && G.p.lvl >= q.need) {
+      q.c = q.need;
+      checkQ();
+    }
+  }
+
   for (let p of G.party) {
     if (p.on && p.hp > 0) updateAffinity(p.n, 1);
   }
@@ -4299,7 +4328,7 @@ function sc(zi) {
       }
     }
   }
-  G.cbt.sk=0; G.cbt.tg=0; render();
+  G.cbt.sk=0; G.cbt.tg=0; checkQ(); render();
 }
 
 
@@ -4319,6 +4348,7 @@ function lvlup(){
     checkNPCUnlocks();
     checkStoryline();
     checkStoryUnlock();
+    checkQ();
   }
 }
 
@@ -4327,6 +4357,9 @@ function checkQ(){
     if(q.done)continue;
     if(q.hidden && !q.revealed)continue;
     if(q.t=='kill'&&G.p.kills>=q.c+q.need)q.c=q.need;
+    if(q.t=='reach_level'&&G.p.lvl>=q.need)q.c=q.need;
+    if(q.t=='kill_specific'&&q.c>=q.need)q.c=q.need;
+    if(q.t=='boss_specific'&&q.c>=q.need)q.c=q.need;
     if(q.t=='aisyah_battle'&&q.c>=q.need)q.c=q.need;
     if(q.t=='joel_battle'&&q.c>=q.need)q.c=q.need;
     if(q.c>=q.need){q.done=true;G.p.xp+=q.rw.xp;G.p.gold+=q.rw.g;G.p.quests++;lg('Quest: '+q.n+'! +'+q.rw.xp+'XP +'+q.rw.g+'G');checkQuestChains();checkAchievements();lvlup();}
