@@ -433,13 +433,13 @@ const G = {
     buffs: [], kills: 0, quests: 0, fstreak: 0, bossKills: 0, crafts: 0, survivedCritical: false
   },
   party: [
-    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed' },
-    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669' },
-    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2' },
-    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit', resurrect: { name: 'Breath of Life', cooldown: 0, maxCooldown: 5, healPct: 0.5, desc: 'Revives a fallen ally with 50% HP. 5-turn cooldown.' } },
-    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04' },
-    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626' },
-    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true }
+    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed', gear: null },
+    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669', gear: null },
+    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2', gear: null },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit', resurrect: { name: 'Breath of Life', cooldown: 0, maxCooldown: 5, healPct: 0.5, desc: 'Revives a fallen ally with 50% HP. 5-turn cooldown.' }, gear: null },
+    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04', gear: null },
+    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626', gear: null },
+    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true, gear: null }
   ],
 
   partySynergies: [
@@ -844,7 +844,9 @@ const G = {
         { n: 'Flaming Longsword', t: 'wep', q: 1, r: 'rare', price: 120, atk: 8, fireDmg: 4 },
         { n: 'Cloak of Protection', t: 'arm', q: 1, r: 'rare', price: 150, def: 4, wis: 2 },
         { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 },
-        { n: 'Rod of Resurrection', t: 'revive', q: 1, r: 'epic', price: 250, eff: 'revive', v: 75, d: 'A gleaming rod that channels divine energy to restore life. Revives fallen ally with 75% HP.' }
+        { n: 'Rod of Resurrection', t: 'revive', q: 1, r: 'epic', price: 250, eff: 'revive', v: 75, d: 'A gleaming rod that channels divine energy to restore life. Revives fallen ally with 75% HP.' },
+        { n: "Joel's Bulwark", t: 'pgear', q: 1, r: 'rare', price: 80, for: 'Joel', atk: 0, def: 3, hp: 20, d: 'A heavy shield forged for The Steadfast. +3 DEF, +20 HP' },
+        { n: "Aisyah's Twin Blades", t: 'pgear', q: 1, r: 'rare', price: 80, for: 'Aisyah', atk: 3, def: 0, spd: 2, d: 'Matched daggers that sing in the dark. +3 ATK, +2 SPD' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Larloch', t: 'trader', title: 'Vecna Artifacts', icon: '', col: '#7c2d12', zone: 'Abyssal Depths', zoneLv: 8,
@@ -852,7 +854,8 @@ const G = {
       stock: [
         { n: 'Robe of Vecna', t: 'arm', q: 1, r: 'legendary', price: 800, def: 8, int: 5, voidDmg: 5 },
         { n: 'Vecnas Hand', t: 'acc', q: 1, r: 'epic', price: 500, str: 3, lifeSteal: 0.15 },
-        { n: 'Eye of Vecna', t: 'acc', q: 1, r: 'epic', price: 500, wis: 4, voidRes: 0.25 }
+        { n: 'Eye of Vecna', t: 'acc', q: 1, r: 'epic', price: 500, wis: 4, voidRes: 0.25 },
+        { n: "Soel's Spirit Bell", t: 'pgear', q: 1, r: 'epic', price: 100, for: 'Soel', atk: 1, def: 1, spd: 2, d: 'A tiny bell only Soel can hear. +1 ATK, +1 DEF, +2 SPD, amplifies fortune' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Deidre', t: 'trader', title: 'Exotic Wares', icon: '', col: '#0891b2', zone: 'Frostspire Ruins', zoneLv: 6,
@@ -860,7 +863,9 @@ const G = {
       stock: [
         { n: 'Frostbrand', t: 'wep', q: 1, r: 'rare', price: 200, atk: 10, iceDmg: 5 },
         { n: 'Icingdeath Scimitar', t: 'wep', q: 1, r: 'epic', price: 350, atk: 12, dex: 3, iceDmg: 4 },
-        { n: 'Belt of Hill Giant Strength', t: 'acc', q: 1, r: 'rare', price: 250, str: 4, con: 2 }
+        { n: 'Belt of Hill Giant Strength', t: 'acc', q: 1, r: 'rare', price: 250, str: 4, con: 2 },
+        { n: "Eliz's Serenity Orb", t: 'pgear', q: 1, r: 'epic', price: 120, for: 'Eliz', atk: 0, def: 2, hp: 15, d: 'A glowing orb that soothes the wounded. +2 DEF, +15 HP, enhances healing' },
+        { n: "Zaki's Temper Band", t: 'pgear', q: 1, r: 'rare', price: 75, for: 'Zaki', atk: 3, def: 1, spd: 0, d: 'A red armband that fuels rage. +3 ATK, +1 DEF' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Nym', t: 'trader', title: 'Targos Quartermaster', icon: '', col: '#16a34a', zone: 'Stormhold', zoneLv: 5,
@@ -868,7 +873,9 @@ const G = {
       stock: [
         { n: 'Gnome Hooked Hammer', t: 'wep', q: 1, r: 'uncommon', price: 80, atk: 6, str: 1 },
         { n: 'Leather Armor +1', t: 'arm', q: 1, r: 'uncommon', price: 90, def: 4, dex: 1 },
-        { n: 'Gnomish Goggles', t: 'acc', q: 1, r: 'rare', price: 120, int: 2, critChance: 0.05 }
+        { n: 'Gnomish Goggles', t: 'acc', q: 1, r: 'rare', price: 120, int: 2, critChance: 0.05 },
+        { n: "Mezstorm's Conduit", t: 'pgear', q: 1, r: 'rare', price: 90, for: 'Mezstorm', atk: 2, def: 0, mp: 15, d: 'A crystal that channels storm energy. +2 ATK, +15 MP' },
+        { n: "Senedra's Hawkeye Lens", t: 'pgear', q: 1, r: 'rare', price: 85, for: 'Senedra', atk: 2, def: 0, spd: 2, d: 'A spyglass that sees weakness. +2 ATK, +2 SPD' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
@@ -1432,6 +1439,57 @@ function unequipItem(slot) {
   render();
 }
 
+function equipPartyGear(memberName, invIndex) {
+  const member = G.party.find(p => p.n === memberName);
+  if (!member) return;
+  if (member.gear) {
+    lg('❌ ' + member.n + ' already has ' + member.gear.n + '! Unequip first.');
+    return;
+  }
+  const item = G.p.inv[invIndex];
+  if (!item || item.t !== 'pgear') return;
+  if (item.for && item.for !== memberName) {
+    lg('❌ ' + item.n + ' is for ' + item.for + ', not ' + memberName + '!');
+    return;
+  }
+  member.gear = {
+    n: item.n,
+    atk: item.atk || 0,
+    def: item.def || 0,
+    hp: item.hp || 0,
+    mp: item.mp || 0,
+    spd: item.spd || 0,
+    d: item.d || 'Party gear.'
+  };
+  // Apply stats
+  if (member.gear.hp) { member.mhp += member.gear.hp; member.hp += member.gear.hp; }
+  if (member.gear.mp) { member.mmp = (member.mmp || member.mhp) + member.gear.mp; member.mp = (member.mp || 0) + member.gear.mp; }
+  if (member.gear.atk) member.atk += member.gear.atk;
+  if (member.gear.def) member.def += member.gear.def;
+  if (member.gear.spd) member.spd += member.gear.spd;
+  G.p.inv.splice(invIndex, 1);
+  lg('⚔️ Equipped ' + item.n + ' on ' + member.n + '!');
+  render();
+}
+
+function unequipPartyGear(memberName) {
+  const member = G.party.find(p => p.n === memberName);
+  if (!member || !member.gear) return;
+  const g = member.gear;
+  // Remove stats
+  if (g.hp) { member.mhp -= g.hp; member.hp = Math.min(member.mhp, member.hp - g.hp); }
+  if (g.mp) { member.mmp -= g.mp; member.mp = Math.max(0, (member.mp || 0) - g.mp); }
+  if (g.atk) member.atk -= g.atk;
+  if (g.def) member.def -= g.def;
+  if (g.spd) member.spd -= g.spd;
+  // Return to inventory
+  addI({ n: g.n, t: 'pgear', q: 1, for: memberName, atk: g.atk, def: g.def, hp: g.hp, mp: g.mp, spd: g.spd, d: g.d });
+  lg('📦 Unequipped ' + g.n + ' from ' + member.n + '.');
+  member.gear = null;
+  render();
+}
+
+
 function addLootFromCombat(zoneName) {
   const zone = G.zones.find(z => z.n === zoneName);
   if (!zone) return;
@@ -1862,6 +1920,44 @@ function buyFromNPC(npcName, itemIdx) {
     return;
   }
   G.p.gold -= item.price;
+
+  // Party gear (pgear) goes directly to that party member, not inventory
+  if (item.t === 'pgear') {
+    const member = G.party.find(p => p.n === item.for);
+    if (!member) {
+      lg('❌ No party member named ' + item.for + '!');
+      G.p.gold += item.price; // refund
+      return;
+    }
+    if (member.gear) {
+      lg('❌ ' + member.n + ' already has ' + member.gear.n + '! Unequip first.');
+      G.p.gold += item.price; // refund
+      return;
+    }
+    member.gear = {
+      n: item.n,
+      atk: item.atk || 0,
+      def: item.def || 0,
+      hp: item.hp || 0,
+      mp: item.mp || 0,
+      spd: item.spd || 0,
+      d: item.d || 'Party gear.'
+    };
+    // Apply stats immediately
+    if (member.gear.hp) { member.mhp += member.gear.hp; member.hp += member.gear.hp; }
+    if (member.gear.mp) { member.mmp = (member.mmp || member.mhp) + member.gear.mp; member.mp = (member.mp || 0) + member.gear.mp; }
+    if (member.gear.atk) member.atk += member.gear.atk;
+    if (member.gear.def) member.def += member.gear.def;
+    if (member.gear.spd) member.spd += member.gear.spd;
+    npc.visitCount++;
+    lg('🧳 Bought ' + item.n + ' for ' + member.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
+    if (npc.visitCount === 1) {
+      lg('   ' + npc.n + ': "Pleasure doing business, mage."');
+    }
+    render();
+    return;
+  }
+
   // Map type to equipment slot
   const slotMap = { 'wep': 'weapon', 'arm': 'armor', 'acc': 'amulet' };
   const boughtItem = { 
@@ -2619,8 +2715,13 @@ function doPartyAttack(member) {
   if (aliveEnemies.length === 0) return;
   
   const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+  // Use gear-modified stats
+  const gearAtk = member.gear ? (member.gear.atk || 0) : 0;
+  const gearSpd = member.gear ? (member.gear.spd || 0) : 0;
+  const effectiveAtk = member.atk + gearAtk;
+  const effectiveSpd = member.spd + gearSpd;
   const abilityScore = member.r === 'Rogue' || member.r === 'Ranger' 
-    ? member.spd * 2 : member.atk * 2;
+    ? effectiveSpd * 2 : effectiveAtk * 2;
   
   const attackResult = DICE.attackRoll({
     attackerLevel: G.p.lvl,
@@ -2701,7 +2802,9 @@ function doEnemyAttack(enemy) {
     target = joel;
   }
   
-  const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor((target.def || 0) / 2);
+  // Calculate target AC with gear DEF bonus
+  const gearDef = target.gear ? (target.gear.def || 0) : 0;
+  const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor(((target.def || 0) + gearDef) / 2);
   const attackResult = DICE.attackRoll({
     attackerLevel: G.zones.find(z => z.en.includes(enemy.n))?.lv || 1,
     abilityScore: enemy.atk * 2,
@@ -2722,11 +2825,12 @@ function doEnemyAttack(enemy) {
     isCrit: attackResult.isCrit
   });
   
-  let finalDamage = damageResult.total;
+    let finalDamage = damageResult.total;
+  const targetGearDef = target.gear ? (target.gear.def || 0) : 0;
   const targetDef = target === G.p 
     ? (G.p.eq.armor ? G.p.eq.armor.def : 0) + G.p.buffs.reduce((s, b) => s + (b.def || 0), 0)
-    : (target.def || 0);
-  
+    : (target.def || 0) + targetGearDef;
+
   finalDamage = Math.max(1, finalDamage - Math.floor(targetDef / 2));
   finalDamage = applySynergyDefense(finalDamage);
   
@@ -4844,7 +4948,7 @@ function rNPC() {
         h += '<div class="npc-stock">';
         for (let j = 0; j < npc.stock.length; j++) {
           const item = npc.stock[j];
-          const icon = item.t === 'food' ? '🍽️' : item.t === 'drink' ? '🥤' : '';
+          const icon = item.t === 'food' ? '🍽️' : item.t === 'drink' ? '🥤' : item.t === 'pgear' ? '⚔️' : '';
           h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + icon + ' ' + item.n + ' (' + item.price + 'G)</span>';
         }
         h += '</div>';
@@ -5205,6 +5309,18 @@ function attachEvents() {
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       reviveMember(el.getAttribute('data-m'));
+    });
+  });
+  document.querySelectorAll('.equip-pgear').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      equipPartyGear(el.getAttribute('data-member'), parseInt(el.getAttribute('data-idx')));
+    });
+  });
+  document.querySelectorAll('.unequip-pgear').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      unequipPartyGear(el.getAttribute('data-member'));
     });
   });
 }
@@ -5991,7 +6107,40 @@ function rParty(){
   }
   h += '<div class="plist">';
   for(let p of G.party){
-    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')+'</div></div>';
+    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+(p.gear&&p.gear.atk?'(+'+p.gear.atk+')':'')+' DEF:'+p.def+(p.gear&&p.gear.def?'(+'+p.gear.def+')':'')+' SPD:'+p.spd+(p.gear&&p.gear.spd?'(+'+p.gear.spd+')':'')+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')+'</div></div>';
+    // Gear section
+    if(p.on || p.ul <= G.p.lvl){
+      h += '<div style="background:var(--bg-hover);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:8px;">';
+      h += '<div style="font-size:11px;font-weight:600;color:var(--accent-light);margin-bottom:6px;">⚔️ Gear Slot</div>';
+      if(p.gear){
+        h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">';
+        h += '<span style="font-size:12px;font-weight:600;">' + p.gear.n + '</span>';
+        h += '<button class="unequip-pgear" data-member="' + p.n + '" style="padding:4px 10px;border-radius:8px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:11px;font-weight:600;cursor:pointer;">Unequip</button>';
+        h += '</div>';
+        h += '<div style="font-size:10px;color:var(--text-dim);">';
+        const stats = [];
+        if(p.gear.atk) stats.push('+ ' + p.gear.atk + ' ATK');
+        if(p.gear.def) stats.push('+ ' + p.gear.def + ' DEF');
+        if(p.gear.hp) stats.push('+ ' + p.gear.hp + ' HP');
+        if(p.gear.mp) stats.push('+ ' + p.gear.mp + ' MP');
+        if(p.gear.spd) stats.push('+ ' + p.gear.spd + ' SPD');
+        h += stats.join(' · ') + '</div>';
+      } else {
+        h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">No gear equipped</div>';
+        // Show equippable items from inventory
+        const equippable = G.p.inv.map((it, idx) => ({it, idx})).filter(x => x.it.t === 'pgear' && x.it.for === p.n);
+        if(equippable.length > 0){
+          h += '<div style="display:flex;flex-direction:column;gap:4px;">';
+          for(let eq of equippable){
+            h += '<button class="equip-pgear" data-member="' + p.n + '" data-idx="' + eq.idx + '" style="padding:6px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:11px;font-weight:600;cursor:pointer;text-align:left;">';
+            h += 'Equip: ' + eq.it.n;
+            h += '</button>';
+          }
+          h += '</div>';
+        }
+      }
+      h += '</div>';
+    }
   }
   h+='</div></div>'; return h;
 }
