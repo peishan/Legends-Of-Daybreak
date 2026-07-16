@@ -4759,6 +4759,7 @@ function eqI(ix){
 
 let ft=null;
 function sf(minutes){
+  if(ft){clearInterval(ft);ft=null;} // Clean up any existing timer
   const validMinutes = [5, 10, 15, 20, 25].includes(minutes) ? minutes : 25;
   G.state='focus'; G.fs=Date.now(); G.fd=validMinutes*60*1000; G.focusDuration = validMinutes;
   triggerSoelCommentary('focus');
@@ -4783,7 +4784,7 @@ function sf(minutes){
   },1000);
 }
 
-function cf(){if(ft)clearInterval(ft);setS('menu');lg('Focus cancelled.');render();}
+function cf(){if(ft){clearInterval(ft);ft=null;}G.fs=null;G.focusDuration=null;setS('menu');lg('Focus cancelled.');render();}
 
 function lg(msg){
   G.log.push(msg); if(G.log.length>50)G.log.shift();
@@ -5414,7 +5415,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus'){G.fs=null;G.focusDuration=null;setS('focus');}else if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
     else if(a=='talents')setS('talents');
     else if(a=='runes')setS('runes');
@@ -6602,6 +6603,7 @@ function rQuest(){
 function rFocus(){
   // If focus is not active, show the session picker
   if (!G.fs || G.state !== 'focus') {
+    G.fs = null; G.focusDuration = null; // Clear stale state
     let h = '<div class="fv">';
     h += '<div style="font-size:42px;margin-bottom:8px;">🧘</div>';
     h += '<div class="fl" style="font-size:18px;font-weight:700;margin-bottom:4px;">Focus Mode</div>';
