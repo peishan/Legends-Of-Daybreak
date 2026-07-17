@@ -793,8 +793,15 @@ const G = {
     { id: 'b7', n: 'Storm Chaser', d: 'Defeat 3 Storm Wraiths', t: 'kill_specific', target: 'Storm Wraith', c: 0, need: 3, rw: { xp: 120, g: 75 }, done: false, refreshDay: 0 },
     { id: 'b8', n: 'Ice Breaker', d: 'Defeat 3 Ice Elementals', t: 'kill_specific', target: 'Ice Elemental', c: 0, need: 3, rw: { xp: 150, g: 90 }, done: false, refreshDay: 0 },
     { id: 'b9', n: 'Void Hunter', d: 'Defeat 2 Void Beasts', t: 'kill_specific', target: 'Void Beast', c: 0, need: 2, rw: { xp: 200, g: 120 }, done: false, refreshDay: 0 },
-    { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0 }
+        { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0 }
   ],
+    dailyQuests: [],
+  dailyQuestSeed: 0,
+  
+
+  // === DAILY QUEST SYSTEM (separate from bounties) ===
+  dailyQuests: [],
+  dailyQuestLastGen: 0,
 
   achievements: [
     { id: 'first_blood', n: 'First Blood', d: 'Defeat your first monster', icon: '🩸', t: 'kills', need: 1, rw: { xp: 25, g: 10 }, done: false, secret: false },
@@ -1534,7 +1541,7 @@ function equipItem(invIndex) {
   G.p.mmp = 120 + (G.p.lvl - 1) * 15 + (eqStats.int * 2);
   G.p.hp = Math.min(G.p.hp, G.p.mhp);
   G.p.mp = Math.min(G.p.mp, G.p.mmp);
-
+ checkDailyQuests('cast_spells', 1); 
   render();
 }
 
@@ -2269,6 +2276,40 @@ function sellToAmad(invIndex) {
 function getDayNumber() {
   return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
 }
+function generateDailyQuests() {
+  const today = getDayNumber();
+  if (G.dailyQuestSeed === today) return;
+  G.dailyQuestSeed = today;
+  G.dailyQuests = [];
+  const pool = [...DAILY_QUESTS];
+  for (let i = 0; i < 3 && pool.length > 0; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    const template = pool.splice(idx, 1)[0];
+    G.dailyQuests.push({
+      id: template.id, n: template.n, d: template.d, t: template.t,
+      c: 0, need: template.need, rw: template.rw, done: false
+    });
+  }
+  lg('📋 New daily quests available!');
+}
+
+function checkDailyQuests(type, amount) {
+  amount = amount || 1;
+  if (!G.dailyQuests || G.dailyQuests.length === 0) return;
+  for (let q of G.dailyQuests) {
+    if (q.done) continue;
+    if (q.t === type || (type === 'kill_specific' && q.t === 'kill')) {
+      q.c += amount;
+      if (q.c >= q.need) {
+        q.done = true;
+        G.p.xp += q.rw.xp;
+        G.p.gold += q.rw.g;
+        lg('📋 Daily quest complete: ' + q.n + '! +' + q.rw.xp + 'XP +' + q.rw.g + 'G');
+        lvlup();
+      }
+    }
+  }
+}
 
 function refreshBounties() {
   const today = getDayNumber();
@@ -2284,6 +2325,8 @@ function refreshBounties() {
   if (refreshed) {
     lg('📋 New bounties available!');
   }
+    generateDailyQuests(); // Also refresh daily quests daily
+
 }
 
 function checkStoryline() {
@@ -2422,6 +2465,17 @@ function isImmune(enemyName, spellElem) {
 
 
 /* ========== THEME SYSTEM ========== */
+const DAILY_QUESTS = [
+  { id: 'dq1', n: 'Arcane Practice', d: 'Cast 5 spells in combat', t: 'cast_spells', need: 5, rw: { xp: 40, g: 20 } },
+  { id: 'dq2', n: 'Monster Hunter', d: 'Defeat 3 monsters', t: 'kill', need: 3, rw: { xp: 35, g: 15 } },
+  { id: 'dq3', n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', need: 2, rw: { xp: 30, g: 15 } },
+  { id: 'dq4', n: 'Explorer', d: 'Explore 2 different zones', t: 'explore', need: 2, rw: { xp: 45, g: 25 } },
+  { id: 'dq5', n: 'Rest & Recover', d: 'Rest once at any campsite', t: 'rest', need: 1, rw: { xp: 25, g: 10 } },
+  { id: 'dq6', n: 'Gold Hoarder', d: 'Earn 50 gold from any source', t: 'earn_gold', need: 50, rw: { xp: 50, g: 30 } },
+  { id: 'dq7', n: 'Skill Master', d: 'Use focus mode once', t: 'focus', need: 1, rw: { xp: 60, g: 35 } },
+  { id: 'dq8', n: 'Party Bond', d: 'Win a battle with a full party', t: 'full_party_battle', need: 1, rw: { xp: 40, g: 20 } }
+];
+
 const THEME_KEY = 'ldb_theme';
 
 
@@ -3417,7 +3471,10 @@ function handleVictory() {
   
   G.p.xp += txp;
   G.p.gold += tg2;
+   checkDailyQuests('earn_gold', tg2); 
   G.p.kills += G.cbt.en.length;
+   checkDailyQuests('kill', G.cbt.en.length); 
+    if (G.party.filter(p => p.on).length >= 3) checkDailyQuests('full_party_battle', 1); 
   if (G.currentBoss) { G.p.bossKills = (G.p.bossKills || 0) + 1; }
   if (G.currentBoss && G.currentBoss.n === 'The Planarch') {
     lg('🏆 You have conquered the Arcane Planar Tower!');
@@ -4192,6 +4249,7 @@ function startRest(siteId) {
       clearInterval(restTimer);
       restTimer = null;
       G.rest.active = false;
+       checkDailyQuests('rest', 1); 
       G.rest.ambushPending = true;
       setTimeout(() => {
         G.rest.ambushPending = false;
@@ -4817,6 +4875,7 @@ function craft(ri){
   }
   addI({...r.res}); lg('Crafted: '+r.n+'!');
   G.p.crafts = (G.p.crafts || 0) + 1;
+   checkDailyQuests('craft', 1); 
   checkAchievements();
   const pq=G.quests.find(q=>q.t=='craft');
   if(pq&&!pq.done){pq.c++;checkQ();}
@@ -4841,7 +4900,8 @@ function sf(minutes){
       clearInterval(ft);
       const baseXp = G.focusDuration * 4;
       const baseGold = G.focusDuration * 2;
-      G.p.fstreak++; G.p.xp+=baseXp; G.p.gold+=baseGold;
+      G.p.fstreak++;  checkDailyQuests('focus', 1); 
+      G.p.xp+=baseXp; G.p.gold+=baseGold;
       const fq=G.quests.find(q=>q.t=='focus');
       if(fq&&!fq.done){fq.c++;checkQ();}
       lg('Focus complete! +' + baseXp + 'XP +' + baseGold + 'G Streak:'+G.p.fstreak);
@@ -4931,8 +4991,10 @@ function saveGame() {
     currentRift: G.currentRift,
     riftFightsRemaining: G.riftFightsRemaining,
     riftTriggerAt: G.riftTriggerAt,
-    runeSocketModal: G.runeSocketModal,
-    runeCombineModal: G.runeCombineModal
+        runeSocketModal: G.runeSocketModal,
+    runeCombineModal: G.runeCombineModal,
+    dailyQuests: G.dailyQuests,
+    dailyQuestSeed: G.dailyQuestSeed
   };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -5148,6 +5210,13 @@ function loadGame() {
         }
       }
     }
+        if (data.dailyQuests) {
+      G.dailyQuests = data.dailyQuests;
+    }
+    if (data.dailyQuestSeed !== undefined) {
+      G.dailyQuestSeed = data.dailyQuestSeed;
+    }
+
     if (data.storyline) {
       for (let i = 0; i < G.storyline.length; i++) {
         if (data.storyline[i]) {
@@ -5164,6 +5233,8 @@ function loadGame() {
     G.joelReviveUsed = data.joelReviveUsed || false;
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     for (let name in G.affinity) checkAffinityUnlocks(name);
+        generateDailyQuests(); // Check/generate daily quests on load
+
     lg('Game loaded!');
     return true;
   } catch(e) {
@@ -6618,6 +6689,19 @@ function rQuest(){
     h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+Math.min(q.c,q.need)+'/'+q.need+'</span></div></div>';
   }
   h+='</div>';
+    // Daily Quests section
+  h += '<h2 class="st" style="margin-top:20px;">📋 Daily Quests</h2><div class="qlist">';
+  generateDailyQuests();
+  if (G.dailyQuests.length === 0) {
+    h += '<div class="qc"><div class="qd">No daily quests available. Check back tomorrow!</div></div>';
+  } else {
+    for (let q of G.dailyQuests) {
+      const pc = Math.min(100, (q.c / q.need) * 100);
+      h += '<div class="qc ' + (q.done ? 'done' : '') + '"><div class="qh"><span class="qn">' + q.n + '</span><span class="qr">' + q.rw.xp + ' XP | ' + q.rw.g + ' G</span></div>';
+      h += '<div class="qd">' + q.d + '</div><div class="qp"><div class="pbar"><div class="pfill" style="width:' + pc + '%"></div></div><span class="ptxt">' + q.c + '/' + q.need + '</span></div></div>';
+    }
+  }
+  h += '</div>';
   // Bounties section
   h+='<h2 class="st" style="margin-top:20px;">💰 Bounties (Daily)</h2><div class="qlist">';
   for(let b of G.bounties){
