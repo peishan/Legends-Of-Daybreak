@@ -2275,7 +2275,63 @@ function sellToAmad(invIndex) {
 
 function getDayNumber() {
   return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  }
+  function checkDailyLogin() {
+  const today = getDayNumber();
+  const lastLogin = G.lastLoginDay || 0;
+  
+  if (today !== lastLogin) {
+    G.loginClaimed = false;
+    
+    if (today - lastLogin > 1) {
+      G.loginStreak = 0;
+      lg('📅 New day! Login streak reset.');
+    } else if (today > lastLogin) {
+      G.loginStreak = (G.loginStreak || 0) + 1;
+      lg('📅 New day! Login streak: ' + G.loginStreak);
+    }
+    
+    G.lastLoginDay = today;
+    saveGame();
+  }
 }
+function claimDailyLoginReward() {
+  if (G.loginClaimed) return;
+  
+  const streak = G.loginStreak || 0;
+  const rewards = [
+    { day: 1, g: 50, xp: 25 },
+    { day: 2, mp: 30, xp: 35 },
+    { day: 3, hp: 50, xp: 45 },
+    { day: 4, g: 100, xp: 60 },
+    { day: 5, g: 150, xp: 80 },
+    { day: 6, mp: 50, xp: 100 },
+    { day: 7, g: 300, xp: 200, item: { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' } }
+  ];
+  
+  const reward = rewards[Math.min(streak, 6)];
+  
+  if (reward.g) G.p.gold += reward.g;
+  if (reward.xp) G.p.xp += reward.xp;
+  if (reward.hp) G.p.hp = Math.min(G.p.mhp, G.p.hp + reward.hp);
+  if (reward.mp) G.p.mp = Math.min(G.p.mmp, G.p.mp + reward.mp);
+  if (reward.item) addI({ ...reward.item });
+  
+  G.loginClaimed = true;
+  
+  const rewardMsg = [];
+  if (reward.g) rewardMsg.push('+' + reward.g + 'G');
+  if (reward.xp) rewardMsg.push('+' + reward.xp + 'XP');
+  if (reward.hp) rewardMsg.push('+' + reward.hp + 'HP');
+  if (reward.mp) rewardMsg.push('+' + reward.mp + 'MP');
+  if (reward.item) rewardMsg.push(reward.item.n);
+  
+  lg('🎁 Daily login reward claimed! ' + rewardMsg.join(', '));
+  lvlup();
+  saveGame();
+  render();
+}
+
 function generateDailyQuests() {
   const today = getDayNumber();
   if (G.dailyQuestSeed === today) return;
@@ -4967,7 +5023,12 @@ function saveGame() {
       equipment: G.p.eq,
       inventory: G.p.inv,
       buffs: G.p.buffs,
-      kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
+      kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak,
+      // Add these inside the saveData object, alongside other fields:
+lastLoginDay: G.lastLoginDay || 0,
+loginStreak: G.loginStreak || 0,
+loginClaimed: G.loginClaimed || false
+
     },
     party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, affinityBonuses: p.affinityBonuses })),
     quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
@@ -5557,7 +5618,11 @@ function attachEvents() {
     else if(a=='runes')setS('runes');
     else if(a=='storymode')startStoryMode();});
   });
-  document.querySelectorAll('.story-view .abtn').forEach(el=>{
+ const btnClaimLogin = document.getElementById('btn-claim-login');
+if (btnClaimLogin) {
+  btnClaimLogin.addEventListener('click', claimDailyLoginReward);
+}
+ document.querySelectorAll('.story-view .abtn').forEach(el=>{
     el.addEventListener('click',advanceStory);
   });
   const btnSave=document.getElementById('btn-save');if(btnSave)btnSave.addEventListener('click',()=>{saveGame();});
@@ -6657,6 +6722,66 @@ function rCraft(){
 
 function rQuest(){
   let h='<div class="quest-view">';
+    // === DAILY LOGIN REWARDS ===
+  const today = getDayNumber();
+  const streak = G.loginStreak || 0;
+  const claimedToday = G.loginClaimed || false;
+
+  const loginRewards = [
+    { day: 1, icon: '💰', name: 'Gold Pouch', g: 50, xp: 25 },
+    { day: 2, icon: '💧', name: 'Mana Crystal', mp: 30, xp: 35 },
+    { day: 3, icon: '🧪', name: 'Health Potion', hp: 50, xp: 45 },
+    { day: 4, icon: '💎', name: 'Gem Shard', g: 100, xp: 60 },
+    { day: 5, icon: '⚔️', name: 'Mystic Scroll', g: 150, xp: 80 },
+    { day: 6, icon: '🔮', name: 'Arcane Orb', mp: 50, xp: 100 },
+    { day: 7, icon: '👑', name: 'Legendary Cache', g: 300, xp: 200, item: { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' } }
+  ];
+
+  const todayReward = loginRewards[Math.min(streak, 6)];
+
+  h += '<div style="background: linear-gradient(135deg, var(--accent), #6d28d9); border-radius: 16px; padding: 16px; margin-bottom: 16px; color: white;">';
+  h += '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">';
+  h += '<div style="font-size: 28px;">🎁</div>';
+  h += '<div><div style="font-weight: 700; font-size: 16px;">Daily Login Reward</div>';
+  h += '<div style="font-size: 11px; opacity: 0.9;">Day ' + (streak + 1) + ' · Streak: ' + streak + '</div></div>';
+  h += '</div>';
+
+  h += '<div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px; margin-bottom: 12px;">';
+  h += '<div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Today\'s Reward:</div>';
+  h += '<div style="display: flex; align-items: center; gap: 8px;">';
+  h += '<div style="font-size: 32px;">' + todayReward.icon + '</div>';
+  h += '<div style="flex: 1;">';
+  h += '<div style="font-weight: 600; font-size: 14px;">' + todayReward.name + '</div>';
+  h += '<div style="font-size: 11px; opacity: 0.85;">';
+  const rewardParts = [];
+  if (todayReward.g) rewardParts.push('+' + todayReward.g + 'G');
+  if (todayReward.xp) rewardParts.push('+' + todayReward.xp + 'XP');
+  if (todayReward.hp) rewardParts.push('+' + todayReward.hp + 'HP');
+  if (todayReward.mp) rewardParts.push('+' + todayReward.mp + 'MP');
+  if (todayReward.item) rewardParts.push(todayReward.item.n);
+  h += rewardParts.join(' · ');
+  h += '</div></div></div></div>';
+
+  // Streak progress dots
+  h += '<div style="display: flex; gap: 6px; justify-content: center; margin-bottom: 12px;">';
+  for (let i = 0; i < 7; i++) {
+    const isActive = i < streak;
+    const isToday = i === streak;
+    h += '<div style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; ' + 
+      (isActive ? 'background: #fbbf24; color: #000;' : 
+       isToday ? 'background: white; color: var(--accent); border: 2px solid #fbbf24;' : 
+       'background: rgba(255,255,255,0.2); color: white;') + '">' + (i + 1) + '</div>';
+  }
+  h += '</div>';
+
+  if (claimedToday) {
+    h += '<button disabled style="width: 100%; padding: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: white; font-size: 13px; font-weight: 600; opacity: 0.6; cursor: not-allowed;">✅ Claimed Today — Come Back Tomorrow!</button>';
+  } else {
+    h += '<button id="btn-claim-login" style="width: 100%; padding: 10px; border-radius: 10px; border: none; background: #fbbf24; color: #000; font-size: 13px; font-weight: 700; cursor: pointer;">🎁 Claim Reward</button>';
+  }
+  h += '</div>';
+  // === END DAILY LOGIN ===
+
   // Storyline section
   h+='<h2 class="st">📖 Storyline</h2><div class="qlist">';
   for(let s of G.storyline){
@@ -6898,6 +7023,8 @@ document.addEventListener('DOMContentLoaded', function() {
     lg('Welcome to Legends of Daybreak, San.');
     lg('Tap Adventure to start your journey!');
     showStory();
+      checkDailyLogin();
+
   }
   // Check for idle gains on load
     setTimeout(() => {
