@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<he
-    if (data.potionMenu !== undefined) G.potionMenu = data.potionMenu;ad>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src https: fonts.gstatic.com;">
@@ -50,24 +49,7 @@
   --hp: #dc2626;
   --mp: #2563eb;
   --xp: #ca8a04;
-  --,
-    {
-      id: 'planar_scholar',
-      name: 'Kael',
-      title: 'The Last Astronomer',
-      icon: '🔭',
-      zones: ['Arcane Planar Tower', 'Starlight Spire'],
-      chance: 0.08,
-      reqParty: 'Mezstorm',
-      dialogue: [
-        { speaker: 'Kael', text: "A gaunt figure hunches over a telescope pointed at nothing. 'The stars are wrong,' he whispers. 'They have been wrong since the tower rose.'" }
-      ],
-      choices: [
-        { label: 'Share planar observations', cost: { item: 'Planar Essence', qty: 1 }, reward: { affinity: 'Mezstorm', amt: 25, xp: 80, item: { n: 'Chrono Sand', t: 'mat', q: 1, r: 'epic' } }, response: "Kael's eyes widen. 'You have been inside the rift. You have seen what I see.' He presses a vial of sand into your hand. 'Time is currency here. Spend it wisely.'" },
-        { label: 'Ask about the Planarch', cost: {}, reward: { xp: 60, info: 'planarch_hint' }, response: "Kael laughs — a dry, broken sound. 'The Planarch is not a creature. It is a wound. A place where too many dimensions touched, and something woke up.'" },
-        { label: 'Leave him to his stars', cost: {}, reward: {}, response: "Kael does not look up as you leave. 'They are all leaving,' he murmurs to the empty sky. 'Eventually, everyone leaves.'" }
-      ]
-    }gold: #d97706;
+  --gold: #d97706;
   --success: #16a34a;
   --danger: #dc2626;
   --rest: #059669;
@@ -433,13 +415,13 @@ const G = {
     buffs: [], kills: 0, quests: 0, fstreak: 0, bossKills: 0, crafts: 0, survivedCritical: false
   },
   party: [
-    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone. Born in a small Philippine village, second of four children, he grew up feeding every stray that crossed his path. It was Joel who found Soel\'s mother starving under a porch, who fed her until she vanished and left five damp bundles of fur in a cardboard box. He named the last one Soel — a name that sounds like rain, like the space between San and Joel. When the dorm assignment came and pets were forbidden, he said "take him" without looking at you, because looking would have broken him. In Aethon, as in Brunei, he is The Steadfast — the one who stands between you and everything that would harm you.', b: '+10% Max HP', col: '#7c3aed' },
-    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued. The eldest of three, she learned the trade routes of Brunei before she learned to fight, counting gold faster than you can blink because numbers don\'t lie and people do — but some people don\'t. She taught you to trade in the night markets of Gadong, to haggle a ruby into three weeks of safe passage, to find the real money in dried goods because they travel and they last. In Aethon she moves like shadow and steel, but she still checks her pack three times, still worries about Mum and Dad, still looks for you even when you\'re right beside her. Family business stays in the family.', b: '+20% Gold found', col: '#059669' },
-    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose. Once she was Mez — your middle sister, estranged, hard, distant. The magic made a mistake when it pulled her through the rift, rendered her male like Edwin in the old tales, and the memories are ghost-images now: vague, painful, present. She speaks to the storm and sometimes it answers. She drinks tea that tastes of copper and regret. She knows the ley lines are wrong, has known since the tower rose. The wall between you was built from silence, from years of not knowing how to cross, and now she stands on the other side of it with lightning in her hands, neither of you sure how to begin.', b: '+15% Spell damage', col: '#0891b2' },
-    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds. Mez\'s daughter, your niece — autistic in the old world, which in Aethon means she experiences magic in textures and colors no one else can perceive. Her hands glow with actual light, not metaphorically. She presses cool cloths to foreheads without asking, knows fevers before they\'re spoken, hears the void as loud as the mosque back home. The game calls her Guardian Spirit: she cannot be reduced below 1 HP. You call her Eliz being Eliz — the girl who has always endured, who arranges herbs in patterns that make no sense to you because balance, she says, everything needs balance, especially sorcerers.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit' },
-    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods. She learned her trade from her mother, her courage from Aisyah, her patience from waiting. She strings her bow by feel, eyes never leaving the dark, finds secret paths where others see only trees. She offers you pemmican that tastes like survival and tells you her mother taught her to make it — the real money is in dried goods, she says, they travel, they last, they sell. She wants to learn the trade routes. She calls them possibilities. She checks her pack seventeen times, just like Zaki, because Mum says both rushing and waiting have value, and she thinks Mum is usually right.', b: '+20% Crit chance', col: '#ca8a04' },
-    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold. The youngest blade, Mum\'s pride, checking his pack seventeen times because nervous is a kind of love and he loves hard. He throws pebbles at bats and misses by meters and grins like he meant to. He asks why you picked sorcery, says it seems lonely, and you don\'t have an answer because you didn\'t pick it — it picked you, like Soel picked you, like Joel picked you. Some things you don\'t choose. Mum says you\'re the bravest person she knows, he tells you suddenly, and he wants to be brave like you. You don\'t feel brave. You feel tired. But you smile anyway, because that\'s what breadwinners do.', b: '+15% Attack speed', col: '#dc2626' },
-    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame. He began with rain, the kind that falls for days in Brunei and turns the world soft and gray. Joel found his mother starving under a porch, fed her until she left a cardboard box of five damp bundles. Soel was the last, the one who wouldn\'t stop staring, who climbed into your lap like he\'d been waiting for you specifically. When the dorm said no pets, Joel said "take him" and Soel rode home in your pack, purring like a motor. He is not merely a cat. He is a spirit. He is a choice made flesh. He is the space between San and Joel, made purring. He chooses you, in every world, in every form. That is rare. That is everything.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true }
+    { n: 'Joel', t: 'The Steadfast', r: 'Tank', hp: 120, mhp: 120, atk: 6, def: 8, spd: 4, on: true, d: 'Your partner and shield. Never lets you fight alone.', b: '+10% Max HP', col: '#7c3aed', affinityBonuses: [], gear: null },
+    { n: 'Aisyah', t: 'Sisterblade', r: 'Rogue', hp: 70, mhp: 70, atk: 10, def: 4, spd: 9, on: true, d: 'Your sister, sharp-eyed and sharper-tongued.', b: '+20% Gold found', col: '#059669', affinityBonuses: [], gear: null },
+    { n: 'Mezstorm', t: 'Stormsinger', r: 'Mage', hp: 60, mhp: 60, atk: 12, def: 3, spd: 6, on: false, ul: 3, d: 'A wandering storm mage seeking purpose.', b: '+15% Spell damage', col: '#0891b2', affinityBonuses: [], gear: null },
+    { n: 'Eliz', t: 'Little Healer', r: 'Healer', hp: 65, mhp: 65, atk: 4, def: 5, spd: 5, on: false, ul: 4, d: 'A gentle soul with hands that mend wounds.', b: '+25% Healing potency. Guardian Spirit: Cannot be reduced below 1 HP.', col: '#db2777', passive: 'guardian_spirit', resurrect: { name: 'Breath of Life', cooldown: 0, maxCooldown: 5, healPct: 0.5, desc: 'Revives a fallen ally with 50% HP. 5-turn cooldown.' }, affinityBonuses: [], gear: null },
+    { n: 'Senedra', t: 'Swift Scout', r: 'Ranger', hp: 75, mhp: 75, atk: 8, def: 5, spd: 10, on: false, ul: 6, d: 'An eagle-eyed tracker from the northern woods.', b: '+20% Crit chance', col: '#ca8a04', affinityBonuses: [], gear: null },
+    { n: 'Zaki', t: 'Young Blade', r: 'Warrior', hp: 100, mhp: 100, atk: 9, def: 6, spd: 6, on: false, ul: 8, d: 'A hot-headed swordsman with a heart of gold.', b: '+15% Attack speed', col: '#dc2626', affinityBonuses: [], gear: null },
+    { n: 'Soel', t: 'The Familiar', r: 'Support', hp: 55, mhp: 55, atk: 5, def: 4, spd: 8, on: false, ul: 10, d: 'Your loyal spirit cat companion. Brings fortune to the party. Cannot be killed — he reforms from spirit flame.', b: '+10% All stats · Spirit Cat (unkillable)', col: '#7c2d12', spiritCat: true, affinityBonuses: [], gear: null }
   ],
 
   partySynergies: [
@@ -452,6 +434,44 @@ const G = {
     { members: ['Soel', 'San'], name: 'Familiar Bond', desc: 'Soul-linked. +5% all stats.', bonus: { allStatsPct: 0.05 }, icon: '🐱💜' },
     { members: ['Eliz', 'San'], name: "Healer's Grace", desc: "San's aura soothes. +20% healing potency.", bonus: { healPct: 0.20 }, icon: '💚💜' }
   ],
+
+  affinityUnlocks: {
+    Joel: [
+      { th: 40, id: 'steadfast', n: 'Steadfast', d: '+10% Max HP', fx: { hpPct: 0.10 } },
+      { th: 70, id: 'shield_oath', n: 'Shield Oath', d: 'Taunt chance rises to 70%', fx: { taunt: true } },
+      { th: 100, id: 'unbreakable', n: 'Unbreakable', d: 'Auto-revive once per rest', fx: { revive: true } }
+    ],
+    Aisyah: [
+      { th: 40, id: 'quick_fingers', n: 'Quick Fingers', d: '+10% Gold found', fx: { goldPct: 0.10 } },
+      { th: 70, id: 'treasure_sense', n: 'Treasure Sense', d: '+15% Gold found', fx: { goldPct: 0.15 } },
+      { th: 100, id: 'dragons_hoard', n: "Dragon's Hoard", d: '+25% Gold found', fx: { goldPct: 0.25 } }
+    ],
+    Mezstorm: [
+      { th: 40, id: 'storm_focus', n: 'Storm Focus', d: '+10% Spell damage', fx: { spellDmgPct: 0.10 } },
+      { th: 70, id: 'eye_of_storm', n: 'Eye of the Storm', d: '+15% Spell damage', fx: { spellDmgPct: 0.15 } },
+      { th: 100, id: 'tempest_soul', n: 'Tempest Soul', d: '+25% Spell damage', fx: { spellDmgPct: 0.25 } }
+    ],
+    Eliz: [
+      { th: 40, id: 'gentle_hands', n: 'Gentle Hands', d: '+10% Healing potency', fx: { healPct: 0.10 } },
+      { th: 70, id: 'lightweaver', n: 'Lightweaver', d: '+15% Healing potency', fx: { healPct: 0.15 } },
+      { th: 100, id: 'angelic_grace', n: 'Angelic Grace', d: '+25% Healing potency', fx: { healPct: 0.25 } }
+    ],
+    Senedra: [
+      { th: 40, id: 'eagle_eye', n: 'Eagle Eye', d: '+10% Crit chance', fx: { critPct: 0.10 } },
+      { th: 70, id: 'deadeye', n: 'Deadeye', d: '+15% Crit chance', fx: { critPct: 0.15 } },
+      { th: 100, id: 'storms_arrow', n: "Storm's Arrow", d: '+25% Crit chance', fx: { critPct: 0.25 } }
+    ],
+    Zaki: [
+      { th: 40, id: 'iron_discipline', n: 'Iron Discipline', d: '+3 DEF', fx: { def: 3 } },
+      { th: 70, id: 'battle_hardened', n: 'Battle Hardened', d: '+15% Max HP', fx: { hpPct: 0.15 } },
+      { th: 100, id: 'immortal_wall', n: 'Immortal Wall', d: '+5 DEF, +3 ATK', fx: { def: 5, atk: 3 } }
+    ],
+    Soel: [
+      { th: 40, id: 'warm_presence', n: 'Warm Presence', d: '+10 HP, +2 DEF', fx: { hp: 10, def: 2 } },
+      { th: 70, id: 'spirit_vigil', n: 'Spirit Vigil', d: '+3 ATK, +2 DEF', fx: { atk: 3, def: 2 } },
+      { th: 100, id: 'nine_lives', n: 'Nine Lives', d: '+25% Max HP, +3 DEF', fx: { hpPct: 0.25, def: 3 } }
+    ]
+  },
 
   secretAreas: {
     'Whispering Woods': {
@@ -579,6 +599,23 @@ const G = {
         { label: 'Ask who you are', cost: {}, reward: { xp: 60, affinity: 'Soel', amt: 40 }, response: "The echo fades, smiling. 'Someone who failed. Someone who hopes you won't. Tell him... tell him the warm spots were worth it. All of them.' The throne is empty. Soel purrs louder than usual for hours." },
         { label: 'Reach for him', cost: {}, reward: { item: { n: 'Starlight Tear', t: 'mat', q: 1, r: 'rare' }, xp: 40 }, response: "Your hand passes through, but something warm lingers. A single crystal tear falls into your palm. 'For the days when you forget why you fight,' the echo whispers. Then silence." },
         { label: 'Stay silent', cost: {}, reward: { xp: 30 }, response: "The echo nods, as if you answered perfectly. 'Good. He chose well. Silence is a kind of love too.' The frost melts where he sat. Soel jumps into your arms, trembling. You hold him until he stops." }
+      ]
+    },
+    {
+      id: 'planar_scholar',
+      name: 'Kael',
+      title: 'The Last Astronomer',
+      icon: '🔭',
+      zones: ['Arcane Planar Tower', 'Starlight Spire'],
+      chance: 0.08,
+      reqParty: 'Mezstorm',
+      dialogue: [
+        { speaker: 'Kael', text: "A gaunt figure hunches over a telescope pointed at nothing. 'The stars are wrong,' he whispers. 'They have been wrong since the tower rose.'" }
+      ],
+      choices: [
+        { label: 'Share planar observations', cost: { item: 'Planar Essence', qty: 1 }, reward: { affinity: 'Mezstorm', amt: 25, xp: 80, item: { n: 'Chrono Sand', t: 'mat', q: 1, r: 'epic' } }, response: "Kael's eyes widen. 'You have been inside the rift. You have seen what I see.' He presses a vial of sand into your hand. 'Time is currency here. Spend it wisely.'" },
+        { label: 'Ask about the Planarch', cost: {}, reward: { xp: 60, info: 'planarch_hint' }, response: "Kael laughs — a dry, broken sound. 'The Planarch is not a creature. It is a wound. A place where too many dimensions touched, and something woke up.'" },
+        { label: 'Leave him to his stars', cost: {}, reward: {}, response: "Kael does not look up as you leave. 'They are all leaving,' he murmurs to the empty sky. 'Eventually, everyone leaves.'" }
       ]
     }
   ],
@@ -730,34 +767,6 @@ const G = {
     { n: 'Chrono Elixir', m: { 'Chrono Sand': 2, 'Planar Essence': 1, 'Mana Potion': 1 }, res: { n: 'Chrono Elixir', t: 'pot', eff: 'mana', v: 60, q: 1, r: 'epic' }, d: 'Restores 60 MP and resets one spell cooldown' },
     { n: 'Reality Anchor', m: { 'Planar Essence': 3, 'Void Thread': 2, 'Aether Shard': 2 }, res: { n: 'Reality Anchor', t: 'acc', q: 1, r: 'legendary', int: 5, wis: 3, voidRes: 0.25, arcaneDmg: 5 }, d: 'INT +5, WIS +3, +25% Void Resist, +5 Arcane DMG' }
   ],
-  dailyQuests: {
-    lastResetDay: 0,
-    claimed: [],
-    quests: [
-      { id: 'dq1', n: 'Daily Slayer', d: 'Defeat 10 monsters today', t: 'kill', c: 0, need: 10, rw: { xp: 100, g: 50 }, done: false, claimed: false },
-      { id: 'dq2', n: 'Daily Explorer', d: 'Enter 3 different zones today', t: 'explore', c: 0, need: 3, rw: { xp: 80, g: 40 }, done: false, claimed: false },
-      { id: 'dq3', n: 'Daily Crafter', d: 'Craft 3 items today', t: 'craft', c: 0, need: 3, rw: { xp: 60, g: 30 }, done: false, claimed: false },
-      { id: 'dq4', n: 'Daily Focus', d: 'Complete 1 focus session today', t: 'focus', c: 0, need: 1, rw: { xp: 120, g: 60 }, done: false, claimed: false },
-      { id: 'dq5', n: 'Daily Gold', d: 'Earn 100 gold from combat today', t: 'gold_earned', c: 0, need: 100, rw: { xp: 50, g: 25 }, done: false, claimed: false }
-    ]
-  },
-  dailyGoldEarned: 0,
-  dailyZonesVisited: [],
-  weeklyQuests: {
-    lastResetWeek: 0,
-    claimed: [],
-    quests: [
-      { id: 'wq1', n: 'Weekly Slayer', d: 'Defeat 100 monsters this week', t: 'kill', c: 0, need: 100, rw: { xp: 800, g: 400 }, done: false, claimed: false },
-      { id: 'wq2', n: 'Weekly Explorer', d: 'Visit 15 unique zones this week', t: 'explore', c: 0, need: 15, rw: { xp: 600, g: 300 }, done: false, claimed: false },
-      { id: 'wq3', n: 'Weekly Boss Hunter', d: 'Defeat 5 bosses this week', t: 'boss', c: 0, need: 5, rw: { xp: 1000, g: 500 }, done: false, claimed: false },
-      { id: 'wq4', n: 'Weekly Crafter', d: 'Craft 20 items this week', t: 'craft', c: 0, need: 20, rw: { xp: 500, g: 250 }, done: false, claimed: false },
-      { id: 'wq5', n: 'Weekly Focus Master', d: 'Complete 10 focus sessions this week', t: 'focus', c: 0, need: 10, rw: { xp: 700, g: 350 }, done: false, claimed: false },
-      { id: 'wq6', n: 'Weekly Gold Hoarder', d: 'Earn 1000 gold from combat this week', t: 'gold_earned', c: 0, need: 1000, rw: { xp: 900, g: 450 }, done: false, claimed: false }
-    ]
-  },
-  weeklyGoldEarned: 0,
-  weeklyZonesVisited: [],
-  weeklyBossKills: 0,
   quests: [
     { id: 1, n: 'First Steps', d: 'Defeat 3 monsters in Whispering Woods', t: 'kill', c: 0, need: 3, rw: { xp: 50, g: 20 }, done: false },
     { id: 2, n: 'Potion Brewer', d: 'Craft 2 potions', t: 'craft', c: 0, need: 2, rw: { xp: 30, g: 15 }, done: false },
@@ -825,6 +834,8 @@ const G = {
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
+  soelBlessing: null,
+  joelReviveUsed: false,
   affinity: {
     Joel: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
     Aisyah: { val: 50, max: 100, lastInteract: Date.now(), decayRate: 0.05 },
@@ -871,7 +882,10 @@ const G = {
       stock: [
         { n: 'Flaming Longsword', t: 'wep', q: 1, r: 'rare', price: 120, atk: 8, fireDmg: 4 },
         { n: 'Cloak of Protection', t: 'arm', q: 1, r: 'rare', price: 150, def: 4, wis: 2 },
-        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 }
+        { n: 'Ring of Wizardry', t: 'acc', q: 1, r: 'epic', price: 300, int: 4, mpRegen: 3 },
+        { n: 'Rod of Resurrection', t: 'revive', q: 1, r: 'epic', price: 250, eff: 'revive', v: 75, d: 'A gleaming rod that channels divine energy to restore life. Revives fallen ally with 75% HP.' },
+        { n: "Joel's Bulwark", t: 'pgear', q: 1, r: 'rare', price: 80, for: 'Joel', atk: 0, def: 3, hp: 20, d: 'A heavy shield forged for The Steadfast. +3 DEF, +20 HP' },
+        { n: "Aisyah's Twin Blades", t: 'pgear', q: 1, r: 'rare', price: 80, for: 'Aisyah', atk: 3, def: 0, spd: 2, d: 'Matched daggers that sing in the dark. +3 ATK, +2 SPD' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Larloch', t: 'trader', title: 'Vecna Artifacts', icon: '', col: '#7c2d12', zone: 'Abyssal Depths', zoneLv: 8,
@@ -879,7 +893,8 @@ const G = {
       stock: [
         { n: 'Robe of Vecna', t: 'arm', q: 1, r: 'legendary', price: 800, def: 8, int: 5, voidDmg: 5 },
         { n: 'Vecnas Hand', t: 'acc', q: 1, r: 'epic', price: 500, str: 3, lifeSteal: 0.15 },
-        { n: 'Eye of Vecna', t: 'acc', q: 1, r: 'epic', price: 500, wis: 4, voidRes: 0.25 }
+        { n: 'Eye of Vecna', t: 'acc', q: 1, r: 'epic', price: 500, wis: 4, voidRes: 0.25 },
+        { n: "Soel's Spirit Bell", t: 'pgear', q: 1, r: 'epic', price: 100, for: 'Soel', atk: 1, def: 1, spd: 2, d: 'A tiny bell only Soel can hear. +1 ATK, +1 DEF, +2 SPD, amplifies fortune' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Deidre', t: 'trader', title: 'Exotic Wares', icon: '', col: '#0891b2', zone: 'Frostspire Ruins', zoneLv: 6,
@@ -887,7 +902,9 @@ const G = {
       stock: [
         { n: 'Frostbrand', t: 'wep', q: 1, r: 'rare', price: 200, atk: 10, iceDmg: 5 },
         { n: 'Icingdeath Scimitar', t: 'wep', q: 1, r: 'epic', price: 350, atk: 12, dex: 3, iceDmg: 4 },
-        { n: 'Belt of Hill Giant Strength', t: 'acc', q: 1, r: 'rare', price: 250, str: 4, con: 2 }
+        { n: 'Belt of Hill Giant Strength', t: 'acc', q: 1, r: 'rare', price: 250, str: 4, con: 2 },
+        { n: "Eliz's Serenity Orb", t: 'pgear', q: 1, r: 'epic', price: 120, for: 'Eliz', atk: 0, def: 2, hp: 15, d: 'A glowing orb that soothes the wounded. +2 DEF, +15 HP, enhances healing' },
+        { n: "Zaki's Temper Band", t: 'pgear', q: 1, r: 'rare', price: 75, for: 'Zaki', atk: 3, def: 1, spd: 0, d: 'A red armband that fuels rage. +3 ATK, +1 DEF' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'Nym', t: 'trader', title: 'Targos Quartermaster', icon: '', col: '#16a34a', zone: 'Stormhold', zoneLv: 5,
@@ -895,7 +912,9 @@ const G = {
       stock: [
         { n: 'Gnome Hooked Hammer', t: 'wep', q: 1, r: 'uncommon', price: 80, atk: 6, str: 1 },
         { n: 'Leather Armor +1', t: 'arm', q: 1, r: 'uncommon', price: 90, def: 4, dex: 1 },
-        { n: 'Gnomish Goggles', t: 'acc', q: 1, r: 'rare', price: 120, int: 2, critChance: 0.05 }
+        { n: 'Gnomish Goggles', t: 'acc', q: 1, r: 'rare', price: 120, int: 2, critChance: 0.05 },
+        { n: "Mezstorm's Conduit", t: 'pgear', q: 1, r: 'rare', price: 90, for: 'Mezstorm', atk: 2, def: 0, mp: 15, d: 'A crystal that channels storm energy. +2 ATK, +15 MP' },
+        { n: "Senedra's Hawkeye Lens", t: 'pgear', q: 1, r: 'rare', price: 85, for: 'Senedra', atk: 2, def: 0, spd: 2, d: 'A spyglass that sees weakness. +2 ATK, +2 SPD' }
       ],
       unlocked: false, visitCount: 0 },
     { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
@@ -1257,6 +1276,17 @@ const LOOT_TABLES = {
     { n: 'Void Reaver',       ilvl: 8,  atk: 15, str: 3, voidDmg: 4 },
     { n: 'Dragonfang',        ilvl: 9,  atk: 18, str: 4, fireDmg: 5 },
     { n: 'Starlight Blade',   ilvl: 10, atk: 22, int: 5, lightDmg: 6 },
+    // Phase 2: Planar Weapons (Lv 11-20)
+    { n: 'Planar Edge',       ilvl: 11, atk: 26, int: 6, arcaneDmg: 6 },
+    { n: 'Emberfall Scythe',  ilvl: 12, atk: 30, str: 5, fireDmg: 8 },
+    { n: 'Glacial Greatsword',ilvl: 13, atk: 34, str: 6, iceDmg: 9 },
+    { n: 'Thunderlord Spear', ilvl: 14, atk: 38, dex: 5, lightDmg: 10 },
+    { n: 'Voidrender',        ilvl: 15, atk: 42, int: 7, voidDmg: 12 },
+    { n: 'Chronoblade',       ilvl: 16, atk: 46, int: 8, arcaneDmg: 10, mpRegen: 2 },
+    { n: 'Aetherium Halberd', ilvl: 17, atk: 50, wis: 6, arcaneDmg: 11, hpRegen: 2 },
+    { n: 'Convergence Blade', ilvl: 18, atk: 55, int: 9, arcaneDmg: 13, voidDmg: 5 },
+    { n: 'Nexus Cleaver',     ilvl: 19, atk: 60, str: 7, voidDmg: 14, lifeSteal: 0.08 },
+    { n: 'Reality Sunderer',  ilvl: 20, atk: 70, int: 10, arcaneDmg: 15, voidDmg: 8, mpRegen: 3 },
   ],
   armor: [
     { n: 'Tattered Cloth',    ilvl: 1,  def: 1 },
@@ -1270,14 +1300,36 @@ const LOOT_TABLES = {
     { n: 'Abyssal Mail',      ilvl: 8,  def: 11, str: 2, voidRes: 0.2 },
     { n: 'Dragonscale Armor', ilvl: 9,  def: 13, con: 3, fireRes: 0.2 },
     { n: 'Celestial Vestment',ilvl: 10, def: 15, wis: 4, hpRegen: 3 },
+    // Phase 2: Planar Armor (Lv 11-20)
+    { n: 'Planar Robes',      ilvl: 11, def: 17, int: 5, arcaneRes: 0.15, mpRegen: 2 },
+    { n: 'Emberfall Plate',   ilvl: 12, def: 19, con: 4, fireRes: 0.25, hpRegen: 2 },
+    { n: 'Glacial Aegis',    ilvl: 13, def: 21, wis: 5, iceRes: 0.25, mpRegen: 2 },
+    { n: 'Stormweave Mail',   ilvl: 14, def: 23, dex: 4, lightRes: 0.25, hpRegen: 3 },
+    { n: 'Voidshroud',        ilvl: 15, def: 25, int: 6, voidRes: 0.3, mpRegen: 3 },
+    { n: 'Chronos Vest',      ilvl: 16, def: 27, wis: 6, arcaneRes: 0.2, hpRegen: 3 },
+    { n: 'Aetherium Plate',   ilvl: 17, def: 29, con: 5, arcaneRes: 0.25, mpRegen: 3 },
+    { n: 'Convergence Mail',  ilvl: 18, def: 32, str: 4, voidRes: 0.2, fireRes: 0.2, iceRes: 0.2 },
+    { n: 'Nexus Ward',        ilvl: 19, def: 35, con: 6, arcaneRes: 0.3, voidRes: 0.2, hpRegen: 4 },
+    { n: 'Reality Anchor',    ilvl: 20, def: 40, int: 8, wis: 4, arcaneRes: 0.35, voidRes: 0.25, hpRegen: 5, mpRegen: 4 },
   ],
   head: [
     { n: 'Cloth Hood',        ilvl: 1,  def: 1, wis: 1 },
     { n: 'Leather Cap',       ilvl: 2,  def: 2, dex: 1 },
     { n: 'Iron Helm',         ilvl: 3,  def: 3, str: 1 },
-    { n: 'Scholars Hat',    ilvl: 4,  def: 2, int: 2 },
+    { n: 'Scholars Hat',      ilvl: 4,  def: 2, int: 2 },
     { n: 'Crown of Thought',  ilvl: 6,  def: 4, int: 3, mpRegen: 1 },
     { n: 'Dragon Helm',       ilvl: 8,  def: 6, con: 2, fireRes: 0.1 },
+    // Phase 2: Planar Headgear (Lv 11-20)
+    { n: 'Planar Crown',      ilvl: 11, def: 8, int: 4, arcaneRes: 0.1, mpRegen: 2 },
+    { n: 'Emberfall Helm',    ilvl: 12, def: 9, str: 3, fireRes: 0.15, hpRegen: 1 },
+    { n: 'Glacial Diadem',    ilvl: 13, def: 10, wis: 4, iceRes: 0.15, mpRegen: 2 },
+    { n: 'Stormcaller Hood',  ilvl: 14, def: 11, int: 5, lightRes: 0.15, mpRegen: 2 },
+    { n: 'Voidmask',          ilvl: 15, def: 12, int: 5, voidRes: 0.2, mpRegen: 3 },
+    { n: 'Chronos Circlet',   ilvl: 16, def: 13, wis: 5, arcaneRes: 0.15, hpRegen: 2 },
+    { n: 'Aetherium Crown',   ilvl: 17, def: 14, int: 6, arcaneRes: 0.2, mpRegen: 3 },
+    { n: 'Convergence Helm',  ilvl: 18, def: 15, con: 4, arcaneRes: 0.15, voidRes: 0.15 },
+    { n: 'Nexus Visage',      ilvl: 19, def: 17, int: 7, arcaneRes: 0.25, voidRes: 0.15, mpRegen: 3 },
+    { n: 'Reality Crown',     ilvl: 20, def: 20, int: 8, wis: 4, arcaneRes: 0.3, voidRes: 0.2, mpRegen: 4 },
   ],
   hands: [
     { n: 'Cloth Wraps',       ilvl: 1,  def: 1, dex: 1 },
@@ -1285,6 +1337,17 @@ const LOOT_TABLES = {
     { n: 'Iron Gauntlets',    ilvl: 3,  def: 2, str: 1 },
     { n: 'Spellweaver Gloves',ilvl: 5,  def: 2, int: 2, mpRegen: 1 },
     { n: 'Void Grips',        ilvl: 7,  def: 3, atk: 2, voidDmg: 2 },
+    // Phase 2: Planar Gloves (Lv 11-20)
+    { n: 'Planar Wraps',      ilvl: 11, def: 4, int: 3, arcaneDmg: 2, mpRegen: 1 },
+    { n: 'Emberfall Gauntlets',ilvl: 12, def: 5, str: 3, fireDmg: 3, atk: 2 },
+    { n: 'Glacial Grips',     ilvl: 13, def: 5, dex: 3, iceDmg: 3, atk: 2 },
+    { n: 'Stormtouch Gloves', ilvl: 14, def: 6, int: 4, lightDmg: 4, mpRegen: 2 },
+    { n: 'Void Claws',        ilvl: 15, def: 6, atk: 4, voidDmg: 5, critChance: 0.03 },
+    { n: 'Chronos Wraps',     ilvl: 16, def: 7, int: 4, arcaneDmg: 4, mpRegen: 2 },
+    { n: 'Aetherium Grips',   ilvl: 17, def: 7, wis: 3, arcaneDmg: 5, hpRegen: 1 },
+    { n: 'Convergence Fists', ilvl: 18, def: 8, str: 3, atk: 3, fireDmg: 2, iceDmg: 2 },
+    { n: 'Nexus Grasp',       ilvl: 19, def: 9, int: 5, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
+    { n: 'Reality Gauntlets', ilvl: 20, def: 10, int: 6, atk: 4, arcaneDmg: 7, voidDmg: 4, critChance: 0.05 },
   ],
   feet: [
     { n: 'Worn Boots',        ilvl: 1,  def: 1, con: 1 },
@@ -1293,6 +1356,17 @@ const LOOT_TABLES = {
     { n: 'Arcane Slippers',   ilvl: 4,  def: 1, int: 2 },
     { n: 'Winged Boots',      ilvl: 6,  def: 2, dex: 3 },
     { n: 'Void Walkers',      ilvl: 8,  def: 3, dex: 2, voidRes: 0.1 },
+    // Phase 2: Planar Boots (Lv 11-20)
+    { n: 'Planar Treads',     ilvl: 11, def: 4, dex: 3, arcaneRes: 0.1, mpRegen: 1 },
+    { n: 'Emberfall Boots',   ilvl: 12, def: 4, con: 3, fireRes: 0.15, hpRegen: 1 },
+    { n: 'Glacial Striders',  ilvl: 13, def: 5, dex: 4, iceRes: 0.15, mpRegen: 1 },
+    { n: 'Stormleapers',      ilvl: 14, def: 5, dex: 4, lightRes: 0.15, hpRegen: 2 },
+    { n: 'Void Striders',     ilvl: 15, def: 6, dex: 4, voidRes: 0.2, mpRegen: 2 },
+    { n: 'Chronos Boots',     ilvl: 16, def: 6, wis: 3, arcaneRes: 0.1, hpRegen: 2 },
+    { n: 'Aetherium Walkers', ilvl: 17, def: 7, dex: 5, arcaneRes: 0.15, mpRegen: 2 },
+    { n: 'Convergence Treads',ilvl: 18, def: 7, con: 3, arcaneRes: 0.1, voidRes: 0.1, hpRegen: 2 },
+    { n: 'Nexus Striders',    ilvl: 19, def: 8, dex: 5, arcaneRes: 0.2, voidRes: 0.15, mpRegen: 2 },
+    { n: 'Reality Walkers',   ilvl: 20, def: 10, dex: 6, con: 3, arcaneRes: 0.25, voidRes: 0.2, hpRegen: 3, mpRegen: 3 },
   ],
   ring: [
     { n: 'Copper Ring',       ilvl: 1,  con: 1 },
@@ -1302,6 +1376,17 @@ const LOOT_TABLES = {
     { n: 'Sapphire Ring',     ilvl: 5,  int: 2, mpRegen: 1 },
     { n: 'Emerald Ring',      ilvl: 6,  dex: 2, critChance: 0.03 },
     { n: 'Void Band',         ilvl: 8,  int: 3, voidDmg: 2 },
+    // Phase 2: Planar Rings (Lv 11-20)
+    { n: 'Planar Band',       ilvl: 11, int: 4, arcaneDmg: 2, mpRegen: 1 },
+    { n: 'Emberfall Signet',  ilvl: 12, str: 3, fireDmg: 3, hpRegen: 1 },
+    { n: 'Glacial Loop',      ilvl: 13, wis: 3, iceDmg: 3, mpRegen: 1 },
+    { n: 'Storm Ring',        ilvl: 14, dex: 3, lightDmg: 4, critChance: 0.04 },
+    { n: 'Void Seal',         ilvl: 15, int: 5, voidDmg: 5, voidRes: 0.1 },
+    { n: 'Chronos Band',      ilvl: 16, wis: 4, arcaneDmg: 4, mpRegen: 2 },
+    { n: 'Aetherium Ring',    ilvl: 17, int: 5, arcaneDmg: 5, hpRegen: 2 },
+    { n: 'Convergence Loop',  ilvl: 18, con: 3, arcaneDmg: 3, voidDmg: 3, hpRegen: 1 },
+    { n: 'Nexus Band',        ilvl: 19, int: 6, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
+    { n: 'Reality Seal',      ilvl: 20, int: 7, wis: 3, arcaneDmg: 7, voidDmg: 4, hpRegen: 3, mpRegen: 3 },
   ],
   amulet: [
     { n: 'String Charm',      ilvl: 1,  wis: 1 },
@@ -1310,6 +1395,17 @@ const LOOT_TABLES = {
     { n: 'Dragon Tooth',      ilvl: 5,  str: 2, fireRes: 0.1 },
     { n: 'Starlight Pendant', ilvl: 7,  wis: 3, hpRegen: 2 },
     { n: 'Abyssal Locket',    ilvl: 9,  int: 4, voidDmg: 3 },
+    // Phase 2: Planar Amulets (Lv 11-20)
+    { n: 'Planar Pendant',    ilvl: 11, int: 5, arcaneDmg: 3, mpRegen: 1 },
+    { n: 'Emberfall Charm',   ilvl: 12, str: 4, fireDmg: 4, fireRes: 0.1 },
+    { n: 'Glacial Talisman',  ilvl: 13, wis: 4, iceDmg: 4, iceRes: 0.1 },
+    { n: 'Storm Amulet',      ilvl: 14, dex: 4, lightDmg: 5, lightRes: 0.1 },
+    { n: 'Void Locket',       ilvl: 15, int: 6, voidDmg: 6, voidRes: 0.15 },
+    { n: 'Chronos Pendant',   ilvl: 16, wis: 5, arcaneDmg: 5, hpRegen: 2 },
+    { n: 'Aetherium Charm',   ilvl: 17, int: 6, arcaneDmg: 6, mpRegen: 2 },
+    { n: 'Convergence Amulet',ilvl: 18, con: 4, arcaneDmg: 4, voidDmg: 4, hpRegen: 2 },
+    { n: 'Nexus Pendant',     ilvl: 19, int: 7, arcaneDmg: 7, voidDmg: 4, mpRegen: 3 },
+    { n: 'Reality Anchor',    ilvl: 20, int: 8, wis: 5, arcaneDmg: 8, voidDmg: 5, hpRegen: 4, mpRegen: 4, lifeSteal: 0.05 },
   ]
 };
 
@@ -1458,6 +1554,57 @@ function unequipItem(slot) {
 
   render();
 }
+
+function equipPartyGear(memberName, invIndex) {
+  const member = G.party.find(p => p.n === memberName);
+  if (!member) return;
+  if (member.gear) {
+    lg('❌ ' + member.n + ' already has ' + member.gear.n + '! Unequip first.');
+    return;
+  }
+  const item = G.p.inv[invIndex];
+  if (!item || item.t !== 'pgear') return;
+  if (item.for && item.for !== memberName) {
+    lg('❌ ' + item.n + ' is for ' + item.for + ', not ' + memberName + '!');
+    return;
+  }
+  member.gear = {
+    n: item.n,
+    atk: item.atk || 0,
+    def: item.def || 0,
+    hp: item.hp || 0,
+    mp: item.mp || 0,
+    spd: item.spd || 0,
+    d: item.d || 'Party gear.'
+  };
+  // Apply stats
+  if (member.gear.hp) { member.mhp += member.gear.hp; member.hp += member.gear.hp; }
+  if (member.gear.mp) { member.mmp = (member.mmp || member.mhp) + member.gear.mp; member.mp = (member.mp || 0) + member.gear.mp; }
+  if (member.gear.atk) member.atk += member.gear.atk;
+  if (member.gear.def) member.def += member.gear.def;
+  if (member.gear.spd) member.spd += member.gear.spd;
+  G.p.inv.splice(invIndex, 1);
+  lg('⚔️ Equipped ' + item.n + ' on ' + member.n + '!');
+  render();
+}
+
+function unequipPartyGear(memberName) {
+  const member = G.party.find(p => p.n === memberName);
+  if (!member || !member.gear) return;
+  const g = member.gear;
+  // Remove stats
+  if (g.hp) { member.mhp -= g.hp; member.hp = Math.min(member.mhp, member.hp - g.hp); }
+  if (g.mp) { member.mmp -= g.mp; member.mp = Math.max(0, (member.mp || 0) - g.mp); }
+  if (g.atk) member.atk -= g.atk;
+  if (g.def) member.def -= g.def;
+  if (g.spd) member.spd -= g.spd;
+  // Return to inventory
+  addI({ n: g.n, t: 'pgear', q: 1, for: memberName, atk: g.atk, def: g.def, hp: g.hp, mp: g.mp, spd: g.spd, d: g.d });
+  lg('📦 Unequipped ' + g.n + ' from ' + member.n + '.');
+  member.gear = null;
+  render();
+}
+
 
 function addLootFromCombat(zoneName) {
   const zone = G.zones.find(z => z.n === zoneName);
@@ -1695,6 +1842,52 @@ function getResonanceStatus(zoneName) {
   return { status: 'mismatched', text: gearElem.toUpperCase() + ' vs ' + zoneElem.toUpperCase() + ' (-25% DMG)', color: '#ef4444', icon: '⚠️' };
 }
 
+
+// === STAGE 3: ZONE-BASED TEMPORARY BUFFS ===
+const ZONE_BUFFS = {
+  'Ember Peak': { name: 'Fire Attunement', fireRes: 0.15, atk: 2, desc: 'The heat fuels your rage' },
+  'Frostspire Ruins': { name: 'Ice Attunement', iceRes: 0.15, def: 2, desc: 'The cold hardens your resolve' },
+  'Arcane Planar Tower': { name: 'Planar Attunement', arcaneDmg: 3, desc: 'Reality bends to your will' },
+  'Stormhold': { name: 'Storm Attunement', lightRes: 0.15, spd: 1, desc: 'Lightning courses through you' },
+  'Abyssal Depths': { name: 'Void Attunement', voidRes: 0.15, desc: 'You embrace the darkness' },
+  "Dragon's Maw": { name: 'Dragon Scales', fireRes: 0.1, def: 1, desc: 'Ash settles on your skin like armor' }
+};
+
+function applyZoneBuffs(zoneName) {
+  clearZoneBuffs();
+  const buff = ZONE_BUFFS[zoneName];
+  if(!buff) return;
+  for(let p of G.party) {
+    if(!p.on) continue;
+    p.zoneBuff = { ...buff, zone: zoneName };
+    if(buff.atk) p.atk += buff.atk;
+    if(buff.def) p.def += buff.def;
+    if(buff.spd) p.spd += buff.spd;
+    const statBonuses = [];
+    if(buff.atk) statBonuses.push('ATK+' + buff.atk);
+    if(buff.def) statBonuses.push('DEF+' + buff.def);
+    if(buff.spd) statBonuses.push('SPD+' + buff.spd);
+    if(buff.arcaneDmg) statBonuses.push('Arcane+' + buff.arcaneDmg);
+    if(buff.fireRes) statBonuses.push('FireRes+' + Math.floor(buff.fireRes*100) + '%');
+    if(buff.iceRes) statBonuses.push('IceRes+' + Math.floor(buff.iceRes*100) + '%');
+    if(buff.lightRes) statBonuses.push('LightRes+' + Math.floor(buff.lightRes*100) + '%');
+    if(buff.voidRes) statBonuses.push('VoidRes+' + Math.floor(buff.voidRes*100) + '%');
+    lg('🌟 ' + p.n + ' feels ' + buff.name + ': ' + statBonuses.join(' ') + ' — ' + buff.desc);
+  }
+}
+
+function clearZoneBuffs() {
+  for(let p of G.party) { 
+    if(p.zoneBuff) {
+      const buff = p.zoneBuff;
+      if(buff.atk) p.atk -= buff.atk;
+      if(buff.def) p.def -= buff.def;
+      if(buff.spd) p.spd -= buff.spd;
+      delete p.zoneBuff;
+    }
+  }
+}
+
 function applyPlanarResonance(damage, zoneName) {
   const mult = getResonanceMultiplier(zoneName);
   if (mult > 1) lg('🌌 PLANAR RESONANCE MATCHED! +' + Math.floor((mult - 1) * 100) + '% damage!');
@@ -1722,6 +1915,43 @@ function pd(ds, bonus) {
 
 
 
+
+// ============================================================
+// STAGE 1: PARTY TRINKET SHOP
+// ============================================================
+
+const TRINKET_SHOP = [
+  { n: 'Iron Shield',      atk: 0, def: 3, hp: 20, r: 'common',    price: 30 },
+  { n: 'Lucky Charm',      atk: 1, def: 1, hp: 10, r: 'common',    price: 25 },
+  { n: "Warrior's Band",   atk: 3, def: 0, hp: 15, r: 'uncommon',  price: 60 },
+  { n: 'Guardian Pendant', atk: 0, def: 5, hp: 30, r: 'uncommon',  price: 80 },
+  { n: 'Storm Crystal',    atk: 4, def: 2, hp: 10, r: 'rare',      price: 150 },
+  { n: 'Phoenix Ember',    atk: 2, def: 2, hp: 50, r: 'rare',      price: 200 },
+  { n: 'Void Shard',       atk: 6, def: 0, hp: 20, r: 'epic',      price: 400 },
+  { n: 'Celestial Seal',   atk: 3, def: 4, hp: 40, r: 'epic',      price: 500 }
+];
+
+function buyTrinket(index) {
+  const t = TRINKET_SHOP[index];
+  if (!t) return;
+  if (G.p.gold < t.price) { lg('Need ' + t.price + 'G'); return; }
+  G.p.gold -= t.price;
+  const item = {
+    n: t.n, t: 'pgear', q: 1, r: t.r,
+    atk: t.atk || 0, def: t.def || 0, hp: t.hp || 0,
+    d: '+' + (t.atk || 0) + ' ATK, +' + (t.def || 0) + ' DEF, +' + (t.hp || 0) + ' HP'
+  };
+  addI(item);
+  lg('Bought ' + t.n + ' for ' + t.price + 'G');
+  render();
+}
+
+function initPartyGearBonus() {
+  if (!G || !G.party) return;
+  for (let p of G.party) {
+    if (!p.gearBonus) p.gearBonus = { atk: 0, def: 0, hp: 0, mp: 0, spd: 0 };
+  }
+}
 
 function checkAchievements() {
   let newUnlocks = 0;
@@ -1798,6 +2028,47 @@ function revealSecretAchievements() {
   }
 }
 
+function checkAffinityUnlocks(name) {
+  const aff = G.affinity[name];
+  const defs = G.affinityUnlocks[name];
+  if (!aff || !defs) return;
+  const member = G.party.find(p => p.n === name);
+  if (!member) return;
+  member.affinityBonuses = member.affinityBonuses || [];
+  for (let u of defs) {
+    if (aff.val >= u.th && !member.affinityBonuses.includes(u.id)) {
+      member.affinityBonuses.push(u.id);
+      applyAffinityUnlockFx(member, u);
+      lg('🌟 Affinity ' + u.th + ': ' + name + ' unlocks "' + u.n + '" — ' + u.d + '!');
+    }
+  }
+}
+
+function hasAffinityUnlock(name, id) {
+  const m = G.party.find(p => p.n === name);
+  return !!(m && m.affinityBonuses && m.affinityBonuses.includes(id));
+}
+
+function getAffinityUnlockBonus(type) {
+  let bonus = 0;
+  for (let m of G.party) {
+    if (!m.affinityBonuses) continue;
+    for (let id of m.affinityBonuses) {
+      const def = (G.affinityUnlocks[m.n] || []).find(u => u.id === id);
+      if (def && def.fx[type]) bonus += def.fx[type];
+    }
+  }
+  return bonus;
+}
+
+function applyAffinityUnlockFx(member, u) {
+  const fx = u.fx;
+  if (fx.hpPct) { const g = Math.floor(member.mhp * fx.hpPct); member.mhp += g; member.hp += g; }
+  if (fx.hp) { member.mhp += fx.hp; member.hp += fx.hp; }
+  if (fx.atk) member.atk += fx.atk;
+  if (fx.def) member.def += fx.def;
+}
+
 function updateAffinity(partyMemberName, amount) {
   if (!G.affinity[partyMemberName]) return;
   G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
@@ -1805,6 +2076,7 @@ function updateAffinity(partyMemberName, amount) {
   if (amount > 0) {
     lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
   }
+  checkAffinityUnlocks(partyMemberName);
   checkAchievements();
   revealSecretAchievements();
   checkAffinityDecay();
@@ -1852,39 +2124,6 @@ function getTimerStatus(q) {
   return { cls: 'timer-ok', label: q.timer + ' ticks left', pct: pct };
 }
 
-function updateAffinity(partyMemberName, amount) {
-  if (!G.affinity[partyMemberName]) return;
-  G.affinity[partyMemberName].val = Math.max(0, Math.min(G.affinity[partyMemberName].max, G.affinity[partyMemberName].val + amount));
-  G.affinity[partyMemberName].lastInteract = Date.now();
-  if (amount > 0) {
-    lg('💕 Affinity with ' + partyMemberName + ' +' + amount + ' (' + G.affinity[partyMemberName].val + '/' + G.affinity[partyMemberName].max + ')');
-  }
-  checkAchievements();
-  revealSecretAchievements();
-}
-
-function checkAffinityDecay() {
-  const now = Date.now();
-  for (let name in G.affinity) {
-    const aff = G.affinity[name];
-    const hoursSince = (now - aff.lastInteract) / (1000 * 60 * 60);
-    if (hoursSince > 24) {
-      const decay = Math.floor(hoursSince / 24) * aff.decayRate * 10;
-      aff.val = Math.max(0, aff.val - decay);
-      if (decay > 0) {
-        lg('💔 ' + name + ' feels neglected. Affinity -' + Math.floor(decay) + ' (' + aff.val + ')');
-      }
-      aff.lastInteract = now;
-    }
-  }
-}
-
-function getAffinityColor(val) {
-  if (val >= 70) return 'affinity-high';
-  if (val >= 40) return 'affinity-mid';
-  return 'affinity-low';
-}
-
 function triggerSoelCommentary(triggerType) {
   if (!G.party[6].on) return;
   if (G.soelCommentCooldown > 0) { G.soelCommentCooldown--; return; }
@@ -1922,6 +2161,44 @@ function buyFromNPC(npcName, itemIdx) {
     return;
   }
   G.p.gold -= item.price;
+
+  // Party gear (pgear) goes directly to that party member, not inventory
+  if (item.t === 'pgear') {
+    const member = G.party.find(p => p.n === item.for);
+    if (!member) {
+      lg('❌ No party member named ' + item.for + '!');
+      G.p.gold += item.price; // refund
+      return;
+    }
+    if (member.gear) {
+      lg('❌ ' + member.n + ' already has ' + member.gear.n + '! Unequip first.');
+      G.p.gold += item.price; // refund
+      return;
+    }
+    member.gear = {
+      n: item.n,
+      atk: item.atk || 0,
+      def: item.def || 0,
+      hp: item.hp || 0,
+      mp: item.mp || 0,
+      spd: item.spd || 0,
+      d: item.d || 'Party gear.'
+    };
+    // Apply stats immediately
+    if (member.gear.hp) { member.mhp += member.gear.hp; member.hp += member.gear.hp; }
+    if (member.gear.mp) { member.mmp = (member.mmp || member.mhp) + member.gear.mp; member.mp = (member.mp || 0) + member.gear.mp; }
+    if (member.gear.atk) member.atk += member.gear.atk;
+    if (member.gear.def) member.def += member.gear.def;
+    if (member.gear.spd) member.spd += member.gear.spd;
+    npc.visitCount++;
+    lg('🧳 Bought ' + item.n + ' for ' + member.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
+    if (npc.visitCount === 1) {
+      lg('   ' + npc.n + ': "Pleasure doing business, mage."');
+    }
+    render();
+    return;
+  }
+
   // Map type to equipment slot
   const slotMap = { 'wep': 'weapon', 'arm': 'armor', 'acc': 'amulet' };
   const boughtItem = { 
@@ -2097,7 +2374,7 @@ function getSynergyDesc() {
 }
 
 function applySynergyDamage(dmg, type) {
-  const spellBonus = getSynergyBonus('spellDmgPct');
+  const spellBonus = getSynergyBonus('spellDmgPct') + getAffinityUnlockBonus('spellDmgPct');
   if (type === 'spell' && spellBonus > 0) {
     dmg = Math.floor(dmg * (1 + spellBonus));
   }
@@ -2113,15 +2390,15 @@ function applySynergyDefense(dmg) {
 }
 
 function getSynergyCritBonus() {
-  return getSynergyBonus('critPct');
+  return getSynergyBonus('critPct') + getAffinityUnlockBonus('critPct');
 }
 
 function getSynergyGoldBonus() {
-  return getSynergyBonus('goldPct');
+  return getSynergyBonus('goldPct') + getAffinityUnlockBonus('goldPct');
 }
 
 function getSynergyHealBonus() {
-  return getSynergyBonus('healPct');
+  return getSynergyBonus('healPct') + getAffinityUnlockBonus('healPct');
 }
 
 function getTotalCritChance() {
@@ -2642,287 +2919,50 @@ function doPhysicalAttack(target) {
 }
 
 
-
-/* ========== ELIZ COMBAT HEALING & RESURRECTION ========== */
-function doPartyHeal(member) {
-  // Eliz (Healer) heals the most wounded party member instead of attacking
-  if (member.r !== 'Healer' || member.hp <= 0) return false;
-
-  // Find the most wounded ally (including San)
-  const targets = [G.p, ...G.party.filter(p => p.on && p.hp > 0 && p.n !== member.n)];
-  const wounded = targets.filter(t => t.hp / (t.mhp || t.mhp) < 0.75);
-  if (wounded.length === 0) return false;
-
-  wounded.sort((a, b) => (a.hp / a.mhp) - (b.hp / b.mhp));
-  const target = wounded[0];
-
-  // Heal amount based on Eliz's level and INT
-  const baseHeal = 15 + Math.floor(G.p.lvl * 2);
-  const synergyHealBonus = getSynergyHealBonus();
-  let healAmt = Math.floor(baseHeal * (1 + synergyHealBonus));
-
-  const oldHp = target.hp;
-  target.hp = Math.min(target.mhp || target.mhp, target.hp + healAmt);
-  const actualHeal = target.hp - oldHp;
-
-  lg('💚 ' + member.n + ' heals ' + (target.n || target.name) + ' for ' + actualHeal + ' HP!');
-  return true;
-}
-
-function doPartyRevive(member) {
-  // Eliz can revive fallen companions once per combat (if she has Phoenix Feather or high level)
-  if (member.r !== 'Healer' || member.hp <= 0) return false;
-
-  const dead = G.party.filter(p => p.on && p.hp <= 0 && p.n !== member.n);
-  if (dead.length === 0) return false;
-
-  // Check for Phoenix Feather in inventory
-  const feather = G.p.inv.find(i => i.t === 'revive');
-  if (!feather) {
-    // At level 10+, Eliz can revive without feather (once per combat)
-    if (G.p.lvl < 10 || member.hasRevivedThisCombat) return false;
-    member.hasRevivedThisCombat = true;
-  } else {
-    feather.q--;
-    if (feather.q <= 0) {
-      const idx = G.p.inv.indexOf(feather);
-      G.p.inv.splice(idx, 1);
-    }
-  }
-
-  const target = dead[0];
-  target.hp = Math.floor(target.mhp * 0.4);
-  target.on = true;
-
-  const source = feather ? 'Phoenix Feather' : 'Sacred Light';
-  lg('🔥 ' + member.n + ' uses ' + source + '! ' + target.n + ' revived with ' + target.hp + ' HP!');
-  lg('✨ ' + target.n + ' rejoins the fight!');
-  return true;
-}
-
-function resetCombatReviveFlags() {
-  for (let p of G.party) {
-    p.hasRevivedThisCombat = false;
-  }
-}
-
-
-
-
-/* ========== DAILY QUEST SYSTEM ========== */
-function getDayNumber() {
-  return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-}
-
-function checkDailyQuestReset() {
-  const today = getDayNumber();
-  if (G.dailyQuests.lastResetDay !== today) {
-    // Reset all daily quests
-    for (let q of G.dailyQuests.quests) {
-      q.c = 0;
-      q.done = false;
-      q.claimed = false;
-    }
-    G.dailyQuests.lastResetDay = today;
-    G.dailyQuests.claimed = [];
-    G.dailyGoldEarned = 0;
-    G.dailyZonesVisited = [];
-    lg('📅 New day! Daily quests have been reset.');
-  }
-}
-
-function updateDailyQuestProgress(type, amount) {
-  checkDailyQuestReset();
-  for (let q of G.dailyQuests.quests) {
-    if (q.done || q.claimed || q.t !== type) continue;
-    q.c = Math.min(q.need, q.c + (amount || 1));
-    if (q.c >= q.need) {
-      q.done = true;
-      lg('📅 Daily quest complete: ' + q.n + '! Claim your reward in the Quests tab.');
-    }
-  }
-}
-
-function claimDailyReward(questId) {
-  checkDailyQuestReset();
-  const q = G.dailyQuests.quests.find(dq => dq.id === questId);
-  if (!q) return;
-  if (!q.done) { lg('❌ Complete the quest first!'); return; }
-  if (q.claimed) { lg('❌ Already claimed!'); return; }
-
-  q.claimed = true;
-  G.dailyQuests.claimed.push(questId);
-  G.p.xp += q.rw.xp;
-  G.p.gold += q.rw.g;
-  lg('🎁 Claimed: ' + q.n + '! +' + q.rw.xp + ' XP, +' + q.rw.g + 'G');
-  lvlup();
-  render();
-}
-
-function getDailyQuestStatus(q) {
-  if (q.claimed) return { text: 'CLAIMED', color: '#22c55e', icon: '✅' };
-  if (q.done) return { text: 'READY', color: '#f59e0b', icon: '🎁' };
-  return { text: 'IN PROGRESS', color: '#9ca3af', icon: '⏳' };
-}
-
-function getWeekNumber() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const diff = now - start + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-  const oneDay = 1000 * 60 * 60 * 24;
-  const day = Math.floor(diff / oneDay);
-  return Math.floor(day / 7);
-}
-
-function checkWeeklyQuestReset() {
-  const thisWeek = getWeekNumber();
-  if (G.weeklyQuests.lastResetWeek !== thisWeek) {
-    for (let q of G.weeklyQuests.quests) {
-      q.c = 0;
-      q.done = false;
-      q.claimed = false;
-    }
-    G.weeklyQuests.lastResetWeek = thisWeek;
-    G.weeklyQuests.claimed = [];
-    G.weeklyGoldEarned = 0;
-    G.weeklyZonesVisited = [];
-    G.weeklyBossKills = 0;
-    lg('📆 New week! Weekly quests have been reset.');
-  }
-}
-
-function updateWeeklyQuestProgress(type, amount) {
-  checkWeeklyQuestReset();
-  for (let q of G.weeklyQuests.quests) {
-    if (q.done || q.claimed || q.t !== type) continue;
-    q.c = Math.min(q.need, q.c + (amount || 1));
-    if (q.c >= q.need) {
-      q.done = true;
-      lg('📆 Weekly quest complete: ' + q.n + '! Claim your reward in the Quests tab.');
-    }
-  }
-}
-
-function claimWeeklyReward(questId) {
-  checkWeeklyQuestReset();
-  const q = G.weeklyQuests.quests.find(wq => wq.id === questId);
-  if (!q) return;
-  if (!q.done) { lg('❌ Complete the quest first!'); return; }
-  if (q.claimed) { lg('❌ Already claimed!'); return; }
-
-  q.claimed = true;
-  G.weeklyQuests.claimed.push(questId);
-  G.p.xp += q.rw.xp;
-  G.p.gold += q.rw.g;
-  lg('🏆 Claimed: ' + q.n + '! +' + q.rw.xp + ' XP, +' + q.rw.g + 'G');
-  lvlup();
-  render();
-}
-
-function getWeeklyQuestStatus(q) {
-  if (q.claimed) return { text: 'CLAIMED', color: '#22c55e', icon: '✅' };
-  if (q.done) return { text: 'READY', color: '#a855f7', icon: '🏆' };
-  return { text: 'IN PROGRESS', color: '#9ca3af', icon: '⏳' };
-}
-
-/* ========== COMBAT RESURRECTION SYSTEM ========== */
-function getFallenParty() {
-  return G.party.filter(p => p.on && p.hp <= 0);
-}
-
-function useReviveInCombat(invIndex, targetName) {
-  const it = G.p.inv[invIndex];
-  if (!it || it.t !== 'revive') return;
-
-  const target = G.party.find(p => p.n === targetName);
-  if (!target || target.hp > 0) {
-    lg('❌ ' + targetName + ' is not fallen!');
-    return;
-  }
-
-  const reviveHp = Math.floor(target.mhp * (it.v / 100));
-  target.hp = reviveHp;
-  target.on = true;
-
-  it.q--;
-  if (it.q <= 0) G.p.inv.splice(invIndex, 1);
-
-  lg('🔥 ' + it.n + ' flares with sacred flame!');
-  lg('✨ ' + target.n + ' is revived with ' + reviveHp + ' HP!');
-
-  // Affinity boost for saving them
-  updateAffinity(target.n, 5);
-
-  render();
-}
-
-function doElizCombatRevive() {
-  // Eliz can attempt a combat revive once per battle (no item needed at high levels)
-  const eliz = G.party.find(p => p.on && p.n === 'Eliz' && p.hp > 0);
-  if (!eliz) return false;
-
-  const dead = getFallenParty();
-  if (dead.length === 0) return false;
-
-  // Check if already revived this combat
-  if (eliz.hasRevivedThisCombat) {
-    // Try using Phoenix Feather from inventory
-    const feather = G.p.inv.find(i => i.t === 'revive');
-    if (feather) {
-      const idx = G.p.inv.indexOf(feather);
-      useReviveInCombat(idx, dead[0].n);
-      return true;
-    }
+function doElizResurrect(member) {
+  // Check if Eliz has resurrect ability and it's off cooldown
+  if (!member.resurrect) return false;
+  if (member.resurrect.cooldown > 0) {
+    member.resurrect.cooldown--;
     return false;
   }
 
-  // Eliz casts Sacred Resurrection
-  eliz.hasRevivedThisCombat = true;
-  const target = dead[0];
-  const reviveHp = Math.floor(target.mhp * (0.35 + (G.p.lvl * 0.02))); // 35% + 2% per level
-  target.hp = reviveHp;
-  target.on = true;
+  // Find dead party members (excluding Eliz herself)
+  const deadMembers = G.party.filter(p => p.on && p.hp <= 0 && p.n !== 'Eliz');
+  if (deadMembers.length === 0) return false;
 
-  lg('🌟 ═══════════════════════════════════════');
-  lg('🌟 ELIZ CASTS SACRED RESURRECTION!');
-  lg('🌟 ═══════════════════════════════════════');
-  lg('✨ ' + target.n + ' is pulled back from the brink!');
-  lg('💚 ' + target.n + ' revived with ' + reviveHp + ' HP!');
+  // Prioritize: San (player) first, then others
+  let target = deadMembers.find(p => p.n === 'San');
+  if (!target) target = deadMembers[0];
 
-  updateAffinity(target.n, 10);
+  // Perform resurrection
+  const healAmount = Math.floor(target.mhp * member.resurrect.healPct);
+  target.hp = Math.max(1, healAmount);
+  member.resurrect.cooldown = member.resurrect.maxCooldown;
+
+  lg('💚 ' + member.n + ' casts ' + member.resurrect.name + '!');
+  lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP!');
+
   return true;
 }
 
-function checkAutoRevive() {
-  // Check if anyone just died and Eliz can auto-revive
-  const dead = getFallenParty();
-  if (dead.length === 0) return false;
-
-  const eliz = G.party.find(p => p.on && p.n === 'Eliz' && p.hp > 0);
-  if (!eliz) return false;
-
-  // Priority: fallen San (player) gets immediate revive
-  const fallenSan = G.p.hp <= 0;
-  if (fallenSan) {
-    // This shouldn't happen with Guardian Spirit, but just in case
-    return doElizCombatRevive();
-  }
-
-  // Otherwise revive first fallen party member
-  return doElizCombatRevive();
-}
-
-function getCombatRevives() {
-  return G.p.inv.filter(i => i.t === 'revive');
-}
-
 function doPartyAttack(member) {
+
+  // Eliz prioritizes resurrection over attacking
+  if (member.n === 'Eliz' && member.hp > 0) {
+    if (doElizResurrect(member)) return;
+  }
   const aliveEnemies = G.cbt.en.filter(e => e.hp > 0);
   if (aliveEnemies.length === 0) return;
   
   const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+  // Use gear-modified stats
+  const gearAtk = member.gear ? (member.gear.atk || 0) : 0;
+  const gearSpd = member.gear ? (member.gear.spd || 0) : 0;
+  const effectiveAtk = member.atk + gearAtk;
+  const effectiveSpd = member.spd + gearSpd;
   const abilityScore = member.r === 'Rogue' || member.r === 'Ranger' 
-    ? member.spd * 2 : member.atk * 2;
+    ? effectiveSpd * 2 : effectiveAtk * 2;
   
   const attackResult = DICE.attackRoll({
     attackerLevel: G.p.lvl,
@@ -2996,14 +3036,17 @@ function doEnemyAttack(enemy) {
     }
   }
 
-  // Tank Taunt: Joel 40% chance to intercept attacks on allies
+  // Tank Taunt: Joel intercepts attacks on allies (70% with Shield Oath)
   const joel = G.party.find(p => p.on && p.n === 'Joel' && p.hp > 0 && p.r === 'Tank');
-  if (joel && target !== joel && Math.random() < 0.40) {
+  const joelTaunt = hasAffinityUnlock('Joel', 'shield_oath') ? 0.70 : 0.40;
+  if (joel && target !== joel && Math.random() < joelTaunt) {
     lg('🛡️ Joel taunts ' + enemy.n + '! The attack is drawn to his shield!');
     target = joel;
   }
   
-  const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor((target.def || 0) / 2);
+  // Calculate target AC with gear DEF bonus
+  const gearDef = target.gear ? (target.gear.def || 0) : 0;
+  const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor(((target.def || 0) + gearDef + getBlessDef(target)) / 2);
   const attackResult = DICE.attackRoll({
     attackerLevel: G.zones.find(z => z.en.includes(enemy.n))?.lv || 1,
     abilityScore: enemy.atk * 2,
@@ -3024,11 +3067,12 @@ function doEnemyAttack(enemy) {
     isCrit: attackResult.isCrit
   });
   
-  let finalDamage = damageResult.total;
+    let finalDamage = damageResult.total;
+  const targetGearDef = target.gear ? (target.gear.def || 0) : 0;
   const targetDef = target === G.p 
     ? (G.p.eq.armor ? G.p.eq.armor.def : 0) + G.p.buffs.reduce((s, b) => s + (b.def || 0), 0)
-    : (target.def || 0);
-  
+    : (target.def || 0) + targetGearDef + getBlessDef(target);
+
   finalDamage = Math.max(1, finalDamage - Math.floor(targetDef / 2));
   finalDamage = applySynergyDefense(finalDamage);
   
@@ -3044,6 +3088,10 @@ function doEnemyAttack(enemy) {
     } else if (target !== G.p && target.n === 'Soel') {
       target.hp = 1;
       lg('🔥 Soel flickers like a spirit flame! He cannot be killed — he reforms at 1 HP!');
+    } else if (target !== G.p && target.n === 'Joel' && hasAffinityUnlock('Joel', 'unbreakable') && !G.joelReviveUsed) {
+      G.joelReviveUsed = true;
+      target.hp = Math.floor(target.mhp * 0.5);
+      lg('💜 UNBREAKABLE! Joel refuses to fall — he rises again at ' + target.hp + ' HP! (Once per rest)');
     } else {
       target.hp = 0;
       lg('💀 ' + (target.n || 'You') + ' fall unconscious!');
@@ -3324,6 +3372,12 @@ function handleZoneHazards() {
 }
 
 function finishPlayerTurn() {
+  // Reduce Eliz's resurrect cooldown each turn
+  const eliz = G.party.find(p => p.on && p.n === 'Eliz');
+  if (eliz && eliz.resurrect && eliz.resurrect.cooldown > 0) {
+    eliz.resurrect.cooldown--;
+  }
+
   for (let p of G.party) {
     if (p.on && p.hp > 0) doPartyAttack(p);
   }
@@ -3349,6 +3403,8 @@ function finishPlayerTurn() {
 }
 
 function handleVictory() {
+  clearZoneBuffs(); // STAGE 3: Clear zone buffs on victory
+
   const txp = G.cbt.en.reduce((s, e) => s + e.xp, 0);
   let tg2 = G.cbt.en.reduce((s, e) => s + e.g, 0);
   
@@ -3361,18 +3417,8 @@ function handleVictory() {
   
   G.p.xp += txp;
   G.p.gold += tg2;
-  G.dailyGoldEarned += tg2;
-  G.weeklyGoldEarned += tg2;
-  updateDailyQuestProgress('gold_earned', G.dailyGoldEarned);
-  updateWeeklyQuestProgress('gold_earned', G.weeklyGoldEarned);
   G.p.kills += G.cbt.en.length;
-  updateDailyQuestProgress('kill', G.cbt.en.length);
-  updateWeeklyQuestProgress('kill', G.cbt.en.length);
-  if (G.currentBoss) { 
-    G.p.bossKills = (G.p.bossKills || 0) + 1;
-    G.weeklyBossKills++;
-    updateWeeklyQuestProgress('boss', G.weeklyBossKills);
-  }
+  if (G.currentBoss) { G.p.bossKills = (G.p.bossKills || 0) + 1; }
   if (G.currentBoss && G.currentBoss.n === 'The Planarch') {
     lg('🏆 You have conquered the Arcane Planar Tower!');
     lg('   The spire bends to your will. Planar energy surges through your veins.');
@@ -3460,12 +3506,13 @@ function handleVictory() {
   G.currentBoss = null;
   G.cbt.autoCombat = false;
   G.cbt.on = false;
-  resetCombatReviveFlags();
   G.state = 'explore';
   render();
 }
 
 function handleDefeat() {
+  clearZoneBuffs(); // STAGE 3: Clear zone buffs on defeat
+
   if (checkSecondWind()) { render(); return; }
   lg('💀 You have fallen! Rolling death saves...');
   
@@ -3689,9 +3736,6 @@ function eturn() {
   for (let e of G.cbt.en) {
     doEnemyAttack(e);
   }
-
-  // Check if anyone needs revival after enemy turn
-  checkAutoRevive();
   
   handleBossMechanics();
   handleZoneHazards();
@@ -3733,13 +3777,6 @@ function doAutoCombatTick() {
     return;
   }
   
-  // Auto-use potion if HP critical
-  if (G.p.hp / G.p.mhp < 0.25) {
-    if (autoUsePotion()) {
-      setTimeout(doAutoCombatTick, 600);
-      return;
-    }
-  }
   if (G.p.hp <= 1) {
     G.cbt.autoCombat = false;
     G.cbt.autoFlee = true;
@@ -3786,65 +3823,6 @@ function doAutoCombatTick() {
   
   if (!G.cbt.on) { G.cbt.autoCombat = false; return; }
   setTimeout(doAutoCombatTick, 1200);
-}
-
-
-
-/* ========== COMBAT POTION SYSTEM ========== */
-function getCombatPotions() {
-  return G.p.inv.filter(i => 
-    (i.t === 'pot' || i.t === 'food' || i.t === 'drink') && 
-    (i.eff === 'heal' || i.eff === 'mana')
-  );
-}
-
-function togglePotionMenu() {
-  G.potionMenu = !G.potionMenu;
-  render();
-}
-
-function usePotionInCombat(invIndex) {
-  const it = G.p.inv[invIndex];
-  if (!it) return;
-  if (it.eff === 'heal') {
-    const oldHp = G.p.hp;
-    G.p.hp = Math.min(G.p.mhp, G.p.hp + it.v);
-    const healed = G.p.hp - oldHp;
-    it.q--;
-    if (it.q <= 0) G.p.inv.splice(invIndex, 1);
-    lg('🧪 Used ' + it.n + '! +' + healed + ' HP (' + G.p.hp + '/' + G.p.mhp + ')');
-  } else if (it.eff === 'mana') {
-    const oldMp = G.p.mp;
-    G.p.mp = Math.min(G.p.mmp, G.p.mp + it.v);
-    const restored = G.p.mp - oldMp;
-    it.q--;
-    if (it.q <= 0) G.p.inv.splice(invIndex, 1);
-    lg('🧪 Used ' + it.n + '! +' + restored + ' MP (' + G.p.mp + '/' + G.p.mmp + ')');
-  }
-  G.potionMenu = false;
-  render();
-}
-
-function autoUsePotion() {
-  // Auto-use health potion if HP below 30%
-  if (G.p.hp / G.p.mhp < 0.30) {
-    const healPot = G.p.inv.find(i => (i.t === 'pot' || i.t === 'food') && i.eff === 'heal');
-    if (healPot) {
-      const idx = G.p.inv.indexOf(healPot);
-      usePotionInCombat(idx);
-      return true;
-    }
-  }
-  // Auto-use mana potion if MP below 20%
-  if (G.p.mp / G.p.mmp < 0.20) {
-    const manaPot = G.p.inv.find(i => i.t === 'pot' && i.eff === 'mana');
-    if (manaPot) {
-      const idx = G.p.inv.indexOf(manaPot);
-      usePotionInCombat(idx);
-      return true;
-    }
-  }
-  return false;
 }
 
 function toggleAutoCombat() {
@@ -4084,6 +4062,19 @@ function hasHealer() {
   return G.party.some(p => p.on && p.r === 'Healer' && p.hp > 0);
 }
 
+function getBlessDef(t) {
+  return (G.soelBlessing && t && t.n === G.soelBlessing.target) ? (G.soelBlessing.def || 0) : 0;
+}
+
+function soelBless(name) {
+  if (G.soelBlessing) return;
+  const m = G.party.find(p => p.n === name && p.on);
+  if (!m) return;
+  G.soelBlessing = { target: name, def: 10 };
+  lg('🐱 Soel blesses ' + name + ' (+10 DEF until next rest).');
+  render();
+}
+
 function getHealerName() {
   const h = G.party.find(p => p.on && p.r === 'Healer' && p.hp > 0);
   return h ? h.n : null;
@@ -4172,8 +4163,16 @@ function startRest(siteId) {
   G.rest.tick = 0;
   G.rest.ambushPending = false;
   G.currentDialogue = null;
-  potionMenu: false,
+  G.potionMenu = false;
   G.ambushWarning = null;
+  if (G.soelBlessing) {
+    lg("🐱 Soel's blessing on " + G.soelBlessing.target + " fades as the party makes camp.");
+    G.soelBlessing = null;
+  }
+  if (G.joelReviveUsed) {
+    G.joelReviveUsed = false;
+    lg('💜 Joel steady his shield. Unbreakable is ready again.');
+  }
   const healerName = getHealerName();
   lg('💤 ' + healerName + ' begins the rest ritual at ' + site.name + '...');
   lg('🔥 Campfire lit. 5 ticks to full recovery.');
@@ -4607,8 +4606,8 @@ function sc(zi) {
   }
   if (checkMiniStory(z.n)) return;
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
-  resetCombatReviveFlags();
   checkDimensionalInstability(); // Phase 2: Dimensional Instability
+  applyZoneBuffs(z.n); // STAGE 3: Apply zone buffs
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
   let isBoss = false;
@@ -4696,14 +4695,6 @@ function sc(zi) {
       e.id=i; e.status=[]; G.cbt.en.push(e);
     }
     lg('Entered '+z.n+'! '+ec+' enemies appear!');
-  if (!G.dailyZonesVisited.includes(z.n)) {
-    G.dailyZonesVisited.push(z.n);
-    updateDailyQuestProgress('explore', 1);
-  }
-  if (!G.weeklyZonesVisited.includes(z.n)) {
-    G.weeklyZonesVisited.push(z.n);
-    updateWeeklyQuestProgress('explore', 1);
-  }
   }
   triggerSoelCommentary('explore');
   // Track explore_with quest progress
@@ -4732,6 +4723,22 @@ function lvlup(){
     G.p.mhp+=10; G.p.mmp+=15; G.p.hp=G.p.mhp; G.p.mp=G.p.mmp;
     G.p.stats.int+=2; G.p.stats.con+=1;
     lg('LEVEL UP! Now Level '+G.p.lvl+'!');
+
+    // === STAGE 2: PARTY AUTO STAT GROWTH ===
+    for(let p of G.party){
+      if(p.on || p.ul <= G.p.lvl){
+        const oldMhp = p.mhp, oldAtk = p.atk, oldDef = p.def;
+        p.mhp += 8; 
+        p.hp = Math.min(p.mhp, p.hp + 8);
+        p.atk += 1; 
+        p.def += 1;
+        // Only log for active members to avoid spam
+        if(p.on){
+          lg('📈 ' + p.n + ' grows with you! HP ' + oldMhp + '→' + p.mhp + ' ATK ' + oldAtk + '→' + p.atk + ' DEF ' + oldDef + '→' + p.def);
+        }
+      }
+    }
+
     for(let s of G.p.skills){if(!s.on&&s.ul<=G.p.lvl){s.on=true;lg('Learned: '+s.n+'!');}}
     for(let p of G.party){if(!p.on&&p.ul<=G.p.lvl){p.on=true;p.hp=p.mhp;lg(p.n+' '+p.t+' joins!');}}
     checkAchievements();
@@ -4743,7 +4750,6 @@ function lvlup(){
     checkQ();
   }
 }
-
 function checkQ(){
   for(let q of G.quests){
     if(q.done)continue;
@@ -4811,8 +4817,6 @@ function craft(ri){
   }
   addI({...r.res}); lg('Crafted: '+r.n+'!');
   G.p.crafts = (G.p.crafts || 0) + 1;
-  updateDailyQuestProgress('craft', 1);
-  updateWeeklyQuestProgress('craft', 1);
   checkAchievements();
   const pq=G.quests.find(q=>q.t=='craft');
   if(pq&&!pq.done){pq.c++;checkQ();}
@@ -4841,8 +4845,6 @@ function sf(minutes){
       const fq=G.quests.find(q=>q.t=='focus');
       if(fq&&!fq.done){fq.c++;checkQ();}
       lg('Focus complete! +' + baseXp + 'XP +' + baseGold + 'G Streak:'+G.p.fstreak);
-  updateDailyQuestProgress('focus', 1);
-  updateWeeklyQuestProgress('focus', 1);
       checkAchievements();
       lvlup(); G.state='menu'; render();
     }else{
@@ -4907,14 +4909,15 @@ function saveGame() {
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak
     },
-    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col })),
+    party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, affinityBonuses: p.affinityBonuses })),
     quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
     rest: {
       sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
     },
     log: G.log,
     affinity: G.affinity,
-    affinity: G.affinity,
+    soelBlessing: G.soelBlessing,
+    joelReviveUsed: G.joelReviveUsed,
     achievements: G.achievements.map(a => ({ id: a.id, done: a.done, revealed: a.revealed })),
     bestiary: G.bestiary,
     partySynergies: G.partySynergies,
@@ -4922,13 +4925,6 @@ function saveGame() {
     state: G.state,
     potionMenu: G.potionMenu,
     // Phase 2 data
-    dailyQuests: G.dailyQuests,
-    dailyGoldEarned: G.dailyGoldEarned,
-    dailyZonesVisited: G.dailyZonesVisited,
-    weeklyQuests: G.weeklyQuests,
-    weeklyGoldEarned: G.weeklyGoldEarned,
-    weeklyZonesVisited: G.weeklyZonesVisited,
-    weeklyBossKills: G.weeklyBossKills,
     talents: G.talents,
     runes: G.runes,
     riftCounter: G.riftCounter,
@@ -4968,15 +4964,6 @@ function loadGame() {
 
     // Phase 2: Initialize missing fields
     if (!data.player) return false;
-    if (data.dailyQuests) {
-      G.dailyQuests = data.dailyQuests;
-    }
-    if (data.dailyGoldEarned !== undefined) G.dailyGoldEarned = data.dailyGoldEarned;
-    if (data.dailyZonesVisited) G.dailyZonesVisited = data.dailyZonesVisited;
-    if (data.weeklyQuests) G.weeklyQuests = data.weeklyQuests;
-    if (data.weeklyGoldEarned !== undefined) G.weeklyGoldEarned = data.weeklyGoldEarned;
-    if (data.weeklyZonesVisited) G.weeklyZonesVisited = data.weeklyZonesVisited;
-    if (data.weeklyBossKills !== undefined) G.weeklyBossKills = data.weeklyBossKills;
     if (!data.player.talents) data.player.talents = [];
     if (!data.player.runes) data.player.runes = [];
     if (data.player.riftCounter === undefined) data.player.riftCounter = 0;
@@ -5067,6 +5054,10 @@ function loadGame() {
       if (saved) {
         p.on = saved.on;
         p.mhp = saved.mhp;
+        p.atk = saved.atk;
+        p.def = saved.def;
+        p.spd = saved.spd;
+        p.affinityBonuses = saved.affinityBonuses || [];
         // Offline regen for party too
         if (data.lastSaveTime) {
           const now = Date.now();
@@ -5169,7 +5160,10 @@ function loadGame() {
       G.currentBoss = data.currentBoss;
     }
     G.potionMenu = data.potionMenu || false;
+    G.soelBlessing = data.soelBlessing || null;
+    G.joelReviveUsed = data.joelReviveUsed || false;
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
+    for (let name in G.affinity) checkAffinityUnlocks(name);
     lg('Game loaded!');
     return true;
   } catch(e) {
@@ -5249,7 +5243,7 @@ function rNPC() {
         h += '<div class="npc-stock">';
         for (let j = 0; j < npc.stock.length; j++) {
           const item = npc.stock[j];
-          const icon = item.t === 'food' ? '🍽️' : item.t === 'drink' ? '🥤' : '';
+          const icon = item.t === 'food' ? '🍽️' : item.t === 'drink' ? '🥤' : item.t === 'pgear' ? '⚔️' : '';
           h += '<span class="npc-item" style="color:' + rc(item.r) + ';">' + icon + ' ' + item.n + ' (' + item.price + 'G)</span>';
         }
         h += '</div>';
@@ -5321,6 +5315,22 @@ function rNPC() {
   }
 
   h += '<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:16px;">Traders unlock by zone level. Allies unlock through party affinity.</div>';
+  // Trinket Shop
+  h += '<div style="margin-top:20px;"><h3 style="font-size:14px;color:#a78bfa;margin-bottom:10px;">🎁 Trinket Shop</h3>';
+  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Simple gear any party member can equip. Buy then equip from Party screen.</div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">';
+  for(let i=0;i<TRINKET_SHOP.length;i++){
+    const t=TRINKET_SHOP[i];
+    const canAfford=G.p.gold>=t.price;
+    const color=t.r==='epic'?'#a855f7':t.r==='rare'?'#3b82f6':t.r==='uncommon'?'#22c55e':'#9ca3af';
+    h+='<button class="trinket-buy-btn" data-tidx="'+i+'" style="padding:10px;border-radius:12px;border:1px solid '+(canAfford?color:'var(--disabled)')+';background:var(--bg-card);color:var(--text);font-size:11px;font-weight:600;cursor:'+(canAfford?'pointer':'not-allowed')+';opacity:'+(canAfford?'1':'0.5')+';text-align:left;">';
+    h+='<div style="color:'+color+';font-weight:700;">'+t.n+'</div>';
+    h+='<div style="font-size:10px;color:var(--text-dim);margin-top:2px;">ATK+'+t.atk+' DEF+'+t.def+' HP+'+t.hp+'</div>';
+    h+='<div style="font-size:10px;color:'+(canAfford?'#f59e0b':'var(--danger)')+';margin-top:4px;">'+(canAfford?'💰 ':'🔒 ')+t.price+'G</div>';
+    h+='</button>';
+  }
+  h += '</div></div>';
+
   h += '</div>';
   return h;
 }
@@ -5419,6 +5429,8 @@ function rAchievements() {
 }
 
 function render(){
+  initPartyGearBonus();
+
   const a=document.getElementById('app'); if(!a)return;
   let h='';
   h+='<div class="hdr"><div class="hdr-l"><div class="pname">'+G.p.name+' <span class="cls">'+G.p.cls+'</span></div><div class="lvl">Lv.'+G.p.lvl+'</div></div>';
@@ -5444,7 +5456,6 @@ function render(){
   else if(G.state=='craft')h+=rCraft();
   else if(G.state=='quest')h+=rQuest();
   else if(G.state=='focus')h+=rFocus();
-  else if(G.state=='focus-picker')h+=rFocusPicker();
   else if(G.state=='rest')h+=rRest();
   else if(G.state=='secret')h+=rSecret();
   else if(G.state=='skilltree')h+=rSkillTree();
@@ -5469,8 +5480,10 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus-picker')setS('focus-picker');else if(a=='rest')setS('rest');
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
+    else if(a=='talents')setS('talents');
+    else if(a=='runes')setS('runes');
     else if(a=='storymode')startStoryMode();});
   });
   document.querySelectorAll('.story-view .abtn').forEach(el=>{
@@ -5559,23 +5572,6 @@ function attachEvents() {
   document.querySelectorAll('.focus-session-btn').forEach(el=>{
     el.addEventListener('click',()=>{sf(parseInt(el.getAttribute('data-min')));});
   });
-  document.querySelectorAll('.focus-back-btn').forEach(el=>{
-    el.addEventListener('click',()=>{setS('menu');});
-  });
-  // Daily quest claim buttons
-  document.querySelectorAll('.daily-claim-btn').forEach(el=>{
-    el.addEventListener('click',(e)=>{
-      e.stopPropagation();
-      claimDailyReward(el.getAttribute('data-qid'));
-    });
-  });
-  // Weekly quest claim buttons
-  document.querySelectorAll('.weekly-claim-btn').forEach(el=>{
-    el.addEventListener('click',(e)=>{
-      e.stopPropagation();
-      claimWeeklyReward(el.getAttribute('data-qid'));
-    });
-  });
   if(cfb)cfb.addEventListener('click',cf);
   const btnAuto=document.getElementById('btn-auto');
   if(btnAuto)btnAuto.addEventListener('click',toggleAutoCombat);
@@ -5608,6 +5604,9 @@ function attachEvents() {
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
   });
+  document.querySelectorAll('.soel-bless-btn').forEach(el=>{
+    el.addEventListener('click',()=>{soelBless(el.getAttribute('data-n'));});
+  });
   const cancelRestBtn=document.getElementById('cancel-rest');
   if(cancelRestBtn)cancelRestBtn.addEventListener('click',cancelRest);
   document.querySelectorAll('.npc-buy').forEach(el=>{
@@ -5622,26 +5621,30 @@ function attachEvents() {
       sellToAmad(parseInt(el.getAttribute('data-index')));
     });
   });
-
-  // Combat potion buttons (Stage 3)
-  document.querySelectorAll('.potion-use-btn').forEach(el=>{
-    el.addEventListener('click',(e)=>{
-      e.stopPropagation();
-      usePotionInCombat(parseInt(el.getAttribute('data-idx')));
-    });
-  });
-
-  // Combat revive buttons (Stage 3)
-  document.querySelectorAll('.revive-use-btn').forEach(el=>{
-    el.addEventListener('click',(e)=>{
-      e.stopPropagation();
-      useReviveInCombat(parseInt(el.getAttribute('data-idx')), el.getAttribute('data-target'));
-    });
-  });
   document.querySelectorAll('.tr-btn:not(.dis)').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       reviveMember(el.getAttribute('data-m'));
+    });
+  });
+  document.querySelectorAll('.equip-pgear').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      equipPartyGear(el.getAttribute('data-member'), parseInt(el.getAttribute('data-idx')));
+    });
+  // Stage 1: Trinket shop
+  document.querySelectorAll('.trinket-buy-btn').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      buyTrinket(parseInt(el.getAttribute('data-tidx')));
+    });
+  });
+
+  });
+  document.querySelectorAll('.unequip-pgear').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      unequipPartyGear(el.getAttribute('data-member'));
     });
   });
 }
@@ -6156,7 +6159,7 @@ function rMenu(){
     {i:'💎',l:'Runes',d:'Socket runes into gear (Lv.20+)',a:'runes'},
     {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
-    {i:'🧘',l:'Focus Mode',d:'5–25 min ADHD timer',a:'focus-picker'},
+    {i:'🧘',l:'Focus Mode',d:'5–25 min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
   ];
   let h='<div class="grid2">';
@@ -6225,63 +6228,45 @@ function rCbt() {
 
   // Potion button
   const potions = getCombatPotions();
-  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (potions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (potions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (potions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
-  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + potions.length + ')') + '</button>';
+  const usablePotions = potions.filter(p => {
+    if (p.t === 'revive') return getDeadParty().length > 0;
+    return true;
+  });
+  h += '<button onclick="togglePotionMenu()" style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid ' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';background:' + (usablePotions.length > 0 ? '#22c55e15' : 'transparent') + ';color:' + (usablePotions.length > 0 ? '#22c55e' : 'var(--disabled)') + ';font-size:12px;font-weight:600;cursor:' + (usablePotions.length > 0 ? 'pointer' : 'not-allowed') + ';margin-bottom:12px;user-select:none;">';
+  h += (G.potionMenu ? '❌ Close Potion Bag' : '🧪 Use Potion (' + usablePotions.length + ' usable)') + '</button>';
 
   // Potion menu
-  if (G.potionMenu) {
+  if (G.potionMenu && potions.length > 0) {
     h += '<div style="background:var(--bg-card);border:1px solid #22c55e;border-radius:12px;padding:10px;margin-bottom:12px;">';
     h += '<div style="font-size:11px;color:#22c55e;margin-bottom:8px;">🧪 Quick Potion Bag</div>';
-
-    // Health/Mana potions
-    const potions = getCombatPotions();
-    if (potions.length > 0) {
-      h += '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">';
-      for (let i = 0; i < G.p.inv.length; i++) {
-        const it = G.p.inv[i];
-        if ((it.t === 'pot' || it.t === 'food' || it.t === 'drink') && (it.eff === 'heal' || it.eff === 'mana')) {
-          const isHeal = it.eff === 'heal';
-          const icon = isHeal ? '❤️' : '💧';
-          const color = isHeal ? '#ef4444' : '#3b82f6';
-          const current = isHeal ? G.p.hp + '/' + G.p.mhp : G.p.mp + '/' + G.p.mmp;
-          const full = isHeal ? G.p.hp >= G.p.mhp : G.p.mp >= G.p.mmp;
-          h += '<button class="potion-use-btn" data-idx="' + i + '" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + (full ? 'var(--disabled)' : color) + ';font-size:12px;font-weight:600;cursor:' + (full ? 'not-allowed' : 'pointer') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (full ? '0.5' : '1') + ';">';
-          h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
-          h += '<span>' + (full ? 'FULL' : '+' + it.v + ' ' + (isHeal ? 'HP' : 'MP')) + ' · ' + current + '</span>';
-          h += '</button>';
-        }
+    h += '<div style="display:flex;flex-direction:column;gap:6px;">';
+    for (let i = 0; i < G.p.inv.length; i++) {
+      const it = G.p.inv[i];
+      // Regular potions (heal/mana)
+      if ((it.t === 'pot' || it.t === 'food' || it.t === 'drink') && (it.eff === 'heal' || it.eff === 'mana')) {
+        const isHeal = it.eff === 'heal';
+        const icon = isHeal ? '❤️' : '💧';
+        const color = isHeal ? '#ef4444' : '#3b82f6';
+        const current = isHeal ? G.p.hp + '/' + G.p.mhp : G.p.mp + '/' + G.p.mmp;
+        const full = isHeal ? G.p.hp >= G.p.mhp : G.p.mp >= G.p.mmp;
+        h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + (full ? 'var(--disabled)' : color) + ';font-size:12px;font-weight:600;cursor:' + (full ? 'not-allowed' : 'pointer') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (full ? '0.5' : '1') + ';">';
+        h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
+        h += '<span>' + (full ? 'FULL' : '+' + it.v + ' ' + (isHeal ? 'HP' : 'MP')) + ' · ' + current + '</span>';
+        h += '</button>';
       }
-      h += '</div>';
-    }
-
-    // Revive items section
-    const revives = getCombatRevives();
-    const fallen = getFallenParty();
-    if (revives.length > 0 && fallen.length > 0) {
-      h += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;">';
-      h += '<div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">🔥 Resurrection</div>';
-      h += '<div style="display:flex;flex-direction:column;gap:6px;">';
-      for (let i = 0; i < G.p.inv.length; i++) {
-        const it = G.p.inv[i];
-        if (it.t === 'revive') {
-          for (let f = 0; f < fallen.length; f++) {
-            const fallenMember = fallen[f];
-            const reviveHp = Math.floor(fallenMember.mhp * (it.v / 100));
-            h += '<button class="revive-use-btn" data-idx="' + i + '" data-target="' + fallenMember.n + '" style="padding:10px 14px;border-radius:10px;border:1px solid #f59e0b;background:#f59e0b15;color:#f59e0b;font-size:12px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">';
-            h += '<span>🔥 ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
-            h += '<span>Revive ' + fallenMember.n + ' (' + reviveHp + ' HP)</span>';
-            h += '</button>';
-          }
-        }
+      // Revive items (Phoenix Feather, etc.)
+      else if (it.t === 'revive') {
+        const deadMembers = getDeadParty();
+        const hasDead = deadMembers.length > 0;
+        const color = hasDead ? '#f59e0b' : 'var(--disabled)';
+        const icon = '🔥';
+        h += '<button onclick="usePotionInCombat(' + i + ')" style="padding:10px 14px;border-radius:10px;border:1px solid ' + color + ';background:' + color + '15;color:' + color + ';font-size:12px;font-weight:600;cursor:' + (hasDead ? 'pointer' : 'not-allowed') + ';display:flex;justify-content:space-between;align-items:center;opacity:' + (hasDead ? '1' : '0.5') + ';">';
+        h += '<span>' + icon + ' ' + it.n + (it.q > 1 ? ' x' + it.q : '') + '</span>';
+        h += '<span>' + (hasDead ? 'Revive 50% HP' : 'No one to revive') + ' · ' + deadMembers.length + ' down</span>';
+        h += '</button>';
       }
-      h += '</div></div>';
-    } else if (fallen.length > 0) {
-      h += '<div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px;font-size:11px;color:var(--disabled);">';
-      h += '💀 ' + fallen.length + ' fallen — no revive items. Eliz may help...';
-      h += '</div>';
     }
-
-    h += '</div>';
+    h += '</div></div>';
   }
   
   // Reuse zone variable from resonance check above
@@ -6360,25 +6345,10 @@ function rCbt() {
   h += '<div class="pstat"><div class="mst"><span class="md" style="background:#7c3aed"></span>San ' + G.p.hp + '/' + G.p.mhp + ' AC' + playerAC + '</div>';
   for (let p of G.party) {
     if (p.on) {
-      const isDead = p.hp <= 0;
-      h += '<div class="mst" style="' + (isDead ? 'opacity:0.5;text-decoration:line-through;' : '') + '"><span class="md" style="background:' + (isDead ? '#6b7280' : p.col) + '"></span>' + p.n + ' ' + (isDead ? '💀' : p.hp + '/' + p.mhp) + '</div>';
+      h += '<div class="mst"><span class="md" style="background:' + p.col + '"></span>' + p.n + ' ' + p.hp + '/' + p.mhp + '</div>';
     }
   }
   h += '</div>';
-
-  // Show fallen allies warning
-  const fallenAllies = getFallenParty();
-  if (fallenAllies.length > 0) {
-    h += '<div style="background:#ef444415;border:1px solid var(--danger);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:var(--danger);">';
-    h += '💀 FALLEN: ' + fallenAllies.map(p => p.n).join(', ');
-    const eliz = G.party.find(p => p.on && p.n === 'Eliz' && p.hp > 0);
-    if (eliz) {
-      h += ' — Eliz will attempt to revive!';
-    } else {
-      h += ' — Use a Phoenix Feather or retreat!';
-    }
-    h += '</div>';
-  }
   
   h += '<div class="skills"><h3>Select Skill</h3><div class="slist">';
   
@@ -6461,11 +6431,62 @@ function rParty(){
   }
   h += '<div class="plist">';
   for(let p of G.party){
-    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+' DEF:'+p.def+' SPD:'+p.spd+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')+'</div></div>';
+    h+='<div class="pcard '+(p.on?'':'locked')+'"><div class="pava" style="background:'+p.col+'20;border-color:'+p.col+'"><span style="font-size:28px">'+(p.on?re(p.r):'🔒')+'</span></div><div class="pinfo"><div class="pn">'+p.n+' <span class="pt">'+p.t+'</span></div><div class="pr" style="color:'+p.col+'">'+p.r+'</div><div class="pd">'+p.d+'</div><div class="pb">'+p.b+'</div>'+(p.on?'<div class="ps">HP:'+p.hp+'/'+p.mhp+' ATK:'+p.atk+(p.gear&&p.gear.atk?'(+'+p.gear.atk+')':'')+' DEF:'+p.def+(p.gear&&p.gear.def?'(+'+p.gear.def+')':'')+' SPD:'+p.spd+(p.gear&&p.gear.spd?'(+'+p.gear.spd+')':'')+(getBlessDef(p)?' <span style="color:var(--rest);font-weight:700;">🐱+10 DEF</span>':'')+'</div>':'')+(G.affinity[p.n]?'<div class="affinity-bar"><div class="affinity-fill '+getAffinityColor(G.affinity[p.n].val)+'" style="width:'+(G.affinity[p.n].val/G.affinity[p.n].max*100)+'%"></div></div><div class="affinity-label">'+(G.affinity[p.n].val>=70?'💕 Close':G.affinity[p.n].val>=40?'💛 Friendly':G.affinity[p.n].val>=20?'💔 Distant':'💀 Strained')+' ('+G.affinity[p.n].val+'/'+G.affinity[p.n].max+')</div>':'')
++(G.affinityUnlocks[p.n]?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">'+G.affinityUnlocks[p.n].map(function(u){var un=p.affinityBonuses&&p.affinityBonuses.includes(u.id);return '<span title="'+u.d+'" style="font-size:9px;padding:2px 6px;border-radius:8px;border:1px solid '+(un?'var(--xp);color:var(--xp);':'var(--border);color:var(--text-dim);opacity:0.6;')+'">'+(un?'🌟 ':'🔒 ')+u.n+' ('+u.th+')</span>';}).join('')+'</div>':'')+'</div></div>';
+    // === STAGE 1: ENHANCED TRINKET/GEAR SYSTEM ===
+    if(p.on || p.ul <= G.p.lvl){
+      h += '<div style="background:var(--bg-hover);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:8px;">';
+      h += '<div style="font-size:11px;font-weight:600;color:var(--accent-light);margin-bottom:6px;">🎁 Trinket Slot</div>';
+      if(p.gear){
+        // Equipped trinket display with rarity color
+        const rarityColor = p.gear.r ? (p.gear.r==='epic'?'#a855f7':p.gear.r==='rare'?'#3b82f6':p.gear.r==='uncommon'?'#22c55e':'#9ca3af') : '#9ca3af';
+        h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">';
+        h += '<span style="font-size:12px;font-weight:600;color:'+rarityColor+';">' + p.gear.n + '</span>';
+        h += '<button class="unequip-pgear" data-member="' + p.n + '" style="padding:4px 10px;border-radius:8px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:11px;font-weight:600;cursor:pointer;">Unequip</button>';
+        h += '</div>';
+        h += '<div style="font-size:10px;color:var(--text-dim);">';
+        const stats = [];
+        if(p.gear.atk) stats.push('+ ' + p.gear.atk + ' ATK');
+        if(p.gear.def) stats.push('+ ' + p.gear.def + ' DEF');
+        if(p.gear.hp) stats.push('+ ' + p.gear.hp + ' HP');
+        if(p.gear.mp) stats.push('+ ' + p.gear.mp + ' MP');
+        if(p.gear.spd) stats.push('+ ' + p.gear.spd + ' SPD');
+        h += stats.join(' · ') + '</div>';
+        if(p.gear.d) h += '<div style="font-size:10px;color:var(--accent-light);margin-top:4px;font-style:italic;">' + p.gear.d + '</div>';
+      } else {
+        h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Empty trinket slot</div>';
+        // Show ALL equippable pgear items (not just for this member)
+        const allPgear = G.p.inv.map((it, idx) => ({it, idx})).filter(x => x.it.t === 'pgear');
+        if(allPgear.length > 0){
+          h += '<div style="display:flex;flex-direction:column;gap:4px;">';
+          for(let eq of allPgear){
+            const isForThis = !eq.it.for || eq.it.for === p.n;
+            const rarityColor = eq.it.r ? (eq.it.r==='epic'?'#a855f7':eq.it.r==='rare'?'#3b82f6':eq.it.r==='uncommon'?'#22c55e':'#9ca3af') : '#9ca3af';
+            if(isForThis){
+              h += '<button class="equip-pgear" data-member="' + p.n + '" data-idx="' + eq.idx + '" style="padding:6px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:11px;font-weight:600;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;">';
+              h += '<span style="color:'+rarityColor+';">' + eq.it.n + '</span>';
+              h += '<span style="font-size:10px;color:var(--text-dim);">Equip →</span>';
+              h += '</button>';
+            }
+          }
+          // Show incompatible items as disabled
+          const incompatible = allPgear.filter(x => x.it.for && x.it.for !== p.n);
+          if(incompatible.length > 0){
+            h += '<div style="font-size:10px;color:var(--disabled);margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">Not for ' + p.n + ':</div>';
+            for(let eq of incompatible){
+              h += '<div style="padding:4px 10px;border-radius:8px;background:var(--nav-bg);color:var(--disabled);font-size:10px;">' + eq.it.n + ' (' + eq.it.for + ' only)</div>';
+            }
+          }
+          h += '</div>';
+        } else {
+          h += '<div style="font-size:10px;color:var(--disabled);margin-top:4px;">Buy trinkets from traders like Ribald, Deidre, or Nym.</div>';
+        }
+      }
+      h += '</div>';
+    }
   }
   h+='</div></div>'; return h;
 }
-
 function rSkills(){
   let h='<div class="skills-view"><h2 class="st">Mage Skills</h2><div class="sklist">';
   for(let s of G.p.skills){
@@ -6598,55 +6619,6 @@ function rQuest(){
   }
   h+='</div>';
   // Bounties section
-  // Daily Quests Section
-  h+='<h2 class="st" style="margin-top:20px;">📅 Daily Quests</h2>';
-  h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Resets at midnight · Claim rewards when complete</div>';
-  h+='<div class="qlist">';
-  checkDailyQuestReset();
-  for(let q of G.dailyQuests.quests){
-    const pc=Math.min(100,(q.c/q.need)*100);
-    const status=getDailyQuestStatus(q);
-    h+='<div class="qc '+(q.claimed?'done':'')+'" style="border-color:'+status.color+';">';
-    h+='<div class="qh"><span class="qn">'+status.icon+' '+q.n+'</span>';
-    h+='<span class="qr" style="color:'+status.color+';">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div>';
-    h+='<div class="qd">'+q.d+'</div>';
-    h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%;background:'+status.color+';"></div></div>';
-    h+='<span class="ptxt">'+q.c+'/'+q.need+'</span></div>';
-    if(q.done && !q.claimed){
-      h+='<button class="daily-claim-btn" data-qid="'+q.id+'" style="width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;">🎁 Claim Reward</button>';
-    }else if(q.claimed){
-      h+='<div style="text-align:center;padding:8px;font-size:11px;color:#22c55e;font-weight:600;">✅ Reward Claimed</div>';
-    }else{
-      h+='<div style="text-align:center;padding:8px;font-size:11px;color:var(--text-dim);">⏳ Complete to claim</div>';
-    }
-    h+='</div>';
-  }
-  h+='</div>';
-  // Weekly Quests Section
-  h+='<h2 class="st" style="margin-top:24px;">📆 Weekly Quests</h2>';
-  h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Resets every Sunday · Bigger rewards</div>';
-  h+='<div class="qlist">';
-  checkWeeklyQuestReset();
-  for(let q of G.weeklyQuests.quests){
-    const pc=Math.min(100,(q.c/q.need)*100);
-    const status=getWeeklyQuestStatus(q);
-    h+='<div class="qc '+(q.claimed?'done':'')+'" style="border-color:'+status.color+';">';
-    h+='<div class="qh"><span class="qn">'+status.icon+' '+q.n+'</span>';
-    h+='<span class="qr" style="color:'+status.color+';">'+q.rw.xp+' XP | '+q.rw.g+' G</span></div>';
-    h+='<div class="qd">'+q.d+'</div>';
-    h+='<div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%;background:'+status.color+';"></div></div>';
-    h+='<span class="ptxt">'+q.c+'/'+q.need+'</span></div>';
-    if(q.done && !q.claimed){
-      h+='<button class="weekly-claim-btn" data-qid="'+q.id+'" style="width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,#a855f7,#7c3aed);color:white;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;">🏆 Claim Reward</button>';
-    }else if(q.claimed){
-      h+='<div style="text-align:center;padding:8px;font-size:11px;color:#22c55e;font-weight:600;">✅ Reward Claimed</div>';
-    }else{
-      h+='<div style="text-align:center;padding:8px;font-size:11px;color:var(--text-dim);">⏳ Complete to claim</div>';
-    }
-    h+='</div>';
-  }
-  h+='</div>';
-  // Bounties section
   h+='<h2 class="st" style="margin-top:20px;">💰 Bounties (Daily)</h2><div class="qlist">';
   for(let b of G.bounties){
     if(b.done) continue;
@@ -6656,31 +6628,6 @@ function rQuest(){
   }
   h+='</div>';
   h+='<div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
-  return h;
-}
-
-function rFocusPicker(){
-  let h = '<div style="padding:20px;text-align:center;">';
-  h += '<div style="font-size:48px;margin-bottom:8px;">🧘</div>';
-  h += '<h2 class="st" style="margin-bottom:4px;">Focus Mode</h2>';
-  h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:24px;">Choose your session length</div>';
-  h += '<div style="display:flex;flex-direction:column;gap:12px;max-width:280px;margin:0 auto;">';
-  const sessions = [
-    {min:5,label:'5 Minutes',desc:'Quick reset',color:'#22c55e'},
-    {min:10,label:'10 Minutes',desc:'Short sprint',color:'#3b82f6'},
-    {min:15,label:'15 Minutes',desc:'Deep work',color:'#a855f7'},
-    {min:20,label:'20 Minutes',desc:'Extended focus',color:'#f59e0b'},
-    {min:25,label:'25 Minutes',desc:'Full Pomodoro',color:'#ef4444'}
-  ];
-  for (let s of sessions) {
-    h += '<button class="focus-session-btn" data-min="' + s.min + '" style="padding:16px 20px;border-radius:14px;border:2px solid ' + s.color + ';background:var(--bg-card);color:var(--text);font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s;">';
-    h += '<span>' + s.label + '</span>';
-    h += '<span style="font-size:11px;color:' + s.color + ';">' + s.desc + '</span>';
-    h += '</button>';
-  }
-  h += '</div>';
-  h += '<button class="focus-back-btn" style="margin-top:20px;padding:10px 24px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:13px;font-weight:600;cursor:pointer;">← Back</button>';
-  h += '</div>';
   return h;
 }
 
@@ -6805,6 +6752,23 @@ function rRest() {
     h2 += '<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">You need a healer (like Eliz) in your active party to rest safely.</div>';
     h2 += '</div>';
   }
+  const soelActive = G.party.some(p => p.n === 'Soel' && p.on);
+  h2 += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;text-align:left;">';
+  h2 += '<div style="font-size:13px;font-weight:600;color:var(--rest);margin-bottom:4px;">🐱 Soel\'s Spirit Blessing</div>';
+  if (!soelActive) {
+    h2 += '<div style="font-size:11px;color:var(--text-dim);">Soel must be in your active party to share his blessing.</div>';
+  } else if (G.soelBlessing) {
+    h2 += '<div style="font-size:11px;color:var(--text-dim);">Blessing rests on <b style="color:var(--text);">' + G.soelBlessing.target + '</b> (+' + G.soelBlessing.def + ' DEF). One blessing per rest \u2014 it fades when you next make camp.</div>';
+  } else {
+    h2 += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">One member per rest receives +10 DEF until your next rest.</div>';
+    h2 += '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    for (let m of G.party) {
+      if (!m.on || m.n === 'Soel') continue;
+      h2 += '<button class="soel-bless-btn" data-n="' + m.n + '" style="padding:6px 12px;border-radius:10px;border:1px solid var(--rest);background:#10b98115;color:var(--text);font-size:11px;font-weight:600;cursor:pointer;">' + m.n + '</button>';
+    }
+    h2 += '</div>';
+  }
+  h2 += '</div>';
   h2 += '<div class="rest-sites">';
   const zones = {};
   for (let site of G.rest.sites) {
@@ -6869,6 +6833,41 @@ function togglePotionMenu() {
 function usePotionInCombat(invIndex) {
   const it = G.p.inv[invIndex];
   if (!it) return;
+
+  // Handle revive items (Phoenix Feather, Rod of Resurrection, etc.)
+  if (it.t === 'revive') {
+    const deadMembers = getDeadParty();
+    if (deadMembers.length === 0) {
+      lg('❌ No fallen allies to revive!');
+      G.potionMenu = false;
+      render();
+      return;
+    }
+
+    // Prioritize: San (player) first, then party members
+    let target = deadMembers.find(p => p.n === 'San');
+    if (!target) target = deadMembers[0];
+
+    // Use item's v value for revive percentage (50% for Phoenix Feather, 75% for Rod of Resurrection)
+    const revivePct = it.v || 50;
+    const healAmount = Math.floor(target.mhp * (revivePct / 100));
+    target.hp = Math.max(1, healAmount);
+    target.on = true;
+
+    lg('🔥 ' + it.n + ' radiates with sacred light!');
+    lg('✨ ' + (target.n === 'San' ? 'You' : target.n) + ' are revived with ' + target.hp + ' HP (' + revivePct + '%)!');
+
+    it.q--;
+    if (it.q <= 0) {
+      G.p.inv.splice(invIndex, 1);
+    }
+
+    G.potionMenu = false;
+    render();
+    return;
+  }
+
+  // Regular potions only
   if (it.t !== 'pot' && it.t !== 'food' && it.t !== 'drink') return;
 
   if (it.eff === 'heal') {
@@ -6895,7 +6894,8 @@ function usePotionInCombat(invIndex) {
 function getCombatPotions() {
   return G.p.inv.filter(it => 
     (it.t === 'pot' || it.t === 'food' || it.t === 'drink') &&
-    (it.eff === 'heal' || it.eff === 'mana')
+    (it.eff === 'heal' || it.eff === 'mana') ||
+    it.t === 'revive'
   );
 }
 </script>
