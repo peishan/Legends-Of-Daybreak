@@ -719,7 +719,11 @@ const G = {
     { n: 'Chronos Spire', lv: 17, elem: 'arcane', d: 'A tower where past, present, and future exist simultaneously. You fight yourself — or will.', en: ['Time Echo','Chronomancer Lord','Paradox Wraith'], loot: ['Chrono Sand','Time Shard','Paradox Gem'], xp: 380, dg: 'impossible' },
     { n: 'Aetherium Gardens', lv: 18, elem: 'arcane', d: 'Floating gardens of pure magic. The flowers sing. The water thinks. Beauty that kills.', en: ['Aether Bloom','Mana Leviathan','Crystal Serpent'], loot: ['Aether Nectar','Mana Bloom','Crystal Lotus'], xp: 420, dg: 'impossible' },
     { n: 'The Convergence', lv: 19, elem: 'arcane', d: 'All planar energies meet here. The air shimmers with conflicting resonances. Reality is thin.', en: ['Convergence Avatar','Planar Chimera','Resonance Horror'], loot: ['Convergence Shard','Planar Alloy','Resonance Crystal'], xp: 460, dg: 'impossible' },
-    { n: 'The Nexus', lv: 20, elem: 'arcane', d: "The heart of all dimensions. The Planarch waits here — or what remains of it. Five phases. No mercy.", en: ['Nexus Guardian','Planar Titan','The Nexus Planarch'], loot: ['Nexus Core','Planar Crown','Reality Key'], xp: 500, dg: 'impossible' }
+    { n: 'The Nexus', lv: 20, elem: 'arcane', d: "The heart of all dimensions. The Planarch waits here — or what remains of it. Five phases. No mercy.", en: ['Nexus Guardian','Planar Titan','The Nexus Planarch'], loot: ['Nexus Core','Planar Crown','Reality Key'], xp: 500, dg: 'impossible' },
+
+        // === EXPANSION: LV 21+ ZONES ===
+    { n: 'The Fractured Veil', lv: 21, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 550, dg: 'impossible' },
+
   ],
 
   // Zone hazards: environmental dangers that trigger during combat
@@ -783,25 +787,43 @@ const G = {
     { id: 13, n: 'Tower Ascent V: The Planarch', d: 'Defeat The Planarch and claim the Arcane Planar Tower', t: 'boss_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 420, g: 1500 }, done: false, chain: 'tower', reqQuest: 12, hidden: true, revealed: false }
   ],
 
-  bounties: [
-    { id: 'b1', n: 'Goblin Slayer', d: 'Defeat 5 Goblins', t: 'kill_specific', target: 'Goblin', c: 0, need: 5, rw: { xp: 40, g: 25 }, done: false, refreshDay: 0 },
-    { id: 'b2', n: 'Bone Collector', d: 'Defeat 5 Skeletons', t: 'kill_specific', target: 'Skeleton', c: 0, need: 5, rw: { xp: 60, g: 35 }, done: false, refreshDay: 0 },
-    { id: 'b3', n: 'Wolf Hunter', d: 'Defeat 3 Wolves', t: 'kill_specific', target: 'Wolf', c: 0, need: 3, rw: { xp: 30, g: 20 }, done: false, refreshDay: 0 },
-    { id: 'b4', n: 'Ghost Buster', d: 'Defeat 3 Ghosts', t: 'kill_specific', target: 'Ghost', c: 0, need: 3, rw: { xp: 80, g: 50 }, done: false, refreshDay: 0 },
-    { id: 'b5', n: 'Fire Purge', d: 'Defeat 4 Fire Imps', t: 'kill_specific', target: 'Fire Imp', c: 0, need: 4, rw: { xp: 100, g: 60 }, done: false, refreshDay: 0 },
-    { id: 'b6', n: 'Crystal Breaker', d: 'Defeat 3 Crystal Spiders', t: 'kill_specific', target: 'Crystal Spider', c: 0, need: 3, rw: { xp: 70, g: 40 }, done: false, refreshDay: 0 },
-    { id: 'b7', n: 'Storm Chaser', d: 'Defeat 3 Storm Wraiths', t: 'kill_specific', target: 'Storm Wraith', c: 0, need: 3, rw: { xp: 120, g: 75 }, done: false, refreshDay: 0 },
-    { id: 'b8', n: 'Ice Breaker', d: 'Defeat 3 Ice Elementals', t: 'kill_specific', target: 'Ice Elemental', c: 0, need: 3, rw: { xp: 150, g: 90 }, done: false, refreshDay: 0 },
-    { id: 'b9', n: 'Void Hunter', d: 'Defeat 2 Void Beasts', t: 'kill_specific', target: 'Void Beast', c: 0, need: 2, rw: { xp: 200, g: 120 }, done: false, refreshDay: 0 },
-        { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0 }
+   bounties: [
+    // === PHASE 1: EARLY GAME (Lv 1-9) ===
+    { id: 'b1', n: 'Goblin Slayer', d: 'Defeat 5 Goblins', t: 'kill_specific', target: 'Goblin', c: 0, need: 5, rw: { xp: 40, g: 25 }, done: false, refreshDay: 0, minLv: 1 },
+    { id: 'b2', n: 'Bone Collector', d: 'Defeat 5 Skeletons', t: 'kill_specific', target: 'Skeleton', c: 0, need: 5, rw: { xp: 60, g: 35 }, done: false, refreshDay: 0, minLv: 2 },
+    { id: 'b3', n: 'Wolf Hunter', d: 'Defeat 3 Wolves', t: 'kill_specific', target: 'Wolf', c: 0, need: 3, rw: { xp: 30, g: 20 }, done: false, refreshDay: 0, minLv: 1 },
+    { id: 'b4', n: 'Ghost Buster', d: 'Defeat 3 Ghosts', t: 'kill_specific', target: 'Ghost', c: 0, need: 3, rw: { xp: 80, g: 50 }, done: false, refreshDay: 0, minLv: 2 },
+    { id: 'b5', n: 'Fire Purge', d: 'Defeat 4 Fire Imps', t: 'kill_specific', target: 'Fire Imp', c: 0, need: 4, rw: { xp: 100, g: 60 }, done: false, refreshDay: 0, minLv: 4 },
+    { id: 'b6', n: 'Crystal Breaker', d: 'Defeat 3 Crystal Spiders', t: 'kill_specific', target: 'Crystal Spider', c: 0, need: 3, rw: { xp: 70, g: 40 }, done: false, refreshDay: 0, minLv: 3 },
+    { id: 'b7', n: 'Storm Chaser', d: 'Defeat 3 Storm Wraiths', t: 'kill_specific', target: 'Storm Wraith', c: 0, need: 3, rw: { xp: 120, g: 75 }, done: false, refreshDay: 0, minLv: 5 },
+    { id: 'b8', n: 'Ice Breaker', d: 'Defeat 3 Ice Elementals', t: 'kill_specific', target: 'Ice Elemental', c: 0, need: 3, rw: { xp: 150, g: 90 }, done: false, refreshDay: 0, minLv: 6 },
+    { id: 'b9', n: 'Void Hunter', d: 'Defeat 2 Void Beasts', t: 'kill_specific', target: 'Void Beast', c: 0, need: 2, rw: { xp: 200, g: 120 }, done: false, refreshDay: 0, minLv: 8 },
+    { id: 'b10', n: 'Dragon Slayer', d: 'Defeat 1 Elder Wyrm', t: 'kill_specific', target: 'Elder Wyrm', c: 0, need: 1, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0, minLv: 9 },
+
+    // === PHASE 2: ARCANE PLANAR TOWER (Lv 11-15) ===
+    { id: 'b11', n: 'Planar Wisp Hunter', d: 'Defeat 5 Planar Wisps', t: 'kill_specific', target: 'Planar Wisp', c: 0, need: 5, rw: { xp: 250, g: 150 }, done: false, refreshDay: 0, minLv: 11 },
+    { id: 'b12', n: 'Rift Stalker Slayer', d: 'Defeat 3 Rift Stalkers', t: 'kill_specific', target: 'Rift Stalker', c: 0, need: 3, rw: { xp: 300, g: 180 }, done: false, refreshDay: 0, minLv: 11 },
+    { id: 'b13', n: 'Aether Golem Breaker', d: 'Defeat 3 Aether Golems', t: 'kill_specific', target: 'Aether Golem', c: 0, need: 3, rw: { xp: 350, g: 200 }, done: false, refreshDay: 0, minLv: 11 },
+    { id: 'b14', n: 'Chronomancer Nemesis', d: 'Defeat 3 Chronomancers', t: 'kill_specific', target: 'Chronomancer', c: 0, need: 3, rw: { xp: 400, g: 220 }, done: false, refreshDay: 0, minLv: 12 },
+    { id: 'b15', n: 'Void Weaver Hunter', d: 'Defeat 3 Void Weavers', t: 'kill_specific', target: 'Void Weaver', c: 0, need: 3, rw: { xp: 450, g: 250 }, done: false, refreshDay: 0, minLv: 13 },
+    { id: 'b16', n: 'Planar Leviathan Slayer', d: 'Defeat 2 Planar Leviathans', t: 'kill_specific', target: 'Planar Leviathan', c: 0, need: 2, rw: { xp: 550, g: 300 }, done: false, refreshDay: 0, minLv: 14 },
+    { id: 'b17', n: 'The Planarch', d: 'Defeat The Planarch', t: 'kill_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 1000, g: 600 }, done: false, refreshDay: 0, minLv: 15 },
+
+    // === PHASE 3: PLANAR REALMS (Lv 16-20) ===
+    { id: 'b18', n: 'Veil Wraith Hunter', d: 'Defeat 5 Veil Wraiths', t: 'kill_specific', target: 'Veil Wraith', c: 0, need: 5, rw: { xp: 400, g: 220 }, done: false, refreshDay: 0, minLv: 16 },
+    { id: 'b19', n: 'Shardling Slayer', d: 'Defeat 5 Shardlings', t: 'kill_specific', target: 'Shardling', c: 0, need: 5, rw: { xp: 420, g: 230 }, done: false, refreshDay: 0, minLv: 16 },
+    { id: 'b20', n: 'Ember Drake Hunter', d: 'Defeat 3 Ember Drakes', t: 'kill_specific', target: 'Ember Drake', c: 0, need: 3, rw: { xp: 480, g: 260 }, done: false, refreshDay: 0, minLv: 17 },
+    { id: 'b21', n: 'Ash Titan Slayer', d: 'Defeat 2 Ash Titans', t: 'kill_specific', target: 'Ash Titan', c: 0, need: 2, rw: { xp: 520, g: 280 }, done: false, refreshDay: 0, minLv: 17 },
+    { id: 'b22', n: 'Frost Lich Nemesis', d: 'Defeat 3 Frost Liches', t: 'kill_specific', target: 'Frost Lich', c: 0, need: 3, rw: { xp: 550, g: 300 }, done: false, refreshDay: 0, minLv: 18 },
+    { id: 'b23', n: 'Glacial Behemoth Hunter', d: 'Defeat 2 Glacial Behemoths', t: 'kill_specific', target: 'Glacial Behemoth', c: 0, need: 2, rw: { xp: 600, g: 330 }, done: false, refreshDay: 0, minLv: 18 },
+    { id: 'b24', n: 'The Nexus Planarch', d: 'Defeat The Nexus Planarch', t: 'kill_specific', target: 'The Nexus Planarch', c: 0, need: 1, rw: { xp: 2000, g: 1200 }, done: false, refreshDay: 0, minLv: 20 }
   ],
-    dailyQuests: [],
-  dailyQuestSeed: 0,
-  
+
 
   // === DAILY QUEST SYSTEM (separate from bounties) ===
   dailyQuests: [],
   dailyQuestLastGen: 0,
+
 
   achievements: [
     { id: 'first_blood', n: 'First Blood', d: 'Defeat your first monster', icon: '🩸', t: 'kills', need: 1, rw: { xp: 25, g: 10 }, done: false, secret: false },
@@ -988,7 +1010,9 @@ const G = {
     { n: 'The Planarch', zone: 'Arcane Planar Tower', hp: 3000, mhp: 3000, atk: 55, def: 32, xp: 800, g: 600,
       mechanic: 'planar_shift', shiftTurn: 3, phases: 5, currentPhase: 1, desc: 'A being of pure planar energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning rifts, and warping the battlefield. Survive 5 planar shifts to win.' },
     { n: 'The Nexus Planarch', zone: 'The Nexus', hp: 2500, mhp: 2500, atk: 60, def: 35, xp: 1200, g: 800,
-      mechanic: 'nexus_planarch', shiftTurn: 4, phases: 5, currentPhase: 1, desc: 'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.', nexus: true }
+      mechanic: 'nexus_planarch', shiftTurn: 4, phases: 5, currentPhase: 1, desc: 'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.', nexus: true },
+          { n: 'The Veilshaper', zone: 'The Fractured Veil', hp: 3500, mhp: 3500, atk: 65, def: 38, xp: 1500, g: 900,
+      mechanic: 'reality_weave', weaveTurn: 3, desc: 'A being of pure fractured reality. Every 3 turns, it weaves a new dimension — summoning echoes of itself and shifting resistances.' },
   ],
 
   currentBoss: null,
@@ -1031,7 +1055,11 @@ const G = {
       { id: 'ad_tavern', name: 'The Last Light', type: 'tavern', zone: 'Abyssal Depths', zoneLv: 8, desc: 'The final tavern before oblivion. Prices are steep.', unlocked: false, icon: '🍺', cost: 25 },
       { id: 'temple', name: 'Temple of Resurrection', type: 'temple', zone: 'Sanctuary', zoneLv: 1, desc: 'An ancient temple that restores fallen companions to life.', unlocked: true, icon: '⛪', cost: 50 },
       { id: 'apt_camp', name: 'Planar Anchor Camp', type: 'camp', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A pocket of stable reality anchored by ancient runes. The walls still shimmer.', unlocked: false, icon: '⛺', cost: 0 },
-      { id: 'apt_tavern', name: 'The Shifting Spire', type: 'tavern', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A tavern that exists in multiple dimensions at once. The bartender may be a future version of yourself.', unlocked: false, icon: '🍺', cost: 30 }
+      { id: 'apt_tavern', name: 'The Shifting Spire', type: 'tavern', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A tavern that exists in multiple dimensions at once. The bartender may be a future version of yourself.', unlocked: false, icon: '🍺', cost: 30 },
+          // === EXPANSION: LV 21+ REST SITES ===
+    { id: 'fv_camp', name: 'Veil\'s Edge Camp', type: 'camp', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A precarious camp at the edge of tearing reality. Tents flicker in and out of existence.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'fv_tavern', name: 'The Shattered Inn', type: 'tavern', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A tavern that exists in multiple dimensions. The beer tastes different in each one.', unlocked: false, icon: '🍺', cost: 35 },
+
     ]
   },
 
@@ -1802,6 +1830,91 @@ const DICE = {
 window.DICE = DICE;
 
 // ============================================================
+// DYNAMIC ENEMY SCALING SYSTEM
+// ============================================================
+
+const ENEMY_TEMPLATES = {
+  // Brute: High HP, low ATK
+  brute:     { hpMult: 1.4, atkMult: 0.8, defMult: 1.2, xpMult: 1.0, gMult: 1.0 },
+  // Striker: Low HP, high ATK  
+  striker:   { hpMult: 0.8, atkMult: 1.4, defMult: 0.7, xpMult: 1.1, gMult: 1.1 },
+  // Tank: High HP/DEF, low ATK
+  tank:      { hpMult: 1.6, atkMult: 0.6, defMult: 1.4, xpMult: 1.0, gMult: 0.9 },
+  // Balanced: Average everything
+  balanced:  { hpMult: 1.0, atkMult: 1.0, defMult: 1.0, xpMult: 1.0, gMult: 1.0 },
+  // Elite: Above average
+  elite:     { hpMult: 1.3, atkMult: 1.2, defMult: 1.1, xpMult: 1.3, gMult: 1.3 },
+};
+
+function generateEnemyStats(zoneLevel, templateKey, elem) {
+  const tpl = ENEMY_TEMPLATES[templateKey] || ENEMY_TEMPLATES.balanced;
+  
+  // Base scaling formula
+  const base = {
+    hp: 15 + (zoneLevel * 12),
+    atk: 3 + (zoneLevel * 1.8),
+    def: 1 + Math.floor(zoneLevel * 1.2),
+    xp: 8 + (zoneLevel * 10),
+    g: 2 + (zoneLevel * 6)
+  };
+  
+  return {
+    hp: Math.floor(base.hp * tpl.hpMult),
+    mhp: Math.floor(base.hp * tpl.hpMult),
+    atk: Math.floor(base.atk * tpl.atkMult),
+    def: Math.floor(base.def * tpl.defMult),
+    xp: Math.floor(base.xp * tpl.xpMult),
+    g: Math.floor(base.g * tpl.gMult),
+    elem: elem || 'none'
+  };
+}
+
+// Enemy type registry for dynamic lookup
+const ENEMY_REGISTRY = {
+  // Lv 1-10 (existing - keep hardcoded for compatibility)
+  'Goblin': null, 'Wolf': null, 'Slime': null,
+  'Skeleton': null, 'Zombie': null, 'Ghost': null,
+  'Fire Imp': null, 'Lava Slug': null, 'Ash Wraith': null,
+  'Crystal Spider': null, 'Gem Golem': null, 'Shimmer Bat': null,
+  'Storm Wraith': null, 'Lightning Hound': null, 'Thunder Knight': null,
+  'Ice Elemental': null, 'Frost Wolf': null, 'Frozen Knight': null,
+  'Void Beast': null, 'Shadow Demon': null, 'Abyssal Horror': null,
+  'Drowned Sailor': null, 'Sea Serpent': null, 'Coral Golem': null,
+  'Dragon Whelp': null, 'Ash Drake': null, 'Elder Wyrm': null,
+  'Star Sentinel': null, 'Celestial Knight': null, 'Astral Lord': null,
+  
+  // Lv 11-20 (existing - keep hardcoded)
+  'Planar Wisp': null, 'Rift Stalker': null, 'Aether Golem': null,
+  'Chronomancer': null, 'Void Weaver': null, 'Planar Leviathan': null,
+  'Veil Wraith': null, 'Shardling': null, 'Echo Walker': null,
+  'Ember Drake': null, 'Ash Titan': null, 'Flame Serpent': null,
+  'Frost Lich': null, 'Glacial Behemoth': null, 'Snow Revenant': null,
+  'Storm Titan': null, 'Lightning Wraith': null, 'Thunderborn': null,
+  'Void Leviathan': null, 'Null Elemental': null, 'Hungering Maw': null,
+  'Time Echo': null, 'Chronomancer Lord': null, 'Paradox Wraith': null,
+  'Aether Bloom': null, 'Mana Leviathan': null, 'Crystal Serpent': null,
+  'Convergence Avatar': null, 'Planar Chimera': null, 'Resonance Horror': null,
+  'Nexus Guardian': null, 'Planar Titan': null,
+  
+  // Lv 21+ (NEW - use dynamic scaling!)
+  'Reality Weaver': { template: 'elite', elem: 'arcane', zoneLv: 21 },
+  'Fracture Hound': { template: 'striker', elem: 'arcane', zoneLv: 21 },
+  'Dimensional Drifter': { template: 'balanced', elem: 'void', zoneLv: 22 },
+  'Chrono-Rat': { template: 'striker', elem: 'arcane', zoneLv: 22 },
+  'Ember Wraith': { template: 'brute', elem: 'fire', zoneLv: 23 },
+  'Ash Phantom': { template: 'striker', elem: 'fire', zoneLv: 23 },
+  'Glacial Shade': { template: 'tank', elem: 'ice', zoneLv: 24 },
+  'Frost Revenant': { template: 'balanced', elem: 'ice', zoneLv: 24 },
+};
+
+function getDynamicEnemyStats(name) {
+  const reg = ENEMY_REGISTRY[name];
+  if (!reg) return null; // null = use hardcoded stats (existing enemies)
+  const stats = generateEnemyStats(reg.zoneLv, reg.template, reg.elem);
+  return { ...stats, n: name };
+}
+
+// ============================================================
 // PLANAR RESONANCE SYSTEM (Phase 2)
 // ============================================================
 
@@ -2370,19 +2483,49 @@ function checkDailyQuests(type, amount) {
 function refreshBounties() {
   const today = getDayNumber();
   let refreshed = false;
-  for (let b of G.bounties) {
-    if (b.done && b.refreshDay !== today) {
+
+  // Get eligible bounties for current player level
+  const eligible = G.bounties.filter(b => {
+    // Must be done AND ready for refresh
+    if (!b.done || b.refreshDay === today) return false;
+    // Must be within level range
+    const minLv = b.minLv || 1;
+    const maxLv = b.maxLv || 99;
+    return G.p.lvl >= minLv && G.p.lvl <= maxLv;
+  });
+
+  // If no eligible bounties at this level, fall back to lower tier
+  if (eligible.length === 0) {
+    // Find the highest tier the player CAN do
+    const fallback = G.bounties.filter(b => {
+      if (!b.done || b.refreshDay === today) return false;
+      return (b.minLv || 1) <= G.p.lvl;
+    }).sort((a, b) => (b.minLv || 1) - (a.minLv || 1));
+    
+    // Refresh up to 3 from fallback
+    const toRefresh = fallback.slice(0, 3);
+    for (let b of toRefresh) {
+      b.done = false;
+      b.c = 0;
+      b.refreshDay = today;
+      refreshed = true;
+    }
+  } else {
+    // Refresh up to 3 eligible bounties
+    const toRefresh = eligible.slice(0, 3);
+    for (let b of toRefresh) {
       b.done = false;
       b.c = 0;
       b.refreshDay = today;
       refreshed = true;
     }
   }
-  if (refreshed) {
-    lg('📋 New bounties available!');
-  }
-    generateDailyQuests(); // Also refresh daily quests daily
 
+  if (refreshed) {
+    lg('📋 New bounties available for your level!');
+  }
+  
+  generateDailyQuests(); // Also refresh daily quests daily
 }
 
 function checkStoryline() {
@@ -3420,8 +3563,28 @@ function handleBossMechanics() {
           }
         }
         break;
+              case 'reality_weave':
+        if (G.cbt.turn > 0 && G.cbt.turn % e.weaveTurn === 0) {
+          e.currentPhase++;
+          lg('🌌 ' + e.n + ' weaves a new dimension! Phase ' + e.currentPhase + '!');
+          // Summon an echo (clone)
+          const echo = {
+            n: 'Veil Echo',
+            hp: 400, mhp: 400, atk: 20, def: 10,
+            xp: 100, g: 50, elem: 'arcane',
+            id: G.cbt.en.length, status: []
+          };
+          G.cbt.en.push(echo);
+          lg('   👤 A Veil Echo manifests!');
+          // Shift resistances
+          e.atk += 3;
+          e.def += 2;
+          lg('   ⚡ ' + e.n + ' grows stronger! ATK: ' + e.atk + ' DEF: ' + e.def);
+        }
+        break;
+
     }
-  }
+  }        
 }
 
 function handleZoneHazards() {
@@ -4742,70 +4905,19 @@ function sc(zi) {
     for(let i=0;i<ec;i++){
       const t=z.en[Math.floor(Math.random()*z.en.length)];
     let e={n:t,hp:0,mhp:0,atk:0,def:0,xp:0,g:0};
-    if(t=='Goblin')e={...e,hp:25,mhp:25,atk:5,def:2,xp:12,g:5,elem:'none'};
+        // Check dynamic scaling first (Lv 21+ enemies)
+    const dynamicStats = getDynamicEnemyStats(t);
+    if (dynamicStats) {
+      e = { ...e, ...dynamicStats };
+    }
+    // Existing hardcoded enemies (Lv 1-20)
+    else if(t=='Goblin')e={...e,hp:25,mhp:25,atk:5,def:2,xp:12,g:5,elem:'none'};
     else if(t=='Wolf')e={...e,hp:20,mhp:20,atk:7,def:1,xp:10,g:3};
     else if(t=='Slime')e={...e,hp:15,mhp:15,atk:3,def:3,xp:8,g:2};
-    else if(t=='Skeleton')e={...e,hp:30,mhp:30,atk:6,def:3,xp:18,g:6};
-    else if(t=='Zombie')e={...e,hp:40,mhp:40,atk:5,def:1,xp:20,g:5};
-    else if(t=='Ghost')e={...e,hp:20,mhp:20,atk:8,def:0,xp:25,g:10};
-    else if(t=='Fire Imp')e={...e,hp:35,mhp:35,atk:9,def:2,xp:35,g:12,elem:'fire'};
-    else if(t=='Lava Slug')e={...e,hp:50,mhp:50,atk:6,def:5,xp:30,g:8,elem:'fire'};
-    else if(t=='Ash Wraith')e={...e,hp:30,mhp:30,atk:11,def:1,xp:45,g:18,elem:'fire'};
-    else if(t=='Ice Elemental')e={...e,hp:60,mhp:60,atk:10,def:6,xp:70,g:25,elem:'ice'};
-    else if(t=='Frost Wolf')e={...e,hp:45,mhp:45,atk:12,def:3,xp:55,g:18,elem:'ice'};
-    else if(t=='Frozen Knight')e={...e,hp:80,mhp:80,atk:14,def:8,xp:100,g:40,elem:'ice'};
-    else if(t=='Void Beast')e={...e,hp:100,mhp:100,atk:16,def:5,xp:150,g:60,elem:'void'};
-    else if(t=='Shadow Demon')e={...e,hp:80,mhp:80,atk:18,def:3,xp:130,g:50,elem:'void'};
-    else if(t=='Abyssal Horror')e={...e,hp:150,mhp:150,atk:20,def:8,xp:300,g:100,elem:'void'};
-    else if(t=='Crystal Spider')e={...e,hp:28,mhp:28,atk:6,def:2,xp:15,g:6};
-    else if(t=='Gem Golem')e={...e,hp:40,mhp:40,atk:5,def:6,xp:20,g:8};
-    else if(t=='Shimmer Bat')e={...e,hp:18,mhp:18,atk:7,def:1,xp:12,g:4};
-    else if(t=='Storm Wraith')e={...e,hp:45,mhp:45,atk:11,def:3,xp:35,g:15,elem:'lightning'};
-    else if(t=='Lightning Hound')e={...e,hp:35,mhp:35,atk:13,def:2,xp:30,g:12,elem:'lightning'};
-    else if(t=='Thunder Knight')e={...e,hp:70,mhp:70,atk:12,def:7,xp:55,g:25,elem:'lightning'};
-    else if(t=='Drowned Sailor')e={...e,hp:50,mhp:50,atk:10,def:4,xp:40,g:16};
-    else if(t=='Sea Serpent')e={...e,hp:65,mhp:65,atk:14,def:3,xp:50,g:22};
-    else if(t=='Coral Golem')e={...e,hp:80,mhp:80,atk:9,def:8,xp:55,g:20};
-    else if(t=='Dragon Whelp')e={...e,hp:80,mhp:80,atk:15,def:5,xp:80,g:35};
-    else if(t=='Ash Drake')e={...e,hp:100,mhp:100,atk:17,def:6,xp:100,g:50};
-    else if(t=='Elder Wyrm')e={...e,hp:180,mhp:180,atk:22,def:10,xp:200,g:100};
-    else if(t=='Star Sentinel')e={...e,hp:120,mhp:120,atk:18,def:8,xp:120,g:60};
-    else if(t=='Celestial Knight')e={...e,hp:140,mhp:140,atk:20,def:10,xp:150,g:80};
-    else if(t=='Astral Lord')e={...e,hp:250,mhp:250,atk:25,def:12,xp:300,g:150};
-    else if(t=='Planar Wisp')e={...e,hp:200,mhp:200,atk:20,def:10,xp:120,g:60,elem:'arcane'};
-    else if(t=='Rift Stalker')e={...e,hp:220,mhp:220,atk:22,def:12,xp:140,g:70,elem:'void'};
-    else if(t=='Aether Golem')e={...e,hp:280,mhp:280,atk:18,def:18,xp:160,g:80,elem:'arcane'};
-    else if(t=='Chronomancer')e={...e,hp:180,mhp:180,atk:25,def:8,xp:180,g:90,elem:'arcane'};
-    else if(t=='Void Weaver')e={...e,hp:240,mhp:240,atk:24,def:14,xp:200,g:100,elem:'void'};
-    else if(t=='Planar Leviathan')e={...e,hp:400,mhp:400,atk:30,def:20,xp:350,g:150,elem:'arcane'};
-    // PHASE 2 ENEMIES
-    else if(t=='Veil Wraith')e={...e,hp:120,mhp:120,atk:14,def:8,xp:100,g:45,elem:'arcane'};
-    else if(t=='Shardling')e={...e,hp:100,mhp:100,atk:16,def:5,xp:90,g:40,elem:'arcane'};
-    else if(t=='Echo Walker')e={...e,hp:110,mhp:110,atk:13,def:9,xp:95,g:42,elem:'arcane'};
-    else if(t=='Ember Drake')e={...e,hp:160,mhp:160,atk:18,def:10,xp:140,g:65,elem:'fire'};
-    else if(t=='Ash Titan')e={...e,hp:200,mhp:200,atk:15,def:14,xp:150,g:70,elem:'fire'};
-    else if(t=='Flame Serpent')e={...e,hp:140,mhp:140,atk:20,def:7,xp:130,g:60,elem:'fire'};
-    else if(t=='Frost Lich')e={...e,hp:180,mhp:180,atk:17,def:12,xp:170,g:80,elem:'ice'};
-    else if(t=='Glacial Behemoth')e={...e,hp:240,mhp:240,atk:14,def:16,xp:180,g:85,elem:'ice'};
-    else if(t=='Snow Revenant')e={...e,hp:150,mhp:150,atk:19,def:8,xp:160,g:75,elem:'ice'};
-    else if(t=='Storm Titan')e={...e,hp:200,mhp:200,atk:20,def:11,xp:200,g:95,elem:'lightning'};
-    else if(t=='Lightning Wraith')e={...e,hp:170,mhp:170,atk:22,def:7,xp:190,g:90,elem:'lightning'};
-    else if(t=='Thunderborn')e={...e,hp:190,mhp:190,atk:18,def:10,xp:195,g:92,elem:'lightning'};
-    else if(t=='Void Leviathan')e={...e,hp:280,mhp:280,atk:22,def:15,xp:260,g:120,elem:'void'};
-    else if(t=='Null Elemental')e={...e,hp:240,mhp:240,atk:19,def:13,xp:240,g:110,elem:'void'};
-    else if(t=='Hungering Maw')e={...e,hp:260,mhp:260,atk:20,def:12,xp:250,g:115,elem:'void'};
-    else if(t=='Time Echo')e={...e,hp:220,mhp:220,atk:18,def:14,xp:220,g:100,elem:'arcane'};
-    else if(t=='Chronomancer Lord')e={...e,hp:200,mhp:200,atk:21,def:10,xp:230,g:105,elem:'arcane'};
-    else if(t=='Paradox Wraith')e={...e,hp:240,mhp:240,atk:17,def:13,xp:225,g:102,elem:'arcane'};
-    else if(t=='Aether Bloom')e={...e,hp:260,mhp:260,atk:18,def:15,xp:250,g:115,elem:'arcane'};
-    else if(t=='Mana Leviathan')e={...e,hp:320,mhp:320,atk:15,def:18,xp:270,g:125,elem:'arcane'};
-    else if(t=='Crystal Serpent')e={...e,hp:240,mhp:240,atk:20,def:11,xp:255,g:112,elem:'arcane'};
-    else if(t=='Convergence Avatar')e={...e,hp:300,mhp:300,atk:22,def:16,xp:300,g:140,elem:'arcane'};
-    else if(t=='Planar Chimera')e={...e,hp:320,mhp:320,atk:24,def:13,xp:310,g:145,elem:'arcane'};
-    else if(t=='Resonance Horror')e={...e,hp:280,mhp:280,atk:25,def:12,xp:305,g:142,elem:'arcane'};
-    else if(t=='Nexus Guardian')e={...e,hp:400,mhp:400,atk:26,def:18,xp:380,g:180,elem:'arcane'};
-    else if(t=='Planar Titan')e={...e,hp:450,mhp:450,atk:24,def:20,xp:400,g:190,elem:'arcane'};
+    // ... (keep ALL your existing else if lines exactly as they are) ...
     else if(t=='The Nexus Planarch')e={...e,hp:1200,mhp:1200,atk:35,def:22,xp:5000,g:4000,elem:'arcane',mechanic:'nexus_planarch',shiftTurn:4,phases:5,currentPhase:1,desc:'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.',nexus:true};
+    // === EXPANSION: LV 21+ ENEMIES (now handled by dynamic scaling above) ===
+ 
       e.id=i; e.status=[]; G.cbt.en.push(e);
     }
     lg('Entered '+z.n+'! '+ec+' enemies appear!');
