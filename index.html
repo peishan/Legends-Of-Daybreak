@@ -7621,7 +7621,9 @@ function rRest() {
     h2 += '<div style="margin-bottom:12px;">';
     h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
     for (let site of sites) {
-      const locked = !site.unlocked;
+            const isDepletedManaSpring = site.type === 'mana_spring' && site.entriesUsed >= site.entryLimit;
+      const locked = !site.unlocked || isDepletedManaSpring;
+
       const canAfford = !site.cost || G.p.gold >= site.cost;
       const canRest = healerOk && !locked && canAfford;
       h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
@@ -7630,9 +7632,14 @@ function rRest() {
       h2 += '<span class="rs-type ' + site.type + '">' + site.type.toUpperCase() + '</span>';
       h2 += '</div>';
       h2 += '<div class="rs-desc">' + site.desc + '</div>';
-      if (locked) {
-        h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
+            if (locked) {
+        if (isDepletedManaSpring) {
+          h2 += '<div class="rs-req fail">💧 Depleted (' + site.entriesUsed + '/' + site.entryLimit + ' uses)</div>';
+        } else {
+          h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
+        }
       } else if (site.cost) {
+
         h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G · Ambush: 5% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
       } else {
         h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
