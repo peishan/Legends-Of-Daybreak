@@ -846,11 +846,6 @@ const G = {
   ],
 
 
-  // === DAILY QUEST SYSTEM (separate from bounties) ===
-  dailyQuests: [],
-  dailyQuestLastGen: 0,
-
-
   achievements: [
     { id: 'first_blood', n: 'First Blood', d: 'Defeat your first monster', icon: '🩸', t: 'kills', need: 1, rw: { xp: 25, g: 10 }, done: false, secret: false },
     { id: 'seasoned_hunter', n: 'Seasoned Hunter', d: 'Defeat 50 monsters', icon: '⚔️', t: 'kills', need: 50, rw: { xp: 100, g: 50 }, done: false, secret: false },
@@ -2573,32 +2568,61 @@ function sellToAmad(invIndex) {
   render();
 }
 
-function getDayNumber() {
+// ============================================================
+// GAME TIME & DAILY SYSTEM
+// ============================================================
+
+function getRealDay() {
   return Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-  }
-  function checkDailyLogin() {
-  const today = getDayNumber();
-  const lastLogin = G.lastLoginDay || 0;
-  
-  if (today !== lastLogin) {
-    G.loginClaimed = false;
-    
-    if (today - lastLogin > 1) {
-      G.loginStreak = 0;
-      lg('📅 New day! Login streak reset.');
-    } else if (today > lastLogin) {
-      G.loginStreak = (G.loginStreak || 0) + 1;
-      lg('📅 New day! Login streak: ' + G.loginStreak);
-    }
-    
-    G.lastLoginDay = today;
-    saveGame();
-  }
 }
-function claimDailyLoginReward() {
-  if (G.loginClaimed) return;
+
+function checkDayAdvance() {
+  const realToday = getRealDay();
   
-  const streak = G.loginStreak || 0;
+  // First time ever playing
+  if (G.lastRealDay === 0) {
+    G.lastRealDay = realToday;
+    G.gameDay = 1;
+    G.lastLoginDay = 1;
+    G.loginStreak = 1;
+    G.loginClaimed = false;
+    generateDailyQuests();
+    saveGame();
+    return;
+  }
+  
+  // Same real day — no advance
+  if (realToday === G.lastRealDay) return;
+  
+  // New real day detected — advance game day
+  const daysPassed = realToday - G.lastRealDay;
+  G.lastRealDay = realToday;
+  G.gameDay += daysPassed;
+  
+  // Handle streak
+  if (daysPassed === 1) {
+    // Consecutive day
+    G.loginStreak = (G.loginStreak || 0) + 1;
+    lg('📅 New day! Login streak: ' + G.loginStreak);
+  } else {
+    // Missed one or more days
+    G.loginStreak = 1;
+    lg('📅 New day! Streak reset (missed ' + (daysPassed - 1) + ' day' + (daysPassed > 2 ? 's' : '') + ').');
+  }
+  
+  G.lastLoginDay = G.gameDay;
+  G.loginClaimed = false;
+  generateDailyQuests();
+  saveGame();
+}
+
+function claimDailyLoginReward() {
+  if (G.loginClaimed) {
+    lg('🎁 Already claimed today! Come back tomorrow.');
+    return;
+  }
+  
+  const streak = G.loginStreak || 1;
   const rewards = [
     { day: 1, g: 50, xp: 25 },
     { day: 2, mp: 30, xp: 35 },
@@ -2609,7 +2633,7 @@ function claimDailyLoginReward() {
     { day: 7, g: 300, xp: 200, item: { n: 'Phoenix Feather', t: 'revive', eff: 'revive', v: 50, q: 1, r: 'rare' } }
   ];
   
-  const reward = rewards[Math.min(streak, 6)];
+  const reward = rewards[Math.min(streak - 1, 6)];
   
   if (reward.g) G.p.gold += reward.g;
   if (reward.xp) G.p.xp += reward.xp;
@@ -2618,6 +2642,7 @@ function claimDailyLoginReward() {
   if (reward.item) addI({ ...reward.item });
   
   G.loginClaimed = true;
+  saveGame();
   
   const rewardMsg = [];
   if (reward.g) rewardMsg.push('+' + reward.g + 'G');
@@ -2626,18 +2651,21 @@ function claimDailyLoginReward() {
   if (reward.mp) rewardMsg.push('+' + reward.mp + 'MP');
   if (reward.item) rewardMsg.push(reward.item.n);
   
-  lg('🎁 Daily login reward claimed! ' + rewardMsg.join(', '));
+  lg('🎁 Day ' + streak + ' reward claimed! ' + rewardMsg.join(', '));
   lvlup();
-  saveGame();
   render();
 }
 
 function generateDailyQuests() {
-  const today = getDayNumber();
-  if (G.dailyQuestSeed === today) return;
-  G.dailyQuestSeed = today;
+  // Only regenerate if it's a new game day
+  if (G.dailyQuestSeed === G.gameDay && G.dailyQuests && G.dailyQuests.length > 0) {
+    return; // Already have quests for today
+  }
+  
+  G.dailyQuestSeed = G.gameDay;
   G.dailyQuests = [];
   const pool = [...DAILY_QUESTS];
+  
   for (let i = 0; i < 3 && pool.length > 0; i++) {
     const idx = Math.floor(Math.random() * pool.length);
     const template = pool.splice(idx, 1)[0];
@@ -2646,7 +2674,7 @@ function generateDailyQuests() {
       c: 0, need: template.need, rw: template.rw, done: false
     });
   }
-  lg('📋 New daily quests available!');
+  lg('📋 New daily quests available for Day ' + G.gameDay + '!');
 }
 
 function checkDailyQuests(type, amount) {
@@ -2665,31 +2693,26 @@ function checkDailyQuests(type, amount) {
       }
     }
   }
+  saveGame();
 }
 
 function refreshBounties() {
-  const today = getDayNumber();
+  const today = G.gameDay;
   let refreshed = false;
 
-  // Get eligible bounties for current player level
   const eligible = G.bounties.filter(b => {
-    // Must be done AND ready for refresh
     if (!b.done || b.refreshDay === today) return false;
-    // Must be within level range
     const minLv = b.minLv || 1;
     const maxLv = b.maxLv || 99;
     return G.p.lvl >= minLv && G.p.lvl <= maxLv;
   });
 
-  // If no eligible bounties at this level, fall back to lower tier
   if (eligible.length === 0) {
-    // Find the highest tier the player CAN do
     const fallback = G.bounties.filter(b => {
       if (!b.done || b.refreshDay === today) return false;
       return (b.minLv || 1) <= G.p.lvl;
     }).sort((a, b) => (b.minLv || 1) - (a.minLv || 1));
     
-    // Refresh up to 3 from fallback
     const toRefresh = fallback.slice(0, 3);
     for (let b of toRefresh) {
       b.done = false;
@@ -2698,7 +2721,6 @@ function refreshBounties() {
       refreshed = true;
     }
   } else {
-    // Refresh up to 3 eligible bounties
     const toRefresh = eligible.slice(0, 3);
     for (let b of toRefresh) {
       b.done = false;
@@ -2709,11 +2731,10 @@ function refreshBounties() {
   }
 
   if (refreshed) {
-    lg('📋 New bounties available for your level!');
+    lg('📋 New bounties available for Day ' + today + '!');
   }
-  
-  generateDailyQuests(); // Also refresh daily quests daily
 }
+
 
 function checkStoryline() {
   for (let s of G.storyline) {
@@ -5587,6 +5608,13 @@ const SAVE_KEY = 'ldb_save_v5';
 function saveGame() {
   const saveData = {
     lastSaveTime: Date.now(),
+    lastLoginDay: G.lastLoginDay || -1,
+    loginStreak: G.loginStreak || 0,
+    loginClaimed: G.loginClaimed || false,
+    gameDay: G.gameDay || 0,
+    lastRealDay: G.lastRealDay || 0,
+    dailyQuests: G.dailyQuests || [],
+    dailyQuestSeed: G.dailyQuestSeed || 0,
     player: {
       name: G.p.name, cls: G.p.cls, lvl: G.p.lvl, xp: G.p.xp, xpN: G.p.xpN,
       hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, gold: G.p.gold,
@@ -5597,9 +5625,8 @@ function saveGame() {
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak,
       // Add these inside the saveData object, alongside other fields:
-lastLoginDay: G.lastLoginDay || 0,
-loginStreak: G.loginStreak || 0,
-loginClaimed: G.loginClaimed || false
+    
+
 
     },
     party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, affinityBonuses: p.affinityBonuses, gear: p.gear })),
@@ -5784,7 +5811,7 @@ function loadGame() {
       }
     }
 
-        if (data.rest && data.rest.sites) {
+            if (data.rest && data.rest.sites) {
       for (let s of G.rest.sites) {
         const saved = data.rest.sites.find(ss => ss.id === s.id);
         if (saved) {
@@ -5794,6 +5821,9 @@ function loadGame() {
         }
       }
     }
+    // Unlock any new rest sites added since last save (for level already achieved)
+    unlockRestSites();
+
 
 
     if (data.affinity) {
@@ -5876,6 +5906,14 @@ function loadGame() {
       G.currentBoss = data.currentBoss;
     }
     G.potionMenu = data.potionMenu || false;
+    G.lastLoginDay = data.lastLoginDay || -1;
+    G.loginStreak = data.loginStreak || 0;
+    G.loginClaimed = data.loginClaimed || false;
+    G.gameDay = data.gameDay || 0;
+    G.lastRealDay = data.lastRealDay || 0;
+    G.dailyQuests = data.dailyQuests || [];
+    G.dailyQuestSeed = data.dailyQuestSeed || 0;
+
     G.soelFortuneCooldown = data.soelFortuneCooldown || 0;
 G.joelShieldCooldown = data.joelShieldCooldown || 0;
 G.currentWeather = data.currentWeather || 'clear';
@@ -5884,7 +5922,8 @@ G.currentWeather = data.currentWeather || 'clear';
     G.joelReviveUsed = data.joelReviveUsed || false;
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
     for (let name in G.affinity) checkAffinityUnlocks(name);
-        generateDailyQuests(); // Check/generate daily quests on load
+        checkDayAdvance(); // Advance game day if real day changed, then generate quests
+
 
     lg('Game loaded!');
     return true;
@@ -7314,7 +7353,7 @@ function rCraft(){
 function rQuest(){
   let h='<div class="quest-view">';
     // === DAILY LOGIN REWARDS ===
-  const today = getDayNumber();
+  const today = G.gameDay || 0;
   const streak = G.loginStreak || 0;
   const claimedToday = G.loginClaimed || false;
 
