@@ -380,6 +380,26 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 <div id="app"></div>
 <script>
 
+const WEATHER = {
+  clear: { name: 'Clear', icon: '☀️', desc: 'Pleasant and calm.', playerHitBonus: 0, enemyHitBonus: 0 },
+  rain: { name: 'Rain', icon: '🌧️', desc: 'Lightning crackles louder in the wet.', playerHitBonus: 0, enemyHitBonus: -0.05, lightningDmgBonus: 0.15 },
+  fog: { name: 'Fog', icon: '🌫️', desc: 'Hard to see. Harder to hit.', playerHitBonus: -0.05, enemyHitBonus: -0.10 },
+  wind: { name: 'Gale', icon: '💨', desc: 'Wind howls. Fire struggles.', playerHitBonus: 0, enemyHitBonus: 0, fireDmgPenalty: 0.10 }
+};
+
+function rollWeather() {
+  const roll = Math.random();
+  if (roll < 0.55) return 'clear';
+  if (roll < 0.75) return 'rain';
+  if (roll < 0.90) return 'fog';
+  return 'wind';
+}
+
+function getCurrentWeather() {
+  if (!G.currentWeather) G.currentWeather = { type: 'clear', zone: null };
+  return G.currentWeather;
+}
+
 const G = {
   state: 'menu',
   p: {
@@ -2286,11 +2306,17 @@ function buyFromNPC(npcName, itemIdx) {
   if (!npc || !npc.unlocked || npc.t !== 'trader') return;
   const item = npc.stock[itemIdx];
   if (!item) return;
-  if (G.p.gold < item.price) {
+  const discount = getHaggleDiscount();
+const finalPrice = Math.floor(item.price * (1 - discount));
+if (G.p.gold < finalPrice) {
+
     lg('❌ Not enough gold! ' + item.n + ' costs ' + item.price + 'G.');
     return;
   }
-  G.p.gold -= item.price;
+  G.p.gold -= finalPrice;
+if (discount > 0) {
+  lg('💚 Aisyah haggles deftly. Saved ' + Math.floor(item.price * discount) + 'G!');
+}
 
   // Party gear (pgear) goes directly to that party member, not inventory
   if (item.t === 'pgear') {
@@ -3153,7 +3179,17 @@ function doPhysicalAttack(target) {
     else lg('   ❌ Solid defense. You\'ll need a better angle.');
     return false;
   }
+    // === WEATHER: Hit check modifier ===
+  const weather = getCurrentWeather();
+  const wData = WEATHER[weather.type];
   
+  if (wData.playerHitBonus && Math.random() < Math.abs(wData.playerHitBonus)) {
+    if (wData.playerHitBonus < 0) {
+      lg('🌫️ The fog throws off your aim!');
+      return false; // Miss due to weather
+    }
+  }
+
   const damageResult = DICE.damageRoll({
     diceExpr: '1d4',
     abilityScore: G.p.stats.str,
@@ -4038,6 +4074,26 @@ function pa(si, ti) {
   }
   finalDamage = applySynergyDamage(finalDamage, 'spell');
   finalDamage = Math.max(1, finalDamage);
+  
+    // === WEATHER: Damage modifiers ===
+  const weather2 = getCurrentWeather();
+  const wData2 = WEATHER[weather2.type];
+  let weatherDmgMod = 1;
+  
+  if (weather2.type === 'rain' && sk.elem === 'lightning') {
+    weatherDmgMod += wData2.lightningDmgBonus;
+    lg('⚡ The rain amplifies your lightning!');
+  }
+  if (weather2.type === 'wind' && sk.elem === 'fire') {
+    weatherDmgMod -= wData2.fireDmgPenalty;
+    lg('💨 The gale weakens your flames!');
+  }
+  
+  if (weatherDmgMod !== 1) {
+    finalDamage = Math.floor(finalDamage * weatherDmgMod);
+    finalDamage = Math.max(1, finalDamage);
+  }
+
   tg.hp -= finalDamage;
   
   const dmgFlavor = getDamageFlavor(finalDamage, isCrit);
@@ -4988,14 +5044,25 @@ function endStoryMode() {
 }
 
 function sc(zi) {
-  const z=G.zones[zi];
+  const z = G.zones[zi];
   G.currentZone = z.n;
+  
+  // Roll weather when entering new zone
+  if (G.currentWeather?.zone !== z.n) {
+    G.currentWeather = { type: rollWeather(), zone: z.n };
+    const w = WEATHER[G.currentWeather.type];
+    if (G.currentWeather.type !== 'clear') {
+      lg(w.icon + ' The weather shifts: ' + w.name + '. ' + w.desc);
+    }
+  }
+    
   // 30% chance for explore event before combat
   if(Math.random() < 0.3 && doExploreEvent()) {
     G.state='explore';
     render();
     return;
   }
+  checkSoelFortune();
   checkNPCUnlocks();
   if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
     if (discoverSecret(z.n)) return;
@@ -5186,6 +5253,44 @@ function addI(it){
   if(ex)ex.q+=it.q||1;
   else G.p.inv.push({...it,q:it.q||1});
 }
+
+function checkSoelFortune() {
+  const soel = G.party.find(p => p.on && p.n === 'Soel' && p.hp > 0);
+  if (!soel) return false;
+  if (Math.random() > 0.15) return false; // 15% chance per explore
+  
+  function getHaggleDiscount() {
+  const aisyah = G.party.find(p => p.on && p.n === 'Aisyah' && p.hp > 0);
+  if (!aisyah) return 0;
+  return 0.10; // 10% off
+}
+
+  const fortuneRoll = Math.random();
+  if (fortuneRoll < 0.5) {
+    // Find gold
+    const gold = 5 + Math.floor(Math.random() * 15);
+    G.p.gold += gold;
+    lg('🐱 Soel scratches at something buried! +' + gold + 'G');
+  } else if (fortuneRoll < 0.85) {
+    // Find material
+    const mats = ['Herb Bundle', 'Goblin Tooth', 'Iron Ore', 'Bone Shard', 'Crystal Shard'];
+    const mat = mats[Math.floor(Math.random() * mats.length)];
+    addI({ n: mat, t: 'mat', q: 1, r: 'common' });
+    lg('🐱 Soel drops a ' + mat + ' at your feet. "Found this."');
+  } else {
+    // Rare: find a potion
+    const pots = [
+      { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' },
+      { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 1, r: 'common' }
+    ];
+    const pot = pots[Math.floor(Math.random() * pots.length)];
+    addI({ ...pot });
+    lg('🐱 Soel nudges a ' + pot.n + ' out from under a bush. Lucky find!');
+  }
+  updateAffinity('Soel', 2);
+  return true;
+}
+
 
 function useI(ix){
   const it=G.p.inv[ix];
