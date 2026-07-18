@@ -238,6 +238,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 .rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: var(--bg-hover); color: var(--text-dim); }
 .rs-type.camp { background: #10b98120; color: var(--rest); }
 .rs-type.tavern { background: #f59e0b20; color: var(--gold); }
+.rs-type.mana_spring { background: #6366f120; color: #6366f1; }
 .rs-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
 .rs-req { font-size: 11px; color: var(--text-dim); }
 .rs-req.ok { color: var(--success); }
@@ -723,7 +724,9 @@ const G = {
 
         // === EXPANSION: LV 21+ ZONES ===
     { n: 'The Fractured Veil', lv: 21, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 550, dg: 'impossible' },
-
+        // === PHASE 1 EXPANSION: LV 22-23 ZONES ===
+    { n: 'The Astral Maelstrom', lv: 22, elem: 'arcane', d: 'A storm of raw planar energy where dimensions collide and unravel. Reality here is a suggestion, not a rule.', en: ['Astral Construct','Void Hound','Phase Walker','Rift Rat'], loot: ['Astral Dust','Void Fragment','Planar Essence','Reality Anchor'], xp: 600, dg: 'impossible' },
+    { n: 'Infernal Crucible', lv: 23, elem: 'fire', d: 'The forge where stars are born and die. Magma rivers flow upward into a sky of eternal flame.', en: ['Ember Wraith','Ash Phantom','Flame Serpent','Magma Titan'], loot: ['Inferno Gem','Ash Crystal','Ember Core','Phoenix Ash'], xp: 680, dg: 'impossible' },
   ],
 
   // Zone hazards: environmental dangers that trigger during combat
@@ -743,7 +746,11 @@ const G = {
     'Chronos Spire': { name: 'Time Echo', chance: 0.12, type: 'damage', dmg: 6, elem: 'arcane', msg: 'Your past self attacks your present!', desc: '15% chance per turn: 10 arcane damage (temporal paradox)' },
     'Aetherium Gardens': { name: 'Mana Bloom', chance: 0.10, type: 'mana_drain', drain: 3, msg: 'The flowers sing — and drink your magic.', desc: '12% chance per turn: drain 5 MP from all (mana bloom)' },
     'The Convergence': { name: 'Resonance Clash', chance: 0.18, type: 'damage', dmg: 10, elem: 'arcane', msg: 'Conflicting planar energies clash — everything shudders!', desc: '22% chance per turn: 16 arcane damage to all (resonance clash)' },
-    'The Nexus': { name: 'Reality Collapse', chance: 0.20, type: 'damage', dmg: 12, elem: 'void', msg: 'The heart of dimensions buckles — reality itself tears!', desc: '25% chance per turn: 20 void damage to all (reality collapse)' }
+    'The Nexus': { name: 'Reality Collapse', chance: 0.20, type: 'damage', dmg: 12, elem: 'void', msg: 'The heart of dimensions buckles — reality itself tears!', desc: '25% chance per turn: 20 void damage to all (reality collapse)' },
+        // === PHASE 1: LV 22-23 ZONE HAZARDS ===
+    'The Astral Maelstrom': { name: 'Dimensional Shear', chance: 0.15, type: 'damage', dmg: 14, elem: 'arcane', msg: 'Reality shears apart — raw astral energy cuts through!', desc: '15% chance per turn: 14 arcane damage to all (dimensional shear)' },
+    'Infernal Crucible': { name: 'Magma Vent', chance: 0.20, type: 'damage', dmg: 10, elem: 'fire', msg: 'A magma vent erupts beneath your feet!', desc: '20% chance per turn: 10 fire damage to all (magma vent)' },
+
   },
 
   exploreEvents: [
@@ -787,7 +794,15 @@ const G = {
     { id: 10, n: 'Tower Ascent II: Planar Warden', d: 'Defeat 5 Planar Wisps in the Arcane Planar Tower', t: 'kill_specific', target: 'Planar Wisp', c: 0, need: 5, rw: { xp: 400, g: 250 }, done: false, chain: 'tower', reqQuest: 9 },
     { id: 11, n: 'Tower Ascent III: Rift Sealer', d: 'Defeat 3 Rift Stalkers and 3 Void Weavers', t: 'kill_specific', target: 'Rift Stalker', c: 0, need: 3, rw: { xp: 500, g: 300 }, done: false, chain: 'tower', reqQuest: 10, hidden: true, revealed: false },
     { id: 12, n: 'Tower Ascent IV: Chronomancer Slayer', d: 'Defeat 3 Chronomancers before time unravels (timed: 300 ticks)', t: 'kill_specific', target: 'Chronomancer', c: 0, need: 3, rw: { xp: 150, g: 140 }, done: false, timed: true, timer: 300, timerMax: 300, chain: 'tower', reqQuest: 11, hidden: true, revealed: false },
-    { id: 13, n: 'Tower Ascent V: The Planarch', d: 'Defeat The Planarch and claim the Arcane Planar Tower', t: 'boss_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 420, g: 1500 }, done: false, chain: 'tower', reqQuest: 12, hidden: true, revealed: false }
+    { id: 13, n: 'Tower Ascent V: The Planarch', d: 'Defeat The Planarch and claim the Arcane Planar Tower', t: 'boss_specific', target: 'The Planarch', c: 0, need: 1, rw: { xp: 420, g: 1500 }, done: false, chain: 'tower', reqQuest: 12, hidden: true, revealed: false },
+        // === PHASE 1: LV 22-23 QUESTS ===
+    { id: 14, n: 'Beyond the Veil I: The Maelstrom', d: 'Reach Level 22 and enter The Astral Maelstrom', t: 'reach_level', c: 0, need: 22, rw: { xp: 500, g: 600 }, done: false, chain: 'beyond_veil' },
+    { id: 15, n: 'Beyond the Veil II: Reality Weaver', d: 'Defeat 5 Reality Weavers in The Astral Maelstrom', t: 'kill_specific', target: 'Reality Weaver', c: 0, need: 5, rw: { xp: 600, g: 400 }, done: false, chain: 'beyond_veil', reqQuest: 14 },
+    { id: 16, n: 'Beyond the Veil III: The Devourer', d: 'Defeat The Astral Devourer', t: 'boss_specific', target: 'The Astral Devourer', c: 0, need: 1, rw: { xp: 800, g: 1200 }, done: false, chain: 'beyond_veil', reqQuest: 15, hidden: true, revealed: false },
+    { id: 17, n: 'Into the Crucible', d: 'Reach Level 23 and enter the Infernal Crucible', t: 'reach_level', c: 0, need: 23, rw: { xp: 600, g: 700 }, done: false, chain: 'crucible' },
+    { id: 18, n: 'Flame Purge', d: 'Defeat 5 Ember Wraiths in the Infernal Crucible', t: 'kill_specific', target: 'Ember Wraith', c: 0, need: 5, rw: { xp: 700, g: 500 }, done: false, chain: 'crucible', reqQuest: 17 },
+    { id: 19, n: 'The Infernal Tyrant', d: 'Defeat The Infernal Tyrant', t: 'boss_specific', target: 'The Infernal Tyrant', c: 0, need: 1, rw: { xp: 1000, g: 1500 }, done: false, chain: 'crucible', reqQuest: 18, hidden: true, revealed: false },
+
   ],
 
    bounties: [
@@ -819,7 +834,15 @@ const G = {
     { id: 'b21', n: 'Ash Titan Slayer', d: 'Defeat 2 Ash Titans', t: 'kill_specific', target: 'Ash Titan', c: 0, need: 2, rw: { xp: 520, g: 280 }, done: false, refreshDay: 0, minLv: 17 },
     { id: 'b22', n: 'Frost Lich Nemesis', d: 'Defeat 3 Frost Liches', t: 'kill_specific', target: 'Frost Lich', c: 0, need: 3, rw: { xp: 550, g: 300 }, done: false, refreshDay: 0, minLv: 18 },
     { id: 'b23', n: 'Glacial Behemoth Hunter', d: 'Defeat 2 Glacial Behemoths', t: 'kill_specific', target: 'Glacial Behemoth', c: 0, need: 2, rw: { xp: 600, g: 330 }, done: false, refreshDay: 0, minLv: 18 },
-    { id: 'b24', n: 'The Nexus Planarch', d: 'Defeat The Nexus Planarch', t: 'kill_specific', target: 'The Nexus Planarch', c: 0, need: 1, rw: { xp: 2000, g: 1200 }, done: false, refreshDay: 0, minLv: 20 }
+    { id: 'b24', n: 'The Nexus Planarch', d: 'Defeat The Nexus Planarch', t: 'kill_specific', target: 'The Nexus Planarch', c: 0, need: 1, rw: { xp: 2000, g: 1200 }, done: false, refreshDay: 0, minLv: 20 },
+        // === PHASE 1: LV 22-23 BOUNTIES ===
+    { id: 'b25', n: 'Reality Weaver Hunter', d: 'Defeat 5 Reality Weavers', t: 'kill_specific', target: 'Reality Weaver', c: 0, need: 5, rw: { xp: 500, g: 300 }, done: false, refreshDay: 0, minLv: 22 },
+    { id: 'b26', n: 'Fracture Hound Slayer', d: 'Defeat 5 Fracture Hounds', t: 'kill_specific', target: 'Fracture Hound', c: 0, need: 5, rw: { xp: 520, g: 310 }, done: false, refreshDay: 0, minLv: 22 },
+    { id: 'b27', n: 'Astral Devourer', d: 'Defeat The Astral Devourer', t: 'kill_specific', target: 'The Astral Devourer', c: 0, need: 1, rw: { xp: 1200, g: 700 }, done: false, refreshDay: 0, minLv: 22 },
+    { id: 'b28', n: 'Ember Wraith Hunter', d: 'Defeat 5 Ember Wraiths', t: 'kill_specific', target: 'Ember Wraith', c: 0, need: 5, rw: { xp: 550, g: 330 }, done: false, refreshDay: 0, minLv: 23 },
+    { id: 'b29', n: 'Ash Phantom Slayer', d: 'Defeat 5 Ash Phantoms', t: 'kill_specific', target: 'Ash Phantom', c: 0, need: 5, rw: { xp: 570, g: 340 }, done: false, refreshDay: 0, minLv: 23 },
+    { id: 'b30', n: 'Infernal Tyrant', d: 'Defeat The Infernal Tyrant', t: 'kill_specific', target: 'The Infernal Tyrant', c: 0, need: 1, rw: { xp: 1400, g: 800 }, done: false, refreshDay: 0, minLv: 23 },
+
   ],
 
 
@@ -853,7 +876,13 @@ const G = {
     { id: 'planar_pioneer', n: 'Planar Pioneer', d: 'Enter the Arcane Planar Tower', icon: '🌀', t: 'reach_level', need: 11, rw: { xp: 90, g: 85 }, done: false, secret: false },
     { id: 'rift_walker', n: 'Rift Walker', d: 'Defeat 20 enemies in the Arcane Planar Tower', icon: '🌌', t: 'kills', need: 20, rw: { xp: 500, g: 300 }, done: false, secret: false },
     { id: 'planarch_slayer', n: 'Planarch Slayer', d: 'Defeat The Planarch and claim the tower', icon: '👑', t: 'boss_specific', target: 'The Planarch', need: 1, rw: { xp: 420, g: 1500 }, done: false, secret: false },
-    { id: 'planar_master', n: 'Planar Master', d: 'Reach Level 15', icon: '⭐', t: 'level', need: 15, rw: { xp: 1000, g: 600 }, done: false, secret: false }
+    { id: 'planar_master', n: 'Planar Master', d: 'Reach Level 15', icon: '⭐', t: 'level', need: 15, rw: { xp: 1000, g: 600 }, done: false, secret: false },
+        // === PHASE 1: LV 22-23 ACHIEVEMENTS ===
+    { id: 'astral_walker', n: 'Astral Walker', d: 'Reach Level 22', icon: '🌌', t: 'level', need: 22, rw: { xp: 800, g: 500 }, done: false, secret: false },
+    { id: 'infernal_heart', n: 'Infernal Heart', d: 'Reach Level 23', icon: '🔥', t: 'level', need: 23, rw: { xp: 900, g: 600 }, done: false, secret: false },
+    { id: 'devourer_slayer', n: 'Devourer of Worlds', d: 'Defeat The Astral Devourer', icon: '🌑', t: 'boss_specific', target: 'The Astral Devourer', need: 1, rw: { xp: 1200, g: 800 }, done: false, secret: false },
+    { id: 'tyrant_slayer', n: 'Tyrant Breaker', d: 'Defeat The Infernal Tyrant', icon: '⚔️', t: 'boss_specific', target: 'The Infernal Tyrant', need: 1, rw: { xp: 1400, g: 900 }, done: false, secret: false },
+    { id: 'beyond_veil', n: 'Beyond the Veil', d: 'Complete the Beyond the Veil quest chain', icon: '🌀', t: 'quests', need: 3, rw: { xp: 1500, g: 1000 }, done: false, secret: false },
   ],
 
   storyline: [
@@ -862,7 +891,10 @@ const G = {
     { id: 's3', n: 'The Frozen Crown', d: 'Reach Level 7 and defeat the Frozen Knight', t: 'reach_level', c: 0, need: 7, rw: { xp: 500, g: 300 }, done: false, unlocked: false, chapter: 3 },
     { id: 's4', n: 'Into the Void', d: 'Reach Level 9 and survive the Abyssal Depths', t: 'reach_level', c: 0, need: 9, rw: { xp: 200, g: 180 }, done: false, unlocked: false, chapter: 4 },
     { id: 's5', n: 'Starlight Ascension', d: 'Reach Level 10 and conquer the Starlight Spire', t: 'reach_level', c: 0, need: 10, rw: { xp: 300, g: 250 }, done: false, unlocked: false, chapter: 5 },
-    { id: 's6', n: 'Planar Convergence', d: 'Reach Level 12 and ascend the Arcane Planar Tower', t: 'reach_level', c: 0, need: 12, rw: { xp: 420, g: 1200 }, done: false, unlocked: false, chapter: 6 }
+    { id: 's6', n: 'Planar Convergence', d: 'Reach Level 12 and ascend the Arcane Planar Tower', t: 'reach_level', c: 0, need: 12, rw: { xp: 420, g: 1200 }, done: false, unlocked: false, chapter: 6 },
+        // === PHASE 1: LV 22-23 STORYLINE ===
+    { id: 's7', n: 'The Astral Threshold', d: 'Reach Level 22 and survive The Astral Maelstrom', t: 'reach_level', c: 0, need: 22, rw: { xp: 600, g: 1500 }, done: false, unlocked: false, chapter: 7 },
+    { id: 's8', n: 'Heart of Fire', d: 'Reach Level 23 and conquer the Infernal Crucible', t: 'reach_level', c: 0, need: 23, rw: { xp: 700, g: 1800 }, done: false, unlocked: false, chapter: 8 },
   ],
   log: ['Welcome to Legends of Daybreak, San.'],
 
@@ -901,7 +933,7 @@ const G = {
   soelCommentCooldown: 0,
 
   npcs: [
-    { n: 'LLP', t: 'trader', title: 'Wandering Merchant', icon: '🧳', col: '#fbbf24', zone: 'Whispering Woods', zoneLv: 1,
+    { n: 'Lewis', t: 'trader', title: 'Wandering Merchant', icon: '🧳', col: '#fbbf24', zone: 'Whispering Woods', zoneLv: 1,
       d: 'A shrewd merchant who appears in Whispering Woods. Sells rare herbs and curious trinkets.',
       stock: [
         { n: 'Mystic Herb', t: 'mat', q: 1, r: 'uncommon', price: 15 },
@@ -949,7 +981,7 @@ const G = {
         { n: "Senedra's Hawkeye Lens", t: 'pgear', q: 1, r: 'rare', price: 85, for: 'Senedra', atk: 2, def: 0, spd: 2, d: 'A spyglass that sees weakness. +2 ATK, +2 SPD' }
       ],
       unlocked: false, visitCount: 0 },
-    { n: 'JT', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
+    { n: 'Jonathan', t: 'trader', title: 'The Gearsmith', icon: '⚙️', col: '#f97316', zone: 'Ember Peak', zoneLv: 4,
       d: 'A tinkerer who sets up shop near Ember Peak. Deals in mechanical parts and weapon upgrades.',
       stock: [
         { n: 'Gear Assembly', t: 'mat', q: 1, r: 'uncommon', price: 20 },
@@ -988,9 +1020,21 @@ const G = {
         { n: 'Planar Wand', t: 'wep', q: 1, r: 'epic', price: 450, atk: 16, int: 5, arcaneDmg: 6 },
         { n: 'Riftward Cloak', t: 'arm', q: 1, r: 'rare', price: 280, def: 8, int: 3, voidRes: 0.15 }
       ],
-      unlocked: false, visitCount: 0 }
-  ],
+      unlocked: false, visitCount: 0 },
+          // === PHASE 1: LV 22 TRADER ===
+    { n: 'Astrid', t: 'trader', title: 'Astral Merchant', icon: '✨', col: '#a855f7', zone: 'The Astral Maelstrom', zoneLv: 22,
+      d: 'A being woven from starlight who trades in astral artifacts. Her voice echoes like a memory of something beautiful.',
+      stock: [
+        { n: 'Astral Dust', t: 'mat', q: 1, r: 'rare', price: 55 },
+        { n: 'Void Fragment', t: 'mat', q: 1, r: 'rare', price: 65 },
+        { n: 'Astral Wand', t: 'wep', q: 1, r: 'epic', price: 500, atk: 18, int: 6, arcaneDmg: 7 },
+        { n: 'Voidweave Cloak', t: 'arm', q: 1, r: 'epic', price: 320, def: 10, int: 4, voidRes: 0.20 },
+        { n: 'Starlight Pendant', t: 'acc', q: 1, r: 'rare', price: 180, int: 5, mpRegen: 3 },
+        { n: 'Planar Essence', t: 'mat', q: 1, r: 'rare', price: 50 }
+      ],
+      unlocked: false, visitCount: 0 },
 
+  ],   
   bosses: [
     { n: 'Goblin King', zone: 'Whispering Woods', hp: 150, mhp: 150, atk: 12, def: 5, xp: 35, g: 35, 
       mechanic: 'rampage', rampageTurn: 3, rampageDmg: 25, desc: 'Enrages after 3 turns. All party members must attack.' },
@@ -1016,6 +1060,11 @@ const G = {
       mechanic: 'nexus_planarch', shiftTurn: 4, phases: 5, currentPhase: 1, desc: 'The true form of the Planarch at the heart of all dimensions. Each phase embodies a different planar element. Defeat all five to sever the rift forever.', nexus: true },
           { n: 'The Veilshaper', zone: 'The Fractured Veil', hp: 3500, mhp: 3500, atk: 65, def: 38, xp: 1500, g: 900,
       mechanic: 'reality_weave', weaveTurn: 3, desc: 'A being of pure fractured reality. Every 3 turns, it weaves a new dimension — summoning echoes of itself and shifting resistances.' },
+        // === PHASE 1: LV 22-23 BOSSES ===
+  { n: 'The Astral Devourer', zone: 'The Astral Maelstrom', hp: 4000, mhp: 4000, atk: 70, def: 40, xp: 1800, g: 1000,
+    mechanic: 'astral_phase', shiftTurn: 3, phases: 4, currentPhase: 1, desc: 'A being that consumes dimensions. Shifts between astral phases, each more dangerous than the last.' },
+  { n: 'The Infernal Tyrant', zone: 'Infernal Crucible', hp: 4500, mhp: 4500, atk: 75, def: 42, xp: 2000, g: 1100,
+    mechanic: 'inferno_core', infernoTurn: 4, infernoDmg: 50, desc: 'The heart of the Crucible given form. Builds inferno energy for 4 turns — interrupt or be incinerated.' },
   ],
 
   currentBoss: null,
@@ -1062,7 +1111,13 @@ const G = {
           // === EXPANSION: LV 21+ REST SITES ===
     { id: 'fv_camp', name: 'Veil\'s Edge Camp', type: 'camp', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A precarious camp at the edge of tearing reality. Tents flicker in and out of existence.', unlocked: false, icon: '⛺', cost: 0 },
     { id: 'fv_tavern', name: 'The Shattered Inn', type: 'tavern', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A tavern that exists in multiple dimensions. The beer tastes different in each one.', unlocked: false, icon: '🍺', cost: 35 },
-
+    // === PHASE 1: LV 22-23 REST SITES ===
+    { id: 'am_camp', name: 'Astral Refuge', type: 'camp', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'A pocket of stable space in the maelstrom. The walls hum with harmonic resonance.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'am_tavern', name: 'The Wandering Star', type: 'tavern', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'A tavern built on a floating asteroid. The beer tastes like stardust and homesickness.', unlocked: false, icon: '🍺', cost: 40 },
+    { id: 'ic_camp', name: 'Crucible Hollow', type: 'camp', zone: 'Infernal Crucible', zoneLv: 23, desc: 'A heat-shielded cave behind a magmafall. The air shimmers.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'ic_tavern', name: 'The Molten Chalice', type: 'tavern', zone: 'Infernal Crucible', zoneLv: 23, desc: 'Fireproof stone tavern. The ale is served in cooled obsidian mugs. Everything glows.', unlocked: false, icon: '🍺', cost: 45 },
+        { id: 'ms_spring1', name: 'Ethereal Mana Spring', type: 'mana_spring', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A natural spring of pure mana. The energy is overwhelming — you can only endure it briefly.', unlocked: false, icon: '💧', cost: 10, entryLimit: 3, entriesUsed: 0 },
+    { id: 'ms_spring2', name: 'Astral Mana Spring', type: 'mana_spring', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'Liquid starlight pools in a crater of fallen meteors. Each sip rewires your magic.', unlocked: false, icon: '💧', cost: 15, entryLimit: 3, entriesUsed: 0 },
     ]
   },
 
@@ -1325,6 +1380,10 @@ const LOOT_TABLES = {
     { n: 'Convergence Blade', ilvl: 18, atk: 55, int: 9, arcaneDmg: 13, voidDmg: 5 },
     { n: 'Nexus Cleaver',     ilvl: 19, atk: 60, str: 7, voidDmg: 14, lifeSteal: 0.08 },
     { n: 'Reality Sunderer',  ilvl: 20, atk: 70, int: 10, arcaneDmg: 15, voidDmg: 8, mpRegen: 3 },
+        // === PHASE 1: ilvl 21-22 WEAPONS ===
+    { n: 'Astral Edge',       ilvl: 21, atk: 78, int: 11, arcaneDmg: 12, voidDmg: 6, mpRegen: 2 },
+    { n: 'Infernal Reaver',   ilvl: 22, atk: 86, str: 9, fireDmg: 14, critChance: 0.04 },
+
   ],
   armor: [
     { n: 'Tattered Cloth',    ilvl: 1,  def: 1 },
@@ -1349,6 +1408,10 @@ const LOOT_TABLES = {
     { n: 'Convergence Mail',  ilvl: 18, def: 32, str: 4, voidRes: 0.2, fireRes: 0.2, iceRes: 0.2 },
     { n: 'Nexus Ward',        ilvl: 19, def: 35, con: 6, arcaneRes: 0.3, voidRes: 0.2, hpRegen: 4 },
     { n: 'Reality Anchor',    ilvl: 20, def: 40, int: 8, wis: 4, arcaneRes: 0.35, voidRes: 0.25, hpRegen: 5, mpRegen: 4 },
+        // === PHASE 1: ilvl 21-22 ARMOR ===
+    { n: 'Astral Vestment',   ilvl: 21, def: 44, int: 9, wis: 5, arcaneRes: 0.30, voidRes: 0.20, hpRegen: 4, mpRegen: 4 },
+    { n: 'Infernal Plate',    ilvl: 22, def: 48, con: 6, str: 4, fireRes: 0.30, hpRegen: 5, mpRegen: 2 },
+
   ],
   head: [
     { n: 'Cloth Hood',        ilvl: 1,  def: 1, wis: 1 },
@@ -1368,6 +1431,10 @@ const LOOT_TABLES = {
     { n: 'Convergence Helm',  ilvl: 18, def: 15, con: 4, arcaneRes: 0.15, voidRes: 0.15 },
     { n: 'Nexus Visage',      ilvl: 19, def: 17, int: 7, arcaneRes: 0.25, voidRes: 0.15, mpRegen: 3 },
     { n: 'Reality Crown',     ilvl: 20, def: 20, int: 8, wis: 4, arcaneRes: 0.3, voidRes: 0.2, mpRegen: 4 },
+        // === PHASE 1: ilvl 21-22 HEAD ===
+    { n: 'Astral Crown',      ilvl: 21, def: 22, int: 9, wis: 5, arcaneRes: 0.25, voidRes: 0.15, mpRegen: 4 },
+    { n: 'Infernal Helm',     ilvl: 22, def: 24, str: 5, con: 4, fireRes: 0.25, hpRegen: 2 },
+
   ],
   hands: [
     { n: 'Cloth Wraps',       ilvl: 1,  def: 1, dex: 1 },
@@ -1386,6 +1453,10 @@ const LOOT_TABLES = {
     { n: 'Convergence Fists', ilvl: 18, def: 8, str: 3, atk: 3, fireDmg: 2, iceDmg: 2 },
     { n: 'Nexus Grasp',       ilvl: 19, def: 9, int: 5, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
     { n: 'Reality Gauntlets', ilvl: 20, def: 10, int: 6, atk: 4, arcaneDmg: 7, voidDmg: 4, critChance: 0.05 },
+        // === PHASE 1: ilvl 21-22 HANDS ===
+    { n: 'Astral Wraps',      ilvl: 21, def: 11, int: 7, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
+    { n: 'Infernal Gauntlets',ilvl: 22, def: 12, str: 5, fireDmg: 6, atk: 3, critChance: 0.04 },
+
   ],
   feet: [
     { n: 'Worn Boots',        ilvl: 1,  def: 1, con: 1 },
@@ -1405,6 +1476,9 @@ const LOOT_TABLES = {
     { n: 'Convergence Treads',ilvl: 18, def: 7, con: 3, arcaneRes: 0.1, voidRes: 0.1, hpRegen: 2 },
     { n: 'Nexus Striders',    ilvl: 19, def: 8, dex: 5, arcaneRes: 0.2, voidRes: 0.15, mpRegen: 2 },
     { n: 'Reality Walkers',   ilvl: 20, def: 10, dex: 6, con: 3, arcaneRes: 0.25, voidRes: 0.2, hpRegen: 3, mpRegen: 3 },
+        // === PHASE 1: ilvl 21-22 FEET ===
+    { n: 'Astral Treads',     ilvl: 21, def: 11, dex: 7, con: 3, arcaneRes: 0.20, voidRes: 0.15, mpRegen: 2 },
+    { n: 'Infernal Boots',    ilvl: 22, def: 12, dex: 6, con: 4, fireRes: 0.20, hpRegen: 2 },
   ],
   ring: [
     { n: 'Copper Ring',       ilvl: 1,  con: 1 },
@@ -1425,6 +1499,10 @@ const LOOT_TABLES = {
     { n: 'Convergence Loop',  ilvl: 18, con: 3, arcaneDmg: 3, voidDmg: 3, hpRegen: 1 },
     { n: 'Nexus Band',        ilvl: 19, int: 6, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
     { n: 'Reality Seal',      ilvl: 20, int: 7, wis: 3, arcaneDmg: 7, voidDmg: 4, hpRegen: 3, mpRegen: 3 },
+        // === PHASE 1: ilvl 21-22 RING ===
+    { n: 'Astral Band',       ilvl: 21, int: 8, wis: 4, arcaneDmg: 6, voidDmg: 3, mpRegen: 2 },
+    { n: 'Infernal Signet',   ilvl: 22, str: 6, fireDmg: 7, fireRes: 0.10, hpRegen: 2 },
+
   ],
   amulet: [
     { n: 'String Charm',      ilvl: 1,  wis: 1 },
@@ -1444,6 +1522,9 @@ const LOOT_TABLES = {
     { n: 'Convergence Amulet',ilvl: 18, con: 4, arcaneDmg: 4, voidDmg: 4, hpRegen: 2 },
     { n: 'Nexus Pendant',     ilvl: 19, int: 7, arcaneDmg: 7, voidDmg: 4, mpRegen: 3 },
     { n: 'Reality Anchor',    ilvl: 20, int: 8, wis: 5, arcaneDmg: 8, voidDmg: 5, hpRegen: 4, mpRegen: 4, lifeSteal: 0.05 },
+        // === PHASE 1: ilvl 21-22 AMULET ===
+    { n: 'Astral Pendant',    ilvl: 21, int: 9, wis: 5, arcaneDmg: 7, voidDmg: 4, mpRegen: 3 },
+    { n: 'Infernal Charm',    ilvl: 22, str: 7, fireDmg: 8, fireRes: 0.15, hpRegen: 3 },
   ]
 };
 
@@ -1908,6 +1989,16 @@ const ENEMY_REGISTRY = {
   'Ash Phantom': { template: 'striker', elem: 'fire', zoneLv: 23 },
   'Glacial Shade': { template: 'tank', elem: 'ice', zoneLv: 24 },
   'Frost Revenant': { template: 'balanced', elem: 'ice', zoneLv: 24 },
+    // === PHASE 1: LV 22 NEW ENEMIES ===
+  'Astral Construct': { template: 'elite', elem: 'arcane', zoneLv: 22 },
+  'Void Hound': { template: 'striker', elem: 'void', zoneLv: 22 },
+  'Phase Walker': { template: 'balanced', elem: 'arcane', zoneLv: 22 },
+  'Rift Rat': { template: 'striker', elem: 'void', zoneLv: 22 },
+      // === PHASE 1: LV 23 NEW ENEMIES (Lv 22 enemies already exist) ===
+  'Ember Wraith': { template: 'brute', elem: 'fire', zoneLv: 23 },
+  'Ash Phantom': { template: 'striker', elem: 'fire', zoneLv: 23 },
+  'Flame Serpent': { template: 'striker', elem: 'fire', zoneLv: 23 },
+  'Magma Titan': { template: 'tank', elem: 'fire', zoneLv: 23 },
 };
 
 function getDynamicEnemyStats(name) {
@@ -2057,15 +2148,21 @@ const TRINKET_SHOP = [
 function buyTrinket(index) {
   const t = TRINKET_SHOP[index];
   if (!t) return;
-  if (G.p.gold < t.price) { lg('Need ' + t.price + 'G'); return; }
-  G.p.gold -= t.price;
+  
+  // Add haggle for trinkets too
+  const aisyah = G.party.find(p => p.on && p.n === 'Aisyah' && p.hp > 0);
+  const finalPrice = aisyah ? Math.floor(t.price * 0.9) : t.price;
+  
+  if (G.p.gold < finalPrice) { lg('Need ' + finalPrice + 'G'); return; }
+  
+  G.p.gold -= finalPrice;
   const item = {
     n: t.n, t: 'pgear', q: 1, r: t.r,
     atk: t.atk || 0, def: t.def || 0, hp: t.hp || 0,
     d: '+' + (t.atk || 0) + ' ATK, +' + (t.def || 0) + ' DEF, +' + (t.hp || 0) + ' HP'
   };
   addI(item);
-  lg('Bought ' + t.n + ' for ' + t.price + 'G');
+  lg('🎁 Bought ' + t.n + ' for ' + finalPrice + 'G!' + (aisyah ? ' (Aisyah haggled 10% off!)' : ''));
   render();
 }
 
@@ -2277,25 +2374,32 @@ function checkNPCUnlocks() {
 function buyFromNPC(npcName, itemIdx) {
   const npc = G.npcs.find(n => n.n === npcName);
   if (!npc || !npc.unlocked || npc.t !== 'trader') return;
+  
   const item = npc.stock[itemIdx];
   if (!item) return;
-  if (G.p.gold < item.price) {
-    lg('❌ Not enough gold! ' + item.n + ' costs ' + item.price + 'G.');
+  
+  // === AISYAH'S HAGGLE ===
+  const aisyah = G.party.find(p => p.on && p.n === 'Aisyah' && p.hp > 0);
+  const finalPrice = aisyah ? Math.floor(item.price * 0.9) : item.price;
+  
+  if (G.p.gold < finalPrice) {
+    lg('❌ Not enough gold! ' + item.n + ' costs ' + finalPrice + 'G.');
     return;
   }
-  G.p.gold -= item.price;
+  
+  G.p.gold -= finalPrice;
 
   // Party gear (pgear) goes directly to that party member, not inventory
   if (item.t === 'pgear') {
     const member = G.party.find(p => p.n === item.for);
     if (!member) {
       lg('❌ No party member named ' + item.for + '!');
-      G.p.gold += item.price; // refund
+      G.p.gold += finalPrice; // refund
       return;
     }
     if (member.gear) {
       lg('❌ ' + member.n + ' already has ' + member.gear.n + '! Unequip first.');
-      G.p.gold += item.price; // refund
+      G.p.gold += finalPrice; // refund
       return;
     }
     member.gear = {
@@ -2307,17 +2411,15 @@ function buyFromNPC(npcName, itemIdx) {
       spd: item.spd || 0,
       d: item.d || 'Party gear.'
     };
-    // Apply stats immediately
+    // Apply stats
     if (member.gear.hp) { member.mhp += member.gear.hp; member.hp += member.gear.hp; }
     if (member.gear.mp) { member.mmp = (member.mmp || member.mhp) + member.gear.mp; member.mp = (member.mp || 0) + member.gear.mp; }
     if (member.gear.atk) member.atk += member.gear.atk;
     if (member.gear.def) member.def += member.gear.def;
     if (member.gear.spd) member.spd += member.gear.spd;
+    
     npc.visitCount++;
-    lg('🧳 Bought ' + item.n + ' for ' + member.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
-    if (npc.visitCount === 1) {
-      lg('   ' + npc.n + ': "Pleasure doing business, mage."');
-    }
+    lg('🧳 Bought ' + item.n + ' for ' + member.n + ' from ' + npc.n + ' for ' + finalPrice + 'G!' + (aisyah ? ' (Aisyah haggled 10% off!)' : ''));
     render();
     return;
   }
@@ -2346,7 +2448,8 @@ function buyFromNPC(npcName, itemIdx) {
   if (item.v !== undefined) boughtItem.v = item.v;
   addI(boughtItem);
   npc.visitCount++;
-  lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + item.price + 'G!');
+  lg('🧳 Bought ' + item.n + ' from ' + npc.n + ' for ' + finalPrice + 'G!' + (aisyah ? ' (Aisyah haggled 10% off!)' : ''));
+
   if (npc.visitCount === 1) {
     lg('   ' + npc.n + ': "Pleasure doing business, mage."');
   }
@@ -3364,7 +3467,7 @@ function doEnemyAttack(enemy) {
     }
   }
 
-  // Tank Taunt: Joel intercepts attacks on allies (70% with Shield Oath)
+    // Tank Taunt: Joel intercepts attacks on allies (70% with Shield Oath)
   const joel = G.party.find(p => p.on && p.n === 'Joel' && p.hp > 0 && p.r === 'Tank');
   const joelTaunt = hasAffinityUnlock('Joel', 'shield_oath') ? 0.70 : 0.40;
   if (joel && target !== joel && Math.random() < joelTaunt) {
@@ -3372,6 +3475,17 @@ function doEnemyAttack(enemy) {
     target = joel;
   }
   
+  // === JOEL'S SHIELD WALL ===
+  if (target === G.p && G.p.hp / G.p.mhp <= 0.30 && joel && joel.hp > 0) {
+    if (!G.joelShieldCooldown) G.joelShieldCooldown = 0;
+    if (G.joelShieldCooldown <= 0 && Math.random() < 0.40) {
+      G.joelShieldCooldown = 5;
+      lg('🛡️ SHIELD WALL! Joel dives in front of San!');
+      target = joel;
+    }
+  }
+  if (G.joelShieldCooldown > 0) G.joelShieldCooldown--;
+    
   // Calculate target AC with gear DEF bonus
   const gearDef = target.gear ? (target.gear.def || 0) : 0;
   const targetAC = target === G.p ? getPlayerAC() : 10 + Math.floor(((target.def || 0) + gearDef + getBlessDef(target)) / 2);
@@ -3655,6 +3769,47 @@ function handleBossMechanics() {
           e.atk += 3;
           e.def += 2;
           lg('   ⚡ ' + e.n + ' grows stronger! ATK: ' + e.atk + ' DEF: ' + e.def);
+        }
+        break;
+      // === PHASE 1: LV 22-23 BOSS MECHANICS ===
+      case 'astral_phase':
+        if (G.cbt.turn > 0 && G.cbt.turn % e.shiftTurn === 0 && e.currentPhase < e.phases) {
+          e.currentPhase++;
+          const astralPhases = ['MATERIAL', 'ASTRAL', 'VOID', 'PRIMORDIAL'];
+          const phaseName = astralPhases[e.currentPhase - 1] || 'UNKNOWN';
+          lg('🌌 ' + e.n + ' shifts to the ' + phaseName + ' PHASE! Phase ' + e.currentPhase + '/' + e.phases);
+          if (e.currentPhase === 2) {
+            e.atk += 5; e.def += 3;
+            lg('   ✨ Astral surge! ATK +' + 5 + ', DEF +' + 3);
+          } else if (e.currentPhase === 3) {
+            lg('   🌑 Void tendrils drain party MP!');
+            G.p.mp = Math.max(0, G.p.mp - 20);
+            for (let p of G.party) { if (p.on) p.mp = Math.max(0, p.mp - 15); }
+          } else if (e.currentPhase === 4) {
+            lg('   🔥 PRIMORDIAL ERUPTION! All take 30 damage!');
+            G.p.hp = Math.max(1, G.p.hp - 30);
+            for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - 30); }
+          }
+          if (e.currentPhase < e.phases) {
+            const riftMinion = { n: 'Astral Echo', hp: 100, mhp: 100, atk: 18, def: 6, xp: 60, g: 40, elem: 'arcane', id: G.cbt.en.length, status: [] };
+            G.cbt.en.push(riftMinion);
+            lg('   🌀 An Astral Echo manifests!');
+          }
+        }
+        break;
+      case 'inferno_core':
+        if (G.cbt.turn >= e.infernoTurn) {
+          lg('🔥 ' + e.n + ' unleashes INFERNO CORE! Party takes ' + e.infernoDmg + ' fire damage!');
+          G.p.hp = Math.max(1, G.p.hp - e.infernoDmg);
+          for (let p of G.party) { if (p.on) p.hp = Math.max(1, p.hp - e.infernoDmg); }
+        }
+        // Heat aura: 10% chance per turn to burn a random target
+        if (Math.random() < 0.10) {
+          const targets = [G.p, ...G.party.filter(p => p.on && p.hp > 0)];
+          const victim = targets[Math.floor(Math.random() * targets.length)];
+          if (!victim.status) victim.status = [];
+          victim.status.push({ type: 'burn', dmg: 8, turns: 3, chance: 1.0 });
+          lg('   🔥 ' + (victim.n || 'You') + ' is ignited by the Infernal Tyrant\'s aura!');
         }
         break;
 
@@ -3995,7 +4150,11 @@ function pa(si, ti) {
     bonus: G.p.eq.weapon ? G.p.eq.weapon.atk : 0
   });
   
-  let finalDamage = Math.floor(damageResult.total * soelBonus);
+    let finalDamage = Math.floor(damageResult.total * soelBonus);
+  
+  // Apply weather damage modifiers
+  finalDamage = applyWeatherDamage(finalDamage, sk.elem);
+
   if (soelBonus > 1) {
     lg('🐱 Soel\'s fortune smiles! +10% damage!');
   }
@@ -4062,6 +4221,14 @@ function pa(si, ti) {
 function eturn() {
   // Mezstorm Arcane Conduit: +3 MP/turn for San
   const mezstorm = G.party.find(p => p.on && p.n === 'Mezstorm' && p.hp > 0);
+    // Mana Spring Blessing: +20% MP regen
+  const msBuff = G.p.buffs.find(b => b.n === 'Mana Spring Blessing');
+  if (msBuff && msBuff.t > 0) {
+    const bonusMp = Math.max(1, Math.floor(G.p.mmp * msBuff.mpRegenPct));
+    const oldMp = G.p.mp;
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + bonusMp);
+    if (G.p.mp > oldMp) lg('💧 Mana Spring Blessing restores ' + (G.p.mp - oldMp) + ' bonus MP!');
+  }
   if (mezstorm) {
     const oldMp = G.p.mp;
     G.p.mp = Math.min(G.p.mmp, G.p.mp + 3);
@@ -4083,7 +4250,9 @@ function eturn() {
       }
     }
   }
-  applyVoidBleed(); // Phase 2: Void Bleed damage
+    applyVoidBleed(); // Phase 2: Void Bleed damage
+  applyWeatherCombat(); // Weather system
+
   for (let e of G.cbt.en) {
     doEnemyAttack(e);
   }
@@ -4501,8 +4670,36 @@ function startRest(siteId) {
     lg('❌ No healer in active party! You need a healer to rest safely.');
     return;
   }
-  if (site.cost && G.p.gold < site.cost) {
+    if (site.cost && G.p.gold < site.cost) {
     lg('❌ Not enough gold! ' + site.name + ' costs ' + site.cost + 'G.');
+    return;
+  }
+  
+  // === MANA SPRING ===
+  if (site.type === 'mana_spring') {
+    if (site.entriesUsed >= site.entryLimit) {
+      lg('💧 The Mana Spring is depleted. Its energy has faded.');
+      return;
+    }
+    site.entriesUsed++;
+    const remaining = site.entryLimit - site.entriesUsed;
+    G.p.gold -= site.cost;
+    
+    // Full MP restore
+    G.p.mp = G.p.mmp;
+    for (let p of G.party) { if (p.on) p.mp = p.mmp || p.mhp; }
+    
+    // Bonus buff for 3 combats
+    G.p.buffs.push({ n: 'Mana Spring Blessing', t: 3, mpRegenPct: 0.20 });
+    
+    // Small HP heal
+    const hpHeal = Math.floor(G.p.mhp * 0.3);
+    G.p.hp = Math.min(G.p.mhp, G.p.hp + hpHeal);
+    for (let p of G.party) { if (p.on) p.hp = Math.min(p.mhp, p.hp + Math.floor(p.mhp * 0.3)); }
+    
+    lg('💧 You bathe in ' + site.name + '. MP fully restored! (' + remaining + ' uses left)');
+    lg('✨ Mana Spring Blessing: +20% MP regen for 3 combats.');
+    render();
     return;
   }
   if (site.cost) {
@@ -4991,8 +5188,67 @@ function sc(zi) {
   }
   if (checkMiniStory(z.n)) return;
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
-  checkDimensionalInstability(); // Phase 2: Dimensional Instability
+    checkDimensionalInstability(); // Phase 2: Dimensional Instability
+  
+  // === WEATHER SYSTEM ===
+  rollWeather();
+  
   applyZoneBuffs(z.n); // STAGE 3: Apply zone buffs
+  
+  const WEATHER = {
+  'clear': { name: 'Clear Skies', desc: 'Normal conditions.', mods: {} },
+  'rain': { name: 'Heavy Rain', desc: 'Lightning +20%, Fire -10%.', mods: { lightningDmg: 1.2, fireDmg: 0.9 } },
+  'fog': { name: 'Thick Fog', desc: 'Accuracy reduced for all.', mods: { hitChance: 0.85 } },
+  'scorching': { name: 'Scorching Heat', desc: 'Fire +15%. MP drains slowly.', mods: { fireDmg: 1.15, mpDrain: 2 } },
+  'starfall': { name: 'Starfall', desc: 'Arcane +15%. Meteors may strike.', mods: { arcaneDmg: 1.15, meteorChance: 0.1 } }
+};
+
+function rollWeather() {
+  const roll = Math.random();
+  if (roll < 0.5) G.currentWeather = 'clear';
+  else if (roll < 0.7) G.currentWeather = 'rain';
+  else if (roll < 0.8) G.currentWeather = 'fog';
+  else if (roll < 0.9) G.currentWeather = 'scorching';
+  else G.currentWeather = 'starfall';
+  
+  const w = WEATHER[G.currentWeather];
+  if (G.currentWeather !== 'clear') {
+    lg('🌦️ Weather: ' + w.name + ' — ' + w.desc);
+  }
+}
+
+function applyWeatherDamage(damage, elem) {
+  if (!G.currentWeather || G.currentWeather === 'clear') return damage;
+  const mods = WEATHER[G.currentWeather].mods;
+  if (elem && mods[elem + 'Dmg']) {
+    const newDmg = Math.floor(damage * mods[elem + 'Dmg']);
+    if (mods[elem + 'Dmg'] > 1) lg('🌦️ Weather boost! +' + Math.floor((mods[elem + 'Dmg'] - 1) * 100) + '% ' + elem + ' damage');
+    return newDmg;
+  }
+  return damage;
+}
+
+function applyWeatherCombat() {
+  if (!G.currentWeather || G.currentWeather === 'clear') return;
+  const mods = WEATHER[G.currentWeather].mods;
+  
+  if (mods.mpDrain && G.cbt.turn % 3 === 0) {
+    G.p.mp = Math.max(0, G.p.mp - mods.mpDrain);
+    lg('☀️ The heat drains ' + mods.mpDrain + ' MP!');
+  }
+  
+  if (mods.meteorChance && Math.random() < mods.meteorChance) {
+    const alive = G.cbt.en.filter(e => e.hp > 0);
+    if (alive.length > 0) {
+      const target = alive[Math.floor(Math.random() * alive.length)];
+      const dmg = Math.floor(G.p.stats.int * 1.5);
+      target.hp -= dmg;
+      lg('☄️ A star falls, striking ' + target.n + ' for ' + dmg + '!');
+      if (target.hp <= 0) { target.hp = 0; lg('💀 ' + target.n + ' is crushed!'); }
+    }
+  }
+}
+
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
   let isBoss = false;
@@ -5088,8 +5344,41 @@ function sc(zi) {
     }
     lg('Entered '+z.n+'! '+ec+' enemies appear!');
   }
-  triggerSoelCommentary('explore');
+    triggerSoelCommentary('explore');
+  
+  // === SOEL'S FORTUNE ===
+  checkSoelFortune();
+  
   // Track explore_with quest progress
+  
+  function checkSoelFortune() {
+  const soel = G.party.find(p => p.on && p.n === 'Soel');
+  if (!soel || soel.hp <= 0) return;
+  if (!G.soelFortuneCooldown) G.soelFortuneCooldown = 0;
+  G.soelFortuneCooldown++;
+  if (G.soelFortuneCooldown < 3) return;
+  G.soelFortuneCooldown = 0;
+  if (Math.random() > 0.25) return;
+  
+  const finds = [
+    { type: 'g', amount: 15 + Math.floor(Math.random() * 25), msg: 'Soel paws at a loose stone. ' },
+    { type: 'mat', item: 'Astral Dust', q: 1, msg: 'Soel bats at a shimmering dust mote. Astral Dust!' },
+    { type: 'mat', item: 'Void Fragment', q: 1, msg: 'Soel hisses at a tear in reality. A Void Fragment falls out!' },
+    { type: 'mat', item: 'Planar Essence', q: 1, msg: 'Soel chases an invisible spark. It solidifies into Planar Essence!' },
+    { type: 'mat', item: 'Ember Shard', q: 1, msg: 'Soel recoils from a warm pebble. It\'s an Ember Shard!' }
+  ];
+  const find = finds[Math.floor(Math.random() * finds.length)];
+  
+  if (find.type === 'g') {
+    G.p.gold += find.amount;
+    lg('🐱 ' + find.msg + find.amount + 'G found!');
+  } else {
+    addI({ n: find.item, t: 'mat', q: find.q, r: 'common' });
+    lg('🐱 ' + find.msg);
+  }
+}
+
+
   for(let q of G.quests){
     if(!q.done && !q.expired && q.t==='explore_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
       q.c++;
@@ -5111,7 +5400,12 @@ function sc(zi) {
 function lvlup(){
   while(G.p.xp>=G.p.xpN){
     G.p.xp-=G.p.xpN; G.p.lvl++;
-    G.p.xpN=Math.floor(G.p.xpN*1.5);
+    // SOFTENED CURVE: 1.5x until Lv 15, then 1.35x for healthier late-game pacing
+    if(G.p.lvl < 15){
+      G.p.xpN=Math.floor(G.p.xpN*1.5);
+    } else {
+      G.p.xpN=Math.floor(G.p.xpN*1.35);
+    }
     G.p.mhp+=10; G.p.mmp+=15; G.p.hp=G.p.mhp; G.p.mp=G.p.mmp;
     G.p.stats.int+=2; G.p.stats.con+=1;
     lg('LEVEL UP! Now Level '+G.p.lvl+'!');
@@ -5284,7 +5578,9 @@ function flee(){
 }
 
 function rc(c){return c=='common'?'#9ca3af':c=='uncommon'?'#22c55e':c=='rare'?'#3b82f6':'#a855f7';}
-function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Planar Wisp':'✨','Rift Stalker':'🌀','Aether Golem':'🪨','Chronomancer':'⏳','Void Weaver':'🕸️','Planar Leviathan':'🌌','The Planarch':'🌌','Nexus Guardian':'🛡️','Planar Titan':'🗿','The Nexus Planarch':'👁️','Nexus Shard':'💎','Planar Construct':'🤖','Reality Fragment':'🪞','Dimensional Echo':'👤','Void Remnant':'🌑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐'};return m[n]||'👾';}
+function ee(n){const m={'Goblin':'👺','Wolf':'🐺','Slime':'🟢','Skeleton':'💀','Zombie':'🧟','Ghost':'👻','Fire Imp':'🔥','Lava Slug':'🌋','Ash Wraith':'💨','Ice Elemental':'❄️','Frost Wolf':'🐕‍🦺','Frozen Knight':'🥶','Void Beast':'🌑','Shadow Demon':'👿','Abyssal Horror':'🐙','Crystal Spider':'🕷️','Gem Golem':'💎','Shimmer Bat':'🦇','Storm Wraith':'⚡','Lightning Hound':'🐕','Thunder Knight':'⚔️','Drowned Sailor':'🧜','Sea Serpent':'🐍','Coral Golem':'🪸','Dragon Whelp':'🐉','Ash Drake':'🔥','Elder Wyrm':'🐲','Star Sentinel':'⭐','Celestial Knight':'🌟','Astral Lord':'👑','Planar Wisp':'✨','Rift Stalker':'🌀','Aether Golem':'🪨','Chronomancer':'⏳','Void Weaver':'🕸️','Planar Leviathan':'🌌','The Planarch':'🌌','Nexus Guardian':'🛡️','Planar Titan':'🗿','The Nexus Planarch':'👁️','Nexus Shard':'💎','Planar Construct':'🤖','Reality Fragment':'🪞','Dimensional Echo':'👤','Void Remnant':'🌑','Goblin King':'👑','Bone Tyrant':'💀','Crystal Leviathan':'💎','Ember Dragon':'🐲','Storm Tyrant':'⚡','Frost Queen':'❄️','Abyssal Leviathan':'🌑','Elder Dragon':'🔥','Starlord':'⭐','The Astral Devourer':'🌌','The Infernal Tyrant':'🔥','Astral Echo':'✨'
+    ,'Reality Weaver':'🧵','Fracture Hound':'🐕‍🦺','Dimensional Drifter':'👤'
+    ,'Ember Wraith':'👻','Ash Phantom':'💨','Flame Serpent':'🐍','Magma Titan':'🌋'};return m[n]||'👾';}
 function re(r){const m={'Tank':'🛡️','Rogue':'🗡️','Mage':'🔮','Healer':'💚','Ranger':'🏹','Warrior':'⚔️','Support':'🍀'};return m[r]||'👤';}
 function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='food')return'🍽️';if(i.t=='drink')return'🥤';if(i.t=='revive')return'🔥';if(i.t=='wep')return'⚔️';if(i.t=='arm')return'🛡️';if(i.t=='acc')return'💍';if(i.t=='mat')return'💎';return'📦';}
 
@@ -5310,9 +5606,15 @@ loginClaimed: G.loginClaimed || false
     },
     party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, affinityBonuses: p.affinityBonuses, gear: p.gear })),
     quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
-    rest: {
-      sites: G.rest.sites.map(s => ({ id: s.id, unlocked: s.unlocked }))
+        rest: {
+      sites: G.rest.sites.map(s => ({ 
+        id: s.id, 
+        unlocked: s.unlocked,
+        entryLimit: s.entryLimit,
+        entriesUsed: s.entriesUsed || 0
+      }))
     },
+
     log: G.log,
     affinity: G.affinity,
     soelBlessing: G.soelBlessing,
@@ -5323,6 +5625,10 @@ loginClaimed: G.loginClaimed || false
     autoCombat: G.cbt.autoCombat,
     state: G.state,
     potionMenu: G.potionMenu,
+        soelFortuneCooldown: G.soelFortuneCooldown || 0,
+    joelShieldCooldown: G.joelShieldCooldown || 0,
+    currentWeather: G.currentWeather || 'clear',
+    
     // Phase 2 data
     talents: G.talents,
     runes: G.runes,
@@ -5480,14 +5786,17 @@ function loadGame() {
       }
     }
 
-    if (data.rest && data.rest.sites) {
+        if (data.rest && data.rest.sites) {
       for (let s of G.rest.sites) {
         const saved = data.rest.sites.find(ss => ss.id === s.id);
         if (saved) {
           s.unlocked = saved.unlocked;
+          if (saved.entryLimit !== undefined) s.entryLimit = saved.entryLimit;
+          if (saved.entriesUsed !== undefined) s.entriesUsed = saved.entriesUsed;
         }
       }
     }
+
 
     if (data.affinity) {
       for (let name in data.affinity) {
@@ -5569,6 +5878,10 @@ function loadGame() {
       G.currentBoss = data.currentBoss;
     }
     G.potionMenu = data.potionMenu || false;
+    G.soelFortuneCooldown = data.soelFortuneCooldown || 0;
+G.joelShieldCooldown = data.joelShieldCooldown || 0;
+G.currentWeather = data.currentWeather || 'clear';
+
     G.soelBlessing = data.soelBlessing || null;
     G.joelReviveUsed = data.joelReviveUsed || false;
     G.log = data.log || ['Welcome back to Legends of Daybreak, San.'];
