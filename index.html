@@ -700,6 +700,7 @@ const G = {
 
     cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   autoCombatHeartbeat: 0,
+
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
     { n: 'Cursed Catacombs', lv: 2, d: 'Ancient tombs filled with restless dead.', en: ['Skeleton','Zombie','Ghost'], loot: ['Iron Ore','Bone Shard','Mana Potion'], xp: 30, dg: 'medium' },
@@ -4431,7 +4432,6 @@ function doAutoCombatTick() {
     for (let p of G.party) {
       if (p.on && p.hp > 0) doPartyAttack(p);
     }
-    eturn();
     
     if (G.cbt.en.every(e => e.hp <= 0)) { handleVictory(); return; }
     if (G.p.hp <= 0) { handleDefeat(); return; }
@@ -4454,61 +4454,6 @@ function doAutoCombatTick() {
   pa(skillIdx, targetIdx);
   
   if (!G.cbt.on) { G.cbt.autoCombat = false; G.autoCombatHeartbeat = 0; return; }
-  setTimeout(doAutoCombatTick, 1200);
-}
-
-  if (!G.cbt.on || !G.cbt.autoCombat) return;
-  
-  if (G.cbt.en.every(e => e.hp <= 0)) {
-    G.cbt.autoCombat = false;
-    return;
-  }
-  
-  if (G.p.hp <= 1) {
-    G.cbt.autoCombat = false;
-    G.cbt.autoFlee = true;
-    lg('🤖 Auto-combat: HP critical! Forcing retreat...');
-    return;
-  }
-  
-  const skill = getBestSkill();
-  if (!skill) {
-    const manaPot = G.p.inv.find(i => i.t === 'pot' && i.eff === 'mana');
-    if (manaPot && G.p.mp < 20) {
-      const idx = G.p.inv.indexOf(manaPot);
-      useI(idx);
-      lg('🤖 Auto-combat: Used Mana Potion!');
-      setTimeout(doAutoCombatTick, 800);
-      return;
-    }
-    
-    lg('🤖 Auto-combat: No MP for attacks. Passing turn...');
-    for (let p of G.party) {
-      if (p.on && p.hp > 0) doPartyAttack(p);
-    }
-    eturn();
-    
-    if (G.cbt.en.every(e => e.hp <= 0)) { handleVictory(); return; }
-    if (G.p.hp <= 0) { handleDefeat(); return; }
-    
-    G.cbt.turn++;
-    render();
-    setTimeout(doAutoCombatTick, 1000);
-    return;
-  }
-  
-  const target = getWeakestEnemy();
-  if (!target) { G.cbt.autoCombat = false; return; }
-  
-  const skillIdx = G.p.skills.indexOf(skill);
-  const targetIdx = getEnemyIndex(target);
-  G.cbt.sk = skillIdx;
-  G.cbt.tg = targetIdx;
-  
-  lg('🤖 Auto-combat: ' + skill.n + ' → ' + target.n);
-  pa(skillIdx, targetIdx);
-  
-  if (!G.cbt.on) { G.cbt.autoCombat = false; return; }
   setTimeout(doAutoCombatTick, 1200);
 }
 
