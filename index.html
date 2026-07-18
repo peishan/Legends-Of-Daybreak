@@ -2109,6 +2109,60 @@ function applyPlanarResonance(damage, zoneName) {
   return Math.floor(damage * mult);
 }
 
+const WEATHER = {
+  'clear': { name: 'Clear Skies', desc: 'Normal conditions.', mods: {} },
+  'rain': { name: 'Heavy Rain', desc: 'Lightning +20%, Fire -10%.', mods: { lightningDmg: 1.2, fireDmg: 0.9 } },
+  'fog': { name: 'Thick Fog', desc: 'Accuracy reduced for all.', mods: { hitChance: 0.85 } },
+  'scorching': { name: 'Scorching Heat', desc: 'Fire +15%. MP drains slowly.', mods: { fireDmg: 1.15, mpDrain: 2 } },
+  'starfall': { name: 'Starfall', desc: 'Arcane +15%. Meteors may strike.', mods: { arcaneDmg: 1.15, meteorChance: 0.1 } }
+};
+
+function rollWeather() {
+  const roll = Math.random();
+  if (roll < 0.5) G.currentWeather = 'clear';
+  else if (roll < 0.7) G.currentWeather = 'rain';
+  else if (roll < 0.8) G.currentWeather = 'fog';
+  else if (roll < 0.9) G.currentWeather = 'scorching';
+  else G.currentWeather = 'starfall';
+  
+  const w = WEATHER[G.currentWeather];
+  if (G.currentWeather !== 'clear') {
+    lg('🌦️ Weather: ' + w.name + ' — ' + w.desc);
+  }
+}
+
+function applyWeatherDamage(damage, elem) {
+  if (!G.currentWeather || G.currentWeather === 'clear') return damage;
+  const mods = WEATHER[G.currentWeather].mods;
+  if (elem && mods[elem + 'Dmg']) {
+    const newDmg = Math.floor(damage * mods[elem + 'Dmg']);
+    if (mods[elem + 'Dmg'] > 1) lg('🌦️ Weather boost! +' + Math.floor((mods[elem + 'Dmg'] - 1) * 100) + '% ' + elem + ' damage');
+    return newDmg;
+  }
+  return damage;
+}
+
+function applyWeatherCombat() {
+  if (!G.currentWeather || G.currentWeather === 'clear') return;
+  const mods = WEATHER[G.currentWeather].mods;
+  
+  if (mods.mpDrain && G.cbt.turn % 3 === 0) {
+    G.p.mp = Math.max(0, G.p.mp - mods.mpDrain);
+    lg('☀️ The heat drains ' + mods.mpDrain + ' MP!');
+  }
+  
+  if (mods.meteorChance && Math.random() < mods.meteorChance) {
+    const alive = G.cbt.en.filter(e => e.hp > 0);
+    if (alive.length > 0) {
+      const target = alive[Math.floor(Math.random() * alive.length)];
+      const dmg = Math.floor(G.p.stats.int * 1.5);
+      target.hp -= dmg;
+      lg('☄️ A star falls, striking ' + target.n + ' for ' + dmg + '!');
+      if (target.hp <= 0) { target.hp = 0; lg('💀 ' + target.n + ' is crushed!'); }
+    }
+  }
+}
+
 // ============================================================
 
 
@@ -2354,6 +2408,33 @@ function triggerSoelCommentary(triggerType) {
   G.lastSoelComment = comment;
   G.soelCommentCooldown = 3;
   lg('🐱 Soel: ' + comment.text);
+}
+
+ function checkSoelFortune() {
+  const soel = G.party.find(p => p.on && p.n === 'Soel');
+  if (!soel || soel.hp <= 0) return;
+  if (!G.soelFortuneCooldown) G.soelFortuneCooldown = 0;
+  G.soelFortuneCooldown++;
+  if (G.soelFortuneCooldown < 3) return;
+  G.soelFortuneCooldown = 0;
+  if (Math.random() > 0.25) return;
+  
+  const finds = [
+    { type: 'g', amount: 15 + Math.floor(Math.random() * 25), msg: 'Soel paws at a loose stone. ' },
+    { type: 'mat', item: 'Astral Dust', q: 1, msg: 'Soel bats at a shimmering dust mote. Astral Dust!' },
+    { type: 'mat', item: 'Void Fragment', q: 1, msg: 'Soel hisses at a tear in reality. A Void Fragment falls out!' },
+    { type: 'mat', item: 'Planar Essence', q: 1, msg: 'Soel chases an invisible spark. It solidifies into Planar Essence!' },
+    { type: 'mat', item: 'Ember Shard', q: 1, msg: 'Soel recoils from a warm pebble. It\'s an Ember Shard!' }
+  ];
+  const find = finds[Math.floor(Math.random() * finds.length)];
+  
+  if (find.type === 'g') {
+    G.p.gold += find.amount;
+    lg('🐱 ' + find.msg + find.amount + 'G found!');
+  } else {
+    addI({ n: find.item, t: 'mat', q: find.q, r: 'common' });
+    lg('🐱 ' + find.msg);
+  }
 }
 
 function checkNPCUnlocks() {
@@ -5195,60 +5276,6 @@ function sc(zi) {
   
   applyZoneBuffs(z.n); // STAGE 3: Apply zone buffs
   
-  const WEATHER = {
-  'clear': { name: 'Clear Skies', desc: 'Normal conditions.', mods: {} },
-  'rain': { name: 'Heavy Rain', desc: 'Lightning +20%, Fire -10%.', mods: { lightningDmg: 1.2, fireDmg: 0.9 } },
-  'fog': { name: 'Thick Fog', desc: 'Accuracy reduced for all.', mods: { hitChance: 0.85 } },
-  'scorching': { name: 'Scorching Heat', desc: 'Fire +15%. MP drains slowly.', mods: { fireDmg: 1.15, mpDrain: 2 } },
-  'starfall': { name: 'Starfall', desc: 'Arcane +15%. Meteors may strike.', mods: { arcaneDmg: 1.15, meteorChance: 0.1 } }
-};
-
-function rollWeather() {
-  const roll = Math.random();
-  if (roll < 0.5) G.currentWeather = 'clear';
-  else if (roll < 0.7) G.currentWeather = 'rain';
-  else if (roll < 0.8) G.currentWeather = 'fog';
-  else if (roll < 0.9) G.currentWeather = 'scorching';
-  else G.currentWeather = 'starfall';
-  
-  const w = WEATHER[G.currentWeather];
-  if (G.currentWeather !== 'clear') {
-    lg('🌦️ Weather: ' + w.name + ' — ' + w.desc);
-  }
-}
-
-function applyWeatherDamage(damage, elem) {
-  if (!G.currentWeather || G.currentWeather === 'clear') return damage;
-  const mods = WEATHER[G.currentWeather].mods;
-  if (elem && mods[elem + 'Dmg']) {
-    const newDmg = Math.floor(damage * mods[elem + 'Dmg']);
-    if (mods[elem + 'Dmg'] > 1) lg('🌦️ Weather boost! +' + Math.floor((mods[elem + 'Dmg'] - 1) * 100) + '% ' + elem + ' damage');
-    return newDmg;
-  }
-  return damage;
-}
-
-function applyWeatherCombat() {
-  if (!G.currentWeather || G.currentWeather === 'clear') return;
-  const mods = WEATHER[G.currentWeather].mods;
-  
-  if (mods.mpDrain && G.cbt.turn % 3 === 0) {
-    G.p.mp = Math.max(0, G.p.mp - mods.mpDrain);
-    lg('☀️ The heat drains ' + mods.mpDrain + ' MP!');
-  }
-  
-  if (mods.meteorChance && Math.random() < mods.meteorChance) {
-    const alive = G.cbt.en.filter(e => e.hp > 0);
-    if (alive.length > 0) {
-      const target = alive[Math.floor(Math.random() * alive.length)];
-      const dmg = Math.floor(G.p.stats.int * 1.5);
-      target.hp -= dmg;
-      lg('☄️ A star falls, striking ' + target.n + ' for ' + dmg + '!');
-      if (target.hp <= 0) { target.hp = 0; lg('💀 ' + target.n + ' is crushed!'); }
-    }
-  }
-}
-
   // Boss fight: only when player is 2+ levels above zone minimum
   const bossChance = Math.random();
   let isBoss = false;
@@ -5350,35 +5377,6 @@ function applyWeatherCombat() {
   checkSoelFortune();
   
   // Track explore_with quest progress
-  
-  function checkSoelFortune() {
-  const soel = G.party.find(p => p.on && p.n === 'Soel');
-  if (!soel || soel.hp <= 0) return;
-  if (!G.soelFortuneCooldown) G.soelFortuneCooldown = 0;
-  G.soelFortuneCooldown++;
-  if (G.soelFortuneCooldown < 3) return;
-  G.soelFortuneCooldown = 0;
-  if (Math.random() > 0.25) return;
-  
-  const finds = [
-    { type: 'g', amount: 15 + Math.floor(Math.random() * 25), msg: 'Soel paws at a loose stone. ' },
-    { type: 'mat', item: 'Astral Dust', q: 1, msg: 'Soel bats at a shimmering dust mote. Astral Dust!' },
-    { type: 'mat', item: 'Void Fragment', q: 1, msg: 'Soel hisses at a tear in reality. A Void Fragment falls out!' },
-    { type: 'mat', item: 'Planar Essence', q: 1, msg: 'Soel chases an invisible spark. It solidifies into Planar Essence!' },
-    { type: 'mat', item: 'Ember Shard', q: 1, msg: 'Soel recoils from a warm pebble. It\'s an Ember Shard!' }
-  ];
-  const find = finds[Math.floor(Math.random() * finds.length)];
-  
-  if (find.type === 'g') {
-    G.p.gold += find.amount;
-    lg('🐱 ' + find.msg + find.amount + 'G found!');
-  } else {
-    addI({ n: find.item, t: 'mat', q: find.q, r: 'common' });
-    lg('🐱 ' + find.msg);
-  }
-}
-
-
   for(let q of G.quests){
     if(!q.done && !q.expired && q.t==='explore_with' && G.party.find(p=>p.on && p.n===q.reqParty)){
       q.c++;
