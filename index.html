@@ -1546,20 +1546,28 @@ function getTotalAC() {
 
 function equipItem(invIndex) {
   const item = G.p.inv[invIndex];
-  if (!item || !item.slot) return;
+  if (!item) return;  // ← FIXED: removed !item.slot check
 
-  const slot = item.slot;
-  const slotKey = slot === 'ring' ? (G.p.eq.ring1 ? 'ring2' : 'ring1') : slot;
+  let slot = item.slot;
+  // Fallback: map type to slot for crafted items
+  if (!slot && item.t) {
+    if (item.t === 'wep') slot = 'weapon';
+    else if (item.t === 'arm') slot = 'armor';
+    else if (item.t === 'acc') slot = item.n.toLowerCase().includes('ring') ? 'ring' : 'amulet';
+  }
+  
+  const isEquip = slot && slot !== 'mat' && slot !== 'pot' && slot !== 'revive' && item.t !== 'food' && item.t !== 'drink';
+  if (!isEquip) return;  // Not equippable
 
   // Unequip current
-  const old = G.p.eq[slotKey];
+  const old = G.p.eq[slot];  // ← FIXED: was slotKey
   if (old) {
     addI(old);
     lg('Unequipped: ' + old.n);
   }
 
   // Equip new
-  G.p.eq[slotKey] = { ...item };
+  G.p.eq[slot] = { ...item };  // ← FIXED: was slotKey
   G.p.inv.splice(invIndex, 1);
   lg('Equipped: ' + item.n + ' (' + ITEM_RARITY[item.r].name + ')');
 
@@ -5782,7 +5790,8 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')setS('focus');
+ if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
     else if(a=='talents')setS('talents');
     else if(a=='runes')setS('runes');
@@ -6858,9 +6867,17 @@ function rInv(){
   h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
   for(let i=0;i<G.p.inv.length;i++){
     const it=G.p.inv[i];
-    const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
+        let itemSlot = it.slot;
+    if (!itemSlot && it.t) {
+      if (it.t === 'wep') itemSlot = 'weapon';
+      else if (it.t === 'arm') itemSlot = 'armor';
+      else if (it.t === 'acc') itemSlot = it.n.toLowerCase().includes('ring') ? 'ring' : 'amulet';
+    }
+    const isEquip = itemSlot && itemSlot !== 'mat' && itemSlot !== 'pot' && itemSlot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
+
     h+='<div class="ic">';
-    h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️') : ie(it))+'</div>';
+        h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[itemSlot]?.icon || '⚔️') : ie(it))+'</div>';
+
     h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
     if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
     h += getItemSocketDisplay(it);
