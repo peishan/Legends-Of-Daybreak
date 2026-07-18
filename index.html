@@ -698,7 +698,8 @@ const G = {
     }
   ],
 
-  cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
+    cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
+  autoCombatHeartbeat: 0,
   zones: [
     { n: 'Whispering Woods', lv: 1, d: 'Mossy paths where goblins lurk.', en: ['Goblin','Wolf','Slime'], loot: ['Herb Bundle','Goblin Tooth','Health Potion'], xp: 15, dg: 'low' },
     { n: 'Cursed Catacombs', lv: 2, d: 'Ancient tombs filled with restless dead.', en: ['Skeleton','Zombie','Ghost'], loot: ['Iron Ore','Bone Shard','Mana Potion'], xp: 30, dg: 'medium' },
@@ -4394,6 +4395,70 @@ function getEnemyIndex(enemy) {
 function doAutoCombatTick() {
   if (!G.cbt.on || !G.cbt.autoCombat) return;
   
+  // Heartbeat: detect stalled timers
+  const now = Date.now();
+  if (G.autoCombatHeartbeat && now - G.autoCombatHeartbeat > 5000) {
+    lg('🤖 Auto-combat: Timer stalled (' + Math.floor((now - G.autoCombatHeartbeat)/1000) + 's). Recovering...');
+  }
+  G.autoCombatHeartbeat = now;
+  
+  if (G.cbt.en.every(e => e.hp <= 0)) {
+    G.cbt.autoCombat = false;
+    G.autoCombatHeartbeat = 0;
+    return;
+  }
+  
+  if (G.p.hp <= 1) {
+    G.cbt.autoCombat = false;
+    G.cbt.autoFlee = true;
+    G.autoCombatHeartbeat = 0;
+    lg('🤖 Auto-combat: HP critical! Forcing retreat...');
+    return;
+  }
+  
+  const skill = getBestSkill();
+  if (!skill) {
+    const manaPot = G.p.inv.find(i => i.t === 'pot' && i.eff === 'mana');
+    if (manaPot && G.p.mp < 20) {
+      const idx = G.p.inv.indexOf(manaPot);
+      useI(idx);
+      lg('🤖 Auto-combat: Used Mana Potion!');
+      setTimeout(doAutoCombatTick, 800);
+      return;
+    }
+    
+    lg('🤖 Auto-combat: No MP for attacks. Passing turn...');
+    for (let p of G.party) {
+      if (p.on && p.hp > 0) doPartyAttack(p);
+    }
+    eturn();
+    
+    if (G.cbt.en.every(e => e.hp <= 0)) { handleVictory(); return; }
+    if (G.p.hp <= 0) { handleDefeat(); return; }
+    
+    G.cbt.turn++;
+    render();
+    setTimeout(doAutoCombatTick, 1000);
+    return;
+  }
+  
+  const target = getWeakestEnemy();
+  if (!target) { G.cbt.autoCombat = false; G.autoCombatHeartbeat = 0; return; }
+  
+  const skillIdx = G.p.skills.indexOf(skill);
+  const targetIdx = getEnemyIndex(target);
+  G.cbt.sk = skillIdx;
+  G.cbt.tg = targetIdx;
+  
+  lg('🤖 Auto-combat: ' + skill.n + ' → ' + target.n);
+  pa(skillIdx, targetIdx);
+  
+  if (!G.cbt.on) { G.cbt.autoCombat = false; G.autoCombatHeartbeat = 0; return; }
+  setTimeout(doAutoCombatTick, 1200);
+}
+
+  if (!G.cbt.on || !G.cbt.autoCombat) return;
+  
   if (G.cbt.en.every(e => e.hp <= 0)) {
     G.cbt.autoCombat = false;
     return;
@@ -4451,14 +4516,15 @@ function toggleAutoCombat() {
   if (!G.cbt.on) return;
   G.cbt.autoCombat = !G.cbt.autoCombat;
   if (G.cbt.autoCombat) {
+    G.autoCombatHeartbeat = Date.now();
     lg('🤖 Auto-combat ENABLED!');
     doAutoCombatTick();
   } else {
+    G.autoCombatHeartbeat = 0;
     lg('🤖 Auto-combat DISABLED. Manual control restored.');
   }
   render();
 }
-
 
 function initTheme() {
   const saved = localStorage.getItem(THEME_KEY);
@@ -7264,6 +7330,41 @@ function rSkills(){
   h+='</div></div>'; return h;
 }
 
+function getEquipScore(item) {
+  if (!item || !item.slot) return 0;
+  let score = 0;
+  if (item.atk) score += item.atk * 3;
+  if (item.def) score += item.def * 3;
+  if (item.int) score += item.int * 2;
+  if (item.str) score += item.str * 2;
+  if (item.dex) score += item.dex * 2;
+  if (item.con) score += item.con * 2;
+  if (item.wis) score += item.wis * 2;
+  if (item.cha) score += item.cha * 1;
+  if (item.fireDmg) score += item.fireDmg * 2;
+  if (item.iceDmg) score += item.iceDmg * 2;
+  if (item.lightDmg) score += item.lightDmg * 2;
+  if (item.voidDmg) score += item.voidDmg * 2;
+  if (item.arcaneDmg) score += item.arcaneDmg * 2;
+  if (item.lifeSteal) score += item.lifeSteal * 10;
+  if (item.critChance) score += item.critChance * 20;
+  if (item.mpRegen) score += item.mpRegen * 2;
+  if (item.hpRegen) score += item.hpRegen * 2;
+  return score;
+}
+
+function getEquipComparison(item) {
+  if (!item || !item.slot) return null;
+  const slot = item.slot === 'ring' ? (G.p.eq.ring1 ? 'ring2' : 'ring1') : item.slot;
+  const equipped = G.p.eq[slot];
+  if (!equipped) return { better: true, arrow: '▲', color: '#22c55e', text: 'New slot' };
+  const itemScore = getEquipScore(item);
+  const eqScore = getEquipScore(equipped);
+  if (itemScore > eqScore) return { better: true, arrow: '▲', color: '#22c55e', text: 'Upgrade' };
+  if (itemScore < eqScore) return { better: false, arrow: '▼', color: '#ef4444', text: 'Downgrade' };
+  return { better: false, arrow: '●', color: '#9ca3af', text: 'Sidegrade' };
+}
+
 function rInv(){
   let h='<div class="inventory-view"><h2 class="st">Inventory</h2>';
 
@@ -7314,24 +7415,108 @@ function rInv(){
   }
   h+='</div></div>';
 
-  // Inventory Items
-  h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
-  for(let i=0;i<G.p.inv.length;i++){
-    const it=G.p.inv[i];
+  // Categorize inventory items
+  const equipItems = [];
+  const consumableItems = [];
+  const matItems = [];
+  const otherItems = [];
+  
+  for(let i=0; i<G.p.inv.length; i++){
+    const it = G.p.inv[i];
     const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
-    h+='<div class="ic">';
-    h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️') : ie(it))+'</div>';
-    h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
-    if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
-    h += getItemSocketDisplay(it);
-    h+='<div class="iq">'+(it.q > 1 ? 'x'+it.q : (it.value ? it.value+'G' : ''))+'</div>';
-    h+='<div class="ia">';
-    if(it.t=='pot' || it.t=='food' || it.t=='drink') h+='<button class="ib ib-u" data-i="'+i+'">Use</button>';
-    if(isEquip) h+='<button class="ib ib-e" data-i="'+i+'">Equip</button>';
+    if(isEquip) equipItems.push({item: it, index: i});
+    else if(it.t==='pot' || it.t==='food' || it.t==='drink' || it.t==='revive') consumableItems.push({item: it, index: i});
+    else if(it.t==='mat') matItems.push({item: it, index: i});
+    else otherItems.push({item: it, index: i});
+  }
+
+  // Equipment section
+  if(equipItems.length > 0){
+    h+='<div class="its"><h3>🎒 Equipment ('+equipItems.length+')</h3><div class="ig">';
+    for(let ei of equipItems){
+      const it = ei.item;
+      const i = ei.index;
+      const cmp = getEquipComparison(it);
+      h+='<div class="ic" style="position:relative;">';
+      if(cmp){
+        h+='<div style="position:absolute;top:6px;right:6px;font-size:14px;color:'+cmp.color+';font-weight:700;" title="'+cmp.text+'">'+cmp.arrow+'</div>';
+      }
+      h+='<div class="ii">'+(EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️')+'</div>';
+      h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+      if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
+      h += getItemSocketDisplay(it);
+      let statLine = [];
+      if(it.atk) statLine.push('ATK+'+it.atk);
+      if(it.def) statLine.push('DEF+'+it.def);
+      if(it.int) statLine.push('INT+'+it.int);
+      if(it.str) statLine.push('STR+'+it.str);
+      if(it.dex) statLine.push('DEX+'+it.dex);
+      if(it.con) statLine.push('CON+'+it.con);
+      if(it.wis) statLine.push('WIS+'+it.wis);
+      if(it.cha) statLine.push('CHA+'+it.cha);
+      if(it.prefix) statLine.push(it.prefixData.desc);
+      if(it.suffix) statLine.push(it.suffixData.desc);
+      if(statLine.length > 0) h+='<div style="font-size:10px;color:var(--text-dim);margin-top:2px;">'+statLine.join(' · ')+'</div>';
+      h+='<div class="iq">'+(it.value ? it.value+'G' : '')+'</div>';
+      h+='<div class="ia">';
+      h+='<button class="ib ib-e" data-i="'+i+'">Equip</button>';
+      h+='</div></div>';
+    }
     h+='</div></div>';
   }
-  if(G.p.inv.length==0)h+='<div class="ei">Your pack is empty.</div>';
-  h+='</div></div></div>';
+
+  // Consumables section
+  if(consumableItems.length > 0){
+    h+='<div class="its"><h3>🧪 Consumables ('+consumableItems.length+')</h3><div class="ig">';
+    for(let ci of consumableItems){
+      const it = ci.item;
+      const i = ci.index;
+      h+='<div class="ic">';
+      h+='<div class="ii">'+ie(it)+'</div>';
+      h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+      if(it.eff==='heal') h+='<div style="font-size:10px;color:var(--success);">+'+it.v+' HP</div>';
+      if(it.eff==='mana') h+='<div style="font-size:10px;color:var(--mp);">+'+it.v+' MP</div>';
+      if(it.eff==='revive') h+='<div style="font-size:10px;color:var(--accent-light);">Revive '+it.v+'% HP</div>';
+      h+='<div class="iq">x'+it.q+'</div>';
+      h+='<div class="ia">';
+      h+='<button class="ib ib-u" data-i="'+i+'">Use</button>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+
+  // Materials section
+  if(matItems.length > 0){
+    h+='<div class="its"><h3>💎 Materials ('+matItems.length+')</h3><div class="ig">';
+    for(let mi of matItems){
+      const it = mi.item;
+      const i = mi.index;
+      h+='<div class="ic">';
+      h+='<div class="ii">'+ie(it)+'</div>';
+      h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+      h+='<div class="iq">x'+it.q+'</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+  }
+
+  // Other items
+  if(otherItems.length > 0){
+    h+='<div class="its"><h3>📦 Other ('+otherItems.length+')</h3><div class="ig">';
+    for(let oi of otherItems){
+      const it = oi.item;
+      const i = oi.index;
+      h+='<div class="ic">';
+      h+='<div class="ii">'+ie(it)+'</div>';
+      h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
+      h+='<div class="iq">x'+it.q+'</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+  }
+
+  if(G.p.inv.length==0) h+='<div class="ei">Your pack is empty.</div>';
+  h+='</div>';
   return h;
 }
 
