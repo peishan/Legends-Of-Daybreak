@@ -380,26 +380,6 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 <div id="app"></div>
 <script>
 
-const WEATHER = {
-  clear: { name: 'Clear', icon: '☀️', desc: 'Pleasant and calm.', playerHitBonus: 0, enemyHitBonus: 0 },
-  rain: { name: 'Rain', icon: '🌧️', desc: 'Lightning crackles louder in the wet.', playerHitBonus: 0, enemyHitBonus: -0.05, lightningDmgBonus: 0.15 },
-  fog: { name: 'Fog', icon: '🌫️', desc: 'Hard to see. Harder to hit.', playerHitBonus: -0.05, enemyHitBonus: -0.10 },
-  wind: { name: 'Gale', icon: '💨', desc: 'Wind howls. Fire struggles.', playerHitBonus: 0, enemyHitBonus: 0, fireDmgPenalty: 0.10 }
-};
-
-function rollWeather() {
-  const roll = Math.random();
-  if (roll < 0.55) return 'clear';
-  if (roll < 0.75) return 'rain';
-  if (roll < 0.90) return 'fog';
-  return 'wind';
-}
-
-function getCurrentWeather() {
-  if (!G.currentWeather) G.currentWeather = { type: 'clear', zone: null };
-  return G.currentWeather;
-}
-
 const G = {
   state: 'menu',
   p: {
@@ -776,9 +756,7 @@ const G = {
       item: {n:'Planar Essence',t:'mat',q:1,r:'rare'}, gold: 40 },
     { n: 'Chrono Anomaly', d: 'Time flows backward in a small sphere. You glimpse your own future.', type: 'blessing', chance: 0.06, minLv: 12, mp: 40, xp: 50 },
     { n: 'Aether Cache', d: 'Crystallized aether forms a natural vault. The contents hum with power.', type: 'loot', chance: 0.08, minLv: 13,
-      items: [{n:'Aether Shard',t:'mat',q:2,r:'rare'},{n:'Chrono Sand',t:'mat',q:1,r:'epic'}], gold: 80 },
-      { n: 'Crystal Waterfall', d: 'A hidden grotto where moonwater cascades down luminescent stone. The mist tingles with raw mana.', type: 'blessing', chance: 0.12, minLv: 3, mp: 35, hp: 10, oncePerZone: true },
-{ n: 'Planar Cascade', d: 'A waterfall that flows upward into a rift of pure aether. Drinking from it restores the mind.', type: 'blessing', chance: 0.08, minLv: 11, mp: 60, hp: 15, oncePerZone: true },
+      items: [{n:'Aether Shard',t:'mat',q:2,r:'rare'},{n:'Chrono Sand',t:'mat',q:1,r:'epic'}], gold: 80 }
   ],
   recipes: [
     { n: 'Health Potion', m: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, res: { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' }, d: 'Restores 30 HP' },
@@ -1568,28 +1546,20 @@ function getTotalAC() {
 
 function equipItem(invIndex) {
   const item = G.p.inv[invIndex];
-  if (!item) return;  // ← FIXED: removed !item.slot check
+  if (!item || !item.slot) return;
 
-  let slot = item.slot;
-  // Fallback: map type to slot for crafted items
-  if (!slot && item.t) {
-    if (item.t === 'wep') slot = 'weapon';
-    else if (item.t === 'arm') slot = 'armor';
-    else if (item.t === 'acc') slot = item.n.toLowerCase().includes('ring') ? 'ring' : 'amulet';
-  }
-  
-  const isEquip = slot && slot !== 'mat' && slot !== 'pot' && slot !== 'revive' && item.t !== 'food' && item.t !== 'drink';
-  if (!isEquip) return;  // Not equippable
+  const slot = item.slot;
+  const slotKey = slot === 'ring' ? (G.p.eq.ring1 ? 'ring2' : 'ring1') : slot;
 
   // Unequip current
-  const old = G.p.eq[slot];  // ← FIXED: was slotKey
+  const old = G.p.eq[slotKey];
   if (old) {
     addI(old);
     lg('Unequipped: ' + old.n);
   }
 
   // Equip new
-  G.p.eq[slot] = { ...item };  // ← FIXED: was slotKey
+  G.p.eq[slotKey] = { ...item };
   G.p.inv.splice(invIndex, 1);
   lg('Equipped: ' + item.n + ' (' + ITEM_RARITY[item.r].name + ')');
 
@@ -2306,17 +2276,11 @@ function buyFromNPC(npcName, itemIdx) {
   if (!npc || !npc.unlocked || npc.t !== 'trader') return;
   const item = npc.stock[itemIdx];
   if (!item) return;
-  const discount = getHaggleDiscount();
-const finalPrice = Math.floor(item.price * (1 - discount));
-if (G.p.gold < finalPrice) {
-
+  if (G.p.gold < item.price) {
     lg('❌ Not enough gold! ' + item.n + ' costs ' + item.price + 'G.');
     return;
   }
-  G.p.gold -= finalPrice;
-if (discount > 0) {
-  lg('💚 Aisyah haggles deftly. Saved ' + Math.floor(item.price * discount) + 'G!');
-}
+  G.p.gold -= item.price;
 
   // Party gear (pgear) goes directly to that party member, not inventory
   if (item.t === 'pgear') {
@@ -3179,17 +3143,7 @@ function doPhysicalAttack(target) {
     else lg('   ❌ Solid defense. You\'ll need a better angle.');
     return false;
   }
-    // === WEATHER: Hit check modifier ===
-  const weather = getCurrentWeather();
-  const wData = WEATHER[weather.type];
   
-  if (wData.playerHitBonus && Math.random() < Math.abs(wData.playerHitBonus)) {
-    if (wData.playerHitBonus < 0) {
-      lg('🌫️ The fog throws off your aim!');
-      return false; // Miss due to weather
-    }
-  }
-
   const damageResult = DICE.damageRoll({
     diceExpr: '1d4',
     abilityScore: G.p.stats.str,
@@ -3245,86 +3199,12 @@ function doElizResurrect(member) {
   return true;
 }
 
-function doElizPassiveHeal(eliz) {
-  // Initialize cooldown tracking if not present
-  if (eliz.passiveHealCooldown === undefined) {
-    eliz.passiveHealCooldown = 0;
-  }
-  
-  // Check if passive is ready (every 3 turns)
-  if (eliz.passiveHealCooldown > 0) {
-    eliz.passiveHealCooldown--;
-    return false;
-  }
-  
-  // Gather all living allies
-  const allies = [{n: 'San', hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, isPlayer: true}];
-  for (let p of G.party) {
-    if (p.on && p.hp > 0 && p.n !== 'Eliz') {
-      allies.push({n: p.n, hp: p.hp, mhp: p.mhp, isPlayer: false, ref: p});
-    }
-  }
-  
-  // Find wounded allies (below 85% HP)
-  const wounded = allies.filter(a => (a.hp / a.mhp) < 0.85);
-  const sanNeedsMp = (G.p.mp / G.p.mmp) < 0.40;
-  
-  // No one needs anything → skip
-  if (wounded.length === 0 && !sanNeedsMp) return false;
-  
-  const synergyBonus = getSynergyHealBonus();
-  let didSomething = false;
-  
-  // === HP HEAL: ALL WOUNDED ALLIES ===
-  if (wounded.length > 0) {
-    for (let ally of wounded) {
-      let healBase = Math.floor(ally.mhp * 0.10); // 10% per ally (reduced from 15% for balance)
-      let healAmount = Math.floor(healBase * (1 + synergyBonus));
-      
-      if (ally.isPlayer) {
-        const oldHp = G.p.hp;
-        G.p.hp = Math.min(G.p.mhp, G.p.hp + healAmount);
-        if (G.p.hp > oldHp) didSomething = true;
-      } else {
-        const oldHp = ally.ref.hp;
-        ally.ref.hp = Math.min(ally.ref.mhp, ally.ref.hp + healAmount);
-        if (ally.ref.hp > oldHp) didSomething = true;
-      }
-    }
-    if (didSomething) {
-      lg('💚 Eliz channels Gentle Pulse! All wounded allies regain HP.');
-    }
-  }
-  
-  // === MP RESTORE: SAN ONLY ===
-  if (sanNeedsMp) {
-    let mpBase = Math.floor(G.p.mmp * 0.12);
-    let mpAmount = Math.floor(mpBase * (1 + synergyBonus));
-    const oldMp = G.p.mp;
-    G.p.mp = Math.min(G.p.mmp, G.p.mp + mpAmount);
-    if (G.p.mp > oldMp) {
-      lg('💧 Eliz weaves mana threads! You restore ' + (G.p.mp - oldMp) + ' MP.');
-      didSomething = true;
-    }
-  }
-  
-  if (!didSomething) return false;
-  
-  eliz.passiveHealCooldown = 3;
-  updateAffinity('Eliz', 1);
-  return true;
-}
-
 function doPartyAttack(member) {
-  // === ELIZ PASSIVE HEAL CHECK ===
+
+  // Eliz prioritizes resurrection over attacking
   if (member.n === 'Eliz' && member.hp > 0) {
-    // Priority 1: Resurrection (existing)
     if (doElizResurrect(member)) return;
-    // Priority 2: Passive heal (new)
-    if (doElizPassiveHeal(member)) return;
   }
-  // === END ELIZ PASSIVE HEAL ===
-  
   const aliveEnemies = G.cbt.en.filter(e => e.hp > 0);
   if (aliveEnemies.length === 0) return;
   
@@ -4074,26 +3954,6 @@ function pa(si, ti) {
   }
   finalDamage = applySynergyDamage(finalDamage, 'spell');
   finalDamage = Math.max(1, finalDamage);
-  
-    // === WEATHER: Damage modifiers ===
-  const weather2 = getCurrentWeather();
-  const wData2 = WEATHER[weather2.type];
-  let weatherDmgMod = 1;
-  
-  if (weather2.type === 'rain' && sk.elem === 'lightning') {
-    weatherDmgMod += wData2.lightningDmgBonus;
-    lg('⚡ The rain amplifies your lightning!');
-  }
-  if (weather2.type === 'wind' && sk.elem === 'fire') {
-    weatherDmgMod -= wData2.fireDmgPenalty;
-    lg('💨 The gale weakens your flames!');
-  }
-  
-  if (weatherDmgMod !== 1) {
-    finalDamage = Math.floor(finalDamage * weatherDmgMod);
-    finalDamage = Math.max(1, finalDamage);
-  }
-
   tg.hp -= finalDamage;
   
   const dmgFlavor = getDamageFlavor(finalDamage, isCrit);
@@ -4698,51 +4558,17 @@ function cancelRest() {
 }
 
 function doExploreEvent() {
-  // Filter: respect oncePerZone (track visited waterfalls per zone)
-  if (!G.visitedWaterfalls) G.visitedWaterfalls = {};
-  
-  const possible = G.exploreEvents.filter(e => {
-    if (Math.random() >= e.chance) return false;
-    if (G.p.lvl < e.minLv) return false;
-    if (e.oncePerZone && G.visitedWaterfalls[e.n + '_' + G.currentZone]) return false;
-    return true;
-  });
-  
-  if (possible.length === 0) return false;
+  const possible = G.exploreEvents.filter(e => Math.random() < e.chance && G.p.lvl >= e.minLv);
+  if(possible.length === 0) return false;
   const evt = possible[Math.floor(Math.random() * possible.length)];
-  
   lg('📖 EVENT: ' + evt.n + '!');
   lg('   ' + evt.d);
-  
-  // Mark as visited if oncePerZone
-  if (evt.oncePerZone) {
-    G.visitedWaterfalls[evt.n + '_' + G.currentZone] = true;
-  }
-  
-  if (evt.gold) { G.p.gold += evt.gold; lg('💰 +' + evt.gold + 'G'); }
-  if (evt.mp) { 
-    const oldMp = G.p.mp;
-    G.p.mp = Math.min(G.p.mmp, G.p.mp + evt.mp); 
-    const gained = G.p.mp - oldMp;
-    if (gained > 0) lg('💧 +' + gained + ' MP from the falling waters!');
-  }
-  if (evt.hp) { 
-    const oldHp = G.p.hp;
-    G.p.hp = Math.min(G.p.mhp, G.p.hp + evt.hp); 
-    const gained = G.p.hp - oldHp;
-    if (gained > 0) lg('💚 +' + gained + ' HP from the soothing mist!');
-  }
-  if (evt.item) { addI({...evt.item}); lg('🎁 Found: ' + evt.item.n); }
-  if (evt.items) { for(let it of evt.items) { addI({...it}); lg('🎁 Found: ' + it.n); } }
-  
-  // Eliz reacts to waterfalls if in party
-  if (G.party.some(p => p.on && p.n === 'Eliz')) {
-    lg('💚 Eliz cups the water in her hands. "It sings," she whispers.');
-  }
-  
+  if(evt.gold) { G.p.gold += evt.gold; lg('💰 +' + evt.gold + 'G'); }
+  if(evt.mp) { G.p.mp = Math.min(G.p.mmp, G.p.mp + evt.mp); lg('💧 +' + evt.mp + ' MP'); }
+  if(evt.item) { addI({...evt.item}); lg('🎁 Found: ' + evt.item.n); }
+  if(evt.items) { for(let it of evt.items) { addI({...it}); lg('🎁 Found: ' + it.n); } }
   return true;
 }
-
 
 
 // SECRET AREAS
@@ -5044,25 +4870,13 @@ function endStoryMode() {
 }
 
 function sc(zi) {
-  const z = G.zones[zi];
-  G.currentZone = z.n;
-  
-  // Roll weather when entering new zone
-  if (G.currentWeather?.zone !== z.n) {
-    G.currentWeather = { type: rollWeather(), zone: z.n };
-    const w = WEATHER[G.currentWeather.type];
-    if (G.currentWeather.type !== 'clear') {
-      lg(w.icon + ' The weather shifts: ' + w.name + '. ' + w.desc);
-    }
-  }
-    
+  const z=G.zones[zi];
   // 30% chance for explore event before combat
   if(Math.random() < 0.3 && doExploreEvent()) {
     G.state='explore';
     render();
     return;
   }
-  checkSoelFortune();
   checkNPCUnlocks();
   if (Math.random() < 0.15 && canDiscoverSecret(z.n)) {
     if (discoverSecret(z.n)) return;
@@ -5253,44 +5067,6 @@ function addI(it){
   if(ex)ex.q+=it.q||1;
   else G.p.inv.push({...it,q:it.q||1});
 }
-
-function checkSoelFortune() {
-  const soel = G.party.find(p => p.on && p.n === 'Soel' && p.hp > 0);
-  if (!soel) return false;
-  if (Math.random() > 0.15) return false; // 15% chance per explore
-  
-  function getHaggleDiscount() {
-  const aisyah = G.party.find(p => p.on && p.n === 'Aisyah' && p.hp > 0);
-  if (!aisyah) return 0;
-  return 0.10; // 10% off
-}
-
-  const fortuneRoll = Math.random();
-  if (fortuneRoll < 0.5) {
-    // Find gold
-    const gold = 5 + Math.floor(Math.random() * 15);
-    G.p.gold += gold;
-    lg('🐱 Soel scratches at something buried! +' + gold + 'G');
-  } else if (fortuneRoll < 0.85) {
-    // Find material
-    const mats = ['Herb Bundle', 'Goblin Tooth', 'Iron Ore', 'Bone Shard', 'Crystal Shard'];
-    const mat = mats[Math.floor(Math.random() * mats.length)];
-    addI({ n: mat, t: 'mat', q: 1, r: 'common' });
-    lg('🐱 Soel drops a ' + mat + ' at your feet. "Found this."');
-  } else {
-    // Rare: find a potion
-    const pots = [
-      { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' },
-      { n: 'Mana Potion', t: 'pot', eff: 'mana', v: 25, q: 1, r: 'common' }
-    ];
-    const pot = pots[Math.floor(Math.random() * pots.length)];
-    addI({ ...pot });
-    lg('🐱 Soel nudges a ' + pot.n + ' out from under a bush. Lucky find!');
-  }
-  updateAffinity('Soel', 2);
-  return true;
-}
-
 
 function useI(ix){
   const it=G.p.inv[ix];
@@ -6006,8 +5782,7 @@ function render(){
 
 function attachEvents() {
   document.querySelectorAll('.card[data-a]').forEach(el=>{
-    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')setS('focus');
- if(a=='rest')setS('rest');
+    el.addEventListener('click',()=>{const a=el.getAttribute('data-a');if(a=='explore')setS('explore');else if(a=='party')setS('party');else if(a=='skills')setS('skills');else if(a=='craft')setS('craft');else if(a=='quest')setS('quest');else if(a=='inventory')setS('inventory');else if(a=='bestiary')setS('bestiary');else if(a=='achievements')setS('achievements');else if(a=='npc')setS('npc');else if(a=='focus')sf();else if(a=='rest')setS('rest');
     else if(a=='skilltree')setS('skilltree');
     else if(a=='talents')setS('talents');
     else if(a=='runes')setS('runes');
@@ -7083,17 +6858,9 @@ function rInv(){
   h+='<div class="its"><h3>Items ('+G.p.inv.length+')</h3><div class="ig">';
   for(let i=0;i<G.p.inv.length;i++){
     const it=G.p.inv[i];
-        let itemSlot = it.slot;
-    if (!itemSlot && it.t) {
-      if (it.t === 'wep') itemSlot = 'weapon';
-      else if (it.t === 'arm') itemSlot = 'armor';
-      else if (it.t === 'acc') itemSlot = it.n.toLowerCase().includes('ring') ? 'ring' : 'amulet';
-    }
-    const isEquip = itemSlot && itemSlot !== 'mat' && itemSlot !== 'pot' && itemSlot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
-
+    const isEquip = it.slot && it.slot !== 'mat' && it.slot !== 'pot' && it.slot !== 'revive' && it.t !== 'food' && it.t !== 'drink';
     h+='<div class="ic">';
-        h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[itemSlot]?.icon || '⚔️') : ie(it))+'</div>';
-
+    h+='<div class="ii">'+(isEquip ? (EQUIPMENT_SLOTS[it.slot]?.icon || '⚔️') : ie(it))+'</div>';
     h+='<div class="in" style="color:'+rc(it.r)+'">'+it.n+'</div>';
     if(it.ilvl) h+='<div style="font-size:9px;color:var(--text-dim);">iLvl '+it.ilvl+' '+ITEM_RARITY[it.r].name+'</div>';
     h += getItemSocketDisplay(it);
