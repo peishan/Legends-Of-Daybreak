@@ -756,7 +756,9 @@ const G = {
       item: {n:'Planar Essence',t:'mat',q:1,r:'rare'}, gold: 40 },
     { n: 'Chrono Anomaly', d: 'Time flows backward in a small sphere. You glimpse your own future.', type: 'blessing', chance: 0.06, minLv: 12, mp: 40, xp: 50 },
     { n: 'Aether Cache', d: 'Crystallized aether forms a natural vault. The contents hum with power.', type: 'loot', chance: 0.08, minLv: 13,
-      items: [{n:'Aether Shard',t:'mat',q:2,r:'rare'},{n:'Chrono Sand',t:'mat',q:1,r:'epic'}], gold: 80 }
+      items: [{n:'Aether Shard',t:'mat',q:2,r:'rare'},{n:'Chrono Sand',t:'mat',q:1,r:'epic'}], gold: 80 },
+      { n: 'Crystal Waterfall', d: 'A hidden grotto where moonwater cascades down luminescent stone. The mist tingles with raw mana.', type: 'blessing', chance: 0.12, minLv: 3, mp: 35, hp: 10, oncePerZone: true },
+{ n: 'Planar Cascade', d: 'A waterfall that flows upward into a rift of pure aether. Drinking from it restores the mind.', type: 'blessing', chance: 0.08, minLv: 11, mp: 60, hp: 15, oncePerZone: true },
   ],
   recipes: [
     { n: 'Health Potion', m: { 'Herb Bundle': 2, 'Goblin Tooth': 1 }, res: { n: 'Health Potion', t: 'pot', eff: 'heal', v: 30, q: 1, r: 'common' }, d: 'Restores 30 HP' },
@@ -3207,12 +3209,86 @@ function doElizResurrect(member) {
   return true;
 }
 
-function doPartyAttack(member) {
-
-  // Eliz prioritizes resurrection over attacking
-  if (member.n === 'Eliz' && member.hp > 0) {
-    if (doElizResurrect(member)) return;
+function doElizPassiveHeal(eliz) {
+  // Initialize cooldown tracking if not present
+  if (eliz.passiveHealCooldown === undefined) {
+    eliz.passiveHealCooldown = 0;
   }
+  
+  // Check if passive is ready (every 3 turns)
+  if (eliz.passiveHealCooldown > 0) {
+    eliz.passiveHealCooldown--;
+    return false;
+  }
+  
+  // Gather all living allies
+  const allies = [{n: 'San', hp: G.p.hp, mhp: G.p.mhp, mp: G.p.mp, mmp: G.p.mmp, isPlayer: true}];
+  for (let p of G.party) {
+    if (p.on && p.hp > 0 && p.n !== 'Eliz') {
+      allies.push({n: p.n, hp: p.hp, mhp: p.mhp, isPlayer: false, ref: p});
+    }
+  }
+  
+  // Find wounded allies (below 85% HP)
+  const wounded = allies.filter(a => (a.hp / a.mhp) < 0.85);
+  const sanNeedsMp = (G.p.mp / G.p.mmp) < 0.40;
+  
+  // No one needs anything → skip
+  if (wounded.length === 0 && !sanNeedsMp) return false;
+  
+  const synergyBonus = getSynergyHealBonus();
+  let didSomething = false;
+  
+  // === HP HEAL: ALL WOUNDED ALLIES ===
+  if (wounded.length > 0) {
+    for (let ally of wounded) {
+      let healBase = Math.floor(ally.mhp * 0.10); // 10% per ally (reduced from 15% for balance)
+      let healAmount = Math.floor(healBase * (1 + synergyBonus));
+      
+      if (ally.isPlayer) {
+        const oldHp = G.p.hp;
+        G.p.hp = Math.min(G.p.mhp, G.p.hp + healAmount);
+        if (G.p.hp > oldHp) didSomething = true;
+      } else {
+        const oldHp = ally.ref.hp;
+        ally.ref.hp = Math.min(ally.ref.mhp, ally.ref.hp + healAmount);
+        if (ally.ref.hp > oldHp) didSomething = true;
+      }
+    }
+    if (didSomething) {
+      lg('💚 Eliz channels Gentle Pulse! All wounded allies regain HP.');
+    }
+  }
+  
+  // === MP RESTORE: SAN ONLY ===
+  if (sanNeedsMp) {
+    let mpBase = Math.floor(G.p.mmp * 0.12);
+    let mpAmount = Math.floor(mpBase * (1 + synergyBonus));
+    const oldMp = G.p.mp;
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + mpAmount);
+    if (G.p.mp > oldMp) {
+      lg('💧 Eliz weaves mana threads! You restore ' + (G.p.mp - oldMp) + ' MP.');
+      didSomething = true;
+    }
+  }
+  
+  if (!didSomething) return false;
+  
+  eliz.passiveHealCooldown = 3;
+  updateAffinity('Eliz', 1);
+  return true;
+}
+
+function doPartyAttack(member) {
+  // === ELIZ PASSIVE HEAL CHECK ===
+  if (member.n === 'Eliz' && member.hp > 0) {
+    // Priority 1: Resurrection (existing)
+    if (doElizResurrect(member)) return;
+    // Priority 2: Passive heal (new)
+    if (doElizPassiveHeal(member)) return;
+  }
+  // === END ELIZ PASSIVE HEAL ===
+  
   const aliveEnemies = G.cbt.en.filter(e => e.hp > 0);
   if (aliveEnemies.length === 0) return;
   
@@ -4566,17 +4642,51 @@ function cancelRest() {
 }
 
 function doExploreEvent() {
-  const possible = G.exploreEvents.filter(e => Math.random() < e.chance && G.p.lvl >= e.minLv);
-  if(possible.length === 0) return false;
+  // Filter: respect oncePerZone (track visited waterfalls per zone)
+  if (!G.visitedWaterfalls) G.visitedWaterfalls = {};
+  
+  const possible = G.exploreEvents.filter(e => {
+    if (Math.random() >= e.chance) return false;
+    if (G.p.lvl < e.minLv) return false;
+    if (e.oncePerZone && G.visitedWaterfalls[e.n + '_' + G.currentZone]) return false;
+    return true;
+  });
+  
+  if (possible.length === 0) return false;
   const evt = possible[Math.floor(Math.random() * possible.length)];
+  
   lg('📖 EVENT: ' + evt.n + '!');
   lg('   ' + evt.d);
-  if(evt.gold) { G.p.gold += evt.gold; lg('💰 +' + evt.gold + 'G'); }
-  if(evt.mp) { G.p.mp = Math.min(G.p.mmp, G.p.mp + evt.mp); lg('💧 +' + evt.mp + ' MP'); }
-  if(evt.item) { addI({...evt.item}); lg('🎁 Found: ' + evt.item.n); }
-  if(evt.items) { for(let it of evt.items) { addI({...it}); lg('🎁 Found: ' + it.n); } }
+  
+  // Mark as visited if oncePerZone
+  if (evt.oncePerZone) {
+    G.visitedWaterfalls[evt.n + '_' + G.currentZone] = true;
+  }
+  
+  if (evt.gold) { G.p.gold += evt.gold; lg('💰 +' + evt.gold + 'G'); }
+  if (evt.mp) { 
+    const oldMp = G.p.mp;
+    G.p.mp = Math.min(G.p.mmp, G.p.mp + evt.mp); 
+    const gained = G.p.mp - oldMp;
+    if (gained > 0) lg('💧 +' + gained + ' MP from the falling waters!');
+  }
+  if (evt.hp) { 
+    const oldHp = G.p.hp;
+    G.p.hp = Math.min(G.p.mhp, G.p.hp + evt.hp); 
+    const gained = G.p.hp - oldHp;
+    if (gained > 0) lg('💚 +' + gained + ' HP from the soothing mist!');
+  }
+  if (evt.item) { addI({...evt.item}); lg('🎁 Found: ' + evt.item.n); }
+  if (evt.items) { for(let it of evt.items) { addI({...it}); lg('🎁 Found: ' + it.n); } }
+  
+  // Eliz reacts to waterfalls if in party
+  if (G.party.some(p => p.on && p.n === 'Eliz')) {
+    lg('💚 Eliz cups the water in her hands. "It sings," she whispers.');
+  }
+  
   return true;
 }
+
 
 
 // SECRET AREAS
@@ -4879,6 +4989,7 @@ function endStoryMode() {
 
 function sc(zi) {
   const z=G.zones[zi];
+  G.currentZone = z.n;
   // 30% chance for explore event before combat
   if(Math.random() < 0.3 && doExploreEvent()) {
     G.state='explore';
