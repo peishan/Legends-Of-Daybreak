@@ -7622,82 +7622,112 @@ function rTalents(){
   return h;
 }
 
+// === REPLACE your rGrindRoom function with this ===
+
 function rGrindRoom() {
   const g = G.endlessGrind;
+  let h = '<div class="content">';
+  
+  h += '<div class="st" style="text-align:center;">⚔️ Endless Grind Room</div>';
+  
+  // Stats bar
+  h += '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">';
+  h += '<span class="mst">Wave: <b>' + g.wave + '</b></span>';
+  h += '<span class="mst">Kills: <b>' + g.totalKills + '</b></span>';
+  h += '<span class="mst">XP: <b>' + g.totalXp + '</b></span>';
+  h += '<span class="mst" style="color:var(--gold)">Gold: <b>' + g.totalGold + '</b></span>';
+  h += '</div>';
+  
+  // Difficulty badge
+  const diffColors = { normal: '#22c55e', hard: '#f59e0b', nightmare: '#ef4444' };
+  h += '<div style="text-align:center;margin-bottom:16px;">';
+  h += '<span style="font-size:11px;padding:4px 12px;border-radius:10px;background:' + diffColors[g.difficulty] + '20;color:' + diffColors[g.difficulty] + ';font-weight:600;text-transform:uppercase;">';
+  h += g.difficulty + ' (×' + g.difficultyMult[g.difficulty] + ')</span>';
+  h += '</div>';
+  
+  // MAIN CONTROLS
   if (!g.active) {
-    let h = '<div class="st">⚔️ Endless Grind Room</div>';
-    h += '<div class="card" style="margin-bottom:16px;">';
-    h += '<div class="cicon">⚔️</div>';
-    h += '<div class="clabel">Enter the Grind Room</div>';
-    h += '<div class="cdesc">Fight endless waves of enemies. How long can you survive?</div>';
-    h += '</div>';
-    h += '<div class="grid2" style="margin-bottom:16px;">';
-    h += '<div class="card" onclick="toggleGrindDifficulty();render();"><div class="cicon">📊</div><div class="clabel">Difficulty</div><div class="cdesc">' + g.difficulty.toUpperCase() + '</div></div>';
-    h += '<div class="card" onclick="enterGrindRoom();"><div class="cicon">🚪</div><div class="clabel">Enter</div><div class="cdesc">Start grinding!</div></div>';
-    h += '</div>';
-    h += '<div class="ftips"><h3>How It Works</h3><ul>';
-    h += '<li>Enemies scale with your level</li>';
-    h += '<li>Each wave gets harder</li>';
-    h += '<li>Earn XP, Gold, and Materials</li>';
-    h += '<li>Auto-advance between waves</li>';
-    h += '</ul></div>';
-    h += '<button class="fbtn" onclick="G.state=\'menu\';render();">Back</button>';
-    return h;
-  }
-  
-  let h = '<div class="st">⚔️ Wave ' + g.wave + '</div>';
-  h += '<div style="text-align:center;margin-bottom:12px;">';
-  h += '<span style="font-size:12px;color:var(--text-dim);">Kills: ' + g.totalKills + ' | XP: ' + g.totalXp + ' | Gold: ' + g.totalGold + '</span>';
-  h += '</div>';
-  
-  // Enemy display
-  if (G.cbt.on && G.cbt.en.length > 0) {
-    h += '<div class="erow">';
-    for (let e of G.cbt.en) {
-      const pct = e.hp > 0 ? (e.hp / e.mhp) * 100 : 0;
-      const deadCls = e.hp <= 0 ? 'dead' : '';
-      const selCls = G.cbt.tg === G.cbt.en.indexOf(e) ? 'sel' : '';
-      h += '<div class="ecard ' + deadCls + ' ' + selCls + '" onclick="G.cbt.tg=' + G.cbt.en.indexOf(e) + ';render();">';
-      h += '<div class="eicon">👹</div>';
-      h += '<div class="ename">' + e.n + '</div>';
-      h += '<div class="hps"><div class="bf bf-hp" style="width:' + pct + '%"></div></div>';
-      h += '<div class="hpt">' + e.hp + '/' + e.mhp + '</div>';
-      if (e.elem && e.elem !== 'none') {
-        h += '<div class="dt">' + e.elem + '</div>';
+    // Between waves or fresh start
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;">';
+    
+    if (g.wave === 0) {
+      // FRESH START - show all settings
+      h += '<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent-light);">Grind Settings</div>';
+      
+      // Tier selector
+      h += '<div style="margin-bottom:12px;">';
+      h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Max Zone Tier</div>';
+      h += '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+      const maxTier = Math.min(G.p.lvl, 23);
+      for (let t = 1; t <= maxTier; t++) {
+        const z = G.zones.find(zn => zn.lv === t);
+        const name = z ? z.n.split(' ')[0] : 'Lv' + t;
+        const isSel = g.maxZoneLevel === t;
+        h += '<button onclick="setGrindTier(' + t + ')" style="padding:6px 10px;border-radius:8px;border:1px solid ' + (isSel ? 'var(--accent)' : 'var(--border)') + ';background:' + (isSel ? 'var(--accent)' : 'var(--bg-card)') + ';color:' + (isSel ? 'white' : 'var(--text)') + ';font-size:11px;cursor:pointer;">' + name + '</button>';
       }
+      h += '</div></div>';
+      
+      // Difficulty toggle
+      h += '<div style="margin-bottom:12px;">';
+      h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Difficulty</div>';
+      h += '<div style="display:flex;gap:6px;">';
+      const diffs = ['normal', 'hard', 'nightmare'];
+      for (let d of diffs) {
+        const isSel = g.difficulty === d;
+        h += '<button onclick="toggleGrindDifficulty()" style="flex:1;padding:8px;border-radius:8px;border:1px solid ' + (isSel ? diffColors[d] : 'var(--border)') + ';background:' + (isSel ? diffColors[d] + '20' : 'var(--bg-card)') + ';color:' + (isSel ? diffColors[d] : 'var(--text-dim)') + ';font-size:12px;font-weight:600;cursor:pointer;">' + d + '</button>';
+      }
+      h += '</div></div>';
+      
+      // Auto-next toggle
+      h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">';
+      h += '<input type="checkbox" id="grind-autonext" ' + (g.autoNext ? 'checked' : '') + ' onchange="toggleAutoNext()" style="width:18px;height:18px;accent-color:var(--accent);">';
+      h += '<label for="grind-autonext" style="font-size:13px;cursor:pointer;">Auto-start next wave</label>';
       h += '</div>';
+      
+      h += '<button onclick="enterGrindRoom()" class="abtn" style="width:100%;">Start Grinding</button>';
+      
+    } else {
+      // BETWEEN WAVES - show Next Wave and Stop
+      h += '<div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent-light);">Wave ' + g.wave + ' Complete!</div>';
+      h += '<div style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">Ready for the next wave?</div>';
+      
+      h += '<button onclick="startGrindWave()" class="abtn" style="width:100%;margin-bottom:8px;">▶️ Next Wave</button>';
+      h += '<button onclick="exitGrindRoom()" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:14px;font-weight:600;cursor:pointer;">⏹ Stop & Collect Loot</button>';
     }
+    
+    h += '</div>';
+    
+  } else {
+    // ACTIVE COMBAT - show STOP button
+    h += '<div style="background:var(--bg-card);border:2px solid var(--danger);border-radius:14px;padding:16px;margin-bottom:12px;text-align:center;">';
+    h += '<div style="font-size:13px;color:var(--text-dim);margin-bottom:10px;">Wave ' + g.wave + ' in progress...</div>';
+    h += '<button onclick="exitGrindRoom()" style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--danger);background:var(--danger);color:white;font-size:15px;font-weight:700;cursor:pointer;">⏹ STOP GRIND</button>';
+    h += '<div style="font-size:11px;color:var(--text-dim);margin-top:8px;">Returns to camp with current loot</div>';
     h += '</div>';
   }
   
-  // Player stats during grind
-  h += '<div class="pstat">';
-  h += '<span class="mst"><span class="md" style="background:var(--hp)"></span>HP: ' + G.p.hp + '/' + G.p.mhp + '</span>';
-  h += '<span class="mst"><span class="md" style="background:var(--mp)"></span>MP: ' + G.p.mp + '/' + G.p.mmp + '</span>';
+  // Session summary (always visible)
+  if (g.wave > 0) {
+    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;">';
+    h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:8px;">📊 This Session</div>';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">';
+    h += '<div>Started: <span style="color:var(--text-dim);">' + new Date(g.sessionStart).toLocaleTimeString() + '</span></div>';
+    h += '<div>Waves: <span style="color:var(--accent-light);">' + g.wave + '</span></div>';
+    h += '<div>Total Kills: <span style="color:var(--accent-light);">' + g.totalKills + '</span></div>';
+    h += '<div>Total XP: <span style="color:var(--xp);">' + g.totalXp + '</span></div>';
+    h += '<div>Total Gold: <span style="color:var(--gold);">' + g.totalGold + '</span></div>';
+    h += '<div>Avg/ Wave: <span style="color:var(--text-dim);">' + (g.wave > 0 ? Math.floor(g.totalXp / g.wave) : 0) + ' XP</span></div>';
+    h += '</div></div>';
+  }
+  
   h += '</div>';
-  
-  // Skills
-  h += '<div class="skills"><h3>Spells</h3><div class="slist">';
-  for (let i = 0; i < G.p.skills.length; i++) {
-    const sk = G.p.skills[i];
-    if (!sk.on) continue;
-    const dis = G.p.mp < sk.c || G.cbt.en.every(e => e.hp <= 0) ? 'dis' : '';
-    const sel = G.cbt.sk === i ? 'sel' : '';
-    h += '<div class="sbtn ' + dis + ' ' + sel + '" onclick="if(!G.cbt.autoCombat){G.cbt.sk=' + i + ';render();}">';
-    h += '<div class="sn">' + sk.n + '</div>';
-    h += '<div class="sc">' + sk.c + ' MP</div>';
-    h += '<div class="sd">' + sk.d + '</div>';
-    h += '</div>';
-  }
-  h += '</div></div>';
-  
-  // Attack / Auto buttons
-  const canAttack = G.cbt.en.some(e => e.hp > 0) && G.p.skills[G.cbt.sk]?.on;
-  h += '<button class="abtn ' + (canAttack ? '' : 'dis') + '" onclick="if(G.cbt.sk>=0&&G.p.skills[G.cbt.sk].on){pa(G.cbt.sk,G.cbt.tg);}">⚔️ CAST SPELL</button>';
-  h += '<button class="fbtn" onclick="toggleAutoCombat();render();">' + (G.cbt.autoCombat ? '⏹️ Stop Auto' : '🤖 Auto Combat') + '</button>';
-  h += '<button class="fbtn" onclick="exitGrindRoom();" style="border-color:var(--danger);color:var(--danger);">🏃 Exit Grind Room</button>';
-  
   return h;
+}
+
+function setGrindTier(tier) {
+  G.endlessGrind.maxZoneLevel = tier;
+  lg('📍 Max tier set to ' + tier);
+  render();
 }
 
 
@@ -7955,7 +7985,23 @@ function rCbt() {
   h += '<button class="abtn ' + (ca ? '' : 'dis') + '" data-si="' + si + '" data-ti="' + G.cbt.tg + '" ' + (G.cbt.autoCombat ? 'disabled style="opacity:0.4;"' : '') + '>';
   h += (isBasic ? '🪄 Staff Swing' : 'Cast ' + (sk ? sk.n : '...')) + '</button>';
   h += '<button class="fbtn" ' + (G.cbt.autoCombat ? 'disabled style="opacity:0.4;"' : '') + '>Flee</button>';
-  
+ 
+   // === GRIND ROOM WAVE CONTROLS ===
+  if (G.endlessGrind.active) {
+    h += '<div style="background:var(--bg-card);border:2px solid var(--accent);border-radius:14px;padding:14px;margin-top:16px;text-align:center;">';
+    h += '<div style="font-size:12px;font-weight:600;color:var(--accent-light);margin-bottom:10px;">⚔️ Grind Room · Wave ' + G.endlessGrind.wave + '</div>';
+    
+    if (G.endlessGrind.autoNext) {
+      h += '<div style="font-size:12px;color:var(--success);">🤖 Auto-next: ON</div>';
+    } else {
+      h += '<button onclick="startGrindWave()" class="abtn" style="width:100%;margin-bottom:8px;">▶️ Next Wave</button>';
+    }
+    
+    h += '<button onclick="exitGrindRoom()" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:13px;font-weight:600;cursor:pointer;">⏹ Stop & Exit</button>';
+    h += '</div>';
+  }
+  // === END GRIND ROOM WAVE CONTROLS ===
+
   h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:12px;">';
   h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">🎲 D&D Combat Rules</div>';
   h += '<div style="font-size:10px;color:var(--text-dim);line-height:1.6;">';
