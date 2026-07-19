@@ -621,83 +621,7 @@ const G = {
     }
   ],
 
-  storyModeChapters: [
-    {
-      title: 'The Awakening',
-      icon: '🌅',
-      scenes: [
-        { text: "You wake in a field of silver grass. The sky is wrong — two moons, one bleeding red. A voice whispers your name. Not San. Something older." },
-        { text: "Joel finds you first. 'You were gone three days,' he says, voice tight. 'We thought the storm took you.' He doesn't mention the mark on your wrist. Neither do you." },
-        { text: "Aisyah runs toward you, blade half-drawn, then sheaths it when she sees your face. 'Don't ever do that again,' she says. Her hands shake." },
-        { text: "Soel curls around your ankles, purring loud enough to drown out the silence. Even he knew something was wrong." }
-      ],
-      choices: [
-        { label: 'Tell them about the voice', nextChapter: 1, affinity: 'Joel', amt: 10 },
-        { label: 'Hide the mark', nextChapter: 1, affinity: 'Aisyah', amt: 5 },
-        { label: 'Say nothing', nextChapter: 1 }
-      ]
-    },
-    {
-      title: 'The First Shard',
-      icon: '💎',
-      scenes: [
-        { text: "The mark burns when you sleep. In dreams, you walk through a city of crystal and bone. A figure waits at the end of every street. You never reach them." },
-        { text: "Mezstorm studies the mark with spells you don't recognize. 'It's not a curse,' he says finally. 'It's a key. But a key to what, I cannot say.'" },
-        { text: "Eliz presses her hands to yours. Her healing magic sinks into the mark and vanishes, swallowed whole. 'It doesn't want to be healed,' she whispers. 'It wants to be fed.'" },
-        { text: "Senedra finds you practicing magic in the dark. 'You're stronger,' she says. Not a compliment. A warning." }
-      ],
-      choices: [
-        { label: 'Ask Mezstorm to teach you more', nextChapter: 2, affinity: 'Mezstorm', amt: 15 },
-        { label: 'Let Eliz try again', nextChapter: 2, affinity: 'Eliz', amt: 10 },
-        { label: 'Train alone', nextChapter: 2, xp: 20 }
-      ]
-    },
-    {
-      title: 'The Hollow King',
-      icon: '👑',
-      scenes: [
-        { text: "The dreams change. The figure turns. You see their face — empty, smiling, wearing your expression like a mask. 'Welcome home,' they say. You wake screaming." },
-        { text: "Zaki stands watch outside your tent. 'You cried out in your sleep,' he says. 'About a king. About a throne.' He pauses. 'I know that throne. I've seen it in the Abyssal Depths.'" },
-        { text: "Soel won't leave your side. He hisses at shadows that aren't there, stares at corners of rooms where nothing moves. 'He sees them too,' Eliz says quietly. 'The things between worlds.'" },
-        { text: "The mark spreads. Veins of silver light crawl up your arm, pulsing with a rhythm that matches no heartbeat you've ever heard." }
-      ],
-      choices: [
-        { label: 'Ask Zaki about the Abyss', nextChapter: 3, affinity: 'Zaki', amt: 15 },
-        { label: 'Let Soel guide you', nextChapter: 3, affinity: 'Soel', amt: 20 },
-        { label: 'Study the mark yourself', nextChapter: 3, xp: 30 }
-      ]
-    },
-    {
-      title: 'The Choice',
-      icon: '⚖️',
-      scenes: [
-        { text: "The Hollow King waits in the deepest dream. 'You could stay,' they offer. 'Rule here. No more loss. No more goodbyes. Everyone you love, safe forever. Frozen. Perfect.'" },
-        { text: "You see them — Joel, Aisyah, Soel, all of them, suspended in crystal, smiling, unchanging. Safe. Dead in every way that matters." },
-        { text: "'Or you could wake up,' the King says, and for the first time, their voice sounds almost kind. 'And lose them one by one, the way mortals do. The way you already know you will.'" },
-        { text: "The mark screams. The choice screams louder." }
-      ],
-      choices: [
-        { label: 'Reject the King — wake up', nextChapter: 4, affinity: 'Joel', amt: 25, xp: 50 },
-        { label: 'Accept the offer', nextChapter: 4, karma: -5, gold: 100 },
-        { label: 'Find a third way', nextChapter: 4, xp: 40, item: { n: 'Void-Touched Crystal', t: 'mat', q: 1, r: 'rare' } }
-      ]
-    },
-    {
-      title: 'Aftermath',
-      icon: '🌙',
-      scenes: [
-        { text: "You wake. The mark is still there, but quieter now. A scar, not a wound. A memory, not a prophecy." },
-        { text: "Joel squeezes your shoulder. 'Breakfast,' he says, like nothing happened. Like you didn't almost end the world in your sleep." },
-        { text: "Aisyah smiles — rare, precious, real. 'You chose us,' she says. 'Every time, you choose us.'" },
-        { text: "Soel purrs on your chest, kneading soft circles into your heart. The sun rises. The story continues. Not ended. Just paused." }
-      ],
-      choices: [
-        { label: 'Begin again', nextChapter: 0, reset: true, xp: 10 },
-        { label: 'Return to camp', nextChapter: -1, end: true }
-      ]
-    }
-  ],
-
+ 
     cbt: { on: false, turn: 0, en: [], sk: 0, tg: 0, autoFlee: false, autoCombat: false },
   autoCombatHeartbeat: 0,
 
@@ -1079,7 +1003,207 @@ const G = {
   secretArea: { active: false, zone: null, choice: null, result: null },
   playerSpec: { path: null, tiers: [], respecCount: 0, lastRespec: 0 },
   currentMiniStory: null,
-  storyMode: { active: false, currentChapter: 0, currentScene: 0, choices: [] },
+storyJournal: {
+    unlocked: [],
+    read: [],
+    entries: [
+      {
+        id: 'journal_001',
+        title: 'The Rain and the Kitten',
+        chapter: 1,
+        unlockType: 'level',
+        unlockAt: 1,
+        icon: '🌧️',
+        summary: 'How Soel came to be, and how Joel found him.',
+        scenes: [
+          { speaker: 'Narrator', text: "It began with rain. The kind that falls for days in Brunei and turns the world soft and gray, that makes the kampong roads muddy and the air smell of wet earth." },
+          { speaker: 'Joel', text: "\"She was starving,\" Joel says, though you do not remember asking. \"The mother cat. Skin and bones under the porch.\"" },
+          { speaker: 'Joel', text: "\"I fed her. Every day. Did not plan to. Just... could not stop.\" His voice carries the weight of every stray he has ever fed, every broken thing he has ever fixed." },
+          { speaker: 'Narrator', text: "Weeks later, the mother cat vanished. In her place: a cardboard box, sodden at the edges, filled with five damp bundles of fur. Kittens. Five of them, mewling, blind, impossibly small." },
+          { speaker: 'Joel', text: "\"Gave three away. Kept one for the mother cat, in case she came back.\" He pauses, looking at something you cannot see. \"She did not.\"" },
+          { speaker: 'Joel', text: "\"The last one... he would not stop staring at me. Like he had already decided.\" Joel smiles — rare, small, precious. \"I named him Soel.\"" },
+          { speaker: 'Narrator', text: "Soel. A name that sounds like rain on a roof. Like something small and certain. Like the space between San and Joel — the letters overlapping, the sounds merging." },
+          { speaker: 'Narrator', text: "Soel grew. Soel watched. Soel chose you, on the nights you visited Joel, climbing into your lap like he had been waiting for you specifically." },
+          { speaker: 'Narrator', text: "Then came the dorm assignment. Joel and his friends, moved across the city. New building. New rules. No pets allowed." },
+          { speaker: 'Joel', text: "\"Take him,\" Joel said, not looking at you. \"He already chose you anyway.\"" },
+          { speaker: 'Narrator', text: "Soel rode home in your pack, purring like a motor. Like he had always known the way. Like he had always known you would need him." }
+        ]
+      },
+      {
+        id: 'journal_002',
+        title: 'The Awakening',
+        chapter: 2,
+        unlockType: 'level',
+        unlockAt: 5,
+        icon: '✨',
+        summary: 'Waking in Aethon. The mark. The two moons.',
+        scenes: [
+          { speaker: 'Narrator', text: "You wake in a field of silver grass. The sky is wrong — two moons, one bleeding red. A voice whispers your name. Not San. Something older." },
+          { speaker: 'Narrator', text: "Your name is San. You are the youngest of three sisters, born in Brunei Darussalam, raised under the weight of family and duty and love that costs more than it should." },
+          { speaker: 'Narrator', text: "You are a Sorcerer — or you will be, once you remember what that means. The mark on your wrist pulses with silver light, veins crawling upward like roots seeking sun." },
+          { speaker: 'Soel', text: "A small cat curls at your feet, purring like he has always known you. His name is Soel. He came with the rain. He chose you. That is rare. That is everything." },
+          { speaker: 'Narrator', text: "Your journey begins in the Whispering Woods. Survive. Grow. Find what was taken from you. And remember — in Aethon, as in Brunei, family is not a choice you make. It is a gravity you orbit." }
+        ]
+      },
+      {
+        id: 'journal_003',
+        title: 'The First Bond',
+        chapter: 3,
+        unlockType: 'level',
+        unlockAt: 8,
+        icon: '🛡️',
+        summary: 'Joel stands between you and everything that would harm you.',
+        scenes: [
+          { speaker: 'Joel', text: "\"You look like you need a shield,\" a voice says. Joel stands in the doorway, already armored, already certain. The steadfast man from a Philippine village, second of four, breadwinner, stray-feeder, yours." },
+          { speaker: 'Joel', text: "\"I do not ask why you are here. I ask if you will let me stand beside you while you find out.\" He does not look at the mark on your wrist. He looks at your face. He always looks at your face." },
+          { speaker: 'Narrator', text: "Joel joins your party. His shield is heavy. His loyalty is heavier. In this world, as in the last, he is The Steadfast — the one who stands between you and everything that would harm you." }
+        ]
+      },
+      {
+        id: 'journal_004',
+        title: 'Sisterblade',
+        chapter: 4,
+        unlockType: 'level',
+        unlockAt: 10,
+        icon: '🗡️',
+        summary: 'Aisyah steps from the shadows. Family with knives.',
+        scenes: [
+          { speaker: 'Aisyah', text: "\"Took you long enough,\" she says, stepping from the shadows. Her daggers glint like teeth. Your eldest sister, fifty-something in the old world, sharp-eyed and sharper-tongued, taught you to trade before she taught you to fight." },
+          { speaker: 'Aisyah', text: "\"Mum asked me to check on you. I told her you were fine. Do not make me a liar.\" Her hands shake, just slightly. She has been looking for you. She always looks for you." },
+          { speaker: 'Narrator', text: "Aisyah joins your party. Family is complicated. Family with knives is complicated and useful. She taught you the trade routes of Brunei. Now she teaches you the dangerous paths of Aethon." }
+        ]
+      },
+      {
+        id: 'journal_005',
+        title: 'The Weight of Before',
+        chapter: 5,
+        unlockType: 'level',
+        unlockAt: 12,
+        icon: '🕯️',
+        summary: 'San and Joel confront the children they left behind.',
+        scenes: [
+          { speaker: 'Narrator', text: "The campfire burns low. Joel sits across from you, sharpening his shield strap with methodical patience — the same patience he brings to everything, including you. Especially you." },
+          { speaker: 'Joel', text: "\"Do you ever think about them?\" he asks, not looking up. You know who he means. You have always known." },
+          { speaker: 'San', text: "You stare into the flames. \"Every day,\" you admit. \"The youngest was only one. She was learning to walk. I left before she learned my name.\"" },
+          { speaker: 'Narrator', text: "The words hang in the air like smoke. You have never said this out loud. Not to Joel. Not to anyone. The shame has been a stone in your chest for years, growing heavier with each birthday you missed, each milestone you only heard about through strained silence." },
+          { speaker: 'San', text: "\"Her grandmother fed him lies,\" you say, and your voice is steadier than you feel. \"About me. About my family. She made me feel small in my own home. And I was — I was so tired, Joel. I was drowning in a house that was never mine, in a life that was never mine. I didn't know I was autistic then. I just knew I was broken somehow, and I couldn't fix it fast enough for them.\"" },
+          { speaker: 'Joel', text: "Joel sets down the strap. His hands are still. \"My daughter,\" he says quietly. \"She is one year older than your eldest. I was responsible for her. But her mother — we broke before she was born. I have never held her. Not once. I send money. I pray. It is not the same. It is never the same.\"" },
+          { speaker: 'Narrator', text: "The fire pops. Sparks rise into a sky with two moons. You think of Brunei. You think of the small apartment where you tried to be a wife, a mother, a daughter-in-law, everything to everyone, until there was nothing left of you but exhaustion and the certainty that you were failing at all of it." },
+          { speaker: 'San', text: "\"Mez left home young,\" you say, and the old grief surfaces, familiar as a scar. \"She was strong. She made money. She could give Mum and Dad things I never could. And I was — I was stuck. In the marriage. In my own head. In the fear that if I left, I would be proving them right. That I was never good enough.\"" },
+          { speaker: 'San', text: "\"Mum fell into depression. Dad has cancer. And I was across the city, barely surviving myself, hating myself for not being the daughter they deserved. Mez was the good one. I was the one who disappeared.\"" },
+          { speaker: 'Joel', text: "\"You did not disappear,\" Joel says, and his voice is firm, the way it gets when he is certain of something. \"You escaped. There is a difference. You were dying, San. I saw it. I see it still, sometimes, in the way you check your gold three times, in the way you flinch when voices get loud. You were not broken. You were surviving in a place that demanded you break yourself to fit.\"" },
+          { speaker: 'Narrator', text: "You think of Soel, curled asleep in your pack. The kitten who came with the rain. The spirit who chose you when no one else did. He was the first thing that was yours, truly yours, in a life where everything had been borrowed or negotiated or endured." },
+          { speaker: 'San', text: "\"Soel turned everything around,\" you whisper. \"He needed me. Just me. Not a wife. Not a daughter-in-law. Just — me. And then you found us. And you didn't ask me to be anything except what I already was.\"" },
+          { speaker: 'Joel', text: "\"I was starving too,\" Joel admits. \"I fed stray cats because I could not feed my own child. I fixed things because I could not fix my own life. And then I found you, and Soel, and for the first time, I was not just the man who sends money and hopes. I was present. I was chosen. You chose me, San. Every day, you choose me.\"" },
+          { speaker: 'Narrator', text: "You look at your hands. They are younger here. You noticed it weeks ago, dismissed it as a trick of the light, a quirk of Aethon's magic. But Joel's face is softer too, less lined, the weight of years lifted from his shoulders. You are not the people you were in Brunei. You are the people you might have been, if the world had been kinder." },
+          { speaker: 'Narrator', text: "\"We are given a second chance,\" you say, and the realization settles into you like warmth, like breath after drowning. \"Not just to fight. Not just to survive. To — to be. To be young again. To choose differently. To love without the weight of what came before.\"" },
+          { speaker: 'Joel', text: "Joel stands. He walks around the fire. He kneels before you, takes your hands in his — rough, calloused, steady. \"Then let us choose,\" he says. \"Let us be the people we were meant to be. Together. In whatever world will have us.\"" },
+          { speaker: 'Narrator', text: "The moons drift behind a silver cloud. The fire burns down to embers. And in the quiet dark, you let yourself be held — not as San the breadwinner, not as San the runaway, not as San the failure. Just San. Just Joel. Just two people who found each other in the wreckage, and chose to build something whole." },
+          { speaker: 'Narrator', text: "Soel purrs from his corner, eyes half-lidded, watching. He has always known. He chose you both, after all. And a spirit cat's choice is never wrong." }
+        ]
+      },
+      {
+        id: 'journal_006',
+        title: "The Healer's Light",
+        chapter: 6,
+        unlockType: 'level',
+        unlockAt: 14,
+        icon: '💚',
+        summary: 'Eliz presses her hands to yours. Magic in textures and colors.',
+        scenes: [
+          { speaker: 'Eliz', text: "\"Your aura is frayed,\" she whispers, pressing a cool hand to your forehead. You did not hear her approach. She moves like silence, like the space between heartbeats." },
+          { speaker: 'Eliz', text: "\"I will mend what I can. But some wounds are not of the body.\" She is your niece, Mez's daughter, autistic in the old world — which here means she experiences magic in textures and colors no one else can perceive." },
+          { speaker: 'Narrator', text: "Eliz joins your party. Her hands glow with gentle light. Her eyes hold older sorrows. She cannot be reduced below 1 HP — a Guardian Spirit, the game calls it. You call it Eliz being Eliz. The girl who has always endured." }
+        ]
+      },
+      {
+        id: 'journal_007',
+        title: 'The Stormsinger',
+        chapter: 7,
+        unlockType: 'level',
+        unlockAt: 16,
+        icon: '⚡',
+        summary: 'Mezstorm — the sister who became a stranger, then a stormsinger.',
+        scenes: [
+          { speaker: 'Mezstorm', text: "Lightning cracks the sky. A figure stands in the rain, hands sparking with static. \"The ley lines brought me to you,\" he says. A voice that is almost familiar. Almost." },
+          { speaker: 'Mezstorm', text: "\"Something is wrong in Aethon. The magic itself is... afraid.\" He offers you strange tea. It tastes of copper and regret. You almost remember sharing a room with him, a childhood game, a mother's song." },
+          { speaker: 'Narrator', text: "Mezstorm joins your party. He speaks to the storm. Sometimes, it answers. He was Mez once — your middle sister, estranged, hard, distant. The magic made a mistake. Rendered her male, like Edwin in the old tales. The memories are ghost-images now. Vague. Painful. Present." }
+        ]
+      },
+      {
+        id: 'journal_008',
+        title: 'Shadows of the Past',
+        chapter: 8,
+        unlockType: 'boss',
+        unlockAt: 'Bone Tyrant',
+        icon: '💀',
+        summary: 'The Cursed Catacombs whisper your name. The estrangement with Mez.',
+        scenes: [
+          { speaker: 'Narrator', text: "The Cursed Catacombs whisper your name. Not San — something older. Something buried. The estrangement with Mez, the wall you never learned to cross, the niece you loved in the abstract." },
+          { speaker: 'Narrator', text: "The Bone Tyrant waits below. It has waited a very long time. It knows about sisters who became strangers. It knows about walls built from silence. It has been waiting for you specifically." }
+        ]
+      },
+      {
+        id: 'journal_009',
+        title: 'The Frozen Crown',
+        chapter: 9,
+        unlockType: 'zone',
+        unlockAt: 'Frostspire Ruins',
+        icon: '❄️',
+        summary: 'The Frost Queen learned to be hard. Like Mez. Like you.',
+        scenes: [
+          { speaker: 'Narrator', text: "Frostspire Ruins rise against the northern sky. The Frost Queen's castle was beautiful once, before the ice took her heart. Before she learned to be hard, to survive, to push away the warmth that might have saved her." },
+          { speaker: 'Narrator', text: "They say she still dances in the great hall, alone, waiting for a partner who will never come. You think of Mez. You think of the sister you lost before you knew how to keep her. The ice is not her enemy. The ice is her choice." }
+        ]
+      },
+      {
+        id: 'journal_010',
+        title: 'Into the Void',
+        chapter: 10,
+        unlockType: 'boss',
+        unlockAt: 'Abyssal Leviathan',
+        icon: '🌑',
+        summary: 'The void between sisters. The silence where words should have been.',
+        scenes: [
+          { speaker: 'Narrator', text: "The Abyssal Depths do not belong to this world. They are a wound in reality, and something looks back from the other side. The void between sisters. The silence where words should have been." },
+          { speaker: 'Narrator', text: "The Abyssal Leviathan devours light, memory, hope. It has swallowed cities. It would swallow you without noticing. But you are a breadwinner. You have been swallowed before. You know how to climb back out." }
+        ]
+      },
+      {
+        id: 'journal_011',
+        title: 'Starlight Ascension',
+        chapter: 11,
+        unlockType: 'boss',
+        unlockAt: 'Starlord',
+        icon: '⭐',
+        summary: 'The hardest truth: love is a decision, made daily.',
+        scenes: [
+          { speaker: 'Narrator', text: "The Starlight Spire touches the sky. At its peak, the Astral Lord waits — the final gatekeeper, the last question. You have come so far from Brunei. So far from the rain and the kitten and the porch where it all began." },
+          { speaker: 'Narrator', text: "The hardest truth is always the last one. That love is not a feeling. It is a decision, made daily, made hourly, made in the space between I am tired and I will keep going anyway." },
+          { speaker: 'Soel', text: "Soel rubs against your leg. \"We go together,\" his eyes seem to say. \"Always together.\" He chose you. In the rain. In the dorm. In the rift. In every world, in every form, he chooses you. That is rare. That is everything." }
+        ]
+      },
+      {
+        id: 'journal_012',
+        title: 'Planar Convergence',
+        chapter: 12,
+        unlockType: 'boss',
+        unlockAt: 'The Planarch',
+        icon: '🌀',
+        summary: 'The tower, the rift, and the choice to keep going.',
+        scenes: [
+          { speaker: 'Narrator', text: "The Arcane Planar Tower tears at the seams of reality. Gravity shifts. Time stutters. The walls breathe with planar magic. This is where the rift began — the tear that pulled you from Brunei, from the ordinary Tuesday, from the life you were still learning to live." },
+          { speaker: 'Narrator', text: "The Planarch waits at the apex — a being of pure planar energy, shifting dimensions every three turns, warping the battlefield, spawning rifts. It is not evil. It is simply a wound, a place where too many dimensions touched and something woke up." },
+          { speaker: 'Narrator', text: "You have survived the rain. You have survived the estrangement. You have survived being a breadwinner in a world that takes more than it gives. The Planarch is just another bill to pay. Another mouth to feed. Another reason to keep going." },
+          { speaker: 'Mezstorm', text: "\"The stars are wrong,\" Mezstorm whispers, hands sparking. \"They have been wrong since the tower rose.\" He looks at you, and for a moment — just a moment — you see Mez in his eyes. Your sister. Your storm. Your almost." },
+          { speaker: 'Joel', text: "\"Breakfast,\" Joel says, like nothing happened. Like you did not almost end the world in your sleep. He squeezes your shoulder. His hand is warm. It has always been warm." },
+          { speaker: 'Narrator', text: "The sun rises over Aethon. Two moons fade. Soel purrs on your chest, kneading soft circles into your heart. The story continues. Not ended. Just paused. And somewhere, in a small village in the Philippines, a mother wakes. In Brunei, two parents check their phones. The gravity still pulls. The orbit still holds. You are still a breadwinner. You are still choosing love. You are still — always — San." }
+        ]
+      }
+    ]
+  },
+
+
 
 
 
@@ -1117,6 +1241,11 @@ const G = {
     { id: 'ms_spring2', name: 'Astral Mana Spring', type: 'mana_spring', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'Liquid starlight pools in a crater of fallen meteors. Each sip rewires your magic.', unlocked: false, icon: '💧', cost: 15, entryLimit: 3, entriesUsed: 0 },
     ]
   },
+  
+    currentJournalEntry: null,
+    questCollapsed: {},
+
+
 
   banter: {
     solo: [
@@ -4029,6 +4158,13 @@ function handleVictory() {
    checkDailyQuests('kill', G.cbt.en.length); 
     if (G.party.filter(p => p.on).length >= 3) checkDailyQuests('full_party_battle', 1); 
   if (G.currentBoss) { G.p.bossKills = (G.p.bossKills || 0) + 1; }
+    // Check boss-based journal unlocks
+  for (let entry of G.storyJournal.entries) {
+    if (entry.unlockType === 'boss' && G.currentBoss && G.currentBoss.n === entry.unlockAt && !G.storyJournal.unlocked.includes(entry.id)) {
+      G.storyJournal.unlocked.push(entry.id);
+      lg('📖 Journal unlocked: ' + entry.title + '!');
+    }
+  }
   if (G.currentBoss && G.currentBoss.n === 'The Planarch') {
     lg('🏆 You have conquered the Arcane Planar Tower!');
     lg('   The spire bends to your will. Planar energy surges through your veins.');
@@ -4043,6 +4179,13 @@ function handleVictory() {
   if (aisyahQuest && G.party.find(p => p.on && p.n === 'Aisyah')) {
     aisyahQuest.c += G.cbt.en.length;
     if (aisyahQuest.c >= aisyahQuest.need) checkQ();
+        // Check journal unlocks
+    for (let entry of G.storyJournal.entries) {
+      if (entry.unlockType === 'level' && G.p.lvl >= entry.unlockAt && !G.storyJournal.unlocked.includes(entry.id)) {
+        G.storyJournal.unlocked.push(entry.id);
+        lg('📖 Journal unlocked: ' + entry.title + '!');
+      }
+    }
   }
   
   const joelQuest = G.quests.find(q => q.t === 'joel_battle' && !q.done);
@@ -5224,68 +5367,6 @@ function closeMiniStory() {
 }
 
 
-// STORY MODE
-function startStoryMode() {
-  G.storyMode.active = true;
-  G.storyMode.currentChapter = 0;
-  G.storyMode.currentScene = 0;
-  G.storyMode.choices = [];
-  G.state = 'storymode';
-  render();
-}
-
-function advanceStoryScene() {
-  if (!G.storyMode.active) return;
-  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
-  if (!chapter) { endStoryMode(); return; }
-  G.storyMode.currentScene++;
-  if (G.storyMode.currentScene >= chapter.scenes.length) {
-    // Show choices
-    render();
-    return;
-  }
-  render();
-}
-
-function makeStoryChoice(choiceIdx) {
-  if (!G.storyMode.active) return;
-  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
-  if (!chapter || !chapter.choices[choiceIdx]) return;
-  const choice = chapter.choices[choiceIdx];
-  G.storyMode.choices.push({ chapter: G.storyMode.currentChapter, choice: choiceIdx });
-
-  // Apply rewards
-  if (choice.affinity) { updateAffinity(choice.affinity, choice.amt); }
-  if (choice.xp) { G.p.xp += choice.xp; lg('✨ +' + choice.xp + ' XP'); }
-  if (choice.gold) { G.p.gold += choice.gold; lg('💰 +' + choice.gold + 'G'); }
-  if (choice.karma) { G.p.karma = (G.p.karma || 0) + choice.karma; }
-  if (choice.item) { addI({ ...choice.item }); lg('🎁 +' + choice.item.n); }
-
-  if (choice.reset) {
-    G.storyMode.currentChapter = 0;
-    G.storyMode.currentScene = 0;
-    G.storyMode.choices = [];
-    lg('📖 Story reset. Beginning again...');
-  } else if (choice.end) {
-    endStoryMode();
-    return;
-  } else if (choice.nextChapter !== undefined) {
-    G.storyMode.currentChapter = choice.nextChapter;
-    G.storyMode.currentScene = 0;
-  }
-
-  lvlup();
-  render();
-}
-
-function endStoryMode() {
-  G.storyMode.active = false;
-  G.storyMode.currentChapter = 0;
-  G.storyMode.currentScene = 0;
-  G.state = 'rest';
-  lg('📖 Story mode ended. Welcome back.');
-  render();
-}
 
 function sc(zi) {
   const z=G.zones[zi];
@@ -5300,6 +5381,13 @@ function sc(zi) {
     if (discoverSecret(z.n)) return;
   }
   if (checkMiniStory(z.n)) return;
+    // Check zone-based journal unlocks
+  for (let entry of G.storyJournal.entries) {
+    if (entry.unlockType === 'zone' && z.n === entry.unlockAt && !G.storyJournal.unlocked.includes(entry.id)) {
+      G.storyJournal.unlocked.push(entry.id);
+      lg('📖 Journal unlocked: ' + entry.title + '!');
+    }
+  }
   G.cbt.on=true; G.cbt.turn=0; G.cbt.en=[]; G.state='combat';
     checkDimensionalInstability(); // Phase 2: Dimensional Instability
   
@@ -5635,6 +5723,8 @@ function saveGame() {
       inventory: G.p.inv,
       buffs: G.p.buffs,
       kills: G.p.kills, quests: G.p.quests, fstreak: G.p.fstreak,
+      storyJournal: { unlocked: G.storyJournal.unlocked, read: G.storyJournal.read },
+
       // Add these inside the saveData object, alongside other fields:
     
 
@@ -5642,6 +5732,8 @@ function saveGame() {
     },
     party: G.party.map(p => ({ n: p.n, t: p.t, r: p.r, hp: p.hp, mhp: p.mhp, atk: p.atk, def: p.def, spd: p.spd, on: p.on, ul: p.ul, d: p.d, b: p.b, col: p.col, affinityBonuses: p.affinityBonuses, gear: p.gear })),
     quests: G.quests.map(q => ({ id: q.id, n: q.n, d: q.d, t: q.t, c: q.c, need: q.need, rw: q.rw, done: q.done })),
+        bounties: G.bounties.map(b => ({ id: b.id, c: b.c, done: b.done, refreshDay: b.refreshDay })),
+    questCollapsed: G.questCollapsed || {},
         rest: {
       sites: G.rest.sites.map(s => ({ 
         id: s.id, 
@@ -5773,6 +5865,40 @@ function loadGame() {
     G.p.kills = data.player.kills;
     G.p.quests = data.player.quests;
     G.p.fstreak = data.player.fstreak;
+          // Load journal progress
+    if (data.player.storyJournal) {
+      G.storyJournal.unlocked = data.player.storyJournal.unlocked || [];
+      G.storyJournal.read = data.player.storyJournal.read || [];
+    }
+    
+    // MIGRATION: Unlock journal entries based on existing progress
+    // Runs if journal data is missing or empty (old saves or fresh installs)
+    const hasJournalData = data.player.storyJournal && 
+                           data.player.storyJournal.unlocked && 
+                           data.player.storyJournal.unlocked.length > 0;
+    if (!hasJournalData) {
+      for (let entry of G.storyJournal.entries) {
+        let shouldUnlock = false;
+        if (entry.unlockType === 'level' && G.p.lvl >= entry.unlockAt) {
+          shouldUnlock = true;
+        } else if (entry.unlockType === 'boss') {
+          // Check bestiary for boss kills
+          if (G.bestiary[entry.unlockAt] && G.bestiary[entry.unlockAt].kills > 0) {
+            shouldUnlock = true;
+          }
+        } else if (entry.unlockType === 'zone') {
+          // Check if zone rest site is unlocked (means visited)
+          const visited = G.rest.sites.find(s => s.zone === entry.unlockAt && s.unlocked);
+          if (visited) shouldUnlock = true;
+        }
+        if (shouldUnlock && !G.storyJournal.unlocked.includes(entry.id)) {
+          G.storyJournal.unlocked.push(entry.id);
+          lg('📖 Journal unlocked (migration): ' + entry.title);
+        }
+      }
+    }
+
+
 
     for (let s of G.p.skills) {
       const saved = data.player.skills.find(ss => ss.n === s.n);
@@ -5814,13 +5940,26 @@ function loadGame() {
       }
     }
 
-    for (let q of G.quests) {
+        for (let q of G.quests) {
       const saved = data.quests.find(sq => sq.id === q.id);
       if (saved) {
         q.c = saved.c;
         q.done = saved.done;
       }
     }
+    // Restore bounties progress
+    if (data.bounties) {
+      for (let sb of data.bounties) {
+        const lb = G.bounties.find(b => b.id === sb.id);
+        if (lb) {
+          lb.c = sb.c || 0;
+          lb.done = sb.done || false;
+          lb.refreshDay = sb.refreshDay || 0;
+        }
+      }
+    }
+    G.questCollapsed = data.questCollapsed || {};
+
 
             if (data.rest && data.rest.sites) {
       for (let s of G.rest.sites) {
@@ -6234,8 +6373,10 @@ function render(){
   else if(G.state=='talents')h+=rTalents();
   else if(G.state=='runes')h+=rRunes();
   else if(G.state=='ministory')h+=rMiniStory();
-  else if(G.state=='storymode')h+=rStoryMode();
+  else if(G.state=='journal')h+=rJournal();
+  else if(G.state=='journalentry')h+=rJournalEntry(G.currentJournalEntry);
   else if(G.state=='npc')h+=rNPC();
+
   h+='</div>';
   h+='<div class="log" id="log">'+G.log.map(m=>'<div class="le">'+m+'</div>').join('')+'</div>';
   h+='<div class="nav"><button class="nb '+(G.state=='menu'?'on':'')+'" data-t="home" data-a="menu">Home</button>';
@@ -6257,7 +6398,7 @@ function attachEvents() {
     else if(a=='skilltree')setS('skilltree');
     else if(a=='talents')setS('talents');
     else if(a=='runes')setS('runes');
-    else if(a=='storymode')startStoryMode();});
+    else if(a=='journal')setS('journal');});
   });
  const btnClaimLogin = document.getElementById('btn-claim-login');
 if (btnClaimLogin) {
@@ -6370,13 +6511,20 @@ if (btnClaimLogin) {
   });
   const btnCloseMini=document.getElementById('btn-close-ministory');
   if(btnCloseMini)btnCloseMini.addEventListener('click',closeMiniStory);
-  const btnAdvanceStory=document.getElementById('btn-advance-story');
-  if(btnAdvanceStory)btnAdvanceStory.addEventListener('click',advanceStoryScene);
-  document.querySelectorAll('.story-choice').forEach(el=>{
-    el.addEventListener('click',()=>{ makeStoryChoice(parseInt(el.getAttribute('data-choice'))); });
+
+// Journal entry click handlers
+document.querySelectorAll('.zcard[data-jid]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const jid=el.getAttribute('data-jid');
+    const entry=G.storyJournal.entries.find(e=>e.id===jid);
+    if(entry&&G.storyJournal.unlocked.includes(jid)){
+      G.currentJournalEntry=jid;
+      setS('journalentry');
+    }
   });
-  const btnEndStory=document.getElementById('btn-end-story');
-  if(btnEndStory)btnEndStory.addEventListener('click',endStoryMode);
+});
+const btnBackJournal=document.getElementById('btn-back-journal');
+if(btnBackJournal)btnBackJournal.addEventListener('click',()=>{ setS('journal'); });
 
   document.querySelectorAll('.rs-card:not(.locked):not(.active)').forEach(el=>{
     el.addEventListener('click',()=>{const id=el.getAttribute('data-id');startRest(id);});
@@ -6551,48 +6699,80 @@ function rMiniStory(){
   h += '</div>';
   return h;
 }
-
-function rStoryMode(){
-  if (!G.storyMode.active) return '<div>Story mode error</div>';
-  const chapter = G.storyModeChapters[G.storyMode.currentChapter];
-  if (!chapter) return '<div>Chapter not found</div>';
-
-  let h = '<div style="padding:20px;text-align:center;max-width:500px;margin:0 auto;">';
-  h += '<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;">📖 Story Mode</div>';
-  h += '<h2 style="font-family:Cinzel,serif;font-size:22px;margin-bottom:4px;">' + chapter.icon + ' ' + chapter.title + '</h2>';
-  h += '<div style="font-size:11px;color:var(--text-dim);margin-bottom:24px;">Chapter ' + (G.storyMode.currentChapter + 1) + ' of ' + G.storyModeChapters.length + '</div>';
-
-  // Progress bar
-  const progress = ((G.storyMode.currentChapter) / G.storyModeChapters.length) * 100;
-  h += '<div style="width:100%;height:4px;background:var(--timer-bg);border-radius:2px;margin-bottom:24px;">';
-  h += '<div style="width:' + progress + '%;height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s;"></div></div>';
-
-  // Current scene
-  const scene = chapter.scenes[G.storyMode.currentScene];
-  if (scene) {
-    h += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;text-align:left;">';
-    h += '<div style="font-size:15px;line-height:1.8;color:var(--text);font-style:italic;">' + scene.text + '</div>';
-    h += '</div>';
-    h += '<button class="abtn" id="btn-advance-story" style="max-width:200px;margin:0 auto;display:block;">Continue →</button>';
-  } else {
-    // Show choices
-    h += '<div style="font-size:14px;color:var(--text-dim);margin-bottom:16px;">What do you do?</div>';
-    h += '<div style="display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;">';
-    for (let i = 0; i < chapter.choices.length; i++) {
-      const ch = chapter.choices[i];
-      h += '<button class="story-choice" data-choice="' + i + '" style="padding:16px 20px;border-radius:14px;border:2px solid var(--accent);background:var(--bg-card);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;">';
-      h += '<div style="margin-bottom:6px;">' + ch.label + '</div>';
-      if (ch.affinity) h += '<div style="font-size:10px;color:var(--success);">+' + ch.amt + ' ' + ch.affinity + ' affinity</div>';
-      if (ch.xp) h += '<div style="font-size:10px;color:var(--success);">+' + ch.xp + ' XP</div>';
-      if (ch.gold) h += '<div style="font-size:10px;color:var(--success);">+' + ch.gold + 'G</div>';
-      if (ch.item) h += '<div style="font-size:10px;color:var(--success);">+' + ch.item.n + '</div>';
-      h += '</button>';
-    }
-    h += '</div>';
+function rJournal(){
+  let h='<div style="padding:16px;">';
+  h+='<div class="st">📖 Journal</div>';
+  
+  const entries=G.storyJournal.entries;
+  const unlocked=G.storyJournal.unlocked;
+  const read=G.storyJournal.read;
+  
+  if(entries.length===0){
+    h+='<div class="ei">No entries yet.</div>';
+    h+='</div>';
+    return h;
   }
+  
+  for(let entry of entries){
+    const isUnlocked=unlocked.includes(entry.id);
+    const isRead=read.includes(entry.id);
+    
+    h+='<div class="zcard '+(isUnlocked?'':'locked')+'" data-jid="'+entry.id+'" style="margin-bottom:10px;">';
+    h+='<div class="zh">';
+    h+='<div class="zn">'+entry.icon+' '+entry.title+'</div>';
+    h+='<div class="zl">Ch. '+entry.chapter+'</div>';
+    h+='</div>';
+    h+='<div class="zd">'+(isUnlocked?entry.summary:'???')+'</div>';
+    
+    if(isUnlocked){
+      h+='<div style="display:flex;gap:8px;align-items:center;margin-top:8px;">';
+      h+='<span style="font-size:11px;color:'+(isRead?'var(--success)':'var(--accent-light)')+';">';
+      h+=isRead?'✓ Read':'● Unread';
+      h+='</span>';
+      h+='</div>';
+    }else{
+      h+='<div style="font-size:11px;color:var(--disabled);margin-top:8px;">';
+      if(entry.unlockType==='level'){
+        h+='🔒 Unlock at Level '+entry.unlockAt;
+      }else if(entry.unlockType==='boss'){
+        h+='🔒 Defeat '+entry.unlockAt;
+      }else if(entry.unlockType==='zone'){
+        h+='🔒 Visit '+entry.unlockAt;
+      }
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  
+  h+='</div>';
+  return h;
+}
 
-  h += '<button id="btn-end-story" style="margin-top:24px;padding:8px 16px;border-radius:8px;border:1px solid var(--disabled);background:transparent;color:var(--disabled);font-size:11px;cursor:pointer;">Exit Story Mode</button>';
-  h += '</div>';
+function rJournalEntry(jid){
+  const entry=G.storyJournal.entries.find(e=>e.id===jid);
+  if(!entry)return'<div>Entry not found</div>';
+  
+  if(!G.storyJournal.read.includes(jid)){
+    G.storyJournal.read.push(jid);
+  }
+  
+  let h='<div style="padding:16px;max-width:500px;margin:0 auto;">';
+  h+='<div style="font-size:12px;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;">📖 Journal — Chapter '+entry.chapter+'</div>';
+  h+='<h2 style="font-family:Cinzel,serif;font-size:22px;margin-bottom:4px;">'+entry.icon+' '+entry.title+'</h2>';
+  h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:24px;">'+entry.summary+'</div>';
+  
+  h+='<div style="width:100%;height:4px;background:var(--timer-bg);border-radius:2px;margin-bottom:24px;">';
+  h+='<div style="width:100%;height:100%;background:var(--accent);border-radius:2px;"></div></div>';
+  
+  for(let scene of entry.scenes){
+    h+='<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;text-align:left;">';
+    h+='<div style="font-size:11px;font-weight:700;color:var(--accent-light);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">'+scene.speaker+'</div>';
+    h+='<div style="font-size:14px;line-height:1.8;color:var(--text);font-style:italic;">'+scene.text+'</div>';
+    h+='</div>';
+  }
+  
+  h+='<button class="fbtn" id="btn-back-journal" style="margin-top:8px;">← Back to Journal</button>';
+  h+='</div>';
   return h;
 }
 
@@ -6934,7 +7114,7 @@ function rMenu(){
     {i:'🌳',l:'Skill Trees',d:'Choose your specialization',a:'skilltree'},
     {i:'🌟',l:'Talents',d:'View planar talents (Lv.16+)',a:'talents'},
     {i:'💎',l:'Runes',d:'Socket runes into gear (Lv.20+)',a:'runes'},
-    {i:'📖',l:'Story Mode',d:'Read while resting',a:'storymode'},
+    {i:'📖',l:'Journal',d:'Chronicles of your journey',a:'journal'},
     {i:'🧳',l:'Traders',d:'Buy from wandering merchants',a:'npc'},
     {i:'🧘',l:'Focus Mode',d:'5–25 min ADHD timer',a:'focus'},
     {i:'💤',l:'Rest',d:'Find a safe place to rest',a:'rest'}
@@ -7480,6 +7660,11 @@ function rCraft(){
   h+='</div></div>'; return h;
 }
 
+function toggleQuestCollapse(key){
+  G.questCollapsed[key] = !G.questCollapsed[key];
+  render();
+}
+
 function rQuest(){
   let h='<div class="quest-view">';
     // === DAILY LOGIN REWARDS ===
@@ -7587,13 +7772,38 @@ function rQuest(){
     }
   }
   h += '</div>';
-  // Bounties section
-  h+='<h2 class="st" style="margin-top:20px;">💰 Bounties (Daily)</h2><div class="qlist">';
-  for(let b of G.bounties){
-    if(b.done) continue;
-    const pc=Math.min(100,(b.c/b.need)*100);
-    h+='<div class="qc"><div class="qh"><span class="qn">'+b.n+'</span><span class="qr">'+b.rw.xp+' XP | '+b.rw.g+' G</span></div>';
-    h+='<div class="qd">'+b.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+b.c+'/'+b.need+'</span></div></div>';
+    // Bounties section
+  const activeBounties = G.bounties.filter(b => !b.done && G.p.lvl >= (b.minLv || 1));
+  const doneBounties = G.bounties.filter(b => b.done);
+  if (activeBounties.length > 0 || doneBounties.length > 0) {
+    h+='<h2 class="st" style="margin-top:20px;">💰 Bounties</h2>';
+    if (activeBounties.length > 0) {
+      h+='<div class="qlist">';
+      for(let b of activeBounties){
+        const pc=Math.min(100,(b.c/b.need)*100);
+        h+='<div class="qc"><div class="qh"><span class="qn">'+b.n+'</span><span class="qr">'+b.rw.xp+' XP | '+b.rw.g+' G</span></div>';
+        h+='<div class="qd">'+b.d+'</div><div class="qp"><div class="pbar"><div class="pfill" style="width:'+pc+'%"></div></div><span class="ptxt">'+b.c+'/'+b.need+'</span></div></div>';
+      }
+      h+='</div>';
+    }
+    if (doneBounties.length > 0) {
+      const collapsed = G.questCollapsed['__bounties_done__'];
+      h+='<div style="margin-top:12px;">';
+      h+='<div onclick="toggleQuestCollapse(\'__bounties_done__\')" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;background:var(--bg-hover);border-radius:14px;border:1px solid var(--border);user-select:none;">';
+      h+='<span style="font-size:12px;transition:transform 0.2s;display:inline-block;' + (collapsed ? '' : 'transform:rotate(90deg);') + '">▶</span>';
+      h+='<span style="font-size:14px;font-weight:600;color:var(--success);">✅ Claimed</span>';
+      h+='<span style="font-size:12px;color:var(--text-dim);margin-left:auto;">' + doneBounties.length + '</span>';
+      h+='</div>';
+      if (!collapsed) {
+        h+='<div class="qlist" style="margin-top:8px;">';
+        for(let b of doneBounties){
+          h+='<div class="qc done" style="opacity:0.55;"><div class="qh"><span class="qn" style="text-decoration:line-through;">'+b.n+'</span><span class="qr" style="color:var(--success);">✓</span></div>';
+          h+='<div class="qd">'+b.d+'</div></div>';
+        }
+        h+='</div>';
+      }
+      h+='</div>';
+    }
   }
   h+='</div>';
   h+='<div class="sum"><div class="si2"><span class="sv">'+G.p.kills+'</span><span class="sl">Monsters</span></div><div class="si2"><span class="sv">'+G.p.quests+'</span><span class="sl">Quests</span></div><div class="si2"><span class="sv">'+G.p.fstreak+'</span><span class="sl">Focus</span></div></div></div>';
