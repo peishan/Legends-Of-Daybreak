@@ -3086,7 +3086,7 @@ function checkBountyKill(enemyName) {
       b.c++;
       if (b.c >= b.need) {
         b.done = true;
-        b.refreshDay = getDayNumber();
+        b.refreshDay = G.gameDay;
         G.p.xp += b.rw.xp;
         G.p.gold += b.rw.g;
         G.p.quests++;
@@ -5625,7 +5625,7 @@ function exitGrindRoom() {
 }
 
 function startGrindWave() {
-  if (!G.endlessGrind.active) return;
+    // Allow starting wave even when active is false (between waves)
   
   G.endlessGrind.wave++;
   G.cbt.on = true;
@@ -8612,7 +8612,7 @@ function rRest() {
       const locked = !site.unlocked || isDepletedManaSpring;
 
       const canAfford = !site.cost || G.p.gold >= site.cost;
-      const canRest = healerOk && !locked && canAfford;
+      const canRest = (site.type === 'mana_spring' || site.type === 'temple' || healerOk) && !locked && canAfford;
       h2 += '<div class="rs-card ' + (locked ? 'locked' : '') + '" data-id="' + site.id + '">';
       h2 += '<div class="rs-head">';
       h2 += '<span class="rs-name">' + site.icon + ' ' + site.name + '</span>';
@@ -8627,7 +8627,8 @@ function rRest() {
         }
       } else if (site.cost) {
 
-        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G · Ambush: 5% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+        h2 += '<div class="rs-req ' + ((site.type === 'mana_spring' || site.type === 'temple' || healerOk) ? 'ok' : 'fail') + '">' + ((site.type === 'mana_spring' || site.type === 'temple' || healerOk) ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+
       } else {
         h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
       }
