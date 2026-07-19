@@ -1410,7 +1410,7 @@ storyJournal: {
     { id: 'ic_camp', name: 'Crucible Hollow', type: 'camp', zone: 'Infernal Crucible', zoneLv: 23, desc: 'A heat-shielded cave behind a magmafall. The air shimmers.', unlocked: false, icon: '⛺', cost: 0 },
     { id: 'ic_tavern', name: 'The Molten Chalice', type: 'tavern', zone: 'Infernal Crucible', zoneLv: 23, desc: 'Fireproof stone tavern. The ale is served in cooled obsidian mugs. Everything glows.', unlocked: false, icon: '🍺', cost: 45 },
         { id: 'ms_spring1', name: 'Ethereal Mana Spring', type: 'mana_spring', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A natural spring of pure mana. The energy is overwhelming — you can only endure it briefly.', unlocked: false, icon: '💧', cost: 10, entryLimit: 3, entriesUsed: 0 },
-    { id: 'ms_spring2', name: 'Astral Mana Spring', type: 'mana_spring', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'Liquid starlight pools in a crater of fallen meteors. Each sip rewires your magic.', unlocked: false, icon: '💧', cost: 15, entryLimit: 3, entriesUsed: 0 },
+    { id: 'ms_spring2', name: 'Astral Mana Spring', type: 'mana_spring', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'Liquid starlight pools in a crater of fallen meteors. Each sip rewires your magic.', unlocked: false, icon: '💧', cost: 15 },
     ]
   },
   
@@ -1429,6 +1429,8 @@ storyJournal: {
     difficulty: 'normal', // normal, hard, nightmare
     difficultyMult: { normal: 1.0, hard: 1.5, nightmare: 2.5 }
   },
+  manaSpringUses: { day: 0, count: 0 },
+
 
     questCollapsed: {},
 
@@ -2907,6 +2909,8 @@ function checkDayAdvance() {
     G.loginStreak = 1;
     G.loginClaimed = false;
     generateDailyQuests();
+    G.manaSpringUses.day = G.gameDay;
+    G.manaSpringUses.count = 0;
     saveGame();
     return;
   }
@@ -5113,17 +5117,22 @@ function startRest(siteId) {
   }
   
   // === MANA SPRING: No healer required ===
-  if (site.type === 'mana_spring') {
-    if (site.entriesUsed >= site.entryLimit) {
-      lg('💧 The Mana Spring is depleted. Its energy has faded.');
+    if (site.type === 'mana_spring') {
+    if (G.manaSpringUses.day !== G.gameDay) {
+      G.manaSpringUses.day = G.gameDay;
+      G.manaSpringUses.count = 0;
+    }
+    if (G.manaSpringUses.count >= 8) {
+      lg('💧 You have reached your daily mana spring limit (8/day).');
       return;
     }
     if (G.p.gold < site.cost) {
       lg('❌ Not enough gold! ' + site.name + ' costs ' + site.cost + 'G.');
       return;
     }
-    site.entriesUsed++;
-    const remaining = site.entryLimit - site.entriesUsed;
+    G.manaSpringUses.count++;
+    const remaining = 8 - G.manaSpringUses.count;
+
     G.p.gold -= site.cost;
     
     // Full MP restore
@@ -8608,7 +8617,12 @@ function rRest() {
     h2 += '<div style="margin-bottom:12px;">';
     h2 += '<div style="font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">' + zoneName + '</div>';
     for (let site of sites) {
-            const isDepletedManaSpring = site.type === 'mana_spring' && site.entriesUsed >= site.entryLimit;
+    let manaSpringRemaining = 8;
+    if (G.manaSpringUses.day === G.gameDay) {
+        manaSpringRemaining = 8 - G.manaSpringUses.count;
+      }
+      const isDepletedManaSpring = site.type === 'mana_spring' && manaSpringRemaining <= 0;
+
       const locked = !site.unlocked || isDepletedManaSpring;
 
       const canAfford = !site.cost || G.p.gold >= site.cost;
@@ -8620,14 +8634,17 @@ function rRest() {
       h2 += '</div>';
       h2 += '<div class="rs-desc">' + site.desc + '</div>';
             if (locked) {
-        if (isDepletedManaSpring) {
-          h2 += '<div class="rs-req fail">💧 Depleted (' + site.entriesUsed + '/' + site.entryLimit + ' uses)</div>';
+            if (isDepletedManaSpring) {
+          h2 += '<div class="rs-req fail">💧 Daily limit reached (8/8 uses)</div>';
+
         } else {
           h2 += '<div class="rs-req fail">🔒 Requires Level ' + site.zoneLv + ' to discover</div>';
         }
       } else if (site.cost) {
 
-        h2 += '<div class="rs-req ' + ((site.type === 'mana_spring' || site.type === 'temple' || healerOk) ? 'ok' : 'fail') + '">' + ((site.type === 'mana_spring' || site.type === 'temple' || healerOk) ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+                const msUsesLeft = site.type === 'mana_spring' ? ' (' + manaSpringRemaining + '/8 today)' : '';
+        h2 += '<div class="rs-req ' + (canAfford ? 'ok' : 'fail') + '">' + (canAfford ? '✅' : '❌') + ' Cost: ' + site.cost + 'G' + msUsesLeft + ' · Ambush: 5% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
+
 
       } else {
         h2 += '<div class="rs-req ' + (healerOk ? 'ok' : 'fail') + '">' + (healerOk ? '✅' : '❌') + ' Free · Ambush: 15% | ' + (canRest ? 'Tap to rest' : 'Cannot rest') + '</div>';
