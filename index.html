@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f0e17">
+<link rel="manifest" href="manifest.json">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src https: fonts.gstatic.com;">
 <title>Legends of Daybreak - RPG</title>
 <style>
@@ -66,7 +68,7 @@
   --glow-rest: #10b98115;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; overscroll-behavior-y: none; touch-action: pan-x; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 .hdr { background: linear-gradient(135deg, var(--nav-bg), var(--bg-hover)); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
 .hdr-l { display: flex; align-items: center; gap: 10px; }
@@ -381,7 +383,14 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 <div id="app"></div>
 <script>
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function(err) {
+    console.log('SW registration failed:', err);
+  });
+}
+
 const G = {
+
   state: 'menu',
   p: {
     name: 'San', cls: 'Sorcerer', lvl: 1, xp: 0, xpN: 100,
@@ -5001,7 +5010,13 @@ function updateLastActive() {
 // Update last active time periodically
 setInterval(updateLastActive, 60000); // Every minute
 // Also update on page hide/show
-window.addEventListener('beforeunload', updateLastActive);
+window.addEventListener('beforeunload', function(e) {
+  updateLastActive();
+  if (G && (G.cbt?.on || G.rest?.active)) {
+    e.preventDefault();
+    e.returnValue = 'You are in combat or resting. Leave anyway?';
+  }
+});
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     updateLastActive();
