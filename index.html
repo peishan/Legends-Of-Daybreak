@@ -7,6 +7,10 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#0f0e17">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daybreak v2">
 <link rel="manifest" href="manifest.json?v=2">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src https: fonts.gstatic.com;">
 <title>Legends of Daybreak - RPG</title>
@@ -385,6 +389,38 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 <body>
 <div id="app"></div>
 <script>
+
+// PWA Install Prompt Handler
+let deferredPrompt = null;
+const installBtn = document.createElement('button');
+installBtn.id = 'pwa-install-btn';
+installBtn.style.cssText = 'position:fixed;bottom:80px;right:16px;z-index:1000;padding:12px 20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;display:none;box-shadow:0 4px 12px #7c3aed40;';
+installBtn.textContent = '⚔️ Install Daybreak';
+document.body.appendChild(installBtn);
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+  lg('📲 PWA install available! Tap the floating button to install.');
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    lg('🎉 Daybreak installed! Welcome, San.');
+    installBtn.style.display = 'none';
+  }
+  deferredPrompt = null;
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+  lg('✅ Daybreak is now installed on your device!');
+});
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(function(err) {
