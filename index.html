@@ -7276,19 +7276,18 @@ if(btnBackJournal)btnBackJournal.addEventListener('click',()=>{ setS('journal');
       reviveMember(el.getAttribute('data-m'));
     });
   });
-  document.querySelectorAll('.equip-pgear').forEach(el=>{
+    document.querySelectorAll('.equip-pgear').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       equipPartyGear(el.getAttribute('data-member'), parseInt(el.getAttribute('data-idx')));
     });
+  });
   // Stage 1: Trinket shop
   document.querySelectorAll('.trinket-buy-btn').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       buyTrinket(parseInt(el.getAttribute('data-tidx')));
     });
-  });
-
   });
   document.querySelectorAll('.unequip-pgear').forEach(el=>{
     el.addEventListener('click',(e)=>{
