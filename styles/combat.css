@@ -1,0 +1,84 @@
+/* === COMBAT.CSS === Battle UI, enemy cards, skill buttons, buffs, status */
+
+/* === ENEMY ROW === */
+.erow { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+
+.ecard {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  min-width: 90px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.ecard.sel { border-color: var(--danger); box-shadow: 0 0 0 3px #ef444430; }
+.ecard.dead { opacity: 0.4; border-color: #333; cursor: default; }
+.eicon { font-size: 32px; margin-bottom: 4px; }
+.ename { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.hps { height: 6px; background: var(--timer-bg); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.hpt { font-size: 10px; color: var(--text-dim); }
+.dt { font-size: 10px; color: #666; font-style: italic; }
+.e-immune { font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 2px; }
+
+/* === PLAYER STATS IN COMBAT === */
+.pstat { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.mst { font-size: 11px; display: flex; align-items: center; gap: 4px; background: var(--bg-hover); padding: 4px 10px; border-radius: 10px; }
+.md { width: 8px; height: 8px; border-radius: 50%; }
+
+/* === SKILLS === */
+.skills h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.slist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.sbtn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.sbtn:hover:not(.dis) { border-color: var(--accent); }
+.sbtn.sel { border-color: var(--accent); background: #7c3aed15; }
+.sbtn.dis { opacity: 0.4; cursor: not-allowed; }
+.sn { font-weight: 600; font-size: 13px; }
+.sc { font-size: 11px; color: var(--mp); }
+.sd { font-size: 11px; color: var(--text-dim); }
+
+/* === ACTION BUTTONS === */
+.abtn, .fbtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 8px;
+  user-select: none;
+}
+.abtn { background: linear-gradient(135deg, var(--accent), #6d28d9); color: white; }
+.abtn.dis { opacity: 0.4; cursor: not-allowed; }
+.fbtn { background: #374151; color: var(--text); }
+
+/* === AMBUSH WARNING === */
+.ambush-warning {
+  background: #ef444415;
+  border: 1px solid var(--danger);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: left;
+  animation: shake 0.5s ease;
+}
+.ambush-warning .aw-text { font-size: 13px; color: var(--danger); font-weight: 600; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* === ELEMENTAL IMMUNITY === */
+.e-immune { font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 2px; }

@@ -1,0 +1,50 @@
+/* === THEME.CSS === Dark/Light mode overrides, color tokens */
+
+/* LIGHT MODE OVERRIDES - Fix dark elements */
+[data-theme="light"] .sbtn,
+[data-theme="light"] .ecard,
+[data-theme="light"] .mst,
+[data-theme="light"] .dp,
+[data-theme="light"] .mp,
+[data-theme="light"] .rs-type,
+[data-theme="light"] .npc-item {
+  background: #ffffff !important;
+  border-color: #d4d0c8 !important;
+}
+
+[data-theme="light"] .sbtn.sel {
+  background: #f3e8ff !important;
+  border-color: #7c3aed !important;
+}
+
+[data-theme="light"] .sbtn .sn,
+[data-theme="light"] .ecard .ename {
+  color: #2d2a26 !important;
+}
+
+[data-theme="light"] .sbtn .sc,
+[data-theme="light"] .sbtn .sd,
+[data-theme="light"] .ecard .dt,
+[data-theme="light"] .mst {
+  color: #6b6560 !important;
+}
+
+[data-theme="light"] .sbtn.dis {
+  opacity: 0.5 !important;
+  background: #f5f3ef !important;
+}
+
+[data-theme="light"] .ecard.sel {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px #ef444425 !important;
+}
+
+[data-theme="light"] .ecard.dead {
+  opacity: 0.4 !important;
+  border-color: #a8a29e !important;
+}
+
+[data-theme="light"] .hpt,
+[data-theme="light"] .e-immune {
+  color: #6b6560 !important;
+}
