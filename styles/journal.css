@@ -1,0 +1,39 @@
+/* === JOURNAL.CSS === Story entries, cutscenes, dialogue scenes, chapter unlocks */
+
+/* === STORY JOURNAL === */
+.story-journal { padding: 0; }
+
+.journal-entry {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.journal-entry:hover { border-color: var(--accent); }
+.journal-entry.locked { opacity: 0.5; cursor: not-allowed; }
+.journal-entry.read { border-color: var(--success); }
+
+.je-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.je-icon { font-size: 24px; }
+.je-title { font-weight: 700; font-size: 15px; flex: 1; }
+.je-chapter { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: var(--accent); color: white; font-weight: 600; }
+.je-summary { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+.je-status { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+/* === CUTSCENE / SCENE VIEWER === */
+.scene-viewer {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.scene-speaker { font-size: 12px; font-weight: 700; color: var(--accent-light); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+.scene-text { font-size: 14px; color: var(--text); line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+.scene-nav { display: flex; justify-content: space-between; gap: 10px; }
+.scene-btn { padding: 10px 20px; border-radius: 10px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; user-select: none; }
+.scene-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.scene-btn.secondary { background: var(--bg-hover); color: var(--text); }

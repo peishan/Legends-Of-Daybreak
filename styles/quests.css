@@ -1,0 +1,41 @@
+/* === QUESTS.CSS === Quest cards, bounties, achievements, storyline, progress bars */
+
+/* === QUESTS === */
+.qlist { display: flex; flex-direction: column; gap: 10px; }
+.qc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.qc.done { border-color: var(--success); }
+.qh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.qn { font-weight: 600; font-size: 14px; }
+.qr { font-size: 11px; color: var(--gold); }
+.qd { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.qp { display: flex; align-items: center; gap: 10px; }
+.pbar { flex: 1; height: 8px; background: var(--timer-bg); border-radius: 4px; overflow: hidden; }
+.pfill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s; }
+.ptxt { font-size: 11px; color: var(--text-dim); min-width: 40px; text-align: right; }
+
+/* === ACHIEVEMENTS === */
+.achievements-view .ach-card { transition: all 0.2s; }
+.achievements-view .ach-card:hover { transform: translateX(4px); }
+
+/* === SKILL TREES === */
+.sklist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.skcard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.skcard.locked { opacity: 0.5; }
+.skh { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ski { font-size: 20px; }
+.skt { font-weight: 700; font-size: 14px; flex: 1; }
+.sks { font-size: 10px; padding: 3px 10px; border-radius: 10px; background: var(--success); color: white; }
+.skcard.locked .sks { background: #6b7280; }
+.skd { display: flex; gap: 8px; margin-bottom: 6px; }
+.dp { font-size: 11px; background: var(--bg-hover); padding: 3px 10px; border-radius: 8px; color: var(--text-dim); }
+.skdsc { font-size: 12px; color: var(--text-dim); }

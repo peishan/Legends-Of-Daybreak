@@ -1,0 +1,113 @@
+/* === EXPLORATION.CSS === Rest sites, dialogue, zone buffs, hazards, weather */
+
+/* === REST SYSTEM === */
+.rest-view { text-align: center; }
+.rest-sites { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.rs-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  text-align: left;
+}
+.rs-card:hover:not(.locked) { border-color: var(--rest); background: #10b98110; }
+.rs-card.locked { opacity: 0.4; cursor: not-allowed; }
+.rs-card.active { border-color: var(--rest); background: #10b98115; }
+
+.rs-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.rs-name { font-weight: 600; font-size: 15px; }
+.rs-type { font-size: 10px; padding: 2px 8px; border-radius: 8px; background: var(--bg-hover); color: var(--text-dim); }
+.rs-type.camp { background: #10b98120; color: var(--rest); }
+.rs-type.tavern { background: #f59e0b20; color: var(--gold); }
+.rs-type.mana_spring { background: #6366f120; color: #6366f1; }
+.rs-type.temple { background: #7c3aed20; color: var(--accent-light); }
+.rs-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+.rs-req { font-size: 11px; color: var(--text-dim); }
+.rs-req.ok { color: var(--success); }
+.rs-req.fail { color: var(--danger); }
+
+.rest-progress {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.rest-timer { font-size: 48px; font-weight: 700; color: var(--rest); font-family: 'Cinzel', serif; margin-bottom: 8px; }
+.rest-label { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+.rest-bar { height: 12px; background: var(--timer-bg); border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+.rest-fill { height: 100%; background: linear-gradient(90deg, var(--rest), #34d399); border-radius: 6px; transition: width 0.3s ease; }
+.rest-healer { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+.rest-healer.ok { color: var(--success); }
+.rest-healer.fail { color: var(--danger); }
+.rest-cancel { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 13px; font-weight: 600; cursor: pointer; }
+
+.rest-result {
+  background: var(--bg-card);
+  border: 1px solid var(--rest);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.rest-result h3 { color: var(--rest); font-size: 16px; margin-bottom: 8px; }
+.rest-result p { font-size: 13px; color: var(--text-dim); }
+
+/* === CAMPFIRE TICKS === */
+.tick-track { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.tick {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+.tick.done { background: var(--rest); border-color: var(--rest); color: white; }
+.tick.current { border-color: var(--rest); box-shadow: 0 0 0 3px #10b98140; animation: pulse 1s infinite; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #10b98140; }
+  50% { box-shadow: 0 0 0 6px #10b98120; }
+}
+.tick-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+/* === DIALOGUE === */
+.dialogue-box {
+  background: var(--nav-bg);
+  border: 1px solid var(--dialogue);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: left;
+  animation: fadeIn 0.5s ease;
+}
+.dialogue-box .d-speaker { font-size: 12px; font-weight: 700; color: var(--dialogue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.dialogue-box .d-text { font-size: 13px; color: var(--text); line-height: 1.5; font-style: italic; }
+.dialogue-box .d-tick { font-size: 10px; color: var(--text-dim); margin-top: 6px; text-align: right; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* === TEMPLE REVIVE === */
+.temple-revive {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.temple-revive.dead { border-color: var(--danger); background: #ef444410; }
+.temple-revive.alive { opacity: 0.5; }
+.tr-ava { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 18px; }
+.tr-info { flex: 1; text-align: left; }
+.tr-name { font-weight: 600; font-size: 14px; }
+.tr-status { font-size: 11px; color: var(--danger); }
+.tr-status.alive { color: var(--success); }
+.tr-btn { padding: 8px 14px; border-radius: 10px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--accent); color: white; }
+.tr-btn.dis { opacity: 0.4; cursor: not-allowed; background: var(--disabled); }

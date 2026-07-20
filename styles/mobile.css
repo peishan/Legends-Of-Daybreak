@@ -1,0 +1,45 @@
+/* === MOBILE.CSS === Touch optimizations, safe areas, scroll fixes, PWA button */
+
+/* PWA Install Button */
+#pwa-install-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 1000;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  box-shadow: 0 4px 12px #7c3aed40;
+}
+
+/* Touch / Mobile fixes */
+* { -webkit-tap-highlight-color: transparent; }
+body { overscroll-behavior-y: none; touch-action: pan-x; }
+
+/* Safe area for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .nav { padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+  .content { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+}
+
+/* Prevent text selection on interactive elements */
+.card, .zcard, .ecard, .sbtn, .rs-card, .npc-card, .journal-entry, .abtn, .fbtn, .nb, .cb, .ib, .tr-btn, .scene-btn, .cfb, .rest-cancel, .npc-buy {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Smooth scroll for content area */
+.content { -webkit-overflow-scrolling: touch; }
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .bf, .pfill, .rest-fill, .affinity-fill, .timer-fill { transition: none; }
+  .tick.current { animation: none; }
+  .dialogue-box, .ambush-warning { animation: none; }
+}

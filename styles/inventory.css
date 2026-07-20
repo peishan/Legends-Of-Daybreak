@@ -1,0 +1,97 @@
+/* === INVENTORY.CSS === Equipment grid, items, runes, crafting, party gear */
+
+/* === EQUIPMENT SLOTS === */
+.eqs, .its { margin-bottom: 16px; }
+.eqs h3, .its h3 { font-size: 14px; margin-bottom: 10px; color: var(--accent-light); }
+.eqg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.esl {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.esn { font-size: 10px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 4px; }
+.eit { font-size: 12px; font-weight: 600; }
+.est { font-size: 11px; color: var(--success); }
+.ese { font-size: 11px; color: var(--disabled); font-style: italic; }
+
+/* === ITEM GRID === */
+.ig { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.ic {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.ii { font-size: 24px; margin-bottom: 4px; }
+.in { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.iq { font-size: 11px; color: var(--text-dim); }
+.ia { margin-top: 6px; }
+.ib { padding: 4px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; margin: 2px; user-select: none; }
+.ib-u { background: var(--success); color: white; }
+.ib-e { background: var(--mp); color: white; }
+.ei { color: var(--disabled); font-style: italic; padding: 20px; text-align: center; grid-column: span 2; }
+
+/* === RUNES === */
+.rlist { display: flex; flex-direction: column; gap: 10px; }
+.rc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.rr { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.ri { font-size: 24px; }
+.rn { font-weight: 700; font-size: 14px; }
+.rd { font-size: 11px; color: var(--text-dim); }
+.rms { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mp { font-size: 10px; padding: 3px 10px; border-radius: 8px; background: var(--bg-hover); color: var(--text-dim); }
+.mp.ok { background: #22c55e20; color: var(--success); }
+.mp.miss { background: #ef444420; color: var(--danger); }
+.cb {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  user-select: none;
+}
+.cb.dis { opacity: 0.4; cursor: not-allowed; }
+
+/* === CRAFTING === */
+.cfb { padding: 12px 24px; border-radius: 12px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 14px; font-weight: 600; cursor: pointer; user-select: none; }
+
+/* === PARTY GEAR / TRINKETS === */
+.plist { display: flex; flex-direction: column; gap: 10px; }
+.pcard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.pcard.locked { opacity: 0.5; }
+.pava { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid; flex-shrink: 0; font-size: 20px; }
+.pinfo { flex: 1; }
+.pn { font-weight: 700; font-size: 15px; }
+.pt { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+.pr { font-size: 12px; font-weight: 600; margin: 2px 0; }
+.pd { font-size: 11px; color: var(--text-dim); line-height: 1.4; margin-bottom: 4px; }
+.pb { font-size: 11px; color: var(--success); font-weight: 500; }
+.ps { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+/* === STATS TABLE === */
+.stb { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.stb h3 { font-size: 14px; margin-bottom: 10px; }
+.str { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.str:last-child { border-bottom: none; }
+.stn { color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.stv { font-weight: 700; color: var(--accent-light); }
