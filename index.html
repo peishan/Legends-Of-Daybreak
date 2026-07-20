@@ -661,7 +661,19 @@ const G = {
     { n: 'The Fractured Veil', lv: 21, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 550, dg: 'impossible' },
         // === PHASE 1 EXPANSION: LV 22-23 ZONES ===
     { n: 'The Astral Maelstrom', lv: 22, elem: 'arcane', d: 'A storm of raw planar energy where dimensions collide and unravel. Reality here is a suggestion, not a rule.', en: ['Astral Construct','Void Hound','Phase Walker','Rift Rat'], loot: ['Astral Dust','Void Fragment','Planar Essence','Reality Anchor'], xp: 600, dg: 'impossible' },
-    { n: 'Infernal Crucible', lv: 23, elem: 'fire', d: 'The forge where stars are born and die. Magma rivers flow upward into a sky of eternal flame.', en: ['Ember Wraith','Ash Phantom','Flame Serpent','Magma Titan'], loot: ['Inferno Gem','Ash Crystal','Ember Core','Phoenix Ash'], xp: 680, dg: 'impossible' },
+        { n: 'Infernal Crucible', lv: 23, elem: 'fire', d: 'The forge where stars are born and die. Magma rivers flow upward into a sky of eternal flame.', en: ['Ember Wraith','Ash Phantom','Flame Serpent','Magma Titan'], loot: ['Inferno Gem','Ash Crystal','Ember Core','Phoenix Ash'], xp: 680, dg: 'impossible' },
+
+    // === GAP FILLERS ===
+    { n: 'Serpent\'s Coil', lv: 9, elem: 'poison', d: 'A labyrinth of venomous tunnels where basilisks breed. The air is thick with neurotoxin.', en: ['Basilisk','Venom Hound','Mire Serpent'], loot: ['Serpent Scale','Venom Sac','Basilisk Eye'], xp: 250, dg: 'extreme' },
+    { n: 'The Fulcrum', lv: 15, elem: 'arcane', d: 'A floating nexus where all planar energies briefly stabilize before diverging again.', en: ['Fulcrum Warden','Stasis Construct','Planar Mote'], loot: ['Fulcrum Shard','Stasis Crystal','Planar Mote'], xp: 320, dg: 'impossible' },
+
+    // === PHASE 3: LV 24-29 ===
+    { n: 'The Scorched Vein', lv: 24, elem: 'fire', d: 'A canyon of molten glass where the earth bleeds magma. The heat warps reality itself.', en: ['Magma Serpent','Glass Wraith','Scorch Titan'], loot: ['Magma Core','Glass Shard','Scorched Ember'], xp: 520, dg: 'impossible' },
+    { n: 'Tidal Abyss', lv: 25, elem: 'ice', d: 'An ocean trench frozen in time. Pressure crushes; the cold preserves everything, even screams.', en: ['Abyssal Leviathan Spawn','Frozen Kraken','Pressure Golem'], loot: ['Abyssal Pearl','Frozen Ink','Pressure Stone'], xp: 560, dg: 'impossible' },
+    { n: 'The Shattered Crown', lv: 26, elem: 'lightning', d: 'The ruins of a sky-kingdom, shattered by hubris. Lightning still seeks the throne.', en: ['Storm Sovereign Remnant','Crown Wraith','Skyfall Construct'], loot: ['Crown Fragment','Sovereign Essence','Skyfall Ore'], xp: 600, dg: 'impossible' },
+    { n: 'The Hollow Throne', lv: 27, elem: 'void', d: 'A palace built in the space between dimensions. The throne is empty. The throne is hungry.', en: ['Throne Keeper','Hollow Knight','Void Courtier'], loot: ['Throne Shard','Hollow Crown','Void Silk'], xp: 640, dg: 'impossible' },
+    { n: 'The Final Spire', lv: 28, elem: 'arcane', d: 'The last tower before the apex of all realities. Gravity is optional. Time is a suggestion.', en: ['Spire Archon','Reality Weaver Elite','Chrono Guardian'], loot: ['Spire Keystone','Reality Thread','Chrono Crystal'], xp: 680, dg: 'impossible' },
+    { n: 'The Apex', lv: 29, elem: 'arcane', d: 'The highest point in all dimensions. Beyond this, only the story remains. The final gate.', en: ['Apex Warden','Final Construct','The Gatekeeper'], loot: ['Apex Fragment','Final Key','Gate Stone'], xp: 720, dg: 'impossible' },
   ],
 
   // Zone hazards: environmental dangers that trigger during combat
@@ -685,6 +697,15 @@ const G = {
         // === PHASE 1: LV 22-23 ZONE HAZARDS ===
     'The Astral Maelstrom': { name: 'Dimensional Shear', chance: 0.15, type: 'damage', dmg: 14, elem: 'arcane', msg: 'Reality shears apart — raw astral energy cuts through!', desc: '15% chance per turn: 14 arcane damage to all (dimensional shear)' },
     'Infernal Crucible': { name: 'Magma Vent', chance: 0.20, type: 'damage', dmg: 10, elem: 'fire', msg: 'A magma vent erupts beneath your feet!', desc: '20% chance per turn: 10 fire damage to all (magma vent)' },
+        'Serpent\'s Coil': { name: 'Neurotoxin Cloud', chance: 0.15, type: 'damage', dmg: 6, elem: 'poison', msg: 'A cloud of neurotoxin rolls through the tunnels!', desc: '15% chance per turn: 6 poison damage to all' },
+    'The Fulcrum': { name: 'Planar Surge', chance: 0.12, type: 'mana_drain', drain: 5, msg: 'The Fulcrum destabilizes, draining magic!', desc: '12% chance per turn: drain 5 MP from all (planar surge)' },
+    'The Scorched Vein': { name: 'Magma Eruption', chance: 0.20, type: 'damage', dmg: 12, elem: 'fire', msg: 'Magma erupts from the glass canyon walls!', desc: '20% chance per turn: 12 fire damage to all' },
+    'Tidal Abyss': { name: 'Crushing Pressure', chance: 0.15, type: 'damage', dmg: 8, elem: 'ice', msg: 'The abyss crushes everything in its depths!', desc: '15% chance per turn: 8 ice damage to all (pressure)' },
+    'The Shattered Crown': { name: 'Lightning Crown', chance: 0.18, type: 'damage', dmg: 10, elem: 'lightning', msg: 'The crown calls lightning to punish intruders!', desc: '18% chance per turn: 10 lightning damage to random member' },
+    'The Hollow Throne': { name: 'Void Hunger', chance: 0.10, type: 'mana_drain', drain: 6, msg: 'The throne hungers for your magic!', desc: '10% chance per turn: drain 6 MP from all (void hunger)' },
+    'The Final Spire': { name: 'Reality Fracture', chance: 0.15, type: 'damage', dmg: 14, elem: 'arcane', msg: 'The spire fractures reality around you!', desc: '15% chance per turn: 14 arcane damage to all' },
+    'The Apex': { name: 'Apex Radiance', chance: 0.12, type: 'damage', dmg: 16, elem: 'arcane', msg: 'The Apex radiates with unbearable power!', desc: '12% chance per turn: 16 arcane damage to all' },
+
 
   },
 
@@ -963,6 +984,97 @@ const G = {
         { n: 'Planar Essence', t: 'mat', q: 1, r: 'rare', price: 50 }
       ],
       unlocked: false, visitCount: 0 },
+    // === PHASE 3: LV 21-29 TRADERS ===
+    { n: 'Kael', t: 'trader', title: 'The Last Astronomer', icon: '🔭', col: '#6366f1', zone: 'The Fractured Veil', zoneLv: 21,
+      d: 'A gaunt figure hunched over a telescope pointed at nothing. He trades in starlight and secrets. His eyes have seen too many dimensions.',
+      stock: [
+        { n: 'Reality Fragment', t: 'mat', q: 1, r: 'rare', price: 60 },
+        { n: 'Aether Shard', t: 'mat', q: 1, r: 'rare', price: 55 },
+        { n: 'Chrono Sand', t: 'mat', q: 1, r: 'epic', price: 130 },
+        { n: 'Veil Piercer', t: 'wep', q: 1, r: 'epic', price: 550, atk: 20, int: 7, arcaneDmg: 8 },
+        { n: 'Starshroud Cloak', t: 'arm', q: 1, r: 'epic', price: 350, def: 12, int: 5, arcaneRes: 0.25 },
+        { n: 'Astronomer\'s Lens', t: 'acc', q: 1, r: 'rare', price: 200, int: 6, mpRegen: 4 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Ignis', t: 'trader', title: 'The Crucible Keeper', icon: '🔥', col: '#dc2626', zone: 'Infernal Crucible', zoneLv: 23,
+      d: 'A being of living flame who tends the eternal forge. His wares are forged in the heart of a dying star. He speaks in embers.',
+      stock: [
+        { n: 'Inferno Gem', t: 'mat', q: 1, r: 'rare', price: 70 },
+        { n: 'Ash Crystal', t: 'mat', q: 1, r: 'rare', price: 65 },
+        { n: 'Ember Core', t: 'mat', q: 1, r: 'epic', price: 140 },
+        { n: 'Phoenix Ash', t: 'mat', q: 1, r: 'epic', price: 150 },
+        { n: 'Infernal Brand', t: 'wep', q: 1, r: 'epic', price: 600, atk: 22, str: 6, fireDmg: 10 },
+        { n: 'Magmaforged Plate', t: 'arm', q: 1, r: 'epic', price: 380, def: 14, con: 5, fireRes: 0.30 },
+        { n: 'Cinder Ring', t: 'acc', q: 1, r: 'rare', price: 220, str: 5, fireDmg: 5, hpRegen: 2 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Glacielle', t: 'trader', title: 'The Frozen Merchant', icon: '❄️', col: '#06b6d4', zone: 'The Scorched Vein', zoneLv: 24,
+      d: 'An ice-witch who sells cold in a world of fire. Her breath frosts the air. Her prices are as sharp as her tongue.',
+      stock: [
+        { n: 'Magma Core', t: 'mat', q: 1, r: 'rare', price: 75 },
+        { n: 'Glass Shard', t: 'mat', q: 1, r: 'uncommon', price: 40 },
+        { n: 'Scorched Ember', t: 'mat', q: 1, r: 'rare', price: 70 },
+        { n: 'Frostfire Blade', t: 'wep', q: 1, r: 'epic', price: 650, atk: 24, dex: 5, fireDmg: 6, iceDmg: 6 },
+        { n: 'Thermal Ward', t: 'arm', q: 1, r: 'epic', price: 400, def: 13, con: 4, fireRes: 0.20, iceRes: 0.20 },
+        { n: 'Equilibrium Stone', t: 'acc', q: 1, r: 'rare', price: 250, int: 5, fireDmg: 3, iceDmg: 3 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Marinus', t: 'trader', title: 'The Drowned Trader', icon: '🌊', col: '#0891b2', zone: 'Tidal Abyss', zoneLv: 25,
+      d: 'A spectral sailor who walks on the abyssal floor. His wares are waterlogged but powerful. He trades in pressure and pearls.',
+      stock: [
+        { n: 'Abyssal Pearl', t: 'mat', q: 1, r: 'rare', price: 80 },
+        { n: 'Frozen Ink', t: 'mat', q: 1, r: 'rare', price: 75 },
+        { n: 'Pressure Stone', t: 'mat', q: 1, r: 'epic', price: 160 },
+        { n: 'Abyssal Trident', t: 'wep', q: 1, r: 'epic', price: 700, atk: 26, str: 5, iceDmg: 8 },
+        { n: 'Kraken Scale Mail', t: 'arm', q: 1, r: 'epic', price: 420, def: 15, con: 6, iceRes: 0.25 },
+        { n: 'Depth Charge', t: 'acc', q: 1, r: 'rare', price: 280, wis: 5, iceDmg: 4, mpRegen: 3 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Fulgora', t: 'trader', title: 'The Storm Merchant', icon: '⚡', col: '#eab308', zone: 'The Shattered Crown', zoneLv: 26,
+      d: 'A lightning-weaver who sells the storm\'s fury. Her hair crackles with static. Her shop is a Faraday cage of gold and thunder.',
+      stock: [
+        { n: 'Crown Fragment', t: 'mat', q: 1, r: 'rare', price: 85 },
+        { n: 'Sovereign Essence', t: 'mat', q: 1, r: 'epic', price: 170 },
+        { n: 'Skyfall Ore', t: 'mat', q: 1, r: 'rare', price: 80 },
+        { n: 'Thunderlord Spear', t: 'wep', q: 1, r: 'legendary', price: 800, atk: 28, dex: 6, lightDmg: 12 },
+        { n: 'Stormweave Robes', t: 'arm', q: 1, r: 'epic', price: 450, def: 14, int: 6, lightRes: 0.30 },
+        { n: 'Lightning Rod Band', t: 'acc', q: 1, r: 'epic', price: 320, dex: 5, lightDmg: 6, critChance: 0.05 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Nullus', t: 'trader', title: 'The Void Broker', icon: '🌑', col: '#a855f7', zone: 'The Hollow Throne', zoneLv: 27,
+      d: 'A faceless merchant who speaks from the shadows. His wares are memories of things that never existed. He takes payment in secrets.',
+      stock: [
+        { n: 'Throne Shard', t: 'mat', q: 1, r: 'epic', price: 180 },
+        { n: 'Hollow Crown', t: 'mat', q: 1, r: 'epic', price: 190 },
+        { n: 'Void Silk', t: 'mat', q: 1, r: 'rare', price: 90 },
+        { n: 'Null Blade', t: 'wep', q: 1, r: 'legendary', price: 900, atk: 30, int: 7, voidDmg: 14 },
+        { n: 'Voidshroud Mantle', t: 'arm', q: 1, r: 'legendary', price: 500, def: 16, int: 6, voidRes: 0.35 },
+        { n: 'Absorption Ring', t: 'acc', q: 1, r: 'epic', price: 350, int: 6, voidDmg: 5, lifeSteal: 0.08 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'Chrona', t: 'trader', title: 'The Time Merchant', icon: '⏳', col: '#ec4899', zone: 'The Final Spire', zoneLv: 28,
+      d: 'A merchant who exists in all moments at once. She sells futures and pasts. Her prices are paid in years, but she accepts gold too.',
+      stock: [
+        { n: 'Spire Keystone', t: 'mat', q: 1, r: 'epic', price: 200 },
+        { n: 'Reality Thread', t: 'mat', q: 1, r: 'epic', price: 210 },
+        { n: 'Chrono Crystal', t: 'mat', q: 1, r: 'legendary', price: 250 },
+        { n: 'Paradox Edge', t: 'wep', q: 1, r: 'legendary', price: 1000, atk: 32, int: 8, arcaneDmg: 12, mpRegen: 3 },
+        { n: 'Temporal Aegis', t: 'arm', q: 1, r: 'legendary', price: 550, def: 18, wis: 7, arcaneRes: 0.30, hpRegen: 4 },
+        { n: 'Infinity Loop', t: 'acc', q: 1, r: 'legendary', price: 400, int: 7, wis: 4, arcaneDmg: 6, mpRegen: 4 }
+      ],
+      unlocked: false, visitCount: 0 },
+    { n: 'The Arbiter', t: 'trader', title: 'Final Curio Dealer', icon: '👁️', col: '#f59e0b', zone: 'The Apex', zoneLv: 29,
+      d: 'The last merchant in all realities. He has seen the end of everything. His wares are the remnants of completed worlds. He does not haggle.',
+      stock: [
+        { n: 'Apex Fragment', t: 'mat', q: 1, r: 'legendary', price: 300 },
+        { n: 'Final Key', t: 'mat', q: 1, r: 'legendary', price: 350 },
+        { n: 'Gate Stone', t: 'mat', q: 1, r: 'legendary', price: 400 },
+        { n: 'Reality Sunderer', t: 'wep', q: 1, r: 'legendary', price: 1500, atk: 40, int: 10, arcaneDmg: 15, voidDmg: 10, critChance: 0.08 },
+        { n: 'Apex Vestment', t: 'arm', q: 1, r: 'legendary', price: 800, def: 22, int: 8, wis: 5, arcaneRes: 0.35, voidRes: 0.25, hpRegen: 5, mpRegen: 5 },
+        { n: 'The Crown of Ends', t: 'acc', q: 1, r: 'legendary', price: 600, int: 10, wis: 6, arcaneDmg: 8, voidDmg: 6, lifeSteal: 0.10, mpRegen: 3 },
+        { n: 'Planar Essence', t: 'mat', q: 3, r: 'rare', price: 55 }
+      ],
+      unlocked: false, visitCount: 0 },
 
   ],   
   bosses: [
@@ -994,7 +1106,25 @@ const G = {
   { n: 'The Astral Devourer', zone: 'The Astral Maelstrom', hp: 4000, mhp: 4000, atk: 70, def: 40, xp: 1800, g: 1000,
     mechanic: 'astral_phase', shiftTurn: 3, phases: 4, currentPhase: 1, desc: 'A being that consumes dimensions. Shifts between astral phases, each more dangerous than the last.' },
   { n: 'The Infernal Tyrant', zone: 'Infernal Crucible', hp: 4500, mhp: 4500, atk: 75, def: 42, xp: 2000, g: 1100,
-    mechanic: 'inferno_core', infernoTurn: 4, infernoDmg: 50, desc: 'The heart of the Crucible given form. Builds inferno energy for 4 turns — interrupt or be incinerated.' },
+        mechanic: 'inferno_core', infernoTurn: 4, infernoDmg: 50, desc: 'The heart of the Crucible given form. Builds inferno energy for 4 turns — interrupt or be incinerated.' },
+
+    // === GAP FILLER ===
+    { n: 'The Drowned King', zone: 'Sunken Temple', hp: 1800, mhp: 1800, atk: 38, def: 22, xp: 350, g: 300,
+      mechanic: 'drown', drownTurn: 4, desc: 'Floods the battlefield on turn 4. All must save or take massive damage.' },
+
+    // === PHASE 3 BOSSES: LV 24-29 ===
+    { n: 'The Scorched Tyrant', zone: 'The Scorched Vein', hp: 5500, mhp: 5500, atk: 80, def: 45, xp: 2200, g: 1200,
+      mechanic: 'inferno_core', infernoTurn: 4, infernoDmg: 55, desc: 'The heart of the Vein given form. Builds inferno energy for 4 turns — interrupt or be incinerated.' },
+    { n: 'The Tidal Leviathan', zone: 'Tidal Abyss', hp: 6000, mhp: 6000, atk: 85, def: 48, xp: 2400, g: 1300,
+      mechanic: 'crush', crushTurn: 5, desc: 'Pressure builds each turn. On turn 5, unleashes crushing depth damage to all.' },
+    { n: 'The Fallen Sovereign', zone: 'The Shattered Crown', hp: 6500, mhp: 6500, atk: 90, def: 50, xp: 2600, g: 1400,
+      mechanic: 'lightning_rod', rodTurns: 3, desc: 'Lightning strikes weakest member every 3 turns. The crown demands tribute.' },
+    { n: 'The Hollow King', zone: 'The Hollow Throne', hp: 7000, mhp: 7000, atk: 95, def: 52, xp: 2800, g: 1500,
+      mechanic: 'devour', devourTurn: 5, desc: 'The throne devours a party member on turn 5 if not staggered by all attackers.' },
+    { n: 'The Spire Architect', zone: 'The Final Spire', hp: 7500, mhp: 7500, atk: 100, def: 55, xp: 3000, g: 1600,
+      mechanic: 'planar_shift', shiftTurn: 3, phases: 5, currentPhase: 1, desc: 'A being of pure spire energy. Every 3 turns, it shifts dimensions — changing weaknesses, spawning constructs, and warping the battlefield. Survive 5 planar shifts to win.' },
+    { n: 'The Apex Arbiter', zone: 'The Apex', hp: 8000, mhp: 8000, atk: 105, def: 58, xp: 3200, g: 1700,
+      mechanic: 'nexus_planarch', shiftTurn: 4, phases: 5, currentPhase: 1, desc: 'The final guardian of the Apex. Each phase embodies a different planar element. Defeat all five to ascend beyond.', nexus: true },
   ],
 
   currentBoss: null,
@@ -1420,6 +1550,26 @@ storyJournal: {
     { id: 'ic_tavern', name: 'The Molten Chalice', type: 'tavern', zone: 'Infernal Crucible', zoneLv: 23, desc: 'Fireproof stone tavern. The ale is served in cooled obsidian mugs. Everything glows.', unlocked: false, icon: '🍺', cost: 45 },
         { id: 'ms_spring1', name: 'Ethereal Mana Spring', type: 'mana_spring', zone: 'Arcane Planar Tower', zoneLv: 11, desc: 'A natural spring of pure mana. The energy is overwhelming — you can only endure it briefly.', unlocked: false, icon: '💧', cost: 10, entryLimit: 3, entriesUsed: 0 },
     { id: 'ms_spring2', name: 'Astral Mana Spring', type: 'mana_spring', zone: 'The Astral Maelstrom', zoneLv: 22, desc: 'Liquid starlight pools in a crater of fallen meteors. Each sip rewires your magic.', unlocked: false, icon: '💧', cost: 15 },
+        // === PHASE 3: LV 21-29 REST SITES ===
+    { id: 'fv_camp2', name: 'Fractured Veil Hollow', type: 'camp', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A pocket of stable reality within the tearing veil. The walls hum with harmonic dissonance.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'sv_camp', name: 'Scorched Veil Camp', type: 'camp', zone: 'The Scorched Vein', zoneLv: 24, desc: 'A heat-shielded overhang of glassy stone. The magma glows beneath like a second sun.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'sv_tavern', name: 'The Glass Flute', type: 'tavern', zone: 'The Scorched Vein', zoneLv: 24, desc: 'A tavern carved from obsidian glass. The walls sing when the wind blows through the canyon.', unlocked: false, icon: '🍺', cost: 50 },
+    { id: 'ta_camp', name: 'Abyssal Trench Camp', type: 'camp', zone: 'Tidal Abyss', zoneLv: 25, desc: 'A pressure-sealed bubble of air at the trench edge. The darkness beyond has no bottom.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'ta_tavern', name: 'The Drowned Lantern', type: 'tavern', zone: 'Tidal Abyss', zoneLv: 25, desc: 'A tavern built inside a sunken ship. The lanterns burn with captured bioluminescence.', unlocked: false, icon: '🍺', cost: 55 },
+    { id: 'sc_camp', name: 'Crownfall Camp', type: 'camp', zone: 'The Shattered Crown', zoneLv: 26, desc: 'A camp at the base of the fallen sky-kingdom. Lightning scars the stone.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'sc_tavern', name: 'The Sovereign\'s Rest', type: 'tavern', zone: 'The Shattered Crown', zoneLv: 26, desc: 'A tavern built in the throne room of a dead king. The crown still hangs on the wall.', unlocked: false, icon: '🍺', cost: 60 },
+    { id: 'ht_camp', name: 'Hollow Camp', type: 'camp', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A camp in the antechamber of the empty throne. The silence is louder than thunder.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'ht_tavern', name: 'The Empty Chalice', type: 'tavern', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A tavern where the cups fill themselves. No one knows who serves the drinks.', unlocked: false, icon: '🍺', cost: 65 },
+    { id: 'fs_camp', name: 'Spire Base Camp', type: 'camp', zone: 'The Final Spire', zoneLv: 28, desc: 'The last camp before the impossible climb. Gravity is optional here.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'fs_tavern', name: 'The Penultimate Port', type: 'tavern', zone: 'The Final Spire', zoneLv: 28, desc: 'A tavern that exists in multiple timelines simultaneously. Your drink may arrive before you order it.', unlocked: false, icon: '🍺', cost: 70 },
+    { id: 'ap_camp', name: 'Apex Threshold', type: 'camp', zone: 'The Apex', zoneLv: 29, desc: 'The final camp before the end of all things. The air tastes like completion.', unlocked: false, icon: '⛺', cost: 0 },
+    { id: 'ap_tavern', name: 'The Last Door', type: 'tavern', zone: 'The Apex', zoneLv: 29, desc: 'A tavern at the edge of reality. The bartender knows your name before you speak it.', unlocked: false, icon: '🍺', cost: 80 },
+    // Phase 3 mana springs
+    { id: 'ms_spring3', name: 'Infernal Mana Spring', type: 'mana_spring', zone: 'Infernal Crucible', zoneLv: 23, desc: 'A spring of liquid flame that burns cold. Each sip sears the mind with forbidden knowledge.', unlocked: false, icon: '💧', cost: 20 },
+    { id: 'ms_spring4', name: 'Abyssal Mana Spring', type: 'mana_spring', zone: 'Tidal Abyss', zoneLv: 25, desc: 'Dark water that glows with inner light. Drinking it feels like drowning in stars.', unlocked: false, icon: '💧', cost: 25 },
+    { id: 'ms_spring5', name: 'Crown Mana Spring', type: 'mana_spring', zone: 'The Shattered Crown', zoneLv: 26, desc: 'Lightning-charged rain pools in the crown\'s hollow. Each drop crackles with sovereign power.', unlocked: false, icon: '💧', cost: 30 },
+    { id: 'ms_spring6', name: 'Void Mana Spring', type: 'mana_spring', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A spring that flows upward into darkness. The water tastes like forgetting.', unlocked: false, icon: '💧', cost: 35 },
+
     ]
   },
   
@@ -2321,11 +2471,40 @@ const ENEMY_REGISTRY = {
   'Phase Walker': { template: 'balanced', elem: 'arcane', zoneLv: 22 },
   'Rift Rat': { template: 'striker', elem: 'void', zoneLv: 22 },
       // === PHASE 1: LV 23 NEW ENEMIES (Lv 22 enemies already exist) ===
-  'Ember Wraith': { template: 'brute', elem: 'fire', zoneLv: 23 },
+    'Ember Wraith': { template: 'brute', elem: 'fire', zoneLv: 23 },
   'Ash Phantom': { template: 'striker', elem: 'fire', zoneLv: 23 },
   'Flame Serpent': { template: 'striker', elem: 'fire', zoneLv: 23 },
   'Magma Titan': { template: 'tank', elem: 'fire', zoneLv: 23 },
+
+  // === GAP FILLERS ===
+  'Basilisk': { template: 'striker', elem: 'poison', zoneLv: 9 },
+  'Venom Hound': { template: 'striker', elem: 'poison', zoneLv: 9 },
+  'Mire Serpent': { template: 'balanced', elem: 'poison', zoneLv: 9 },
+  'Fulcrum Warden': { template: 'tank', elem: 'arcane', zoneLv: 15 },
+  'Stasis Construct': { template: 'balanced', elem: 'arcane', zoneLv: 15 },
+  'Planar Mote': { template: 'striker', elem: 'arcane', zoneLv: 15 },
+
+  // === PHASE 3: LV 24-29 ===
+  'Magma Serpent': { template: 'striker', elem: 'fire', zoneLv: 24 },
+  'Glass Wraith': { template: 'striker', elem: 'fire', zoneLv: 24 },
+  'Scorch Titan': { template: 'tank', elem: 'fire', zoneLv: 24 },
+  'Abyssal Leviathan Spawn': { template: 'brute', elem: 'ice', zoneLv: 25 },
+  'Frozen Kraken': { template: 'elite', elem: 'ice', zoneLv: 25 },
+  'Pressure Golem': { template: 'tank', elem: 'ice', zoneLv: 25 },
+  'Storm Sovereign Remnant': { template: 'elite', elem: 'lightning', zoneLv: 26 },
+  'Crown Wraith': { template: 'striker', elem: 'lightning', zoneLv: 26 },
+  'Skyfall Construct': { template: 'balanced', elem: 'lightning', zoneLv: 26 },
+  'Throne Keeper': { template: 'tank', elem: 'void', zoneLv: 27 },
+  'Hollow Knight': { template: 'striker', elem: 'void', zoneLv: 27 },
+  'Void Courtier': { template: 'balanced', elem: 'void', zoneLv: 27 },
+  'Spire Archon': { template: 'elite', elem: 'arcane', zoneLv: 28 },
+  'Reality Weaver Elite': { template: 'striker', elem: 'arcane', zoneLv: 28 },
+  'Chrono Guardian': { template: 'tank', elem: 'arcane', zoneLv: 28 },
+  'Apex Warden': { template: 'elite', elem: 'arcane', zoneLv: 29 },
+  'Final Construct': { template: 'tank', elem: 'arcane', zoneLv: 29 },
+  'The Gatekeeper': { template: 'elite', elem: 'arcane', zoneLv: 29 },
 };
+
 
 function getDynamicEnemyStats(name) {
   const reg = ENEMY_REGISTRY[name];
