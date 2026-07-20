@@ -984,7 +984,7 @@ const G = {
         { n: 'Planar Essence', t: 'mat', q: 1, r: 'rare', price: 50 }
       ],
       unlocked: false, visitCount: 0 },
-    // === PHASE 3: LV 21-29 TRADERS ===
+          // === PHASE 3: LV 21-29 TRADERS ===
     { n: 'Kael', t: 'trader', title: 'The Last Astronomer', icon: '🔭', col: '#6366f1', zone: 'The Fractured Veil', zoneLv: 21,
       d: 'A gaunt figure hunched over a telescope pointed at nothing. He trades in starlight and secrets. His eyes have seen too many dimensions.',
       stock: [
@@ -1075,6 +1075,7 @@ const G = {
         { n: 'Planar Essence', t: 'mat', q: 3, r: 'rare', price: 55 }
       ],
       unlocked: false, visitCount: 0 },
+
 
   ],   
   bosses: [
@@ -6426,8 +6427,14 @@ function ie(i){if(i.t=='pot')return i.eff=='heal'?'🧪':'💧';if(i.t=='food')r
 
 const SAVE_KEY = 'ldb_save_v5';
 
+// === CONTENT MIGRATION ===
+const CONTENT_VERSION = 3;
+// =========================
+
+
 function saveGame() {
-  const saveData = {
+    const saveData = {
+    contentVersion: CONTENT_VERSION,
     lastSaveTime: Date.now(),
     lastLoginDay: G.lastLoginDay || -1,
     loginStreak: G.loginStreak || 0,
@@ -6501,99 +6508,75 @@ function saveGame() {
   }
 }
 
-function loadGame() {
-function loadGame() {
-  // === SAVE MIGRATION: Inject missing Phase 3 content ===
-  const saved = localStorage.getItem('ldb_save');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      // Check if zones are from old save (missing Phase 3)
-      if (parsed.zones && parsed.zones.length < 35) {
-        // Inject missing Phase 3+ zones
-        const missingZones = [
-          { n: 'The Fractured Veil', lv: 21, elem: 'arcane', d: 'Reality tears at the seams. Fragments of dead worlds float in crystalline silence.', en: ['Veil Wraith','Shardling','Echo Walker'], loot: ['Planar Essence','Aether Shard','Reality Fragment'], xp: 550, dg: 'impossible' },
-          { n: 'The Astral Maelstrom', lv: 22, elem: 'arcane', d: 'A storm of raw planar energy where dimensions collide and unravel.', en: ['Astral Construct','Void Hound','Phase Walker','Rift Rat'], loot: ['Astral Dust','Void Fragment','Planar Essence','Reality Anchor'], xp: 600, dg: 'impossible' },
-          { n: 'Infernal Crucible', lv: 23, elem: 'fire', d: 'The forge where stars are born and die. Magma rivers flow upward into eternal flame.', en: ['Ember Wraith','Ash Phantom','Flame Serpent','Magma Titan'], loot: ['Inferno Gem','Ash Crystal','Ember Core','Phoenix Ash'], xp: 680, dg: 'impossible' },
-          { n: 'The Scorched Vein', lv: 24, elem: 'fire', d: 'A canyon of molten glass where the earth bleeds magma.', en: ['Magma Serpent','Glass Wraith','Scorch Titan'], loot: ['Magma Core','Glass Shard','Scorched Ember'], xp: 520, dg: 'impossible' },
-          { n: 'Tidal Abyss', lv: 25, elem: 'ice', d: 'An ocean trench frozen in time. Pressure crushes; the cold preserves everything.', en: ['Abyssal Leviathan Spawn','Frozen Kraken','Pressure Golem'], loot: ['Abyssal Pearl','Frozen Ink','Pressure Stone'], xp: 560, dg: 'impossible' },
-          { n: 'The Shattered Crown', lv: 26, elem: 'lightning', d: 'The ruins of a sky-kingdom, shattered by hubris.', en: ['Storm Sovereign Remnant','Crown Wraith','Skyfall Construct'], loot: ['Crown Fragment','Sovereign Essence','Skyfall Ore'], xp: 600, dg: 'impossible' },
-          { n: 'The Hollow Throne', lv: 27, elem: 'void', d: 'A palace built in the space between dimensions. The throne is empty. The throne is hungry.', en: ['Throne Keeper','Hollow Knight','Void Courtier'], loot: ['Throne Shard','Hollow Crown','Void Silk'], xp: 640, dg: 'impossible' },
-          { n: 'The Final Spire', lv: 28, elem: 'arcane', d: 'The last tower before the apex of all realities.', en: ['Spire Archon','Reality Weaver Elite','Chrono Guardian'], loot: ['Spire Keystone','Reality Thread','Chrono Crystal'], xp: 680, dg: 'impossible' },
-          { n: 'The Apex', lv: 29, elem: 'arcane', d: 'The highest point in all dimensions. Beyond this, only the story remains.', en: ['Apex Warden','Final Construct','The Gatekeeper'], loot: ['Apex Fragment','Final Key','Gate Stone'], xp: 720, dg: 'impossible' }
-        ];
-        parsed.zones = parsed.zones.concat(missingZones);
-        // Remove duplicates by name
-        const seen = new Set();
-        parsed.zones = parsed.zones.filter(z => {
-          if (seen.has(z.n)) return false;
-          seen.add(z.n);
-          return true;
-        });
-        // Sort by level
-        parsed.zones.sort((a, b) => a.lv - b.lv);
-        console.log('Save migrated: added', missingZones.length, 'new zones');
+// === CONTENT MIGRATION ===
+function migrateContent(data) {
+  const fromVersion = data.contentVersion || 0;
+  if (fromVersion >= CONTENT_VERSION) return data;
+  
+  lg('🔄 Migrating save from content v' + fromVersion + ' to v' + CONTENT_VERSION + '...');
+  
+  function mergeByKey(target, source, keyFn) {
+    const existing = new Set(target.map(keyFn));
+    for (let item of source) {
+      if (!existing.has(keyFn(item))) {
+        target.push(item);
+        lg('  + Added: ' + keyFn(item));
       }
-      // Inject missing NPCs
-      if (parsed.npcs) {
-        const defaultNpcs = [
-          { n: 'Astrid', t: 'trader', title: 'Astral Merchant', icon: '✨', col: '#a855f7', zone: 'The Astral Maelstrom', zoneLv: 22, d: 'A being woven from starlight who trades in astral artifacts.', stock: [{ n: 'Astral Dust', t: 'mat', q: 1, r: 'rare', price: 55 },{ n: 'Void Fragment', t: 'mat', q: 1, r: 'rare', price: 65 },{ n: 'Astral Wand', t: 'wep', q: 1, r: 'epic', price: 500, atk: 18, int: 6, arcaneDmg: 7 },{ n: 'Voidweave Cloak', t: 'arm', q: 1, r: 'epic', price: 320, def: 10, int: 4, voidRes: 0.20 },{ n: 'Starlight Pendant', t: 'acc', q: 1, r: 'rare', price: 180, int: 5, mpRegen: 3 },{ n: 'Planar Essence', t: 'mat', q: 1, r: 'rare', price: 50 }], unlocked: false, visitCount: 0 },
-          { n: 'Kael', t: 'trader', title: 'The Last Astronomer', icon: '🔭', col: '#6366f1', zone: 'The Fractured Veil', zoneLv: 21, d: 'A gaunt figure hunched over a telescope pointed at nothing.', stock: [{ n: 'Reality Fragment', t: 'mat', q: 1, r: 'rare', price: 60 },{ n: 'Aether Shard', t: 'mat', q: 1, r: 'rare', price: 55 },{ n: 'Chrono Sand', t: 'mat', q: 1, r: 'epic', price: 130 },{ n: 'Veil Piercer', t: 'wep', q: 1, r: 'epic', price: 550, atk: 20, int: 7, arcaneDmg: 8 },{ n: 'Starshroud Cloak', t: 'arm', q: 1, r: 'epic', price: 350, def: 12, int: 5, arcaneRes: 0.25 },{ n: 'Astronomer\'s Lens', t: 'acc', q: 1, r: 'rare', price: 200, int: 6, mpRegen: 4 }], unlocked: false, visitCount: 0 },
-          { n: 'Ignis', t: 'trader', title: 'The Crucible Keeper', icon: '🔥', col: '#dc2626', zone: 'Infernal Crucible', zoneLv: 23, d: 'A being of living flame who tends the eternal forge.', stock: [{ n: 'Inferno Gem', t: 'mat', q: 1, r: 'rare', price: 70 },{ n: 'Ash Crystal', t: 'mat', q: 1, r: 'rare', price: 65 },{ n: 'Ember Core', t: 'mat', q: 1, r: 'epic', price: 140 },{ n: 'Phoenix Ash', t: 'mat', q: 1, r: 'epic', price: 150 },{ n: 'Infernal Brand', t: 'wep', q: 1, r: 'epic', price: 600, atk: 22, str: 6, fireDmg: 10 },{ n: 'Magmaforged Plate', t: 'arm', q: 1, r: 'epic', price: 380, def: 14, con: 5, fireRes: 0.30 },{ n: 'Cinder Ring', t: 'acc', q: 1, r: 'rare', price: 220, str: 5, fireDmg: 5, hpRegen: 2 }], unlocked: false, visitCount: 0 },
-          { n: 'Glacielle', t: 'trader', title: 'The Frozen Merchant', icon: '❄️', col: '#06b6d4', zone: 'The Scorched Vein', zoneLv: 24, d: 'An ice-witch who sells cold in a world of fire.', stock: [{ n: 'Magma Core', t: 'mat', q: 1, r: 'rare', price: 75 },{ n: 'Glass Shard', t: 'mat', q: 1, r: 'uncommon', price: 40 },{ n: 'Scorched Ember', t: 'mat', q: 1, r: 'rare', price: 70 },{ n: 'Frostfire Blade', t: 'wep', q: 1, r: 'epic', price: 650, atk: 24, dex: 5, fireDmg: 6, iceDmg: 6 },{ n: 'Thermal Ward', t: 'arm', q: 1, r: 'epic', price: 400, def: 13, con: 4, fireRes: 0.20, iceRes: 0.20 },{ n: 'Equilibrium Stone', t: 'acc', q: 1, r: 'rare', price: 250, int: 5, fireDmg: 3, iceDmg: 3 }], unlocked: false, visitCount: 0 },
-          { n: 'Marinus', t: 'trader', title: 'The Drowned Trader', icon: '🌊', col: '#0891b2', zone: 'Tidal Abyss', zoneLv: 25, d: 'A spectral sailor who walks on the abyssal floor.', stock: [{ n: 'Abyssal Pearl', t: 'mat', q: 1, r: 'rare', price: 80 },{ n: 'Frozen Ink', t: 'mat', q: 1, r: 'rare', price: 75 },{ n: 'Pressure Stone', t: 'mat', q: 1, r: 'epic', price: 160 },{ n: 'Abyssal Trident', t: 'wep', q: 1, r: 'epic', price: 700, atk: 26, str: 5, iceDmg: 8 },{ n: 'Kraken Scale Mail', t: 'arm', q: 1, r: 'epic', price: 420, def: 15, con: 6, iceRes: 0.25 },{ n: 'Depth Charge', t: 'acc', q: 1, r: 'rare', price: 280, wis: 5, iceDmg: 4, mpRegen: 3 }], unlocked: false, visitCount: 0 },
-          { n: 'Fulgora', t: 'trader', title: 'The Storm Merchant', icon: '⚡', col: '#eab308', zone: 'The Shattered Crown', zoneLv: 26, d: 'A lightning-weaver who sells the storm\'s fury.', stock: [{ n: 'Crown Fragment', t: 'mat', q: 1, r: 'rare', price: 85 },{ n: 'Sovereign Essence', t: 'mat', q: 1, r: 'epic', price: 170 },{ n: 'Skyfall Ore', t: 'mat', q: 1, r: 'rare', price: 80 },{ n: 'Thunderlord Spear', t: 'wep', q: 1, r: 'legendary', price: 800, atk: 28, dex: 6, lightDmg: 12 },{ n: 'Stormweave Robes', t: 'arm', q: 1, r: 'epic', price: 450, def: 14, int: 6, lightRes: 0.30 },{ n: 'Lightning Rod Band', t: 'acc', q: 1, r: 'epic', price: 320, dex: 5, lightDmg: 6, critChance: 0.05 }], unlocked: false, visitCount: 0 },
-          { n: 'Nullus', t: 'trader', title: 'The Void Broker', icon: '🌑', col: '#a855f7', zone: 'The Hollow Throne', zoneLv: 27, d: 'A faceless merchant who speaks from the shadows.', stock: [{ n: 'Throne Shard', t: 'mat', q: 1, r: 'epic', price: 180 },{ n: 'Hollow Crown', t: 'mat', q: 1, r: 'epic', price: 190 },{ n: 'Void Silk', t: 'mat', q: 1, r: 'rare', price: 90 },{ n: 'Null Blade', t: 'wep', q: 1, r: 'legendary', price: 900, atk: 30, int: 7, voidDmg: 14 },{ n: 'Voidshroud Mantle', t: 'arm', q: 1, r: 'legendary', price: 500, def: 16, int: 6, voidRes: 0.35 },{ n: 'Absorption Ring', t: 'acc', q: 1, r: 'epic', price: 350, int: 6, voidDmg: 5, lifeSteal: 0.08 }], unlocked: false, visitCount: 0 },
-          { n: 'Chrona', t: 'trader', title: 'The Time Merchant', icon: '⏳', col: '#ec4899', zone: 'The Final Spire', zoneLv: 28, d: 'A merchant who exists in all moments at once.', stock: [{ n: 'Spire Keystone', t: 'mat', q: 1, r: 'epic', price: 200 },{ n: 'Reality Thread', t: 'mat', q: 1, r: 'epic', price: 210 },{ n: 'Chrono Crystal', t: 'mat', q: 1, r: 'legendary', price: 250 },{ n: 'Paradox Edge', t: 'wep', q: 1, r: 'legendary', price: 1000, atk: 32, int: 8, arcaneDmg: 12, mpRegen: 3 },{ n: 'Temporal Aegis', t: 'arm', q: 1, r: 'legendary', price: 550, def: 18, wis: 7, arcaneRes: 0.30, hpRegen: 4 },{ n: 'Infinity Loop', t: 'acc', q: 1, r: 'legendary', price: 400, int: 7, wis: 4, arcaneDmg: 6, mpRegen: 4 }], unlocked: false, visitCount: 0 },
-          { n: 'The Arbiter', t: 'trader', title: 'Final Curio Dealer', icon: '👁️', col: '#f59e0b', zone: 'The Apex', zoneLv: 29, d: 'The last merchant in all realities.', stock: [{ n: 'Apex Fragment', t: 'mat', q: 1, r: 'legendary', price: 300 },{ n: 'Final Key', t: 'mat', q: 1, r: 'legendary', price: 350 },{ n: 'Gate Stone', t: 'mat', q: 1, r: 'legendary', price: 400 },{ n: 'Reality Sunderer', t: 'wep', q: 1, r: 'legendary', price: 1500, atk: 40, int: 10, arcaneDmg: 15, voidDmg: 10, critChance: 0.08 },{ n: 'Apex Vestment', t: 'arm', q: 1, r: 'legendary', price: 800, def: 22, int: 8, wis: 5, arcaneRes: 0.35, voidRes: 0.25, hpRegen: 5, mpRegen: 5 },{ n: 'The Crown of Ends', t: 'acc', q: 1, r: 'legendary', price: 600, int: 10, wis: 6, arcaneDmg: 8, voidDmg: 6, lifeSteal: 0.10, mpRegen: 3 },{ n: 'Planar Essence', t: 'mat', q: 3, r: 'rare', price: 55 }], unlocked: false, visitCount: 0 }
-        ];
-        const existingNames = new Set(parsed.npcs.map(n => n.n));
-        for (const npc of defaultNpcs) {
-          if (!existingNames.has(npc.n)) {
-            parsed.npcs.push(npc);
-            existingNames.add(npc.n);
-          }
-        }
-        console.log('Save migrated: added', defaultNpcs.length, 'new NPCs');
-      }
-      // Inject missing rest sites
-      if (parsed.rest && parsed.rest.sites) {
-        const defaultSites = [
-          { id: 'fv_camp2', name: 'Fractured Veil Hollow', type: 'camp', zone: 'The Fractured Veil', zoneLv: 21, desc: 'A pocket of stable reality within the tearing veil.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'sv_camp', name: 'Scorched Veil Camp', type: 'camp', zone: 'The Scorched Vein', zoneLv: 24, desc: 'A heat-shielded overhang of glassy stone.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'sv_tavern', name: 'The Glass Flute', type: 'tavern', zone: 'The Scorched Vein', zoneLv: 24, desc: 'A tavern carved from obsidian glass.', unlocked: false, icon: '🍺', cost: 50 },
-          { id: 'ta_camp', name: 'Abyssal Trench Camp', type: 'camp', zone: 'Tidal Abyss', zoneLv: 25, desc: 'A pressure-sealed bubble of air at the trench edge.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'ta_tavern', name: 'The Drowned Lantern', type: 'tavern', zone: 'Tidal Abyss', zoneLv: 25, desc: 'A tavern built inside a sunken ship.', unlocked: false, icon: '🍺', cost: 55 },
-          { id: 'sc_camp', name: 'Crownfall Camp', type: 'camp', zone: 'The Shattered Crown', zoneLv: 26, desc: 'A camp at the base of the fallen sky-kingdom.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'sc_tavern', name: 'The Sovereign\'s Rest', type: 'tavern', zone: 'The Shattered Crown', zoneLv: 26, desc: 'A tavern built in the throne room of a dead king.', unlocked: false, icon: '🍺', cost: 60 },
-          { id: 'ht_camp', name: 'Hollow Camp', type: 'camp', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A camp in the antechamber of the empty throne.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'ht_tavern', name: 'The Empty Chalice', type: 'tavern', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A tavern where the cups fill themselves.', unlocked: false, icon: '🍺', cost: 65 },
-          { id: 'fs_camp', name: 'Spire Base Camp', type: 'camp', zone: 'The Final Spire', zoneLv: 28, desc: 'The last camp before the impossible climb.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'fs_tavern', name: 'The Penultimate Port', type: 'tavern', zone: 'The Final Spire', zoneLv: 28, desc: 'A tavern that exists in multiple timelines.', unlocked: false, icon: '🍺', cost: 70 },
-          { id: 'ap_camp', name: 'Apex Threshold', type: 'camp', zone: 'The Apex', zoneLv: 29, desc: 'The final camp before the end of all things.', unlocked: false, icon: '⛺', cost: 0 },
-          { id: 'ap_tavern', name: 'The Last Door', type: 'tavern', zone: 'The Apex', zoneLv: 29, desc: 'A tavern at the edge of reality.', unlocked: false, icon: '🍺', cost: 80 },
-          { id: 'ms_spring3', name: 'Infernal Mana Spring', type: 'mana_spring', zone: 'Infernal Crucible', zoneLv: 23, desc: 'A spring of liquid flame that burns cold.', unlocked: false, icon: '💧', cost: 20 },
-          { id: 'ms_spring4', name: 'Abyssal Mana Spring', type: 'mana_spring', zone: 'Tidal Abyss', zoneLv: 25, desc: 'Dark water that glows with inner light.', unlocked: false, icon: '💧', cost: 25 },
-          { id: 'ms_spring5', name: 'Crown Mana Spring', type: 'mana_spring', zone: 'The Shattered Crown', zoneLv: 26, desc: 'Lightning-charged rain pools in the crown\'s hollow.', unlocked: false, icon: '💧', cost: 30 },
-          { id: 'ms_spring6', name: 'Void Mana Spring', type: 'mana_spring', zone: 'The Hollow Throne', zoneLv: 27, desc: 'A spring that flows upward into darkness.', unlocked: false, icon: '💧', cost: 35 }
-        ];
-        const existingIds = new Set(parsed.rest.sites.map(s => s.id));
-        for (const site of defaultSites) {
-          if (!existingIds.has(site.id)) {
-            parsed.rest.sites.push(site);
-            existingIds.add(site.id);
-          }
-        }
-        console.log('Save migrated: added', defaultSites.length, 'new rest sites');
-      }
-      // Save the migrated data back
-      localStorage.setItem('ldb_save', JSON.stringify(parsed));
-    } catch(e) {
-      console.error('Save migration failed:', e);
     }
   }
-  // === END SAVE MIGRATION ===
+  
+  if (!data.zones) data.zones = [];
+  mergeByKey(data.zones, G.zones, z => z.n);
+  
+  if (!data.npcs) data.npcs = [];
+  mergeByKey(data.npcs, G.npcs, n => n.n);
+  
+  if (!data.rest) data.rest = {};
+  if (!data.rest.sites) data.rest.sites = [];
+  mergeByKey(data.rest.sites, G.rest.sites, s => s.id);
+  
+  if (!data.bounties) data.bounties = [];
+  mergeByKey(data.bounties, G.bounties, b => b.id);
+  
+  if (!data.achievements) data.achievements = [];
+  mergeByKey(data.achievements, G.achievements, a => a.id);
+  
+  if (!data.storyline) data.storyline = [];
+  mergeByKey(data.storyline, G.storyline, s => s.id);
+  
+  if (!data.storyJournal) data.storyJournal = {};
+  if (!data.storyJournal.entries) data.storyJournal.entries = [];
+  if (!data.storyJournal.unlocked) data.storyJournal.unlocked = [];
+  mergeByKey(data.storyJournal.entries, G.storyJournal.entries, j => j.id);
+  
+  if (!data.zoneHazards) data.zoneHazards = {};
+  for (let zoneName in G.zoneHazards) {
+    if (!data.zoneHazards[zoneName]) {
+      data.zoneHazards[zoneName] = G.zoneHazards[zoneName];
+      lg('  + Hazard: ' + zoneName);
+    }
+  }
+  
+  if (!data.bosses) data.bosses = [];
+  mergeByKey(data.bosses, G.bosses, b => b.n);
+  
+  if (!data.quests) data.quests = [];
+  mergeByKey(data.quests, G.quests, q => q.id);
+  
+  if (!data.exploreEvents) data.exploreEvents = [];
+  mergeByKey(data.exploreEvents, G.exploreEvents, e => e.n);
+  
+  if (!data.recipes) data.recipes = [];
+  mergeByKey(data.recipes, G.recipes, r => r.n);
+  
+  data.contentVersion = CONTENT_VERSION;
+  lg('✅ Migration complete! Save upgraded to content v' + CONTENT_VERSION);
+  return data;
+}
+// =========================
 
+
+function loadGame() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     // Phase 2 migration: try v4 if v5 not found
@@ -7368,18 +7351,19 @@ if(btnBackJournal)btnBackJournal.addEventListener('click',()=>{ setS('journal');
       reviveMember(el.getAttribute('data-m'));
     });
   });
-    document.querySelectorAll('.equip-pgear').forEach(el=>{
+  document.querySelectorAll('.equip-pgear').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       equipPartyGear(el.getAttribute('data-member'), parseInt(el.getAttribute('data-idx')));
     });
-  });
   // Stage 1: Trinket shop
-    document.querySelectorAll('.trinket-buy-btn').forEach(el=>{
+  document.querySelectorAll('.trinket-buy-btn').forEach(el=>{
     el.addEventListener('click',(e)=>{
       e.stopPropagation();
       buyTrinket(parseInt(el.getAttribute('data-tidx')));
     });
+  });
+
   });
   document.querySelectorAll('.unequip-pgear').forEach(el=>{
     el.addEventListener('click',(e)=>{
