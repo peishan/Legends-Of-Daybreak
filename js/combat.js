@@ -1464,3 +1464,42 @@ function getSynergyGoldBonus() {
 function getSynergyHealBonus() {
   return getSynergyBonus('healPct') + getAffinityUnlockBonus('healPct');
 }
+// === AT THE BOTTOM OF js/combat.js ===
+
+(function initCombatWrappers() {
+  // Store originals
+  const _originalHandleVictory = handleVictory;
+  const _originalHandleDefeat = handleDefeat;
+
+  // Override with grind-aware versions
+  handleVictory = function() {
+    if (typeof G !== 'undefined' && G.endlessGrind && G.endlessGrind.active) {
+      handleGrindVictory();
+    } else {
+      _originalHandleVictory();
+    }
+  };
+
+  handleDefeat = function() {
+    if (typeof G !== 'undefined' && G.endlessGrind && G.endlessGrind.active) {
+      if (checkSecondWind && checkSecondWind()) { 
+        render(); 
+        return; 
+      }
+      // Grind defeat logic...
+      lg('💀 GRIND ROOM DEFEAT! Wave ' + G.endlessGrind.wave);
+      G.p.hp = 1;
+      for (let p of G.party) { 
+        if (p.hp <= 0) { p.hp = 1; p.on = true; } 
+      }
+      G.cbt.autoCombat = false;
+      G.cbt.on = false;
+      G.endlessGrind.active = false;
+      G.state = 'menu';
+      render();
+    } else {
+      _originalHandleDefeat();
+    }
+  };
+})();
+
