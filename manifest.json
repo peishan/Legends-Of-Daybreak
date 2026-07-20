@@ -1,7 +1,9 @@
 {
-  "name": "Legends of Daybreak",
-  "short_name": "Daybreak",
-  "description": "A mobile RPG adventure",
+
+  "name": "Legends of Daybreak - RPG",
+  "short_name": "Daybreak v2",
+  "version": "2.0"
+}
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f0e17",
