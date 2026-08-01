@@ -80,6 +80,10 @@
   .roster-lvl{ font-size:8.5px; color:var(--sun-soft); }
   .roster-item.locked .roster-lvl{ color:var(--muted); }
 
+  #hub-save-row{ display:flex; gap:8px; justify-content:center; margin-top:18px; }
+  #hub-save-row button{ background:#211b2aee; border:1px solid #3a3350; color:var(--muted); font-family:'Karla',sans-serif;
+    font-size:10.5px; font-weight:700; padding:8px 12px; border-radius:16px; cursor:pointer; }
+  #hub-save-row button:active{ opacity:.7; }
   #hub-reset-row{ text-align:center; margin:8px 0 70px; }
   #hub-reset-btn{ background:none; border:none; color:var(--muted); font-family:'Karla',sans-serif; font-size:10.5px; text-decoration:underline; cursor:pointer; opacity:.6; }
   #hub-reset-btn.confirm{ color:#e0728a; opacity:1; }
@@ -318,8 +322,9 @@
   .inv-section-label{ font-family:'Karla',sans-serif; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin:18px 2px 10px; }
   .inv-section-label:first-child{ margin-top:0; }
 
-  #inv-equipped{ display:flex; align-items:center; gap:12px; background:#211b2aee; border:1px solid #3a3350; border-radius:14px; padding:14px; }
-  #inv-equipped .eq-icon{ width:44px; height:44px; border-radius:50%; background:#171320; border:1px solid var(--sun-soft); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  #inv-equipped{ display:flex; flex-direction:column; gap:8px; }
+  #inv-equipped .eq-row{ display:flex; align-items:center; gap:12px; background:#211b2aee; border:1px solid #3a3350; border-radius:14px; padding:12px 14px; }
+  #inv-equipped .eq-icon{ width:40px; height:40px; border-radius:50%; background:#171320; border:1px solid var(--sun-soft); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
   #inv-equipped .eq-body{ flex:1; }
   #inv-equipped .eq-name{ font-family:'Spectral',serif; font-weight:600; font-size:14px; color:var(--cream); }
   #inv-equipped .eq-desc{ font-family:'Karla',sans-serif; font-size:11px; color:var(--muted); margin-top:2px; }
@@ -537,6 +542,11 @@
       <div class="hub-section-label">Party Roster</div>
       <div id="hub-roster"></div>
 
+      <div id="hub-save-row">
+        <button id="hub-export-btn">⬇️ Export Save</button>
+        <button id="hub-import-btn">⬆️ Import Save</button>
+        <input type="file" id="hub-import-file" accept="application/json,.json" style="display:none;">
+      </div>
       <div id="hub-reset-row"><button id="hub-reset-btn">New Game (erase save)</button></div>
     </div>
 
@@ -620,6 +630,12 @@
 
       <div class="inv-section-label">Equipped</div>
       <div id="inv-equipped"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Weapons</div>
+      <div id="inv-weapon-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Armor</div>
+      <div id="inv-armor-list"></div>
 
       <div class="inv-section-label">Lewis's Trinket Shop</div>
       <div id="inv-shop-list"></div>
@@ -742,7 +758,7 @@ const AUTO_ATTACK_LEVEL = 3;
 function xpNeeded(lvl){ return 30 + (lvl-1)*25; }
 
 const GameState = {
-  player: { level:1, xp:0, hp:80, mhp:80, mp:120, mmp:120, spd:6, gold:0, autoAttack:false, equippedAmulet:null, templeRep:0 },
+  player: { level:1, xp:0, hp:80, mhp:80, mp:120, mmp:120, spd:6, gold:0, autoAttack:false, equippedAmulet:null, equippedWeapon:null, equippedArmor:null, templeRep:0 },
   companions: {
     Joel:     { hp:120, mhp:120 },
     Aisyah:   { hp:90,  mhp:90 },
@@ -1364,6 +1380,7 @@ function companionAct(name){
   es.classList.add('hit'); setTimeout(()=>es.classList.remove('hit'), 300);
   popDamage(dmg);
   checkPhaseShift();
+  checkInfernoInterrupt();
   checkEnemyDefeatedOrResurrect();
 }
 
@@ -1371,12 +1388,13 @@ function playerAct(type){
   if(!pReady || !inBattle || paused) return;
   const p = GameState.player;
   let dmg = 0; const lvlBonus = Math.floor(p.level/2);
+  const gearAtk = getPlayerAtkBonus();
   if(type === 'missile'){
     if(p.mp < 10) return;
-    p.mp -= 10; dmg = roll(8) + lvlBonus;
+    p.mp -= 10; dmg = roll(8) + lvlBonus + gearAtk;
     document.getElementById('battle-log').textContent = `San hurls a flurry of arcane missiles.`;
   } else {
-    dmg = roll(4) + lvlBonus;
+    dmg = roll(4) + lvlBonus + gearAtk;
     document.getElementById('battle-log').textContent = `San strikes with a quick blow.`;
   }
   currentEnemy.hp = Math.max(0, currentEnemy.hp - dmg);
@@ -1386,6 +1404,7 @@ function playerAct(type){
   pATB = 0; pReady = false;
   updateBattleBars();
   checkPhaseShift();
+  checkInfernoInterrupt();
   checkEnemyDefeatedOrResurrect();
 }
 
@@ -1461,7 +1480,6 @@ function enemyAct(){
 }
 
 function startInfernoCharge(){
-  paused = true;
   bossCharging = true;
   const boss = ZONES[GameState.currentZone].boss;
   const wb = document.getElementById('battle-warning-banner');
@@ -1474,7 +1492,7 @@ function startInfernoCharge(){
     document.getElementById('battle-enemy-sprite').classList.remove('charging');
     if(bossCharging){ unleashInferno(boss); }
     bossCharging = false;
-    eATB = 0; eReady = false; paused = false;
+    eATB = 0; eReady = false;
     updateBattleBars();
   }, 2200);
 }
@@ -1530,7 +1548,11 @@ function doRampage(){
 }
 
 function applyEnemyDamage(targetKey, dmg, msg, big){
-  if(targetKey === 'player'){ GameState.player.hp = Math.max(0, GameState.player.hp - dmg); }
+  if(targetKey === 'player'){
+    const mitigated = Math.max(1, dmg - getPlayerDefBonus());
+    GameState.player.hp = Math.max(0, GameState.player.hp - mitigated);
+    dmg = mitigated;
+  }
   else { const c = GameState.companions[targetKey]; c.hp = Math.max(0, c.hp - dmg); }
   document.getElementById('battle-log').textContent = msg;
   popDamage(dmg, {big:big});
@@ -1689,6 +1711,32 @@ const TEMPLE_TRINKETS = [
   { n:'Sunmote Pendant', int:8, mpRegen:4, r:'epic', price:380, d:'A fragment of Daybreak itself, or so the temple claims. It does glow, at least.' }
 ];
 
+/* Ribald's Armory — real weapon/armor progression data, item-level 1-5 tier
+   (matches where our zones currently sit), plus his two signature rare pieces. */
+const WEAPON_SHOP = [
+  { n:'Worn Dagger',      atk:2, def:0, hp:0, r:'common',   price:20 },
+  { n:'Iron Sword',       atk:4, def:0, hp:0, r:'common',   price:35 },
+  { n:'Crystal Wand',     atk:5, def:0, hp:0, r:'uncommon', price:55 },
+  { n:'Steel Longsword',  atk:7, def:0, hp:0, r:'uncommon', price:85 },
+  { n:'Flaming Longsword',atk:8, def:0, hp:0, r:'rare',     price:120 }
+];
+const ARMOR_SHOP = [
+  { n:'Tattered Cloth',      atk:0, def:1, hp:0,  r:'common',   price:15 },
+  { n:'Novice Robes',        atk:0, def:2, hp:0,  r:'common',   price:25 },
+  { n:'Leather Vest',        atk:0, def:3, hp:0,  r:'uncommon', price:45 },
+  { n:'Scale Mail',          atk:0, def:6, hp:0,  r:'rare',     price:140 },
+  { n:'Cloak of Protection', atk:0, def:5, hp:10, r:'rare',     price:150 }
+];
+
+function getPlayerAtkBonus(){
+  const p = GameState.player;
+  return (p.equippedWeapon?.atk||0) + (p.equippedArmor?.atk||0) + (p.equippedAmulet?.atk||0);
+}
+function getPlayerDefBonus(){
+  const p = GameState.player;
+  return (p.equippedWeapon?.def||0) + (p.equippedArmor?.def||0) + (p.equippedAmulet?.def||0);
+}
+
 function trinketStatLine(t){
   const parts = [];
   if(t.atk) parts.push('+'+t.atk+' ATK');
@@ -1705,33 +1753,45 @@ function renderInventory(){
   document.getElementById('inv-gold').textContent = '🪙 ' + p.gold;
 
   const eq = document.getElementById('inv-equipped');
-  if(p.equippedAmulet){
-    const t = p.equippedAmulet;
-    eq.innerHTML = `<div class="eq-icon">📿</div><div class="eq-body"><div class="eq-name">${t.n}</div><div class="eq-desc">${trinketStatLine(t)}</div></div>`;
-  } else {
-    eq.innerHTML = `<div class="eq-icon">📿</div><div class="eq-body"><div class="eq-empty">No trinket equipped</div></div>`;
-  }
+  const slots = [
+    { key:'equippedWeapon', icon:'⚔️', empty:'No weapon equipped' },
+    { key:'equippedArmor',  icon:'🛡️', empty:'No armor equipped' },
+    { key:'equippedAmulet', icon:'📿', empty:'No trinket equipped' }
+  ];
+  eq.innerHTML = slots.map(s=>{
+    const item = p[s.key];
+    if(item){
+      return `<div class="eq-icon">${s.icon}</div><div class="eq-body"><div class="eq-name">${item.n}</div><div class="eq-desc">${trinketStatLine(item)}</div></div>`;
+    }
+    return `<div class="eq-icon">${s.icon}</div><div class="eq-body"><div class="eq-empty">${s.empty}</div></div>`;
+  }).map(row => `<div class="eq-row">${row}</div>`).join('');
 
   const aisyahHaggle = p.level >= 1; // Aisyah joins at Lv1, always in party from the start
-  const shop = document.getElementById('inv-shop-list');
-  shop.innerHTML = '';
-  TRINKET_SHOP.forEach(t=>{
-    const finalPrice = aisyahHaggle ? Math.floor(t.price * 0.9) : t.price;
-    const owned = p.equippedAmulet && p.equippedAmulet.n === t.n;
-    const row = document.createElement('div');
-    row.className = 'trinket-row';
-    row.innerHTML = `
-      <div class="tr-icon r-${t.r}">📿</div>
-      <div class="tr-body">
-        <div class="tr-name">${t.n}</div>
-        <div class="tr-stats">${trinketStatLine(t)}</div>
-      </div>
-      <button class="tr-buy ${owned?'owned':''}" ${owned || p.gold < finalPrice ? 'disabled' : ''}>${owned ? 'Equipped' : finalPrice+'G'}</button>`;
-    if(!owned){
-      row.querySelector('.tr-buy').addEventListener('click', ()=> buyTrinket(t, finalPrice));
-    }
-    shop.appendChild(row);
-  });
+
+  function renderShopList(containerId, items, icon, slotField){
+    const shop = document.getElementById(containerId);
+    shop.innerHTML = '';
+    items.forEach(t=>{
+      const finalPrice = aisyahHaggle ? Math.floor(t.price * 0.9) : t.price;
+      const owned = p[slotField] && p[slotField].n === t.n;
+      const row = document.createElement('div');
+      row.className = 'trinket-row';
+      row.innerHTML = `
+        <div class="tr-icon r-${t.r}">${icon}</div>
+        <div class="tr-body">
+          <div class="tr-name">${t.n}</div>
+          <div class="tr-stats">${trinketStatLine(t)}</div>
+        </div>
+        <button class="tr-buy ${owned?'owned':''}" ${owned || p.gold < finalPrice ? 'disabled' : ''}>${owned ? 'Equipped' : finalPrice+'G'}</button>`;
+      if(!owned){
+        row.querySelector('.tr-buy').addEventListener('click', ()=> buyGear(t, finalPrice, slotField));
+      }
+      shop.appendChild(row);
+    });
+  }
+  renderShopList('inv-shop-list', TRINKET_SHOP, '📿', 'equippedAmulet');
+  renderShopList('inv-weapon-list', WEAPON_SHOP, '⚔️', 'equippedWeapon');
+  renderShopList('inv-armor-list', ARMOR_SHOP, '🛡️', 'equippedArmor');
 
   const shelfArea = document.getElementById('inv-shelf-area');
   if(p.templeRep < TEMPLE_CONFESSOR_REP){
@@ -1757,7 +1817,7 @@ function renderInventory(){
         </div>
         <button class="tr-buy ${owned?'owned':''}" ${owned || p.gold < t.price ? 'disabled' : ''}>${owned ? 'Equipped' : t.price+'G'}</button>`;
       if(!owned){
-        row.querySelector('.tr-buy').addEventListener('click', ()=> buyTrinket(t, t.price));
+        row.querySelector('.tr-buy').addEventListener('click', ()=> buyGear(t, t.price, 'equippedAmulet'));
       }
       shelfArea.appendChild(row);
     });
@@ -1794,7 +1854,6 @@ function renderCrafting(){
     }).join(' · ');
     const craftable = Object.entries(r.mats).every(([m,need]) => (GameState.materials[m]||0) >= need);
     const alreadyCrafted = r.type === 'companion_gear' && GameState.companionGear[r.id];
-    const locked = r.companion === 'Soel'; // needs Fire Essence, not obtainable yet
     const row = document.createElement('div');
     row.className = 'trinket-row';
     row.innerHTML = `
@@ -1804,8 +1863,8 @@ function renderCrafting(){
         <div class="tr-stats">${r.d}</div>
         <div class="tr-mats">${matLine}</div>
       </div>
-      <button class="tr-buy ${alreadyCrafted?'owned':''}" ${alreadyCrafted || !craftable || locked ? 'disabled' : ''}>${alreadyCrafted ? 'Crafted' : (locked ? 'Locked' : 'Craft')}</button>`;
-    if(!alreadyCrafted && !locked){
+      <button class="tr-buy ${alreadyCrafted?'owned':''}" ${alreadyCrafted || !craftable ? 'disabled' : ''}>${alreadyCrafted ? 'Crafted' : 'Craft'}</button>`;
+    if(!alreadyCrafted){
       row.querySelector('.tr-buy').addEventListener('click', ()=> craftItem(r.id));
     }
     recipeWrap.appendChild(row);
@@ -1827,11 +1886,14 @@ function craftItem(recipeId){
   saveGame();
 }
 
-function buyTrinket(t, price){
+function buyGear(item, price, slotField){
   const p = GameState.player;
   if(p.gold < price) return;
   p.gold -= price;
-  p.equippedAmulet = t;
+  const prev = p[slotField];
+  if(prev){ p.mhp -= (prev.hp||0); p.hp = Math.min(p.hp, p.mhp); }
+  p[slotField] = item;
+  if(item.hp){ p.mhp += item.hp; p.hp = Math.min(p.mhp, p.hp + item.hp); }
   renderInventory();
   saveGame();
 }
@@ -2152,37 +2214,42 @@ document.getElementById('hub-reset-btn').addEventListener('click', (e)=>{
    ========================================================================= */
 const SAVE_KEY = 'daybreak_save_v1';
 
+function getSaveData(){
+  return {
+    player: GameState.player,
+    companions: GameState.companions,
+    materials: GameState.materials,
+    potions: GameState.potions,
+    companionGear: GameState.companionGear,
+    currentZone: GameState.currentZone,
+    zoneState: GameState.zoneState,
+    readChapters: Array.from(GameState.readChapters)
+  };
+}
+
+function applySaveData(data){
+  Object.assign(GameState.player, data.player);
+  Object.assign(GameState.companions, data.companions);
+  GameState.materials = data.materials || {};
+  GameState.potions = Object.assign({ 'Health Potion':0, 'Mana Potion':0, 'Greater Health Potion':0 }, data.potions);
+  GameState.companionGear = data.companionGear || {};
+  GameState.currentZone = data.currentZone || 'whispering-woods';
+  Object.keys(GameState.zoneState).forEach(id=>{
+    if(data.zoneState && data.zoneState[id]) Object.assign(GameState.zoneState[id], data.zoneState[id]);
+  });
+  GameState.readChapters = new Set(data.readChapters || []);
+}
+
 function saveGame(){
-  try{
-    const data = {
-      player: GameState.player,
-      companions: GameState.companions,
-      materials: GameState.materials,
-      potions: GameState.potions,
-      companionGear: GameState.companionGear,
-      currentZone: GameState.currentZone,
-      zoneState: GameState.zoneState,
-      readChapters: Array.from(GameState.readChapters)
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-  } catch(e){ /* storage unavailable — fail silently, game still works this session */ }
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(getSaveData())); }
+  catch(e){ /* storage unavailable — fail silently, game still works this session */ }
 }
 
 function loadGame(){
   try{
     const raw = localStorage.getItem(SAVE_KEY);
     if(!raw) return false;
-    const data = JSON.parse(raw);
-    Object.assign(GameState.player, data.player);
-    Object.assign(GameState.companions, data.companions);
-    GameState.materials = data.materials || {};
-    GameState.potions = Object.assign({ 'Health Potion':0, 'Mana Potion':0, 'Greater Health Potion':0 }, data.potions);
-    GameState.companionGear = data.companionGear || {};
-    GameState.currentZone = data.currentZone || 'whispering-woods';
-    Object.keys(GameState.zoneState).forEach(id=>{
-      if(data.zoneState && data.zoneState[id]) Object.assign(GameState.zoneState[id], data.zoneState[id]);
-    });
-    GameState.readChapters = new Set(data.readChapters || []);
+    applySaveData(JSON.parse(raw));
     return true;
   } catch(e){ return false; }
 }
@@ -2191,6 +2258,43 @@ function newGameReset(){
   try{ localStorage.removeItem(SAVE_KEY); } catch(e){}
   location.reload();
 }
+
+function exportSaveFile(){
+  const data = getSaveData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `daybreak-save-lv${GameState.player.level}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showHubToast('Save file downloaded.');
+}
+
+function importSaveFile(file){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data.player || !data.zoneState) throw new Error('not a Daybreak save');
+      applySaveData(data);
+      saveGame();
+      renderHub();
+      showHubToast('Save imported successfully.');
+    } catch(err){
+      showHubToast("Couldn't read that file — not a valid Daybreak save.");
+    }
+  };
+  reader.readAsText(file);
+}
+document.getElementById('hub-export-btn').addEventListener('click', exportSaveFile);
+document.getElementById('hub-import-btn').addEventListener('click', ()=> document.getElementById('hub-import-file').click());
+document.getElementById('hub-import-file').addEventListener('change', (e)=>{
+  if(e.target.files && e.target.files[0]) importSaveFile(e.target.files[0]);
+  e.target.value = '';
+});
 
 /* =========================================================================
    INIT
