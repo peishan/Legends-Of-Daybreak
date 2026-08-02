@@ -276,6 +276,30 @@
 
   .storm-crown{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:17px solid #a8d8ff; filter:drop-shadow(0 0 8px #7fd4ffcc); }
 
+  /* Frostspire Ruins zone decor */
+  #map-scene.zone-ice{ background:linear-gradient(180deg,#1a2838 0%,#243850 45%,#345068 100%); }
+  .snowfall{ position:absolute; width:3px;height:3px; background:#fff; border-radius:50%; opacity:.7; animation:ashfall 6s linear infinite; }
+  .ice-shard{ position:absolute; bottom:0; width:0;height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-bottom:44px solid #a8e0ff; opacity:.5; filter:drop-shadow(0 0 8px #a8e0ff88); }
+
+  /* Frostspire Ruins enemy sprites */
+  .ice-elemental-body{ width:64px; height:60px; background:linear-gradient(135deg,#a8e0ff,#4a90c0); border-radius:40% 40% 50% 50%; opacity:.85; box-shadow:0 0 18px #a8e0ff88, inset 0 -8px 12px #0002; position:relative; animation:slimeWobble 2.4s ease-in-out infinite; }
+  .ice-elemental-body:before, .ice-elemental-body:after{ content:''; position:absolute; top:16px; width:7px;height:7px; background:#0a2a4a; border-radius:50%; }
+  .ice-elemental-body:before{left:18px;} .ice-elemental-body:after{right:18px;}
+
+  .frostwolf-body{ width:78px; height:48px; background:#c8e8ff; border-radius:40% 50% 40% 45%; position:relative; box-shadow:0 0 14px #a8e0ff66; }
+  .frostwolf-body:before{ content:''; position:absolute; left:-16px; top:5px; width:26px;height:20px; background:#c8e8ff; border-radius:50% 30% 40% 60%; }
+  .frostwolf-body:after{ content:''; position:absolute; left:0px; top:12px; width:5px;height:5px; background:#1a3a5a; border-radius:50%; }
+
+  .frozenknight-body{ width:60px; height:70px; background:linear-gradient(135deg,#d8f0ff,#7fb8d8); clip-path:polygon(30% 0%,70% 0%,100% 30%,85% 100%,15% 100%,0% 30%); box-shadow:0 0 18px #a8e0ff88; position:relative; }
+  .frozenknight-body:before, .frozenknight-body:after{ content:''; position:absolute; top:20px; width:6px;height:6px; background:#0a2a4a; border-radius:50%; }
+  .frozenknight-body:before{left:20px;} .frozenknight-body:after{right:20px;}
+
+  .frostqueen-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #e8f8ff; filter:drop-shadow(0 0 10px #a8e0ffcc); }
+
+  .p-card.frozen{ opacity:.55; filter:grayscale(.4) brightness(1.1); border-color:#a8e0ff !important; position:relative; }
+  .p-card.frozen:after{ content:'❄️'; position:absolute; top:4px; right:6px; font-size:12px; }
+  #battle-p-card{ position:relative; }
+
   .dmg-pop{ position:absolute; top:30%; left:50%; transform:translate(-50%,0); font-family:'Spectral',serif; font-weight:700; font-size:22px; color:#fff; text-shadow:0 2px 6px #000; pointer-events:none; animation:popup .8s ease forwards; }
   .dmg-pop.big{font-size:30px; color:#ffcf5c;}
   .dmg-pop.heal{color:#7ee08a;}
@@ -808,7 +832,8 @@ const GameState = {
     'cursed-catacombs': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
     'crystal-caverns': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
     'ember-peak': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
-    'stormhold': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
+    'stormhold': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
+    'frostspire-ruins': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
   },
   readChapters: new Set()
 };
@@ -1058,11 +1083,40 @@ const ZONES = {
     bossPromptDesc:'Thunder rolls without pause here. Something vast paces atop the ruined keep. The Storm Tyrant has noticed you.',
     zoneClearedDesc:'The lightning has gone quiet over Stormhold. The fortress stands empty at last.',
     templeRepOnClear:220,
+    nextZone:'frostspire-ruins'
+  },
+  'frostspire-ruins': {
+    name:'Frostspire Ruins', theme:'zone-ice',
+    nodes: {
+      camp:     { x:60,y:620, label:'Shelter', icon:'⛺', type:'camp',
+                  desc:'Frostspire Shelter — a magically warded ice cave. Barely warm enough.' },
+      throne:   { x:100,y:400, label:'Throne', icon:'🧊', type:'quest', npcName:'Frozen Throne' },
+      merchant: { x:230,y:300, label:'Deidre', icon:'❄️', type:'merchant', name:'Deidre',
+                  line:'"A frost-touched merchant with an eye for the extraordinary. My breath does not fog in the cold."' },
+      encounter:{ x:230,y:90,  label:'Ramparts', icon:'🌨️', type:'encounter' }
+    },
+    enemyDefs: {
+      'Ice Elemental': { hp:55, atk:6,  spd:3, xp:26, g:19, cls:'ice-elemental-body' },
+      'Frost Wolf':    { hp:32, atk:11, spd:8, xp:28, g:21, cls:'frostwolf-body' },
+      'Frozen Knight': { hp:58, atk:9,  spd:4, xp:30, g:20, cls:'frozenknight-body' }
+    },
+    lootTable: ['Ice Crystal','Frost Gem','Glacial Staff'],
+    boss: { name:'Frost Queen', mechanic:'freeze', hp:210, atk:14, spd:4, xp:200, g:180, freezeChance:0.3, freezeDuration:3000,
+            hint:'30% chance each attack to freeze a party member solid', introLine:'The Frost Queen rises from her throne of ice, and the air itself begins to crystallize.',
+            spriteCls:'frozenknight-body', crownCls:'frostqueen-crown' },
+    quest: { name:'Ice Breaker', need:5, xpReward:150, goldReward:90,
+             acceptDesc:'"Ice Breaker" — Defeat 5 monsters in Frostspire Ruins. Reward: 150 XP, 90 Gold.' },
+    encounterLockedDesc:'Frost creeps across the ramparts ahead. You should check the throne first.',
+    bossPromptDesc:'The cold here is absolute, ancient. A figure sits motionless upon a throne of ice \u2014 until it turns to look at you. The Frost Queen has noticed you.',
+    zoneClearedDesc:'The frost has settled into silence. The Queen\u2019s throne stands empty.',
+    templeRepOnClear:260,
     nextZone:null
   }
 };
 
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
+let frozenUntil = {};
+function isFrozen(key){ return frozenUntil[key] && Date.now() < frozenUntil[key]; }
 let pATB = 0, eATB = 0, pReady = false, eReady = false;
 let tickHandle = null;
 
@@ -1177,6 +1231,22 @@ function buildZoneDecor(zone){
       sp.style.left=(20+Math.random()*60)+'%'; sp.style.top=(15+Math.random()*60)+'%';
       sp.style.animationDelay=(Math.random()*1.4)+'s';
       scene.appendChild(sp);
+    }
+  }
+  if(zone.theme === 'zone-ice'){
+    const shardSpots = [30,70,310,350,160,390];
+    shardSpots.forEach(x=>{
+      const s = document.createElement('div'); s.className='ice-shard';
+      s.style.left=x+'px';
+      s.style.transform = `scale(${0.6+Math.random()*0.7})`;
+      scene.appendChild(s);
+    });
+    for(let i=0;i<30;i++){
+      const sf = document.createElement('div'); sf.className='snowfall';
+      sf.style.left=(Math.random()*100)+'%';
+      sf.style.animationDelay=(Math.random()*6)+'s';
+      sf.style.animationDuration=(5+Math.random()*4)+'s';
+      scene.appendChild(sf);
     }
   }
 }
@@ -1313,6 +1383,7 @@ function resetBattleUI(){
   document.getElementById('battle-result').classList.remove('show');
   document.getElementById('battle-warning-banner').classList.remove('show');
   pATB = 0; eATB = 0; pReady = false; eReady = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
+  frozenUntil = {};
   activeCompanions = getActiveCompanions();
   companionATB = {};
   activeCompanions.forEach(n => companionATB[n] = 0);
@@ -1375,6 +1446,7 @@ function updateBattleBars(){
   document.getElementById('battle-e-atb-fill').style.width = eATB+'%';
   document.getElementById('battle-p-atb-fill').style.width = pATB+'%';
   document.getElementById('battle-p-card').classList.toggle('ready', pReady);
+  document.getElementById('battle-p-card').classList.toggle('frozen', isFrozen('player'));
   activeCompanions.forEach(name=>{
     const c = GameState.companions[name];
     const hpEl = document.getElementById('hp-'+name);
@@ -1382,20 +1454,24 @@ function updateBattleBars(){
     if(hpEl) hpEl.style.width = Math.max(0,(c.hp/c.mhp*100))+'%';
     if(atbEl) atbEl.style.width = (companionATB[name]||0)+'%';
     const card = document.getElementById('pcard-'+name);
-    if(card) card.classList.toggle('fainted', c.hp <= 0);
+    if(card){
+      card.classList.toggle('fainted', c.hp <= 0);
+      card.classList.toggle('frozen', isFrozen(name));
+    }
   });
   const missileBtn = document.getElementById('battle-act-missile');
   const attackBtn = document.getElementById('battle-act-attack');
-  missileBtn.classList.toggle('ready', pReady);
-  attackBtn.classList.toggle('ready', pReady);
-  missileBtn.disabled = !pReady || p.mp < 10;
-  attackBtn.disabled = !pReady;
+  const frozen = isFrozen('player');
+  missileBtn.classList.toggle('ready', pReady && !frozen);
+  attackBtn.classList.toggle('ready', pReady && !frozen);
+  missileBtn.disabled = !pReady || p.mp < 10 || frozen;
+  attackBtn.disabled = !pReady || frozen;
 
   const totalPotions = Object.values(GameState.potions).reduce((a,b)=>a+b, 0);
   const potionBtn = document.getElementById('battle-act-potion');
-  potionBtn.textContent = `🧪 Use Potion (${totalPotions})`;
-  potionBtn.classList.toggle('ready', pReady && totalPotions > 0);
-  potionBtn.disabled = !pReady || totalPotions === 0;
+  potionBtn.textContent = frozen ? '🧊 Frozen solid!' : `🧪 Use Potion (${totalPotions})`;
+  potionBtn.classList.toggle('ready', pReady && totalPotions > 0 && !frozen);
+  potionBtn.disabled = !pReady || totalPotions === 0 || frozen;
 }
 
 function popDamage(amount, opts){
@@ -1413,7 +1489,7 @@ function stopTicking(){ clearInterval(tickHandle); }
 function tick(){
   if(!inBattle || paused) return;
   const p = GameState.player;
-  if(!pReady){
+  if(!pReady && !isFrozen('player')){
     pATB = Math.min(100, pATB + p.spd);
     if(pATB >= 100){ pReady = true; if(p.autoAttack && p.level >= AUTO_ATTACK_LEVEL) playerAct('attack'); }
   }
@@ -1423,7 +1499,7 @@ function tick(){
   }
   activeCompanions.forEach(name=>{
     const c = GameState.companions[name];
-    if(c.hp <= 0) return;
+    if(c.hp <= 0 || isFrozen(name)) return;
     const gear = getCompanionGearBonus(name);
     const spd = COMPANION_COMBAT[name].spd + (gear && gear.spdBonus ? gear.spdBonus : 0);
     companionATB[name] = Math.min(100, (companionATB[name]||0) + spd);
@@ -1468,7 +1544,7 @@ function companionAct(name){
 }
 
 function playerAct(type){
-  if(!pReady || !inBattle || paused) return;
+  if(!pReady || !inBattle || paused || isFrozen('player')) return;
   const p = GameState.player;
   let dmg = 0; const lvlBonus = Math.floor(p.level/2);
   const gearAtk = getPlayerAtkBonus();
@@ -1552,6 +1628,10 @@ function enemyAct(){
     bossTurnCount++;
     if(bossTurnCount % ZONES[GameState.currentZone].boss.rodTurns === 0){ doLightningRod(); return; }
   }
+  if(isBoss && currentEnemy.mechanic === 'freeze'){
+    const boss = ZONES[GameState.currentZone].boss;
+    if(Math.random() < boss.freezeChance){ doFreeze(boss); return; }
+  }
   const es = document.getElementById('battle-enemy-sprite');
   es.classList.add('attacking');
   const targets = livingTargets();
@@ -1561,6 +1641,21 @@ function enemyAct(){
     es.classList.remove('attacking');
     const targetName = target.key === 'player' ? 'San' : target.key;
     applyEnemyDamage(target.key, dmg, `${currentEnemy.name} strikes ${targetName}.`);
+    eATB = 0; eReady = false;
+    updateBattleBars();
+  }, 350);
+}
+
+function doFreeze(boss){
+  const es = document.getElementById('battle-enemy-sprite');
+  es.classList.add('attacking');
+  const targets = livingTargets();
+  const target = targets[Math.floor(Math.random()*targets.length)];
+  const targetName = target.key === 'player' ? 'San' : target.key;
+  setTimeout(()=>{
+    es.classList.remove('attacking');
+    frozenUntil[target.key] = Date.now() + boss.freezeDuration;
+    document.getElementById('battle-log').textContent = `${currentEnemy.name} freezes ${targetName} solid!`;
     eATB = 0; eReady = false;
     updateBattleBars();
   }, 350);
@@ -1760,7 +1855,7 @@ function closeBattle(fled){
 }
 
 function usePotion(){
-  if(!pReady || !inBattle || paused) return;
+  if(!pReady || !inBattle || paused || isFrozen('player')) return;
   const p = GameState.player;
   const pots = GameState.potions;
   let choice = null;
