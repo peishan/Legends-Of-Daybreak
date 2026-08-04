@@ -336,6 +336,18 @@
     width:calc(100% - 28px); text-align:center; transition:opacity .2s ease, border-color .2s ease; }
   #battle-act-potion.ready{ border-color:#7ee08a; }
   #battle-act-potion:disabled{ opacity:.35; cursor:default; }
+
+  #spell-panel{ max-height:0; overflow:hidden; transition:max-height .3s ease; margin:0 14px; }
+  #spell-panel.show{ max-height:260px; overflow-y:auto; margin-bottom:8px; }
+  #spell-panel-list{ display:flex; flex-direction:column; gap:6px; padding-bottom:2px; }
+  .spell-row{ display:flex; align-items:center; gap:10px; background:#211b2aee; border:1px solid #3a3350; border-radius:10px; padding:9px 11px; cursor:pointer; text-align:left; width:100%; }
+  .spell-row:disabled{ opacity:.35; cursor:default; }
+  .spell-row .sp-body{ flex:1; }
+  .spell-row .sp-name{ font-family:'Spectral',serif; font-weight:600; font-size:13px; color:var(--cream); }
+  .spell-row .sp-desc{ font-family:'Karla',sans-serif; font-size:10.5px; color:var(--muted); margin-top:2px; }
+  .spell-row .sp-cost{ font-family:'Karla',sans-serif; font-size:11px; color:var(--mp); font-weight:700; flex-shrink:0; }
+  #battle-act-spells.active{ border-color:var(--sun); }
+
   #battle-auto-row .lbl{font-family:'Karla',sans-serif; font-size:11px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase;}
   #battle-auto-toggle{ width:40px; height:22px; border-radius:12px; background:#2a2a1e; border:1px solid var(--panel-edge); position:relative; cursor:pointer; }
   #battle-auto-toggle .knob{ position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--muted); transition:left .2s ease, background .2s ease; }
@@ -659,8 +671,9 @@
       <div id="battle-log">A Goblin blocks the path.</div>
       <div id="battle-auto-row"><span class="lbl">Auto-Attack</span><div id="battle-auto-toggle"><div class="knob"></div></div></div>
       <button id="battle-act-potion">Use Potion (0)</button>
+      <div id="spell-panel"><div id="spell-panel-list"></div></div>
       <div id="battle-actions">
-        <button id="battle-act-missile"><span>Magic Missile</span><span class="cost">10 MP · 1d8 arcane</span></button>
+        <button id="battle-act-spells"><span>✨ Spells</span><span class="cost">Tap to choose</span></button>
         <button id="battle-act-attack"><span>Basic Attack</span><span class="cost">0 MP · 1d4 physical</span></button>
       </div>
       <div id="battle-result">
@@ -784,7 +797,7 @@ const COMPANION_COMBAT = {
   Eliz:     { spd:4, heals:true, healDie:6, healBonus:2, verb:'whispers a soft blessing, mending wounds.' },
   Senedra:  { spd:6, dmgDie:6, dmgBonus:0, verb:'looses an arrow at {t}.' },
   Zaki:     { spd:4, dmgDie:5, dmgBonus:1, verb:'cleaves at {t}.' },
-  Soel:     { spd:8, dmgDie:3, dmgBonus:0, verb:'pounces on {t} with surprising ferocity.' }
+  Soel:     { spd:9, dmgDie:3, dmgBonus:1, verb:'pounces on {t} with surprising ferocity.' }
 };
 
 /* Real recipes from the source game — trimmed to what's craftable with materials
@@ -809,13 +822,33 @@ function getCompanionGearBonus(name){
   return null;
 }
 
+/* San's real spellbook — Tier 1 & 2 (levels 1-12), matching zones built so far.
+   Higher tiers exist in the source game for much higher levels and will come with future zones. */
+const SPELLS = [
+  { id:'magic_missile', n:'Magic Missile', ul:1, cost:10, dice:'1d8', kind:'damage', verb:'hurls a flurry of arcane missiles' },
+  { id:'chromatic_orb', n:'Chromatic Orb', ul:2, cost:12, dice:'1d10', kind:'damage', proc:{chance:.15, label:'shock', bonus:3}, verb:'hurls a crackling orb of shifting color' },
+  { id:'shield', n:'Shield', ul:4, cost:8, kind:'buff', buffDef:6, buffDuration:9000, verb:'raises a shimmering ward' },
+  { id:'melf_acid_arrow', n:"Melf's Acid Arrow", ul:6, cost:14, dice:'1d10', kind:'damage', proc:{chance:.25, label:'poison', bonus:4}, verb:'looses an arrow of hissing acid' },
+  { id:'evasion_ward', n:'Evasion Ward', ul:7, cost:16, kind:'buff', buffDef:9, buffDuration:9000, verb:'bends the light around herself' },
+  { id:'web_of_frost', n:'Web of Frost', ul:9, cost:18, dice:'1d12', kind:'damage', proc:{chance:.2, label:'shock', bonus:5}, verb:'weaves a lattice of killing frost' },
+  { id:'fireshield_blue', n:'Fireshield (Blue)', ul:10, cost:15, kind:'buff', buffDef:12, buffDuration:9000, verb:'wreathes herself in cold blue flame' },
+  { id:'vampiric_touch', n:'Vampiric Touch', ul:12, cost:20, dice:'1d10', kind:'damage', proc:{chance:.3, label:'poison', bonus:4}, lifesteal:.5, verb:'reaches out with a hand wreathed in shadow' }
+];
+
+function rollDice(diceStr){
+  const [count, sides] = diceStr.split('d').map(Number);
+  let total = 0;
+  for(let i=0;i<count;i++) total += roll(sides);
+  return total;
+}
+
 const AUTO_ATTACK_LEVEL = 3;
 function xpNeeded(lvl){ return 30 + (lvl-1)*25; }
 
 const GameState = {
   player: { level:1, xp:0, hp:80, mhp:80, mp:120, mmp:120, spd:6, gold:0, autoAttack:false, equippedAmulet:null, equippedWeapon:null, equippedArmor:null, templeRep:0 },
   companions: {
-    Joel:     { hp:120, mhp:120 },
+    Joel:     { hp:132, mhp:132 },
     Aisyah:   { hp:90,  mhp:90 },
     Mezstorm: { hp:100, mhp:100 },
     Eliz:     { hp:95,  mhp:95 },
@@ -1117,6 +1150,11 @@ const ZONES = {
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
 let frozenUntil = {};
 function isFrozen(key){ return frozenUntil[key] && Date.now() < frozenUntil[key]; }
+let playerBuffDef = 0, playerBuffUntil = 0;
+function getPlayerBuffDef(){ return Date.now() < playerBuffUntil ? playerBuffDef : 0; }
+let elizReviveReadyAt = 0;
+
+function isCompanionActive(name){ return activeCompanions.includes(name) && GameState.companions[name].hp > 0; }
 let pATB = 0, eATB = 0, pReady = false, eReady = false;
 let tickHandle = null;
 
@@ -1384,6 +1422,8 @@ function resetBattleUI(){
   document.getElementById('battle-warning-banner').classList.remove('show');
   pATB = 0; eATB = 0; pReady = false; eReady = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
   frozenUntil = {};
+  playerBuffDef = 0; playerBuffUntil = 0; elizReviveReadyAt = 0;
+  hideSpellPanel();
   activeCompanions = getActiveCompanions();
   companionATB = {};
   activeCompanions.forEach(n => companionATB[n] = 0);
@@ -1459,13 +1499,15 @@ function updateBattleBars(){
       card.classList.toggle('frozen', isFrozen(name));
     }
   });
-  const missileBtn = document.getElementById('battle-act-missile');
+  const spellsBtn = document.getElementById('battle-act-spells');
   const attackBtn = document.getElementById('battle-act-attack');
   const frozen = isFrozen('player');
-  missileBtn.classList.toggle('ready', pReady && !frozen);
+  spellsBtn.classList.toggle('ready', pReady && !frozen);
   attackBtn.classList.toggle('ready', pReady && !frozen);
-  missileBtn.disabled = !pReady || p.mp < 10 || frozen;
+  spellsBtn.disabled = !pReady || frozen;
   attackBtn.disabled = !pReady || frozen;
+  if(frozen) hideSpellPanel();
+  if(document.getElementById('spell-panel').classList.contains('show')) renderSpellPanel();
 
   const totalPotions = Object.values(GameState.potions).reduce((a,b)=>a+b, 0);
   const potionBtn = document.getElementById('battle-act-potion');
@@ -1490,7 +1532,8 @@ function tick(){
   if(!inBattle || paused) return;
   const p = GameState.player;
   if(!pReady && !isFrozen('player')){
-    pATB = Math.min(100, pATB + p.spd);
+    const effSpd = isCompanionActive('Zaki') ? p.spd * 1.15 : p.spd;
+    pATB = Math.min(100, pATB + effSpd);
     if(pATB >= 100){ pReady = true; if(p.autoAttack && p.level >= AUTO_ATTACK_LEVEL) playerAct('attack'); }
   }
   if(!eReady){
@@ -1546,25 +1589,91 @@ function companionAct(name){
 function playerAct(type){
   if(!pReady || !inBattle || paused || isFrozen('player')) return;
   const p = GameState.player;
-  let dmg = 0; const lvlBonus = Math.floor(p.level/2);
+  const lvlBonus = Math.floor(p.level/2);
   const gearAtk = getPlayerAtkBonus();
-  if(type === 'missile'){
-    if(p.mp < 10) return;
-    p.mp -= 10; dmg = roll(8) + lvlBonus + gearAtk;
-    document.getElementById('battle-log').textContent = `San hurls a flurry of arcane missiles.`;
-  } else {
-    dmg = roll(4) + lvlBonus + gearAtk;
-    document.getElementById('battle-log').textContent = `San strikes with a quick blow.`;
-  }
+  let dmg = roll(4) + lvlBonus + gearAtk;
+  let critText = '';
+  if(isCompanionActive('Senedra') && Math.random() < 0.2){ dmg *= 2; critText = ' A critical hit!'; }
+  document.getElementById('battle-log').textContent = `San strikes with a quick blow.${critText}`;
   currentEnemy.hp = Math.max(0, currentEnemy.hp - dmg);
   const es = document.getElementById('battle-enemy-sprite');
   es.classList.add('hit'); setTimeout(()=>es.classList.remove('hit'), 300);
-  popDamage(dmg);
+  popDamage(dmg, {big:!!critText});
   pATB = 0; pReady = false;
+  hideSpellPanel();
   updateBattleBars();
   checkPhaseShift();
   checkInfernoInterrupt();
   checkEnemyDefeatedOrResurrect();
+}
+
+function castSpell(spellId){
+  if(!pReady || !inBattle || paused || isFrozen('player')) return;
+  const spell = SPELLS.find(s=>s.id===spellId);
+  if(!spell || GameState.player.level < spell.ul) return;
+  const p = GameState.player;
+  if(p.mp < spell.cost) return;
+  p.mp -= spell.cost;
+
+  if(spell.kind === 'buff'){
+    playerBuffDef = spell.buffDef;
+    playerBuffUntil = Date.now() + spell.buffDuration;
+    document.getElementById('battle-log').textContent = `San ${spell.verb}. (+${spell.buffDef} DEF, briefly)`;
+  } else {
+    const lvlBonus = Math.floor(p.level/2);
+    const gearAtk = getPlayerAtkBonus();
+    let dmg = rollDice(spell.dice) + lvlBonus + gearAtk;
+    if(isCompanionActive('Mezstorm')) dmg = Math.round(dmg * 1.15);
+    let critText = '';
+    if(isCompanionActive('Senedra') && Math.random() < 0.2){ dmg *= 2; critText = ' A critical hit!'; }
+    let procText = '';
+    if(spell.proc && Math.random() < spell.proc.chance){
+      dmg += spell.proc.bonus;
+      procText = ` ${spell.proc.label==='poison' ? 'Poison courses through' : 'Shock arcs across'} ${currentEnemy.name}!`;
+    }
+    if(spell.lifesteal){
+      const healed = Math.round(dmg * spell.lifesteal);
+      p.hp = Math.min(p.mhp, p.hp + healed);
+      procText += ` San drains ${healed} HP.`;
+    }
+    currentEnemy.hp = Math.max(0, currentEnemy.hp - dmg);
+    document.getElementById('battle-log').textContent = `San ${spell.verb}.${critText}${procText}`;
+    const es = document.getElementById('battle-enemy-sprite');
+    es.classList.add('hit'); setTimeout(()=>es.classList.remove('hit'), 300);
+    popDamage(dmg, {big:!!critText});
+    checkPhaseShift();
+    checkInfernoInterrupt();
+  }
+  pATB = 0; pReady = false;
+  hideSpellPanel();
+  updateBattleBars();
+  checkEnemyDefeatedOrResurrect();
+}
+
+function toggleSpellPanel(){
+  const panel = document.getElementById('spell-panel');
+  const willShow = !panel.classList.contains('show');
+  if(willShow) renderSpellPanel();
+  panel.classList.toggle('show', willShow);
+  document.getElementById('battle-act-spells').classList.toggle('active', willShow);
+}
+function hideSpellPanel(){
+  document.getElementById('spell-panel').classList.remove('show');
+  document.getElementById('battle-act-spells').classList.remove('active');
+}
+function renderSpellPanel(){
+  const p = GameState.player;
+  const list = document.getElementById('spell-panel-list');
+  list.innerHTML = '';
+  SPELLS.filter(s=>p.level>=s.ul).forEach(s=>{
+    const btn = document.createElement('button');
+    btn.className = 'spell-row';
+    btn.disabled = !pReady || p.mp < s.cost || isFrozen('player');
+    const desc = s.kind==='buff' ? `+${s.buffDef} DEF, brief ward` : `${s.dice} dmg${s.proc?` · ${Math.round(s.proc.chance*100)}% ${s.proc.label}`:''}${s.lifesteal?' · lifesteal':''}`;
+    btn.innerHTML = `<div class="sp-body"><div class="sp-name">${s.n}</div><div class="sp-desc">${desc}</div></div><div class="sp-cost">${s.cost} MP</div>`;
+    btn.addEventListener('click', ()=> castSpell(s.id));
+    list.appendChild(btn);
+  });
 }
 
 function checkPhaseShift(){
@@ -1747,13 +1856,27 @@ function doRampage(){
 }
 
 function applyEnemyDamage(targetKey, dmg, msg, big){
+  let logText = msg;
   if(targetKey === 'player'){
     const mitigated = Math.max(1, dmg - getPlayerDefBonus());
     GameState.player.hp = Math.max(0, GameState.player.hp - mitigated);
     dmg = mitigated;
   }
-  else { const c = GameState.companions[targetKey]; c.hp = Math.max(0, c.hp - dmg); }
-  document.getElementById('battle-log').textContent = msg;
+  else {
+    const c = GameState.companions[targetKey];
+    c.hp = Math.max(0, c.hp - dmg);
+    if(c.hp <= 0 && (targetKey === 'Soel' || targetKey === 'Eliz')){
+      c.hp = 1;
+      logText = targetKey === 'Soel'
+        ? `${msg} Soel dissolves into embers and reforms, unharmed by death itself.`
+        : `${msg} Eliz's guardian spirit holds her at the edge, refusing to let her fall.`;
+    } else if(c.hp <= 0 && isCompanionActive('Eliz') && Date.now() >= elizReviveReadyAt){
+      c.hp = Math.round(c.mhp * 0.5);
+      elizReviveReadyAt = Date.now() + 15000;
+      logText = `${msg} Eliz calls out — Breath of Life! ${targetKey} rises again.`;
+    }
+  }
+  document.getElementById('battle-log').textContent = logText;
   popDamage(dmg, {big:big});
   if(GameState.player.hp <= 0){
     document.getElementById('battle-log').textContent = 'San staggers back, retreating to camp to recover.';
@@ -1786,28 +1909,32 @@ function onVictory(){
   const p = GameState.player;
   const zone = ZONES[GameState.currentZone];
   const zs = GameState.zoneState[GameState.currentZone];
+  const goldMult = isCompanionActive('Aisyah') ? 1.2 : 1;
   let rewardHtml, title, xpGain;
   if(isBoss){
     zs.bossDefeated = true;
-    p.gold += zone.boss.g;
+    const bossGold = Math.round(zone.boss.g * goldMult);
+    p.gold += bossGold;
     p.templeRep += zone.templeRepOnClear;
     xpGain = zone.boss.xp;
     title = `${zone.boss.name} defeated!`;
-    rewardHtml = `+${zone.boss.xp} XP · +${zone.boss.g} Gold<br>${zone.name} cleared.<br>The Temple hears of your deeds (+${zone.templeRepOnClear} rep).`;
+    rewardHtml = `+${zone.boss.xp} XP · +${bossGold} Gold<br>${zone.name} cleared.<br>The Temple hears of your deeds (+${zone.templeRepOnClear} rep).`;
   } else {
     const q = zs.quest;
     q.count = Math.min(zone.quest.need, q.count + 1);
-    p.gold += currentEnemy.g;
+    const killGold = Math.round(currentEnemy.g * goldMult);
+    p.gold += killGold;
     xpGain = currentEnemy.xp;
     const loot = zone.lootTable[Math.floor(Math.random()*zone.lootTable.length)];
     if(loot in GameState.potions){ GameState.potions[loot] = (GameState.potions[loot] || 0) + 1; }
     else { GameState.materials[loot] = (GameState.materials[loot] || 0) + 1; }
     title = `${currentEnemy.name} defeated`;
-    rewardHtml = `+${currentEnemy.xp} XP · +${currentEnemy.g} Gold<br>Found: ${loot}`;
+    rewardHtml = `+${currentEnemy.xp} XP · +${killGold} Gold<br>Found: ${loot}`;
     if(q.count >= zone.quest.need && !q.done){
       q.done = true;
-      p.gold += zone.quest.goldReward;
-      rewardHtml += `<br><br><b>${zone.quest.name} complete!</b><br>+${zone.quest.xpReward} XP · +${zone.quest.goldReward} Gold`;
+      const questGold = Math.round(zone.quest.goldReward * goldMult);
+      p.gold += questGold;
+      rewardHtml += `<br><br><b>${zone.quest.name} complete!</b><br>+${zone.quest.xpReward} XP · +${questGold} Gold`;
       grantXP(zone.quest.xpReward);
     }
   }
@@ -1886,7 +2013,7 @@ function usePotion(){
 }
 
 document.getElementById('battle-act-potion').addEventListener('click', usePotion);
-document.getElementById('battle-act-missile').addEventListener('click', ()=>playerAct('missile'));
+document.getElementById('battle-act-spells').addEventListener('click', toggleSpellPanel);
 document.getElementById('battle-act-attack').addEventListener('click', ()=>playerAct('attack'));
 document.getElementById('map-back-btn').addEventListener('click', ()=> showScreen('hub'));
 
@@ -1933,7 +2060,7 @@ function getPlayerAtkBonus(){
 }
 function getPlayerDefBonus(){
   const p = GameState.player;
-  return (p.equippedWeapon?.def||0) + (p.equippedArmor?.def||0) + (p.equippedAmulet?.def||0);
+  return (p.equippedWeapon?.def||0) + (p.equippedArmor?.def||0) + (p.equippedAmulet?.def||0) + getPlayerBuffDef();
 }
 
 function trinketStatLine(t){
