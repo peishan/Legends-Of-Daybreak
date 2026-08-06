@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Legends of Daybreak — Reader</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap');
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{
+    margin:0; height:100%; overflow:hidden;
+    background:#0a0906;
+    font-family:'Cormorant Garamond', serif;
+    color:#e8dfc8;
+  }
+
+  #app{
+    position:relative;
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- TOP BAR ---------- */
+  #topbar{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 14px;
+    background:linear-gradient(#14110c, #0a0906);
+    border-bottom:1px solid #3a3428;
+    z-index:20;
+  }
+  #topbar .brand{
+    font-family:'Cinzel', serif;
+    font-weight:800;
+    font-size:13px;
+    letter-spacing:2px;
+    color:#b98d3e;
+    text-transform:uppercase;
+  }
+  #topbar .chnum{
+    font-family:'Cinzel', serif;
+    font-size:11px;
+    letter-spacing:1px;
+    color:#8a8067;
+  }
+  #tocBtn{
+    background:none;
+    border:1px solid #4a4432;
+    color:#e8dfc8;
+    font-family:'Cinzel', serif;
+    font-size:10px;
+    letter-spacing:1px;
+    padding:6px 10px;
+    border-radius:3px;
+  }
+  #topbarBtns{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  #zoomBtn{
+    background:none;
+    border:1px solid #4a4432;
+    color:#e8dfc8;
+    font-family:'Cinzel', serif;
+    font-size:13px;
+    letter-spacing:1px;
+    padding:5px 10px;
+    border-radius:3px;
+    line-height:1;
+  }
+  #zoomBtn.active{
+    background:#b98d3e;
+    border-color:#b98d3e;
+    color:#14110c;
+  }
+
+  /* ---------- READER VIEW ---------- */
+  #reader{
+    flex:1 1 auto;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    touch-action:pan-y pinch-zoom;
+  }
+  #pageTrack{
+    display:flex;
+    height:100%;
+    width:100%;
+    transition:transform 0.32s cubic-bezier(.4,0,.2,1);
+  }
+  .pageSlide{
+    flex:0 0 100%;
+    height:100%;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    background:#050403;
+    touch-action:pan-y pinch-zoom;
+  }
+  .pageSlide img{
+    width:100%;
+    max-width:640px;
+    display:block;
+    transition:width 0.25s ease, max-width 0.25s ease;
+  }
+
+  /* ---------- ZOOM MODE ---------- */
+  #app.zoom-mode .pageSlide{
+    overflow-x:auto;
+    justify-content:flex-start;
+    touch-action:pan-x pan-y pinch-zoom;
+  }
+  #app.zoom-mode .pageSlide img{
+    width:210%;
+    max-width:none;
+  }
+
+  .navZone{
+    position:absolute;
+    top:0; bottom:0;
+    width:18%;
+    z-index:5;
+  }
+  .navZone.left{ left:0; }
+  .navZone.right{ right:0; }
+
+  /* ---------- BOTTOM BAR ---------- */
+  #bottombar{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:linear-gradient(#0a0906, #14110c);
+    border-top:1px solid #3a3428;
+    z-index:20;
+  }
+  #bottombar button{
+    background:#1c1810;
+    border:1px solid #4a4432;
+    color:#e8dfc8;
+    font-family:'Cinzel', serif;
+    font-size:11px;
+    letter-spacing:1px;
+    padding:8px 16px;
+    border-radius:3px;
+  }
+  #bottombar button:disabled{ opacity:0.3; }
+  #dots{
+    display:flex;
+    gap:5px;
+    flex:1;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  #dots .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:#3a3428;
+  }
+  #dots .dot.active{ background:#b98d3e; }
+
+  /* ---------- TOC OVERLAY ---------- */
+  #toc{
+    position:absolute;
+    inset:0;
+    background:rgba(6,5,3,0.97);
+    z-index:50;
+    display:none;
+    flex-direction:column;
+    padding:20px 16px;
+    overflow-y:auto;
+  }
+  #toc.open{ display:flex; }
+  #toc h2{
+    font-family:'Cinzel', serif;
+    font-weight:800;
+    letter-spacing:2px;
+    color:#b98d3e;
+    text-align:center;
+    font-size:16px;
+    margin:6px 0 18px;
+    text-transform:uppercase;
+  }
+  #toc .list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-width:420px;
+    margin:0 auto;
+    width:100%;
+  }
+  .tocItem{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:1px solid #3a3428;
+    background:#14110c;
+    padding:10px 12px;
+    border-radius:4px;
+  }
+  .tocItem .num{
+    font-family:'Cinzel', serif;
+    font-weight:800;
+    font-size:18px;
+    color:#8a3324;
+    width:28px;
+    text-align:center;
+  }
+  .tocItem .name{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:16px;
+    color:#e8dfc8;
+  }
+  #closeToc{
+    align-self:center;
+    margin-top:20px;
+    background:none;
+    border:1px solid #4a4432;
+    color:#8a8067;
+    font-family:'Cinzel', serif;
+    font-size:10px;
+    letter-spacing:1px;
+    padding:8px 20px;
+    border-radius:3px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div id="topbar">
+    <div class="brand">Legends of Daybreak</div>
+    <div class="chnum" id="chnumLabel">CH. 01 / 07</div>
+    <div id="topbarBtns">
+      <button id="zoomBtn" title="Toggle zoom">&#128269;</button>
+      <button id="tocBtn">CONTENTS</button>
+    </div>
+  </div>
+
+  <div id="reader">
+    <div class="navZone left" id="zoneLeft"></div>
+    <div class="navZone right" id="zoneRight"></div>
+    <div id="pageTrack"></div>
+  </div>
+
+  <div id="bottombar">
+    <button id="prevBtn">&larr; PREV</button>
+    <div id="dots"></div>
+    <button id="nextBtn">NEXT &rarr;</button>
+  </div>
+
+  <div id="toc">
+    <h2>Table of Contents</h2>
+    <div class="list" id="tocList"></div>
+    <button id="closeToc">CLOSE</button>
+  </div>
+
+</div>
+
+<script>
+const chapters = [
+{num:0, title:"Legends of Daybreak", src:"images/ch00.jpg"},
+{num:1, title:"The Rain and the Kitten", src:"images/ch01.jpg"},
+{num:2, title:"The Awakening", src:"images/ch02.jpg"},
+{num:3, title:"The First Bond", src:"images/ch03.jpg"},
+{num:4, title:"Sisterblade", src:"images/ch04.jpg"},
+{num:5, title:"The Weight of Before", src:"images/ch05.jpg"},
+{num:6, title:"The Healer's Light", src:"images/ch06.jpg"},
+{num:7, title:"The Stormsinger", src:"images/ch07.jpg"},
+{num:8, title:"Shadows of the Past", src:"images/ch08.jpg"},
+{num:9, title:"The Frozen Crown", src:"images/ch09.jpg"},
+{num:10, title:"Into the Void", src:"images/ch10.jpg"},
+{num:11, title:"Starlight Ascension", src:"images/ch11.jpg"},
+{num:12, title:"Planar Convergence", src:"images/ch12.jpg"},
+{num:13, title:"The Astral Threshold", src:"images/ch13.jpg"},
+{num:14, title:"Heart of Fire", src:"images/ch14.jpg"},
+{num:15, title:"The Shattered Veil", src:"images/ch15.jpg"},
+{num:16, title:"Frozen Choices", src:"images/ch16.jpg"},
+{num:17, title:"The Void Between Sisters", src:"images/ch17.jpg"},
+{num:18, title:"The Last Letter", src:"images/ch18.jpg"},
+{num:19, title:"Starlight, Finally", src:"images/ch19.jpg"},
+{num:20, title:"The Planarch", src:"images/ch20.jpg"},
+{num:21, title:"The Breaking", src:"images/ch21.jpg"},
+{num:22, title:"What the Ruin Remembers", src:"images/ch22.jpg"},
+{num:23, title:"Aisiyah's Ledger, Aisiyah's Absence", src:"images/ch23.jpg"},
+{num:24, title:"The Numbers That Never Balanced", src:"images/ch24.jpg"},
+{num:25, title:"The Foreman Never Clocks Out", src:"images/ch25.jpg"},
+{num:26, title:"The Widow's Watch", src:"images/ch26.jpg"},
+{num:27, title:"The Roads Senedra Walked", src:"images/ch27.jpg"},
+{num:28, title:"The Room That Waited", src:"images/ch28.jpg"},
+{num:29, title:"The Weight He Chose to Carry", src:"images/ch29.jpg"},
+{num:30, title:"The Storm That Never Broke", src:"images/ch30.jpg"},
+{num:31, title:"What the Ember Remembers", src:"images/ch31.jpg"},
+{num:32, title:"What the Ledger Never Said", src:"images/ch32.jpg"},
+{num:33, title:"The Version That Stopped Pretending", src:"images/ch33.jpg"},
+{num:34, title:"The Door Someone Built on Purpose", src:"images/ch34.jpg"},
+{num:35, title:"The Tribunal of Every Echo", src:"images/ch35.jpg"},
+{num:36, title:"The First Break", src:"images/ch36.jpg"},
+{num:37, title:"The Slow Work", src:"images/ch37.jpg"},
+{num:38, title:"A Setback Is Not a Failure", src:"images/ch38.jpg"},
+{num:39, title:"What Happens After", src:"images/ch39.jpg"},
+{num:40, title:"The Whole Family", src:"images/ch40.jpg"},
+{num:41, title:"Daybreak", src:"images/ch41.jpg"},
+{num:42, title:"Enough, Without Asking (Part 1)", src:"images/ch42.jpg"},
+{num:42, title:"Enough, Without Asking (Part 2)", src:"images/ch42a.jpg"},
+{num:43, title:"The Question Neither of Them Answers (Part I)", src:"images/ch43.jpg"},
+{num:43, title:"The Question Neither of Them Answers (Part 2)", src:"images/ch43a.jpg"}
+
+];
+
+let current = 0;
+const track = document.getElementById('pageTrack');
+const dotsEl = document.getElementById('dots');
+const tocList = document.getElementById('tocList');
+const chnumLabel = document.getElementById('chnumLabel');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+chapters.forEach((c, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'pageSlide';
+  const img = document.createElement('img');
+  img.src = c.src;
+  img.alt = 'Chapter ' + c.num + ': ' + c.title;
+  img.loading = i === 0 ? 'eager' : 'lazy';
+  slide.appendChild(img);
+  track.appendChild(slide);
+
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(dot);
+
+  const item = document.createElement('div');
+  item.className = 'tocItem';
+  item.innerHTML = '<div class="num">' + String(c.num).padStart(2,'0') + '</div><div class="name">' + c.title + '</div>';
+  item.addEventListener('click', () => { goTo(i); toggleToc(false); });
+  tocList.appendChild(item);
+});
+
+function update() {
+  track.style.transform = 'translateX(-' + (current * 100) + '%)';
+  document.querySelectorAll('#dots .dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  chnumLabel.textContent = 'CH. ' + String(chapters[current].num).padStart(2,'0') + '  (' + (current+1) + '/' + chapters.length + ')';
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === chapters.length - 1;
+}
+
+function goTo(i) {
+  current = Math.max(0, Math.min(chapters.length - 1, i));
+  update();
+  if (zoomed) {
+    const slides = document.querySelectorAll('.pageSlide');
+    if (slides[current]) { slides[current].scrollLeft = 0; slides[current].scrollTop = 0; }
+  }
+}
+
+document.getElementById('zoneLeft').addEventListener('click', () => { if (!zoomed) goTo(current - 1); });
+document.getElementById('zoneRight').addEventListener('click', () => { if (!zoomed) goTo(current + 1); });
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+function toggleToc(state) {
+  document.getElementById('toc').classList.toggle('open', state);
+}
+
+// ---------- ZOOM ----------
+let zoomed = false;
+const appEl = document.getElementById('app');
+const zoomBtn = document.getElementById('zoomBtn');
+
+function setZoom(state) {
+  zoomed = state;
+  appEl.classList.toggle('zoom-mode', zoomed);
+  zoomBtn.classList.toggle('active', zoomed);
+  zoomBtn.innerHTML = zoomed ? '&#10005;' : '&#128269;';
+  zoomBtn.title = zoomed ? 'Exit zoom' : 'Toggle zoom';
+  // reset scroll position on the current slide whenever zoom is toggled
+  const slides = document.querySelectorAll('.pageSlide');
+  if (slides[current]) { slides[current].scrollLeft = 0; slides[current].scrollTop = 0; }
+}
+
+zoomBtn.addEventListener('click', () => setZoom(!zoomed));
+document.getElementById('tocBtn').addEventListener('click', () => toggleToc(true));
+document.getElementById('closeToc').addEventListener('click', () => toggleToc(false));
+
+// swipe support
+let touchStartX = null;
+const reader = document.getElementById('reader');
+reader.addEventListener('touchstart', e => {
+  if (zoomed || e.touches.length > 1) { touchStartX = null; return; }
+  touchStartX = e.touches[0].clientX;
+}, {passive:true});
+reader.addEventListener('touchend', e => {
+  if (zoomed || touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) {
+    if (dx < 0) goTo(current + 1); else goTo(current - 1);
+  }
+  touchStartX = null;
+}, {passive:true});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(current + 1);
+  if (e.key === 'ArrowLeft') goTo(current - 1);
+});
+
+update();
+</script>
+
+</body>
+</html>
