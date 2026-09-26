@@ -18,6 +18,10 @@
   html,body{height:100%;}
   body{ margin:0; font-family:'Karla',sans-serif; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; user-select:none; }
   #app{ position:relative; width:100%; max-width:480px; height:100dvh; max-height:900px; background:#0f0c16; overflow:hidden; box-shadow:0 0 60px #000a; }
+  #music-toggle-btn{ position:absolute; top:10px; right:10px; z-index:200; width:34px; height:34px; border-radius:50%;
+    background:#171320cc; border:1px solid #3a3350; color:var(--cream); font-size:15px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; opacity:.75; }
+  #music-toggle-btn.muted{ opacity:.4; }
   #app.shake{ animation:screenshake .4s ease; }
   @keyframes screenshake{ 0%,100%{transform:translate(0,0);} 20%{transform:translate(-6px,3px);} 40%{transform:translate(6px,-3px);} 60%{transform:translate(-4px,2px);} 80%{transform:translate(4px,-2px);} }
 
@@ -410,6 +414,89 @@
   .devourer-body:before{ content:''; position:absolute; top:28px; left:50%; transform:translateX(-50%); width:34px;height:20px; background:#000; border-radius:50%; box-shadow:inset 0 0 12px 4px #b87affaa; }
   .astral-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #b87aff; filter:drop-shadow(0 0 10px #9a4affdd); }
 
+  /* Infernal Crucible zone decor */
+  #map-scene.zone-crucible{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 45%, #4a1e0c 100%); }
+  .magma-vein{ position:absolute; bottom:0; width:4px; background:linear-gradient(180deg, #ff6a2e, #ff2e0e); opacity:.6; box-shadow:0 0 10px 3px #ff6a2e88; }
+
+  /* Infernal Crucible enemy sprites */
+  .flameserpent-body{ width:84px; height:36px; background:linear-gradient(90deg,#ff6a2e,#a82a0a); border-radius:50% 40% 50% 40%; position:relative; box-shadow:0 0 16px #ff6a2e88; }
+  .flameserpent-body:before{ content:''; position:absolute; left:-4px; top:2px; width:20px;height:20px; background:#ff6a2e; border-radius:50%; }
+  .flameserpent-body:after{ content:''; position:absolute; left:4px; top:8px; width:5px;height:5px; background:#fff0c8; border-radius:50%; box-shadow:0 0 6px 2px #fff0c8cc; }
+
+  .ashphantom-body{ width:56px; height:68px; background:linear-gradient(180deg,#5a4a44,#1a1210); opacity:.8; border-radius:45% 45% 35% 35%; position:relative; box-shadow:0 0 16px #ff6a2e66; animation:slimeWobble 2s ease-in-out infinite; }
+  .ashphantom-body:before, .ashphantom-body:after{ content:''; position:absolute; top:20px; width:6px;height:8px; background:#ff8a4a; border-radius:50%; box-shadow:0 0 6px 2px #ff8a4acc; }
+  .ashphantom-body:before{left:16px;} .ashphantom-body:after{right:16px;}
+
+  .magmatitan-body{ width:82px; height:74px; background:linear-gradient(135deg,#8a3010,#2a0e04); clip-path:polygon(20% 0%,80% 0%,100% 40%,85% 100%,15% 100%,0% 40%); box-shadow:0 0 18px #ff6a2e77; position:relative; }
+  .magmatitan-body:before, .magmatitan-body:after{ content:''; position:absolute; top:22px; width:7px;height:7px; background:#ffcf7c; border-radius:50%; box-shadow:0 0 8px 3px #ffcf7ccc; }
+  .magmatitan-body:before{left:24px;} .magmatitan-body:after{right:24px;}
+
+  .tyrant-body{ width:100px; height:94px; background:linear-gradient(135deg,#ff8a4a,#a82a0a 55%,#280a04); clip-path:polygon(50% 0%,85% 15%,100% 55%,75% 100%,25% 100%,0% 55%,15% 15%); box-shadow:0 0 34px #ff6a2eaa; position:relative; }
+  .tyrant-body:before, .tyrant-body:after{ content:''; position:absolute; top:26px; width:9px;height:9px; background:#fff0c8; border-radius:50%; box-shadow:0 0 10px 4px #fff0c8dd; }
+  .tyrant-body:before{left:30px;} .tyrant-body:after{right:30px;}
+  .tyrant-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #ff8a4a; filter:drop-shadow(0 0 10px #ff6a2edd); }
+
+  /* Fractured Veil zone decor */
+  #map-scene.zone-veil{ background:linear-gradient(180deg,#10182a 0%, #1c2840 45%, #283860 100%); }
+  .veil-shard{ position:absolute; width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:34px solid #7ab8ffaa; opacity:.5; filter:drop-shadow(0 0 8px #7ab8ff88); animation:twinkle2 3.4s infinite ease-in-out; }
+
+  /* Fractured Veil enemy sprites */
+  .veilwraith-body{ width:58px; height:70px; background:linear-gradient(180deg,#3a5488,#14203a); opacity:.8; border-radius:45% 45% 35% 35%; position:relative; box-shadow:0 0 16px #4a6ab888; animation:slimeWobble 2.1s ease-in-out infinite; }
+  .veilwraith-body:before, .veilwraith-body:after{ content:''; position:absolute; top:20px; width:6px;height:8px; background:#a8d0ff; border-radius:50%; box-shadow:0 0 6px 2px #a8d0ffcc; }
+  .veilwraith-body:before{left:16px;} .veilwraith-body:after{right:16px;}
+
+  .shardling-body{ width:52px; height:52px; background:linear-gradient(135deg,#7ab8ff,#2a4a8a); clip-path:polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%); box-shadow:0 0 14px #7ab8ff88; position:relative; }
+  .shardling-body:before{ content:''; position:absolute; left:20px; top:16px; width:5px;height:5px; background:#fff; border-radius:50%; box-shadow:0 0 6px 2px #fffcc; }
+
+  .fracturehound-body{ width:76px; height:40px; background:#1c2c4c; border-radius:40% 50% 30% 40%; position:relative; box-shadow:0 0 14px #3a5a9a88; }
+  .fracturehound-body:before{ content:''; position:absolute; left:-14px; top:4px; width:22px;height:18px; background:#1c2c4c; border-radius:50% 30% 40% 60%; }
+  .fracturehound-body:after{ content:''; position:absolute; left:2px; top:10px; width:5px;height:5px; background:#7ab8ff; border-radius:50%; box-shadow:0 0 6px 2px #7ab8ffcc; }
+
+  .veilshaper-body{ width:98px; height:92px; background:linear-gradient(135deg,#a8d0ff,#3a5488 50%,#10182a); clip-path:polygon(50% 0%,85% 15%,100% 55%,75% 100%,25% 100%,0% 55%,15% 15%); box-shadow:0 0 32px #7ab8ffaa; position:relative; }
+  .veilshaper-body:before, .veilshaper-body:after{ content:''; position:absolute; top:26px; width:9px;height:9px; background:#fff; border-radius:50%; box-shadow:0 0 10px 4px #fffdd; }
+  .veilshaper-body:before{left:30px;} .veilshaper-body:after{right:30px;}
+  .veil-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #a8d0ff; filter:drop-shadow(0 0 10px #7ab8ffdd); }
+
+  /* Dragon's Maw zone decor */
+  #map-scene.zone-dragon{ background:linear-gradient(180deg,#241410 0%, #341c10 45%, #442408 100%); }
+  .dragon-ash{ position:absolute; width:3px;height:3px; background:#c8b8a0; border-radius:50%; opacity:.6; animation:ashfall 6s linear infinite; }
+
+  /* Dragon's Maw enemy sprites */
+  .dragonwhelp-body{ width:56px; height:52px; background:linear-gradient(135deg,#e0824a,#8a3a10); border-radius:45% 45% 40% 40%; position:relative; box-shadow:0 0 14px #e0824a88; }
+  .dragonwhelp-body:before, .dragonwhelp-body:after{ content:''; position:absolute; top:16px; width:6px;height:6px; background:#ffe8a8; border-radius:50%; box-shadow:0 0 6px 2px #ffe8a8cc; }
+  .dragonwhelp-body:before{left:16px;} .dragonwhelp-body:after{right:16px;}
+
+  .ashdrake-body{ width:80px; height:36px; background:linear-gradient(90deg,#8a4a2a,#3a1a0a); border-radius:50% 40% 50% 40%; position:relative; box-shadow:0 0 14px #c86a3a88; }
+  .ashdrake-body:before{ content:''; position:absolute; left:-4px; top:2px; width:20px;height:18px; background:#8a4a2a; border-radius:50%; }
+  .ashdrake-body:after{ content:''; position:absolute; left:4px; top:8px; width:5px;height:5px; background:#ffcf7c; border-radius:50%; box-shadow:0 0 6px 2px #ffcf7ccc; }
+
+  .elderwyrm-body{ width:72px; height:56px; background:linear-gradient(135deg,#a85a2a,#3a1a08); clip-path:polygon(20% 0%,80% 0%,100% 40%,85% 100%,15% 100%,0% 40%); box-shadow:0 0 16px #a85a2a77; position:relative; }
+  .elderwyrm-body:before, .elderwyrm-body:after{ content:''; position:absolute; top:20px; width:6px;height:6px; background:#ffcf7c; border-radius:50%; box-shadow:0 0 6px 2px #ffcf7ccc; }
+  .elderwyrm-body:before{left:20px;} .elderwyrm-body:after{right:20px;}
+
+  .elderdragon-body{ width:104px; height:92px; background:linear-gradient(135deg,#ff8a4a,#8a2a0a 55%,#280a04); clip-path:polygon(50% 0%,85% 14%,100% 50%,80% 100%,20% 100%,0% 50%,15% 14%); box-shadow:0 0 34px #ff6a2eaa; position:relative; }
+  .elderdragon-body:before, .elderdragon-body:after{ content:''; position:absolute; top:26px; width:9px;height:9px; background:#ffe8a8; border-radius:50%; box-shadow:0 0 10px 4px #ffe8a8dd; }
+  .elderdragon-body:before{left:32px;} .elderdragon-body:after{right:32px;}
+  .dragon-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #ff8a4a; filter:drop-shadow(0 0 10px #ff6a2edd); }
+
+  /* The Nexus zone decor — true finale, all elements converging */
+  #map-scene.zone-nexus{ background:linear-gradient(180deg,#140a24 0%, #241440 30%, #3a1440 55%, #2a1c50 80%, #10182a 100%); }
+  .nexus-glimmer{ position:absolute; width:4px;height:4px; border-radius:50%; box-shadow:0 0 10px 3px currentColor; animation:twinkle 2.6s infinite ease-in-out; }
+
+  /* The Nexus enemy sprites */
+  .nexusguardian-body{ width:74px; height:80px; background:linear-gradient(135deg,#c8a8ff,#5a3a9a); clip-path:polygon(50% 0%,90% 20%,100% 60%,80% 100%,20% 100%,0% 60%,10% 20%); box-shadow:0 0 18px #c8a8ff88; position:relative; }
+  .nexusguardian-body:before, .nexusguardian-body:after{ content:''; position:absolute; top:22px; width:7px;height:7px; background:#fff; border-radius:50%; box-shadow:0 0 8px 3px #fffcc; }
+  .nexusguardian-body:before{left:22px;} .nexusguardian-body:after{right:22px;}
+
+  .planartitan-body{ width:88px; height:76px; background:linear-gradient(135deg,#ff8a4a,#4a2a9a 50%,#1a2a5a); clip-path:polygon(20% 0%,80% 0%,100% 40%,85% 100%,15% 100%,0% 40%); box-shadow:0 0 20px #c86cff88; position:relative; }
+  .planartitan-body:before, .planartitan-body:after{ content:''; position:absolute; top:22px; width:7px;height:7px; background:#fff0c8; border-radius:50%; box-shadow:0 0 8px 3px #fff0c8cc; }
+  .planartitan-body:before{left:26px;} .planartitan-body:after{right:26px;}
+
+  .nexusplanarch-body{ width:106px; height:98px; background:conic-gradient(from 0deg, #c86cff, #ff8a4a, #a8e0ff, #ffe066, #8a5cff, #c86cff); clip-path:polygon(50% 0%,85% 15%,100% 55%,75% 100%,25% 100%,0% 55%,15% 15%); box-shadow:0 0 40px #c86cffcc; position:relative; }
+  .nexusplanarch-body:before, .nexusplanarch-body:after{ content:''; position:absolute; top:28px; width:10px;height:10px; background:#fff; border-radius:50%; box-shadow:0 0 12px 5px #ffffffee; }
+  .nexusplanarch-body:before{left:34px;} .nexusplanarch-body:after{right:34px;}
+  .nexus-crown{ position:absolute; top:-26px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:18px solid transparent; border-right:18px solid transparent; border-bottom:20px solid #fff; filter:drop-shadow(0 0 12px #c86cffee); }
+
   .p-card.frozen{ opacity:.55; filter:grayscale(.4) brightness(1.1); border-color:#a8e0ff !important; position:relative; }
   .p-card.frozen:after{ content:'❄️'; position:absolute; top:4px; right:6px; font-size:12px; }
   #battle-p-card{ position:relative; }
@@ -581,6 +668,10 @@
   .theme-star .num{ background:#1a1a3e; color:#fff0c8; }
   .theme-planar .num{ background:#2a1440; color:#e8c8ff; }
   .theme-astral .num{ background:#241238; color:#b87aff; }
+  .theme-crucible .num{ background:#3a1408; color:#ff8a4a; }
+  .theme-veil .num{ background:#1c2840; color:#a8d0ff; }
+  .theme-dragon .num{ background:#341c10; color:#ff8a4a; }
+  .theme-nexus .num{ background:#241440; color:#c86cff; }
 
   #screen-journal-reader{ /* background set per theme */ }
   #jr-scene{ position:absolute; inset:0; overflow:hidden; }
@@ -669,6 +760,18 @@
   /* --- theme: astral (ch13, The Astral Threshold — Mezstorm's arc) --- */
   .theme-astral #jr-scene{ background:linear-gradient(180deg,#140a24 0%, #241238 50%, #341a4e 100%); }
 
+  /* --- theme: crucible (ch14, Heart of Fire — Joel's arc) --- */
+  .theme-crucible #jr-scene{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 50%, #4a1e0c 100%); }
+
+  /* --- theme: veil (ch15, The Shattered Veil — Aisyah's arc) --- */
+  .theme-veil #jr-scene{ background:linear-gradient(180deg,#10182a 0%, #1c2840 50%, #283860 100%); }
+
+  /* --- theme: dragon (ch18, The Last Letter — Joel's arc continues) --- */
+  .theme-dragon #jr-scene{ background:linear-gradient(180deg,#241410 0%, #341c10 50%, #442408 100%); }
+
+  /* --- theme: nexus (ch20, The Planarch — true series finale) --- */
+  .theme-nexus #jr-scene{ background:linear-gradient(180deg,#140a24 0%, #241440 30%, #3a1440 55%, #2a1c50 80%, #10182a 100%); }
+
   #jr-titlecard{ position:absolute; inset:0; z-index:30; background:#0b0e14; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 12%; transition:opacity 1.1s ease, visibility 1.1s; }
   #jr-titlecard.hide{ opacity:0; visibility:hidden; }
   .eyebrow{ font-family:'Karla',sans-serif; letter-spacing:.32em; text-transform:uppercase; font-size:11px; color:var(--muted); margin-bottom:14px; }
@@ -694,6 +797,13 @@
   #jr-speaker.mezstorm{ color:#7fd4ff; }
   #jr-speaker.senedra{ color:#c8e07c; }
   #jr-speaker.zaki{ color:#ff9d6a; }
+  #jr-speaker.infernal-tyrant{ color:#ff6a2e; }
+  #jr-speaker.veilshaper{ color:#a8d0ff; }
+  #jr-speaker.frost-queen{ color:#a8e0ff; }
+  #jr-speaker.abyssal-leviathan{ color:#8a5cff; }
+  #jr-speaker.elder-dragon{ color:#ff8a4a; }
+  #jr-speaker.astral-lord{ color:#fff0c8; }
+  #jr-speaker.the-nexus-planarch{ color:#c86cff; }
   #jr-text{ font-family:'Spectral',serif; font-size:16.5px; line-height:1.5; color:var(--cream); min-height:44px; }
   #jr-text.narr{ font-style:italic; color:#e3ddce; }
   #jr-advance{ position:absolute; right:14px; bottom:12px; color:var(--muted); font-size:18px; animation:bob 1.3s infinite ease-in-out; }
@@ -714,6 +824,8 @@
 </head>
 <body>
 <div id="app">
+  <audio id="bgm" loop></audio>
+  <button id="music-toggle-btn">🎵</button>
 
   <!-- ============ HUB ============ -->
   <div id="screen-hub" class="screen active">
@@ -979,6 +1091,47 @@
 /* =========================================================================
    SHARED GAME STATE — single source of truth read/written by every screen
    ========================================================================= */
+const MUSIC_TRACKS = { standard1:'bgm-standard-1.mp3', standard2:'bgm-standard-2.mp3', antagonist:'bgm-antagonist.mp3', climax:'bgm-climax.mp3' };
+let currentTrack = null;
+let musicMuted = (localStorage.getItem('daybreak_music_muted') === 'true');
+
+function playTrack(key){
+  if(key === null){
+    currentTrack = null;
+    const audio = document.getElementById('bgm');
+    audio.pause();
+    return;
+  }
+  if(currentTrack === key) return;
+  currentTrack = key;
+  const audio = document.getElementById('bgm');
+  audio.src = MUSIC_TRACKS[key];
+  audio.volume = 0.55;
+  if(!musicMuted){ audio.play().catch(()=>{}); }
+}
+function playRandomStandard(){
+  playTrack(Math.random() < 0.5 ? 'standard1' : 'standard2');
+}
+
+function toggleMusic(){
+  musicMuted = !musicMuted;
+  localStorage.setItem('daybreak_music_muted', musicMuted);
+  const audio = document.getElementById('bgm');
+  const btn = document.getElementById('music-toggle-btn');
+  if(musicMuted){
+    audio.pause();
+    btn.textContent = '🔇'; btn.classList.add('muted');
+  } else {
+    if(audio.src) audio.play().catch(()=>{});
+    btn.textContent = '🎵'; btn.classList.remove('muted');
+  }
+}
+document.getElementById('music-toggle-btn').addEventListener('click', toggleMusic);
+if(musicMuted){
+  document.getElementById('music-toggle-btn').textContent = '🔇';
+  document.getElementById('music-toggle-btn').classList.add('muted');
+}
+
 const PORTRAITS = {
   San: "data:image/jpeg;base64,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",
   Joel: "data:image/jpeg;base64,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",
@@ -1084,7 +1237,11 @@ const GameState = {
     'abyssal-depths': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
     'starlight-spire': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
     'arcane-planar-tower': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
-    'astral-maelstrom': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
+    'astral-maelstrom': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
+    'infernal-crucible': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
+    'fractured-veil': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
+    'dragons-maw': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
+    'the-nexus': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
   },
   readChapters: new Set()
 };
@@ -1511,6 +1668,119 @@ const ZONES = {
     bossPromptDesc:'At the heart of the maelstrom, a shape that is not a shape waits. The Astral Devourer has noticed you.',
     zoneClearedDesc:'The maelstrom has gone quiet. Somewhere in the stillness, something has healed.',
     templeRepOnClear:520,
+    nextZone:'infernal-crucible'
+  },
+  'infernal-crucible': {
+    name:'Infernal Crucible', theme:'zone-crucible',
+    nodes: {
+      camp:     { x:60,y:620, label:'Forge Rest', icon:'⛺', type:'camp',
+                  desc:'A cooled pocket of obsidian, shielded from the magma tides. The heat here is almost bearable.' },
+      brazier:  { x:100,y:400, label:'Brazier', icon:'🔥', type:'quest', npcName:'Eternal Brazier' },
+      merchant: { x:230,y:300, label:'Ignis', icon:'🔥', type:'merchant', name:'Ignis',
+                  line:'"A being of living flame who tends the eternal forge. My wares are forged in the heart of a dying star. I speak in embers."' },
+      encounter:{ x:230,y:90,  label:'Magma Flow', icon:'🌋', type:'encounter' }
+    },
+    enemyDefs: {
+      'Flame Serpent':{ hp:82, atk:12, spd:7, xp:56, g:36, cls:'flameserpent-body' },
+      'Ash Phantom':  { hp:62, atk:19, spd:8, xp:55, g:38, cls:'ashphantom-body' },
+      'Magma Titan':  { hp:105,atk:8,  spd:3, xp:52, g:34, cls:'magmatitan-body' }
+    },
+    lootTable: ['Inferno Gem','Ash Crystal','Phoenix Ash'],
+    boss: { name:'The Infernal Tyrant', mechanic:'inferno', hp:450, atk:28, spd:5, xp:2000, g:1100, infernoTurn:4, infernoDmg:26,
+            hint:'Charges an inferno every 4th attack — interrupt it or take heavy damage',
+            introLine:'The Infernal Crucible is not a place. It is a memory made magma. The Infernal Tyrant rises from the flame — a shape of obligation and sacrifice.',
+            spriteCls:'tyrant-body', crownCls:'tyrant-crown' },
+    quest: { name:'Flame Purge', need:5, xpReward:400, goldReward:260,
+             acceptDesc:'"Flame Purge" — Defeat 5 monsters in the Infernal Crucible. Reward: 400 XP, 260 Gold.' },
+    encounterLockedDesc:'The magma flow ahead churns with heat. You should check the brazier first.',
+    bossPromptDesc:'Deep in the crucible, a shape of flame and obligation waits. The Infernal Tyrant has noticed you.',
+    zoneClearedDesc:'The magma has hardened into stone. The fire has become warmth.',
+    templeRepOnClear:580,
+    nextZone:'fractured-veil'
+  },
+  'fractured-veil': {
+    name:'The Fractured Veil', theme:'zone-veil',
+    nodes: {
+      camp:     { x:60,y:620, label:'Anchor', icon:'⛺', type:'camp',
+                  desc:'A pocket of unbroken reality, held together by will alone. The stars here do not move.' },
+      tear:     { x:100,y:400, label:'Tear', icon:'🔺', type:'quest', npcName:'Reality Tear' },
+      merchant: { x:230,y:300, label:'Kael', icon:'🔭', type:'merchant', name:'Kael',
+                  line:'"A gaunt figure hunched over a telescope pointed at nothing. I trade in starlight and secrets. My eyes have seen too many dimensions."' },
+      encounter:{ x:230,y:90,  label:'Fracture', icon:'💠', type:'encounter' }
+    },
+    enemyDefs: {
+      'Veil Wraith':   { hp:90,  atk:11, spd:6, xp:52, g:36, cls:'veilwraith-body' },
+      'Shardling':     { hp:50,  atk:18, spd:9, xp:57, g:40, cls:'shardling-body' },
+      'Fracture Hound':{ hp:100, atk:7,  spd:4, xp:50, g:34, cls:'fracturehound-body' }
+    },
+    lootTable: ['Reality Fragment','Aether Shard','Planar Essence'],
+    boss: { name:'The Veilshaper', mechanic:'reality_weave', hp:480, atk:24, spd:5, xp:1500, g:900,
+            weaveTurn:3, weaveDmg:18, weaveAtkBoost:5,
+            hint:'Weaves a new echo every 3 turns, permanently growing stronger',
+            introLine:'Reality tears at the seams here. Fragments of dead worlds float in crystalline silence. The Veilshaper waits, wearing every face you have ever loved.',
+            spriteCls:'veilshaper-body', crownCls:'veil-crown' },
+    quest: { name:'Seam Walker', need:5, xpReward:420, goldReward:280,
+             acceptDesc:'"Seam Walker" — Defeat 5 monsters in the Fractured Veil. Reward: 420 XP, 280 Gold.' },
+    encounterLockedDesc:'The fracture ahead pulses with unstable light. You should check the tear first.',
+    bossPromptDesc:'A shape wearing a hundred familiar faces waits at the center of the fracture. The Veilshaper has noticed you.',
+    zoneClearedDesc:'The fracture has sealed. Reality holds, for now, the way it always does.',
+    templeRepOnClear:640,
+    nextZone:'dragons-maw'
+  },
+  'dragons-maw': {
+    name:"Dragon's Maw", theme:'zone-dragon',
+    nodes: {
+      camp:     { x:60,y:620, label:'Ashfall Camp', icon:'⛺', type:'camp',
+                  desc:'Ashfall Camp — a wind-scoured hollow where the falling ash never quite settles.' },
+      hoard:    { x:100,y:400, label:'Hoard', icon:'🐲', type:'quest', npcName:'Scattered Hoard' },
+      merchant: { x:230,y:300, label:'Ember', icon:'🔥', type:'merchant', name:'Ember',
+                  line:'"A scavenger who trades in what the dragon leaves behind. Scales, teeth, the occasional intact rib. Waste not."' },
+      encounter:{ x:230,y:90,  label:'Lair', icon:'🐉', type:'encounter' }
+    },
+    enemyDefs: {
+      'Dragon Whelp':{ hp:70, atk:9,  spd:5, xp:40, g:30, cls:'dragonwhelp-body' },
+      'Ash Drake':   { hp:40, atk:16, spd:9, xp:44, g:35, cls:'ashdrake-body' },
+      'Elder Wyrm':  { hp:62, atk:12, spd:6, xp:52, g:35, cls:'elderwyrm-body' }
+    },
+    lootTable: ['Dragon Scale','Wyrm Tooth','Ember Heart'],
+    boss: { name:'Elder Dragon', mechanic:'apocalypse', hp:350, atk:20, spd:5, xp:460, g:2000, apocalypseTurn:6, apocalypseDmg:35,
+            hint:'Unleashes an apocalyptic attack every 6th turn — defeat it quickly or face devastating unavoidable damage',
+            introLine:"Dragon's Maw is ash and bone and the particular silence of a lair that has swallowed everything it has ever met.",
+            spriteCls:'elderdragon-body', crownCls:'dragon-crown' },
+    quest: { name:'Wyrm Hunt', need:5, xpReward:380, goldReward:240,
+             acceptDesc:'"Wyrm Hunt" — Defeat 5 monsters in Dragon\u2019s Maw. Reward: 380 XP, 240 Gold.' },
+    encounterLockedDesc:'The lair ahead reeks of ash and old fire. You should check the hoard first.',
+    bossPromptDesc:'Deep in the lair, something ancient stirs among scattered gold. The Elder Dragon has noticed you.',
+    zoneClearedDesc:'The lair has gone cold. Ash falls like snow over a hoard no one will ever spend.',
+    templeRepOnClear:500,
+    nextZone:'the-nexus'
+  },
+  'the-nexus': {
+    name:'The Nexus', theme:'zone-nexus',
+    nodes: {
+      camp:     { x:60,y:620, label:'Threshold', icon:'⛺', type:'camp',
+                  desc:'The last stable ground before the heart of all dimensions. Beyond here, reality is a suggestion.' },
+      convergence:{ x:100,y:400, label:'Convergence', icon:'🌀', type:'quest', npcName:'Planar Convergence' },
+      merchant: { x:230,y:300, label:'Wren', icon:'🔮', type:'merchant', name:'Wren',
+                  line:'"A quiet figure who trades at the edge of everything. My wares come from worlds that no longer exist. Choose carefully — some prices are not paid in gold."' },
+      encounter:{ x:230,y:90,  label:'Heart', icon:'💫', type:'encounter' }
+    },
+    enemyDefs: {
+      'Nexus Guardian':{ hp:130, atk:9,  spd:4, xp:80,  g:48, cls:'nexusguardian-body' },
+      'Planar Titan':  { hp:105, atk:16, spd:6, xp:100, g:64, cls:'planartitan-body' }
+    },
+    lootTable: ['Nexus Core','Planar Crown','Reality Key'],
+    boss: { name:'The Nexus Planarch', mechanic:'resurrect', lives:[120,110,100,90,80], lifeNames:['Arcane','Fire','Ice','Lightning','Void'],
+            atk:26, spd:5, xp:1200, g:800,
+            hint:'Five elemental phases. No mercy. Defeat all five to sever the rift forever.',
+            introLine:'The Nexus is not a place. It is a choice — the choice to keep going, to keep choosing, to keep loving even when the cost is everything you have.',
+            spriteCls:'nexusplanarch-body', crownCls:'nexus-crown' },
+    quest: { name:'Severing the Rift', need:5, xpReward:450, goldReward:300,
+             acceptDesc:'"Severing the Rift" — Defeat 5 monsters in The Nexus. Reward: 450 XP, 300 Gold.' },
+    encounterLockedDesc:'The heart of the Nexus pulses ahead, unstable. You should check the convergence first.',
+    bossPromptDesc:'At the center of everything, the true form of the Planarch waits. The Nexus Planarch has noticed you.',
+    zoneClearedDesc:'The Nexus has gone still. The dimensions hold. The rift, finally, is sealed.',
+    templeRepOnClear:700,
     nextZone:null
   }
 };
@@ -1732,6 +2002,57 @@ function buildZoneDecor(zone){
       scene.appendChild(st);
     }
   }
+  if(zone.theme === 'zone-crucible'){
+    const veinSpots = [30,90,160,240,310,380];
+    veinSpots.forEach(x=>{
+      const v = document.createElement('div'); v.className='magma-vein';
+      v.style.left=x+'px'; v.style.height=(60+Math.random()*180)+'px';
+      v.style.animationDelay=(Math.random()*2)+'s';
+      scene.appendChild(v);
+    });
+    for(let i=0;i<20;i++){
+      const a = document.createElement('div'); a.className='ash-particle';
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*5)+'s';
+      a.style.animationDuration=(4+Math.random()*3)+'s';
+      scene.appendChild(a);
+    }
+  }
+  if(zone.theme === 'zone-veil'){
+    const shardSpots = [[40,120],[300,200],[160,420],[350,480],[90,540]];
+    shardSpots.forEach(([x,y])=>{
+      const s = document.createElement('div'); s.className='veil-shard';
+      s.style.left=x+'px'; s.style.top=y+'px';
+      s.style.transform = `rotate(${Math.random()*360}deg) scale(${0.6+Math.random()*0.6})`;
+      s.style.animationDelay=(Math.random()*3)+'s';
+      scene.appendChild(s);
+    });
+    for(let i=0;i<16;i++){
+      const st = document.createElement('div'); st.className='starfield-dot';
+      st.style.left=(Math.random()*100)+'%'; st.style.top=(Math.random()*100)+'%';
+      st.style.animationDelay=(Math.random()*2.4)+'s';
+      scene.appendChild(st);
+    }
+  }
+  if(zone.theme === 'zone-dragon'){
+    for(let i=0;i<26;i++){
+      const a = document.createElement('div'); a.className='dragon-ash';
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*6)+'s';
+      a.style.animationDuration=(5+Math.random()*4)+'s';
+      scene.appendChild(a);
+    }
+  }
+  if(zone.theme === 'zone-nexus'){
+    const colors = ['#c86cff','#ff8a4a','#a8e0ff','#ffe066','#8a5cff'];
+    for(let i=0;i<30;i++){
+      const g = document.createElement('div'); g.className='nexus-glimmer';
+      g.style.left=(Math.random()*100)+'%'; g.style.top=(Math.random()*100)+'%';
+      g.style.color = colors[i % colors.length];
+      g.style.animationDelay=(Math.random()*2.6)+'s';
+      scene.appendChild(g);
+    }
+  }
 }
 
 function moveAvatarTo(n, animate=true){
@@ -1819,6 +2140,7 @@ function handleNode(key){
 }
 
 function roll(die){ return 1 + Math.floor(Math.random()*die); }
+function theBoss(name){ return name.startsWith('The ') ? name : 'The '+name; }
 
 function spawnEnemySprite(entry, isBossFlag){
   const enemySprite = document.getElementById('battle-enemy-sprite');
@@ -1987,6 +2309,7 @@ function startEncounter(){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
+  playRandomStandard();
 }
 
 function startBoss(){
@@ -2004,6 +2327,7 @@ function startBoss(){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
+  playTrack(GameState.currentZone === 'the-nexus' ? 'climax' : 'antagonist');
 }
 
 function getReachedZoneIds(){
@@ -2035,6 +2359,7 @@ function startTrainingGrind(zoneId){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
+  playRandomStandard();
 }
 
 function startTrainingRematch(zoneId){
@@ -2055,6 +2380,7 @@ function startTrainingRematch(zoneId){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
+  playTrack(zoneId === 'the-nexus' ? 'climax' : 'antagonist');
 }
 
 function continueTraining(){
@@ -2068,6 +2394,7 @@ function leaveTraining(){
   stopTicking(); inBattle = false;
   trainingMode = null; trainingZoneId = null;
   showScreen('training');
+  playTrack(null);
 }
 document.getElementById('battle-result-leave-btn').addEventListener('click', leaveTraining);
 
@@ -2326,7 +2653,7 @@ function checkPhaseShift(){
   if(bossPhaseIndex < boss.phaseThresholds.length && pct <= boss.phaseThresholds[bossPhaseIndex]){
     bossPhaseIndex++;
     const wb = document.getElementById('battle-warning-banner');
-    wb.textContent = `The ${currentEnemy.name} shifts form!`;
+    wb.textContent = `${theBoss(currentEnemy.name)} shifts form!`;
     wb.classList.add('show');
     setTimeout(()=>wb.classList.remove('show'), 1200);
     const sprite = document.querySelector('#battle-enemy-sprite > div');
@@ -2335,7 +2662,7 @@ function checkPhaseShift(){
       if(bossPhaseIndex === 1) sprite.classList.add('phase2');
       else if(bossPhaseIndex === 2) sprite.classList.add('phase3');
     }
-    document.getElementById('battle-log').textContent = `The ${currentEnemy.name}'s crystal shell cracks and reforms, glowing a new hue.`;
+    document.getElementById('battle-log').textContent = `${theBoss(currentEnemy.name)}'s crystal shell cracks and reforms, glowing a new hue.`;
   }
 }
 
@@ -2351,7 +2678,7 @@ function checkEnemyDefeatedOrResurrect(){
 function doResurrect(boss){
   paused = true;
   const wb = document.getElementById('battle-warning-banner');
-  wb.textContent = `The ${boss.name} will not stay down!`;
+  wb.textContent = `${theBoss(boss.name)} will not stay down!`;
   wb.classList.add('show');
   document.getElementById('battle-enemy-sprite').classList.add('rampage');
   setTimeout(()=>{
@@ -2360,7 +2687,10 @@ function doResurrect(boss){
     bossLifeIndex++;
     const newHp = boss.lives[bossLifeIndex];
     currentEnemy.hp = newHp; currentEnemy.mhp = newHp;
-    document.getElementById('battle-log').textContent = `The ${boss.name} reforms, bones knitting back together.`;
+    const reformMsg = boss.lifeNames
+      ? `${theBoss(boss.name)} shifts into its ${boss.lifeNames[bossLifeIndex]} phase!`
+      : `${theBoss(boss.name)} reforms, bones knitting back together.`;
+    document.getElementById('battle-log').textContent = reformMsg;
     paused = false;
     updateBattleBars();
   }, 1000);
@@ -2404,6 +2734,14 @@ function enemyAct(){
     bossTurnCount++;
     if(bossTurnCount % ZONES[GameState.currentZone].boss.shiftTurn === 0){ doAstralPhase(ZONES[GameState.currentZone].boss); return; }
   }
+  if(isBoss && currentEnemy.mechanic === 'reality_weave'){
+    bossTurnCount++;
+    if(bossTurnCount % ZONES[GameState.currentZone].boss.weaveTurn === 0){ doRealityWeave(ZONES[GameState.currentZone].boss); return; }
+  }
+  if(isBoss && currentEnemy.mechanic === 'apocalypse'){
+    bossTurnCount++;
+    if(bossTurnCount % ZONES[GameState.currentZone].boss.apocalypseTurn === 0){ doApocalypse(ZONES[GameState.currentZone].boss); return; }
+  }
   const es = document.getElementById('battle-enemy-sprite');
   es.classList.add('attacking');
   const targets = livingTargets();
@@ -2435,7 +2773,7 @@ function doFreeze(boss){
 
 function doDrown(boss){
   const wb = document.getElementById('battle-warning-banner');
-  wb.textContent = `The ${currentEnemy.name} floods the battlefield!`;
+  wb.textContent = `${theBoss(currentEnemy.name)} floods the battlefield!`;
   wb.classList.add('show');
   setTimeout(()=>wb.classList.remove('show'), 1400);
   document.getElementById('app').classList.add('shake');
@@ -2676,6 +3014,62 @@ function doAstralPhase(boss){
   }
 }
 
+function doRealityWeave(boss){
+  currentEnemy.atk += boss.weaveAtkBoost;
+  const wb = document.getElementById('battle-warning-banner');
+  wb.textContent = `The Veilshaper weaves a new echo!`;
+  wb.classList.add('show');
+  setTimeout(()=>wb.classList.remove('show'), 1400);
+  const es = document.getElementById('battle-enemy-sprite');
+  es.classList.add('attacking');
+  const targets = livingTargets();
+  const target = targets[Math.floor(Math.random()*targets.length)];
+  const targetName = target.key === 'player' ? 'San' : target.key;
+  setTimeout(()=>{
+    es.classList.remove('attacking');
+    applyEnemyDamage(target.key, boss.weaveDmg, `An echo of ${currentEnemy.name} lashes out at ${targetName}!`, true);
+    eATB = 0; eReady = false;
+    updateBattleBars();
+  }, 400);
+}
+
+function doApocalypse(boss){
+  const wb = document.getElementById('battle-warning-banner');
+  wb.textContent = 'APOCALYPSE!';
+  wb.classList.add('show');
+  setTimeout(()=>wb.classList.remove('show'), 1800);
+  document.getElementById('app').classList.add('shake');
+  setTimeout(()=>document.getElementById('app').classList.remove('shake'), 500);
+  document.getElementById('battle-log').textContent = `${currentEnemy.name} unleashes total annihilation!`;
+  const targets = livingTargets();
+  targets.forEach(t=>{
+    if(t.key === 'player'){
+      const mitigated = Math.max(1, boss.apocalypseDmg - getPlayerDefBonus());
+      GameState.player.hp = Math.max(0, GameState.player.hp - mitigated);
+    } else {
+      const c = GameState.companions[t.key];
+      c.hp = Math.max(0, c.hp - boss.apocalypseDmg);
+      if(c.hp <= 0 && (t.key === 'Soel' || t.key === 'Eliz')){ c.hp = 1; }
+      else if(c.hp <= 0 && isCompanionActive('Eliz') && Date.now() >= elizReviveReadyAt){
+        c.hp = Math.round(c.mhp * 0.5);
+        elizReviveReadyAt = Date.now() + 15000;
+      }
+    }
+  });
+  popDamage(boss.apocalypseDmg, {big:true});
+  eATB = 0; eReady = false;
+  updateBattleBars();
+  if(GameState.player.hp <= 0){
+    document.getElementById('battle-log').textContent = 'San staggers back, retreating to camp to recover.';
+    paused = true;
+    setTimeout(()=>{
+      GameState.player.hp = GameState.player.mhp;
+      Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
+      closeBattle(true);
+    }, 1400);
+  }
+}
+
 function doLightningRod(){
   const boss = ZONES[GameState.currentZone].boss;
   const es = document.getElementById('battle-enemy-sprite');
@@ -2697,7 +3091,7 @@ function startInfernoCharge(){
   bossCharging = true;
   const boss = ZONES[GameState.currentZone].boss;
   const wb = document.getElementById('battle-warning-banner');
-  wb.textContent = `The ${currentEnemy.name} is charging an inferno — attack to interrupt!`;
+  wb.textContent = `${theBoss(currentEnemy.name)} is charging an inferno — attack to interrupt!`;
   wb.classList.add('show');
   document.getElementById('battle-enemy-sprite').classList.add('charging');
   document.getElementById('battle-log').textContent = `${currentEnemy.name} draws in a searing breath...`;
@@ -2716,13 +3110,13 @@ function checkInfernoInterrupt(){
   bossCharging = false;
   const wb = document.getElementById('battle-warning-banner');
   wb.textContent = 'Interrupted!';
-  document.getElementById('battle-log').textContent = `The ${currentEnemy.name}'s inferno is interrupted!`;
+  document.getElementById('battle-log').textContent = `${theBoss(currentEnemy.name)}'s inferno is interrupted!`;
 }
 
 function unleashInferno(boss){
   document.getElementById('app').classList.add('shake');
   setTimeout(()=>document.getElementById('app').classList.remove('shake'), 400);
-  document.getElementById('battle-log').textContent = `The ${currentEnemy.name} unleashes a wave of fire!`;
+  document.getElementById('battle-log').textContent = `${theBoss(currentEnemy.name)} unleashes a wave of fire!`;
   const targets = livingTargets();
   targets.forEach(t=>{
     if(t.key === 'player'){ GameState.player.hp = Math.max(0, GameState.player.hp - boss.infernoDmg); }
@@ -2744,7 +3138,7 @@ function doRampage(){
   paused = true;
   const boss = ZONES[GameState.currentZone].boss;
   const wb = document.getElementById('battle-warning-banner');
-  wb.textContent = `The ${currentEnemy.name} is enraging!`;
+  wb.textContent = `${theBoss(currentEnemy.name)} is enraging!`;
   wb.classList.add('show');
   document.getElementById('battle-enemy-sprite').classList.add('rampage');
   setTimeout(()=>{
@@ -2755,7 +3149,7 @@ function doRampage(){
     const targets = livingTargets();
     const target = targets.reduce((a,b)=> (b.hp > a.hp ? b : a));
     const targetName = target.key === 'player' ? 'San' : target.key;
-    applyEnemyDamage(target.key, boss.rampageDmg, `The ${currentEnemy.name} rampages, targeting ${targetName}!`, true);
+    applyEnemyDamage(target.key, boss.rampageDmg, `${theBoss(currentEnemy.name)} rampages, targeting ${targetName}!`, true);
     eATB = 0; eReady = false; paused = false;
     updateBattleBars();
   }, 900);
@@ -2900,6 +3294,7 @@ function closeBattle(fled){
   document.getElementById('battle-screen').classList.remove('show');
   document.getElementById('battle-result').classList.remove('show');
   stopTicking(); inBattle = false;
+  playTrack(null);
   updateMapHud();
   updateAutoRow();
   const zone = ZONES[GameState.currentZone];
@@ -3369,6 +3764,97 @@ const CHAPTERS = [
       { speaker:'Mezstorm', text:"\u201cThank you,\u201d Mezstorm says to all of you, to none of you, to the sister he was and the stormsinger he is. \u201cThank you for not giving up on me. Even when I had.\u201d" },
       { speaker:'Narrator', text:"The Astral Maelstrom is still now. In the silence, you hear Brunei. You hear the rain. You hear a mother cat under a porch, starving, waiting for someone kind enough to feed her. You hear Soel, purring. You hear the sound of a family, scattered across worlds, slowly finding its way back to itself." }
     ], xpReward:280 },
+  { id:14, unlockType:'boss', unlockAt:'The Infernal Tyrant', icon:'🔥', theme:'theme-crucible', title:'Heart of Fire',
+    sub:'Joel faces the fire he has carried since Brunei — and chooses to write instead of send.', summary:'Joel faces the fire he has carried since Brunei — and chooses to write instead of send.',
+    scenes:[
+      { speaker:'Narrator', text:"The Infernal Crucible is not a place. It is a memory made magma. It is every unsaid word, every unwritten letter, every wire transfer that was supposed to be enough and never was. Joel knows this before you do. You see it in the way his shoulders tighten, the way his shield drops an inch lower than it should." },
+      { speaker:'Joel', text:"\u201cIt looks like my village,\u201d Joel says, and his voice is very small. \u201cThe church. The road. The house where my mother still prays for me. It is all burning. It has always been burning. I just learned not to look.\u201d" },
+      { speaker:'Narrator', text:"The Infernal Tyrant rises from the magma \u2014 a shape of flame and obligation, of sacrifice without reward, of love measured in dollars sent and years lost. It speaks in the voice of every employer who promised Joel the world and gave him exhaustion. It speaks in the voice of the daughter he has never held." },
+      { speaker:'Infernal Tyrant', text:"\u201cYou sent money,\u201d the Tyrant says, and the words are embers. \u201cYou sent prayers. You sent your mother to do your loving for you. What kind of father are you? What kind of man?\u201d" },
+      { speaker:'Narrator', text:"Joel does not raise his shield. For the first time since you have known him, The Steadfast does not stand between you and harm. He stands alone, facing the fire he has carried across worlds." },
+      { speaker:'Joel', text:"\u201cI am the kind who tried,\u201d Joel says, and his voice does not shake. \u201cI am the kind who wakes at 4 AM for a job that does not care if I live or die. I am the kind who sends every dollar I can spare because it is the only way I know to say I am still here. I am still trying. I have not forgotten you. I will never forget you.\u201d" },
+      { speaker:'Narrator', text:"The Tyrant strikes. Joel does not dodge. He absorbs the blow \u2014 not with his shield, but with his history. The fire that should kill him instead passes through, and where it touches, it leaves something behind. Not burns. Words." },
+      { speaker:'Narrator', text:"Words written in flame across his armor, his skin, his heart. A letter, finally, after all these years. Dear anak, it begins. I am sorry I was not there. I am sorry I sent money instead of myself. I am sorry I let fear and distance become habits. I am sorry I let your mother's new family make me feel like I had no right to want more. I am sorry I stopped trying to be your father and settled for being your sender." },
+      { speaker:'Joel', text:"\u201cI will write to you,\u201d Joel says to the Tyrant, to the fire, to the daughter who cannot hear him. \u201cNot money. Words. Every week. Even if they are clumsy. Even if they are late. Even if your mother throws them away. I will write until you know my handwriting better than my mother's face. I will write until you believe I am real.\u201d" },
+      { speaker:'Narrator', text:"The Infernal Tyrant falters. It was built on silence, on absence, on the lie that sending is the same as being. Joel's words are a different fire \u2014 one that illuminates instead of destroys." },
+      { speaker:'San', text:"You step beside him. Your staff is raised, your spells ready, but you do not cast. Not yet. \u201cTogether,\u201d you say. \u201cWe face this together. Then we find paper. And a pen. And we start.\u201d" },
+      { speaker:'Narrator', text:"The final blow is not a spell. It is a promise, spoken in unison by a party that has become a family. The Tyrant dissolves into ash and the smell of ink, and the Crucible cools into something that might, one day, be a home." },
+      { speaker:'Soel', text:"Soel rubs against Joel's ankles, purring loud enough to echo. He has always known about the fire. He has always known Joel would learn to use it instead of fear it." },
+      { speaker:'Joel', text:"\u201cThank you,\u201d Joel says to you, to the cat, to the daughter he will write to tomorrow. \u201cThank you for letting me be more than a shield. Thank you for letting me be a person.\u201d" },
+      { speaker:'Narrator', text:"The magma hardens into stone. The fire becomes warmth. And somewhere, in a small village in the Philippines, a grandmother checks her phone for the message that does not come \u2014 not yet, but soon. A letter. In a handwriting her granddaughter will learn to recognize. In words that say: I am here. I have always been here. I am trying. I will keep trying. Until you believe me." }
+    ], xpReward:300 },
+  { id:15, unlockType:'boss', unlockAt:'The Veilshaper', icon:'🔺', theme:'theme-veil', title:'The Shattered Veil',
+    sub:'Aisyah maps the pattern, and San refuses to be replaced by who she could have been.', summary:'Aisyah maps the pattern, and San refuses to be replaced by who she could have been.',
+    scenes:[
+      { speaker:'Narrator', text:"The Shattered Veil is not a place you walk into. It is a place you fall through \u2014 the moment between waking and dreaming, between sending money home and wondering if it arrived, between being a sister and being a stranger." },
+      { speaker:'Aisyah', text:"\u201cThis way,\u201d Aisyah says, and her voice is the same voice that taught you to count gold faster than you could blink. \u201cThe real money is in the paths no one else sees. The dangerous ones. The ones that last.\u201d She points to a tear in the air that should not exist. \u201cThere. That is where the Veilshaper waits.\u201d" },
+      { speaker:'Narrator', text:"The Veilshaper is a being of pure fractured reality \u2014 every choice you did not make, every path you closed, every door you walked past. It wears your face. It wears Mez's face. It wears the face of the daughter you left before she learned your name." },
+      { speaker:'Veilshaper', text:"\u201cI am what you could have been,\u201d it says, and its voice is all of you at once. \u201cThe good daughter. The present sister. The mother who stayed. The wife who endured. I am your better self, and I am here to replace you.\u201d" },
+      { speaker:'San', text:"You raise your staff. \u201cYou are my ghost,\u201d you say, and the words cost you nothing because you have paid for them already, every night, every wire transfer, every prayer sent into silence. \u201cYou are the weight I carry so I can keep moving. You do not get to replace me. You get to walk beside me, or you get to fall behind.\u201d" },
+      { speaker:'Narrator', text:"The Veilshaper weaves a new dimension \u2014 summoning echoes, shifting resistances, becoming stronger with every phase. But Aisyah has already mapped its pattern. She always maps the pattern. That is what eldest sisters do." },
+      { speaker:'Aisyah', text:"\u201cPhase three,\u201d she calls out, daggers finding the seam between realities. \u201cNow, San! Strike where the light bends!\u201d" },
+      { speaker:'Narrator', text:"You strike. The Veilshaper shatters into a thousand might-have-beens, and for one impossible moment, you see them all \u2014 the life where you stayed, the life where Mez came home, the life where Joel held his daughter, the life where none of you needed Aethon to become family. They are beautiful. They are not yours. You chose this path. You keep choosing it." },
+      { speaker:'Aisyah', text:"\u201cGood trade,\u201d Aisyah says, wiping her daggers. \u201cHigh risk. High reward. Just like Mum taught us.\u201d She does not look at you when she says it, but her hand finds yours, briefly, the way it did when you were small and the world was large and she was already learning to make it smaller." }
+    ], xpReward:320 },
+  { id:16, unlockType:'boss', unlockAt:'Frost Queen', icon:'❄️', theme:'theme-frozen', title:'Frozen Choices',
+    sub:'The Frost Queen is what Mez would have become, if she had stayed frozen.', summary:'The Frost Queen is what Mez would have become, if she had stayed frozen.',
+    scenes:[
+      { speaker:'Narrator', text:"Frostspire Ruins were beautiful once, before the ice took the Queen's heart. Before she learned to be hard, to survive, to push away the warmth that might have saved her. You recognize her. You have been her. You are still her, some nights, when the wire transfers feel like enough and the silence feels like safety." },
+      { speaker:'Frost Queen', text:"\u201cYou think you are different,\u201d the Queen says, and her voice is the sound of every door Mez closed, every call she did not return, every Christmas she spent alone rather than face the family she feared she had failed. \u201cYou think love is a choice you make daily. It is not. Love is a weakness. Love is how they hurt you. Love is how you learn to need, and needing is how you die.\u201d" },
+      { speaker:'Mezstorm', text:"\u201cI used to believe that,\u201d Mezstorm says, and his hands spark with something that is not lightning \u2014 it is memory, it is regret, it is the particular warmth of a sister who fed you when you were small. \u201cI used to think needing made me small. I used to think distance made me safe. I used to think if I sent enough money, it would be the same as being there.\u201d He laughs, and the sound melts ice. \u201cIt is not the same. It is never the same. But it is still love. And love is still worth the risk.\u201d" },
+      { speaker:'Narrator', text:"The Frost Queen falters. She has not been argued with in centuries. She has not been understood. She dances alone in the great hall, waiting for a partner who will never come \u2014 and Mezstorm, her mirror, her warning, her almost, steps forward." },
+      { speaker:'Mezstorm', text:"\u201cDance with me,\u201d he says, and offers his hand. \u201cNot because I am what you need. Because I am what you feared, and I am still here. Because I chose to thaw. Because San chose not to give up on me. Because Eliz \u2014\u201d his voice breaks, beautifully, finally, \u201c\u2014 because Eliz still calls me Mum, even like this. Especially like this.\u201d" },
+      { speaker:'Narrator', text:"The Frost Queen does not take his hand. But she stops dancing. She sits on her throne of ice, and for the first time in centuries, she watches someone else move. She watches Mezstorm dance with his daughter, with his sisters, with the family he almost lost and chose to find again. The ice does not melt. But it cracks. That is enough. That is everything." }
+    ], xpReward:340 },
+  { id:17, unlockType:'boss', unlockAt:'Abyssal Leviathan', icon:'🌑', theme:'theme-void', title:'The Void Between Sisters',
+    sub:'The void is the silence where words should have been.', summary:'The void is the silence where words should have been.',
+    scenes:[
+      { speaker:'Narrator', text:"The Abyssal Depths do not belong to this world. They are a wound in reality, and something looks back from the other side. The void between sisters. The silence where words should have been. The years Mez and you did not speak, did not write, did not try." },
+      { speaker:'Abyssal Leviathan', text:"\u201cI am hungry,\u201d the Leviathan says, and its voice is the sound of every unspoken apology, every unsent letter, every wire transfer that arrived without words. \u201cI am hungry for the love you withheld. I am hungry for the forgiveness you could not give. I am hungry for the family you let become strangers.\u201d" },
+      { speaker:'San', text:"You step forward, though your legs shake. \u201cI was hungry too,\u201d you say. \u201cI was hungry for a sister who came home. I was hungry for someone to see me drowning and throw me a rope instead of a bank account. I was hungry for Mez to be Mez, not Mezstorm, not a stormsinger, not a myth. Just my sister. Just the middle child who was supposed to be my ally against Aisyah's bossiness.\u201d" },
+      { speaker:'Mezstorm', text:"\u201cI was drowning too,\u201d Mezstorm says, and his lightning is dim here, in the void, but it is present. That is the point. It is present. \u201cI was drowning in the person I thought I had to become to be worth loving. I was drowning in the money I made and the family I lost and the shame of needing both.\u201d" },
+      { speaker:'Narrator', text:"The Leviathan devours light, memory, hope. It has swallowed cities. It would swallow you without noticing. But you are a breadwinner. You have been swallowed before. You know how to climb back out." },
+      { speaker:'Joel', text:"\u201cTogether,\u201d Joel says, and his shield is not a weapon here \u2014 it is a promise. It is the same promise he makes every morning when he checks his phone for news from home, every month when he sends money he cannot spare, every night when he prays to a God he is not sure hears him. \u201cWe climb out together. Or we do not climb out at all.\u201d" },
+      { speaker:'Narrator', text:"The Leviathan falls. Not to a single spell, not to a mighty blow, but to the accumulated weight of a family that chose, again and again, to keep choosing each other. The void does not close. But it becomes smaller. It becomes bearable. It becomes a scar instead of a wound." }
+    ], xpReward:360 },
+  { id:18, unlockType:'boss', unlockAt:'Elder Dragon', icon:'🐲', theme:'theme-dragon', title:'The Last Letter',
+    sub:'Joel writes the letter he should have written years ago.', summary:'Joel writes the letter he should have written years ago.',
+    scenes:[
+      { speaker:'Narrator', text:"The Elder Dragon's lair is ash and bone and the particular silence of a man who has run out of things to say. Joel has not spoken since the Crucible. He has been writing. In his head, on scraps of parchment, in the dirt with a stick when he thinks no one is looking." },
+      { speaker:'Joel', text:"\u201cI need to send it,\u201d he says, not looking at you. \u201cThe letter. I need to send it before I lose the courage. Before the next contract, the next shift, the next excuse. Before I become the kind of man who sends money forever and calls it love.\u201d" },
+      { speaker:'Narrator', text:"The Elder Dragon is not a monster. It is a wall \u2014 the wall between Joel and the person he wants to be, the wall between sending and being, the wall between \u201cI am trying\u201d and \u201cI am here.\u201d It breathes fire that smells of diesel and overtime and the particular exhaustion of a body that works so others can rest." },
+      { speaker:'Elder Dragon', text:"\u201cYou will fail,\u201d the Dragon says, and its voice is every supervisor who promised promotion and delivered more hours, every system that grinds good men into dust and calls it productivity. \u201cYou will send the letter. She will not write back. You will send another. She will grow up without you. You will die in a foreign bed and she will learn your name from a bank statement.\u201d" },
+      { speaker:'Joel', text:"\u201cMaybe,\u201d Joel says, and he raises his shield \u2014 not to block, but to declare. \u201cMaybe she will not write back. Maybe she will grow up without me. Maybe I will die in a foreign bed. But I will die having tried. I will die having written. I will die having been more than a number in her mother's account. I will die having been her father, even if only in words, even if only from far away, even if only \u2014\u201d his voice breaks, holds, heals, \u201c\u2014 even if only she never knows how hard I tried.\u201d" },
+      { speaker:'Narrator', text:"The Dragon falls. Not to fire, not to ice, but to the particular weapon that Joel has always had and never used: his words. His truth. His willingness to be seen failing rather than succeed in silence." },
+      { speaker:'Soel', text:"Soel brings Joel a leaf. It is charred at the edges, but intact. Joel tucks it into the envelope with the letter \u2014 the first letter, the real letter, the one that says I am here and I am sorry and I will keep writing until you believe me." }
+    ], xpReward:380 },
+  { id:19, unlockType:'boss', unlockAt:'Starlord', icon:'⭐', theme:'theme-star', title:'Starlight, Finally',
+    sub:'The hardest truth: you are enough. You have always been enough.', summary:'The hardest truth: you are enough. You have always been enough.',
+    scenes:[
+      { speaker:'Narrator', text:"The Starlight Spire touches the sky. At its peak, the Astral Lord waits \u2014 the final gatekeeper, the last question. You have come so far from Brunei. So far from the rain and the kitten and the porch where it all began. So far from the woman who thought she had to be everything to everyone, who thought her worth was measured in wire transfers and endured silences." },
+      { speaker:'Astral Lord', text:"\u201cWhat have you learned?\u201d the Astral Lord asks, and its voice is not a voice \u2014 it is the accumulated weight of every night you cried in the bathroom so no one would hear, every time you checked your bank account and felt the familiar squeeze of not enough, every time you chose someone else's need over your own and called it love." },
+      { speaker:'San', text:"\u201cI have learned,\u201d you say, and your voice is steady because it has earned steadiness, \u201cthat I am not a bank account. I am not a wire transfer. I am not the sum of what I provide. I am San. I am the youngest of three sisters. I am the woman who left a marriage that was eating her alive. I am the woman who found a kitten in the rain and loved him enough to let him teach her how to be loved. I am the woman who found Joel, who found Aisyah, who found Mezstorm again, who is learning to know Eliz. I am enough. I have always been enough. I just needed to stop trying to prove it and start believing it.\u201d" },
+      { speaker:'Narrator', text:"The Astral Lord does not attack. It smiles \u2014 if something made of starlight can smile \u2014 and steps aside. \u201cThen pass,\u201d it says. \u201cNot because you have won. Because you have stopped needing to win. Because you have chosen love over fear, presence over performance, being over doing. That is the only victory that matters.\u201d" },
+      { speaker:'Soel', text:"Soel rubs against your leg. \u201cWe go together,\u201d his eyes say. \u201cAlways together.\u201d He chose you. In the rain. In the dorm. In the rift. In every world, in every form, he chooses you. That is rare. That is everything." },
+      { speaker:'Narrator', text:"The spire opens onto a view of Aethon that takes your breath away \u2014 not because it is beautiful, though it is, but because you are still here to see it. You, San. The breadwinner. The runaway. The survivor. The woman who learned, finally, that she was never broken. She was just surviving in a place that demanded she break herself to fit. And now she is free. Now she is home. Now she is \u2014 always, finally \u2014 enough." }
+    ], xpReward:400 },
+  { id:20, unlockType:'boss', unlockAt:'The Nexus Planarch', icon:'🌀', theme:'theme-nexus', title:'The Planarch',
+    sub:'The heart of all dimensions. The final choice. The beginning.', summary:'The heart of all dimensions. The final choice. The beginning.',
+    scenes:[
+      { speaker:'Narrator', text:"The Nexus is not a place. It is a choice \u2014 the choice to keep going, to keep choosing, to keep loving even when the cost is everything you have. The Planarch waits here, or what remains of it. Five phases. No mercy. But also: no lies. No illusions. Only the truth you have spent twenty chapters learning to face." },
+      { speaker:'The Nexus Planarch', text:"\u201cI am the wound,\u201d the Planarch says, and its voice is every dimension that ever touched and woke something that should have slept. \u201cI am the place where too many worlds pressed against each other and something broke. I am not evil. I am simply what happens when love is not enough, when distance is too great, when family becomes strangers and strangers become family and no one knows which is which anymore.\u201d" },
+      { speaker:'San', text:"\u201cI know wounds,\u201d you say, and your staff is not a weapon now \u2014 it is a walking stick, it is a crutch, it is the thing that kept you upright when everything else fell apart. \u201cI am a wound. Joel is a wound. Mezstorm is a wound. Aisyah is a wound. Eliz \u2014\u201d you look at your niece, at her gentle hands, at her impossible endurance, \u201c\u2014 Eliz is the proof that wounds can heal. That wounds can become strength. That wounds can become love.\u201d" },
+      { speaker:'Narrator', text:"Phase one: Arcane. The Planarch tests your mind, your memory, your ability to hold multiple truths at once. You hold them. You hold them all \u2014 the truth of Brunei and the truth of Aethon, the truth of who you were and who you are becoming, the truth that you can love your family and still need to leave them, the truth that leaving is not the same as abandoning." },
+      { speaker:'Narrator', text:"Phase two: Fire. The Planarch tests your passion, your anger, your willingness to burn for what matters. Joel steps forward. He has been burning his whole life \u2014 in the Crucible, in the Philippines, in every 4 AM shift, in every unsent letter. He knows fire. He is fire. And he has learned to use it instead of fear it." },
+      { speaker:'Narrator', text:"Phase three: Ice. The Planarch tests your stillness, your patience, your ability to endure. Mezstorm endures. He has endured being Mez, being Mezstorm, being neither, being both. He has endured the silence between sisters, the fear of coming home, the shame of needing to be needed. He endures. He thaws. He chooses to keep choosing." },
+      { speaker:'Narrator', text:"Phase four: Lightning. The Planarch tests your speed, your adaptability, your willingness to strike before you are ready. Aisyah strikes. She has always struck \u2014 in the market, in the shadows, in the spaces between what is said and what is meant. She strikes true. She strikes for family. She strikes because she has always known that the real money is in love, and love is the riskiest trade of all." },
+      { speaker:'Narrator', text:"Phase five: Void. The Planarch tests your emptiness, your ability to face the dark and not be consumed. Eliz faces it. Eliz, who sees magic in textures and colors no one else can perceive. Eliz, who cannot be reduced below 1 HP. Eliz, who has endured more than any child should and still offers her hands to heal. She faces the void. She does not blink. She is not empty. She is full \u2014 full of love, full of presence, full of the particular courage of simply being." },
+      { speaker:'The Nexus Planarch', text:"\u201cYou have severed the rift,\u201d the Planarch says, and its voice is fading, becoming wind, becoming memory, becoming the space between heartbeats where love lives. \u201cNot with power. Not with spells. With choice. With family. With the willingness to be wounded and keep walking. The dimensions will heal. The worlds will separate. And you \u2014\u201d it looks at each of you, finally, fully, \u201c\u2014 you will remember. In Brunei. In the Philippines. In every world, in every form. You will remember that you chose each other. That is the only magic that matters.\u201d" },
+      { speaker:'Narrator', text:"The Nexus collapses into light. Not destruction \u2014 birth. The rift closes. The worlds separate. And you stand in a field of silver grass, two moons overhead, Soel purring in your arms, Joel's hand in yours, Aisyah counting gold she does not need, Mezstorm humming a lullaby you almost remember, Eliz pressing her glowing hands to the earth as if to say: I am here. We are here. We are enough." },
+      { speaker:'Joel', text:"\u201cBreakfast?\u201d Joel asks, like nothing happened. Like you did not just save the dimensions. Like he did not just face his fire and choose to write. Like you are not all standing at the end of one story and the beginning of another." },
+      { speaker:'San', text:"You smile. It is not a perfect smile. It is tired, and it is hopeful, and it is yours. \u201cBreakfast,\u201d you agree. \u201cAnd then we find out what comes next.\u201d" },
+      { speaker:'Narrator', text:"The sun rises over Aethon. Two moons fade. Soel purrs, kneading soft circles into your heart. The story continues. Not ended. Just paused. And somewhere, in a small village in the Philippines, a mother wakes to a letter in a handwriting she does not recognize, holds it to her chest, and weeps. In Brunei, two parents check their phones and find a message that says: I am here. I am trying. I love you. The gravity still pulls. The orbit still holds. You are still a breadwinner. You are still choosing love. You are still \u2014 always, finally, enough \u2014 San." }
+    ], xpReward:500 },
   { id:8.5, unlockLevel:15, icon:'🏹', theme:'theme-scout', title:'Swift Scout',
     sub:'A voice in the trees. An eagle-eyed tracker who knows the trade routes.', summary:'A voice in the trees. An eagle-eyed tracker who knows the trade routes.',
     scenes:[
@@ -3598,6 +4084,57 @@ function buildSceneDecor(theme){
       scene.appendChild(st);
     }
   }
+  if(theme === 'theme-crucible'){
+    const veinSpots = [40,120,200,280,360];
+    veinSpots.forEach(x=>{
+      const v = document.createElement('div'); v.className='magma-vein';
+      v.style.left=x+'px'; v.style.height=(50+Math.random()*150)+'px';
+      v.style.animationDelay=(Math.random()*2)+'s';
+      scene.appendChild(v);
+    });
+    for(let i=0;i<14;i++){
+      const a = document.createElement('div'); a.className='ash-particle';
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*5)+'s';
+      a.style.animationDuration=(4+Math.random()*3)+'s';
+      scene.appendChild(a);
+    }
+  }
+  if(theme === 'theme-veil'){
+    const shardSpots = [[40,80],[220,140],[100,300],[300,260]];
+    shardSpots.forEach(([x,y])=>{
+      const s = document.createElement('div'); s.className='veil-shard';
+      s.style.left=x+'px'; s.style.top=y+'px';
+      s.style.transform = `rotate(${Math.random()*360}deg) scale(${0.6+Math.random()*0.6})`;
+      s.style.animationDelay=(Math.random()*3)+'s';
+      scene.appendChild(s);
+    });
+    for(let i=0;i<14;i++){
+      const st = document.createElement('div'); st.className='starfield-dot';
+      st.style.left=(Math.random()*100)+'%'; st.style.top=(Math.random()*100)+'%';
+      st.style.animationDelay=(Math.random()*2.4)+'s';
+      scene.appendChild(st);
+    }
+  }
+  if(theme === 'theme-dragon'){
+    for(let i=0;i<20;i++){
+      const a = document.createElement('div'); a.className='dragon-ash';
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*6)+'s';
+      a.style.animationDuration=(5+Math.random()*4)+'s';
+      scene.appendChild(a);
+    }
+  }
+  if(theme === 'theme-nexus'){
+    const colors = ['#c86cff','#ff8a4a','#a8e0ff','#ffe066','#8a5cff'];
+    for(let i=0;i<36;i++){
+      const g = document.createElement('div'); g.className='nexus-glimmer';
+      g.style.left=(Math.random()*100)+'%'; g.style.top=(Math.random()*100)+'%';
+      g.style.color = colors[i % colors.length];
+      g.style.animationDelay=(Math.random()*2.6)+'s';
+      scene.appendChild(g);
+    }
+  }
 }
 
 function buildJrProgress(scenes){
@@ -3636,7 +4173,7 @@ function renderJrScene(){
     speakerEl.textContent = ''; speakerEl.classList.add('narrator'); textEl.classList.add('narr');
     portraitSlot.classList.remove('show'); box.classList.add('no-portrait');
   } else {
-    speakerEl.textContent = s.speaker; speakerEl.classList.add(s.speaker.toLowerCase());
+    speakerEl.textContent = s.speaker; speakerEl.classList.add(s.speaker.toLowerCase().replace(/\s+/g, '-'));
     document.getElementById('jr-portrait-img').src = JPORTRAITS[s.speaker] || '';
     portraitSlot.classList.add('show'); box.classList.remove('no-portrait');
   }
