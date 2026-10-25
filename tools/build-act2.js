@@ -83,16 +83,16 @@ Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mL
   const c = ch.find(x => x.id === cid); if (!c) throw new Error('chapter ' + cid);
   const elem = ELEM[r.elem] ? r.elem : 'none';
   const bossName = bossOverride || c.bossName.trim();
-  const bossHp = 520 + i * 45;
-  const boss = Object.assign({ name: bossName, mechanic: mech, atk: 28 + Math.round(i * 1.1), spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
+  const bossHp = (520 + i * 45) * 3; // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
+  const boss = Object.assign({ name: bossName, mechanic: mech, atk: Math.round((28 + i * 1.1) * 3), spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
   if (!mp.lives) boss.hp = bossHp;
-  if (mech === 'resurrect') boss.lives = mp.lives.map(l => l + i * 6);
+  if (mech === 'resurrect') boss.lives = mp.lives.map(l => (l + i * 6) * 3);
   if (art) { boss.img = `assets/boss/${art}.jpg`; rs(path.join(V2, 'bosses', art + '.jpg'), path.join(OUT, boss.img), 360, 82); }
   const enemyDefs = {};
   r.en.forEach((n, k) => {
     const t = [{ hp: 1.0, atk: 1.0, spd: 5 }, { hp: 0.75, atk: 1.4, spd: 8 }, { hp: 1.3, atk: 0.8, spd: 4 }][k % 3];
-    enemyDefs[n] = { hp: Math.round((140 + i * 7) * t.hp), atk: Math.round((10 + i * 0.6) * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
+    enemyDefs[n] = { hp: Math.round((140 + i * 7) * 2 * t.hp), atk: Math.round((10 + i * 0.6) * 3 * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
   });
   zones[id] = {
     name: zn, theme: 'zone-act2-' + elem,

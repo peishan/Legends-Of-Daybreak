@@ -1269,6 +1269,40 @@ const SPELLS = [
   { id:'vampiric_touch', n:'Vampiric Touch', ul:12, cost:20, dice:'1d10', kind:'damage', proc:{chance:.3, label:'poison', bonus:4}, lifesteal:.5, verb:'reaches out with a hand wreathed in shadow' }
 ];
 
+/* Higher-tier spellbook ported from V2 (tiers 3-9 plus Farseer's Reach). Damage spells use the same
+   dice/proc fields as the original eight; 'restore' spells refill MP or HP. */
+const spD = (id,n,ul,cost,dice,verb,proc) => ({ id, n, ul, cost, dice, kind:'damage', verb, ...(proc?{proc}:{}) });
+const spB = (id,n,ul,cost,buffDef,verb) => ({ id, n, ul, cost, kind:'buff', buffDef, buffDuration:10000, verb });
+SPELLS.push(
+  spD('fireball','Fireball',13,25,'2d6','hurls a roaring fireball',{chance:.3,label:'burn',bonus:9}),
+  spD('lightning_bolt','Lightning Bolt',15,30,'3d8','calls down a crackling bolt',{chance:.2,label:'shock',bonus:6}),
+  spD('time_lag','Time Lag',18,24,'1d10','makes the foe stumble half a second behind reality',{chance:.3,label:'shock',bonus:6}),
+  spB('stoneskin','Stoneskin',19,28,16,'hardens her skin to stone'),
+  spB('greater_evasion','Greater Evasion',21,30,14,'blurs into a deeper illusion'),
+  spD('ice_storm','Ice Storm',22,32,'2d10','drives a hail of razor ice',{chance:.25,label:'shock',bonus:7}),
+  spD('mind_shatter','Mind Shatter',24,30,'2d8','unravels the foe’s will',{chance:.4,label:'poison',bonus:12}),
+  spD('cone_of_cold','Cone of Cold',25,36,'3d8','looses a cone of absolute cold',{chance:.3,label:'shock',bonus:8}),
+  spD('chaotic_surge','Chaotic Surge',27,38,'2d12','lets raw magic tear loose',{chance:.35,label:'burn',bonus:15}),
+  spD('sunfire','Sunfire',28,40,'3d10','sets a miniature sun loose',{chance:.4,label:'burn',bonus:18}),
+  spD('mesmeric_hold','Mesmeric Hold',29,34,'2d10','locks the foe in place by force of mind',{chance:.4,label:'shock',bonus:9}),
+  { id:'wondrous_recall', n:'Wondrous Recall', ul:30, cost:0, kind:'restore', restoreMp:.35, verb:'draws expended magic back into her mind' },
+  spD('chain_lightning','Chain Lightning',31,45,'4d8','arcs lightning from shadow to shadow',{chance:.3,label:'shock',bonus:10}),
+  spD('withering_fog','Withering Fog',33,42,'3d10','releases a caustic mist',{chance:.5,label:'poison',bonus:24}),
+  spD('finger_of_death','Finger of Death',35,55,'5d8','speaks a word that unmakes',{chance:.4,label:'poison',bonus:30}),
+  spD('spectral_blade','Spectral Blade',37,50,'4d10','conjures a blade with a will of its own'),
+  spD('prismatic_spray','Prismatic Spray',38,52,'4d12','fans seven rays of devastation',{chance:.4,label:'burn',bonus:24}),
+  spB('arcane_ward','Arcane Ward',39,40,20,'raises a standing ward'),
+  spD('incendiary_cloud','Incendiary Cloud',40,60,'5d10','rolls a cloud of superheated ash',{chance:.5,label:'burn',bonus:30}),
+  spD('sunburst','Sunburst',42,65,'5d12','scours the field with radiant fire',{chance:.5,label:'burn',bonus:36}),
+  spD('horrid_wilting','Horrid Wilting',43,62,'6d8','tears the moisture from the foe',{chance:.5,label:'poison',bonus:36}),
+  spD('planar_banish','Planar Banish',44,50,'4d10','opens a rift beneath the foe’s feet',{chance:.5,label:'shock',bonus:14}),
+  spD('black_blade','Black Blade of Disaster',45,70,'6d10','swings a blade of pure entropy'),
+  spD('meteor_swarm','Meteor Swarm',47,60,'6d10','calls ultimate destruction from the sky',{chance:.5,label:'burn',bonus:15}),
+  { id:'wish_fulfilled', n:'Wish Fulfilled', ul:48, cost:50, kind:'restore', restoreHp:1, verb:'bends reality briefly in her favor' },
+  spB('time_stop','Time Stop',50,80,45,'freezes the world; only she still moves'),
+  spD('farseers_reach','Farseer’s Reach',60,85,'5d12','sees the strike land before she throws it',{chance:.35,label:'shock',bonus:16})
+);
+
 function rollDice(diceStr){
   const [count, sides] = diceStr.split('d').map(Number);
   let total = 0;
@@ -2674,7 +2708,11 @@ function castSpell(spellId){
   if(p.mp < spell.cost) return;
   p.mp -= spell.cost;
 
-  if(spell.kind === 'buff'){
+  if(spell.kind === 'restore'){
+    if(spell.restoreMp) p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * spell.restoreMp));
+    if(spell.restoreHp) p.hp = Math.min(p.mhp, p.hp + Math.round(p.mhp * spell.restoreHp));
+    document.getElementById('battle-log').textContent = `San ${spell.verb}.`;
+  } else if(spell.kind === 'buff'){
     playerBuffDef = spell.buffDef;
     playerBuffUntil = Date.now() + spell.buffDuration;
     document.getElementById('battle-log').textContent = `San ${spell.verb}. (+${spell.buffDef} DEF, briefly)`;
@@ -2688,7 +2726,7 @@ function castSpell(spellId){
     let procText = '';
     if(spell.proc && Math.random() < spell.proc.chance){
       dmg += spell.proc.bonus;
-      procText = ` ${spell.proc.label==='poison' ? 'Poison courses through' : 'Shock arcs across'} ${currentEnemy.name}!`;
+      procText = ` ${spell.proc.label==='poison' ? 'Poison courses through' : spell.proc.label==='burn' ? 'Flames lick at' : 'Shock arcs across'} ${currentEnemy.name}!`;
     }
     if(spell.lifesteal){
       const healed = Math.round(dmg * spell.lifesteal);
@@ -2729,7 +2767,7 @@ function renderSpellPanel(){
     const btn = document.createElement('button');
     btn.className = 'spell-row';
     btn.disabled = !pReady || p.mp < s.cost || isFrozen('player');
-    const desc = s.kind==='buff' ? `+${s.buffDef} DEF, brief ward` : `${s.dice} dmg${s.proc?` · ${Math.round(s.proc.chance*100)}% ${s.proc.label}`:''}${s.lifesteal?' · lifesteal':''}`;
+    const desc = s.kind==='restore' ? (s.restoreHp ? 'Restores all HP' : `Restores ${Math.round(s.restoreMp*100)}% MP`) : s.kind==='buff' ? `+${s.buffDef} DEF, brief ward` : `${s.dice} dmg${s.proc?` · ${Math.round(s.proc.chance*100)}% ${s.proc.label}`:''}${s.lifesteal?' · lifesteal':''}`;
     btn.innerHTML = `<div class="sp-body"><div class="sp-name">${s.n}</div><div class="sp-desc">${desc}</div></div><div class="sp-cost">${s.cost} MP</div>`;
     btn.addEventListener('click', ()=> castSpell(s.id));
     list.appendChild(btn);
@@ -3297,6 +3335,7 @@ function grantXP(amount){
 function onVictory(){
   inBattle = false; stopTicking();
   const p = GameState.player;
+  p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
   const goldMult = isCompanionActive('Aisyah') ? 1.2 : 1;
 
   if(trainingMode){

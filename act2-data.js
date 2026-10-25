@@ -40,8 +40,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Fracture Wisp": {
-    "hp": 140,
-    "atk": 10,
+    "hp": 280,
+    "atk": 30,
     "spd": 5,
     "xp": 90,
     "g": 55,
@@ -52,8 +52,8 @@ const ACT2_ZONES = {
     ]
    },
    "Splinter Hound": {
-    "hp": 105,
-    "atk": 14,
+    "hp": 210,
+    "atk": 42,
     "spd": 8,
     "xp": 90,
     "g": 55,
@@ -64,8 +64,8 @@ const ACT2_ZONES = {
     ]
    },
    "Collapse Warden": {
-    "hp": 182,
-    "atk": 8,
+    "hp": 364,
+    "atk": 24,
     "spd": 4,
     "xp": 90,
     "g": 55,
@@ -84,7 +84,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Fracture",
    "mechanic": "phase",
-   "atk": 28,
+   "atk": 84,
    "spd": 5,
    "xp": 2200,
    "g": 1200,
@@ -100,7 +100,7 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 520
+   "hp": 1560
   },
   "quest": {
    "name": "The Breaking: Clear the Way",
@@ -155,8 +155,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Ruin Stalker": {
-    "hp": 147,
-    "atk": 11,
+    "hp": 294,
+    "atk": 32,
     "spd": 5,
     "xp": 95,
     "g": 58,
@@ -167,8 +167,8 @@ const ACT2_ZONES = {
     ]
    },
    "Ash Scavenger": {
-    "hp": 110,
-    "atk": 15,
+    "hp": 221,
+    "atk": 45,
     "spd": 8,
     "xp": 95,
     "g": 58,
@@ -179,8 +179,8 @@ const ACT2_ZONES = {
     ]
    },
    "Broken Sentinel": {
-    "hp": 191,
-    "atk": 8,
+    "hp": 382,
+    "atk": 25,
     "spd": 4,
     "xp": 95,
     "g": 58,
@@ -199,7 +199,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Last Guard",
    "mechanic": "rampage",
-   "atk": 29,
+   "atk": 87,
    "spd": 5,
    "xp": 2320,
    "g": 1260,
@@ -213,7 +213,7 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 24,
-   "hp": 565
+   "hp": 1695
   },
   "quest": {
    "name": "The Silent Ruin: Clear the Way",
@@ -268,8 +268,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Market Looter": {
-    "hp": 154,
-    "atk": 11,
+    "hp": 308,
+    "atk": 34,
     "spd": 5,
     "xp": 100,
     "g": 61,
@@ -280,8 +280,8 @@ const ACT2_ZONES = {
     ]
    },
    "Ash Peddler": {
-    "hp": 116,
-    "atk": 16,
+    "hp": 231,
+    "atk": 47,
     "spd": 8,
     "xp": 100,
     "g": 61,
@@ -292,8 +292,8 @@ const ACT2_ZONES = {
     ]
    },
    "Burnt Enforcer": {
-    "hp": 200,
-    "atk": 9,
+    "hp": 400,
+    "atk": 27,
     "spd": 4,
     "xp": 100,
     "g": 61,
@@ -312,7 +312,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Scavenger King",
    "mechanic": "rampage",
-   "atk": 30,
+   "atk": 91,
    "spd": 5,
    "xp": 2440,
    "g": 1320,
@@ -326,7 +326,7 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 4,
    "rampageDmg": 28,
-   "hp": 610
+   "hp": 1830
   },
   "quest": {
    "name": "Ashfall Market: Clear the Way",
@@ -381,8 +381,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Ledger Wraith": {
-    "hp": 161,
-    "atk": 12,
+    "hp": 322,
+    "atk": 35,
     "spd": 5,
     "xp": 105,
     "g": 64,
@@ -393,8 +393,8 @@ const ACT2_ZONES = {
     ]
    },
    "Sunken Auditor": {
-    "hp": 121,
-    "atk": 17,
+    "hp": 242,
+    "atk": 50,
     "spd": 8,
     "xp": 105,
     "g": 64,
@@ -405,8 +405,8 @@ const ACT2_ZONES = {
     ]
    },
    "Debt Collector": {
-    "hp": 209,
-    "atk": 9,
+    "hp": 419,
+    "atk": 28,
     "spd": 4,
     "xp": 105,
     "g": 64,
@@ -425,7 +425,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Debt Wraith",
    "mechanic": "drown",
-   "atk": 31,
+   "atk": 94,
    "spd": 5,
    "xp": 2560,
    "g": 1380,
@@ -440,7 +440,7 @@ const ACT2_ZONES = {
    "drownTurn": 4,
    "drownDmg": 26,
    "drownSaveChance": 0.5,
-   "hp": 655
+   "hp": 1965
   },
   "quest": {
    "name": "The Drowned Ledger: Clear the Way",
@@ -495,8 +495,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Rust Automaton": {
-    "hp": 168,
-    "atk": 12,
+    "hp": 336,
+    "atk": 37,
     "spd": 5,
     "xp": 110,
     "g": 67,
@@ -507,8 +507,8 @@ const ACT2_ZONES = {
     ]
    },
    "Dockhand Wraith": {
-    "hp": 126,
-    "atk": 17,
+    "hp": 252,
+    "atk": 52,
     "spd": 8,
     "xp": 110,
     "g": 67,
@@ -519,8 +519,8 @@ const ACT2_ZONES = {
     ]
    },
    "Overtime Specter": {
-    "hp": 218,
-    "atk": 10,
+    "hp": 437,
+    "atk": 30,
     "spd": 4,
     "xp": 110,
     "g": 67,
@@ -539,7 +539,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Foreman",
    "mechanic": "lightning_rod",
-   "atk": 32,
+   "atk": 97,
    "spd": 5,
    "xp": 2680,
    "g": 1440,
@@ -553,7 +553,7 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 30,
-   "hp": 700,
+   "hp": 2100,
    "img": "assets/boss/theforeman.jpg"
   },
   "quest": {
@@ -609,8 +609,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Watching Echo": {
-    "hp": 175,
-    "atk": 13,
+    "hp": 350,
+    "atk": 39,
     "spd": 5,
     "xp": 115,
     "g": 70,
@@ -621,8 +621,8 @@ const ACT2_ZONES = {
     ]
    },
    "Silent Mourner": {
-    "hp": 131,
-    "atk": 18,
+    "hp": 263,
+    "atk": 55,
     "spd": 8,
     "xp": 115,
     "g": 70,
@@ -633,8 +633,8 @@ const ACT2_ZONES = {
     ]
    },
    "Grief Warden": {
-    "hp": 228,
-    "atk": 10,
+    "hp": 455,
+    "atk": 31,
     "spd": 4,
     "xp": 115,
     "g": 70,
@@ -653,7 +653,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Echo of Joel",
    "mechanic": "resurrect",
-   "atk": 34,
+   "atk": 101,
    "spd": 5,
    "xp": 2800,
    "g": 1500,
@@ -666,8 +666,8 @@ const ACT2_ZONES = {
     "#7a3aba"
    ],
    "lives": [
-    180,
-    170
+    540,
+    510
    ],
    "lifeNames": [
     "The Watcher",
@@ -728,8 +728,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Road Wraith": {
-    "hp": 182,
-    "atk": 14,
+    "hp": 364,
+    "atk": 41,
     "spd": 5,
     "xp": 120,
     "g": 73,
@@ -740,8 +740,8 @@ const ACT2_ZONES = {
     ]
    },
    "Pack Beast Husk": {
-    "hp": 137,
-    "atk": 19,
+    "hp": 273,
+    "atk": 57,
     "spd": 8,
     "xp": 120,
     "g": 73,
@@ -752,8 +752,8 @@ const ACT2_ZONES = {
     ]
    },
    "Toll Ghost": {
-    "hp": 237,
-    "atk": 11,
+    "hp": 473,
+    "atk": 33,
     "spd": 4,
     "xp": 120,
     "g": 73,
@@ -772,7 +772,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Vanished Guide",
    "mechanic": "freeze",
-   "atk": 35,
+   "atk": 104,
    "spd": 5,
    "xp": 2920,
    "g": 1560,
@@ -786,7 +786,7 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.3,
    "freezeDuration": 3000,
-   "hp": 790,
+   "hp": 2370,
    "img": "assets/boss/thevanishedguide.jpg"
   },
   "quest": {
@@ -842,8 +842,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Nursery Wraith": {
-    "hp": 189,
-    "atk": 14,
+    "hp": 378,
+    "atk": 43,
     "spd": 5,
     "xp": 125,
     "g": 76,
@@ -854,8 +854,8 @@ const ACT2_ZONES = {
     ]
    },
    "Uncaught Echo": {
-    "hp": 142,
-    "atk": 20,
+    "hp": 284,
+    "atk": 60,
     "spd": 8,
     "xp": 125,
     "g": 76,
@@ -866,8 +866,8 @@ const ACT2_ZONES = {
     ]
    },
    "Quiet Sentinel": {
-    "hp": 246,
-    "atk": 11,
+    "hp": 491,
+    "atk": 34,
     "spd": 4,
     "xp": 125,
     "g": 76,
@@ -886,7 +886,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Hollow Eliz",
    "mechanic": "devour",
-   "atk": 36,
+   "atk": 107,
    "spd": 5,
    "xp": 3040,
    "g": 1620,
@@ -901,7 +901,7 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 34,
    "staggerPct": 0.35,
-   "hp": 835,
+   "hp": 2505,
    "img": "assets/boss/holloweliz.jpg"
   },
   "quest": {
@@ -957,8 +957,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Burnt Recruit": {
-    "hp": 196,
-    "atk": 15,
+    "hp": 392,
+    "atk": 44,
     "spd": 5,
     "xp": 130,
     "g": 79,
@@ -969,8 +969,8 @@ const ACT2_ZONES = {
     ]
    },
    "Barracks Wraith": {
-    "hp": 147,
-    "atk": 21,
+    "hp": 294,
+    "atk": 62,
     "spd": 8,
     "xp": 130,
     "g": 79,
@@ -981,8 +981,8 @@ const ACT2_ZONES = {
     ]
    },
    "Hollow Drillmaster": {
-    "hp": 255,
-    "atk": 12,
+    "hp": 510,
+    "atk": 36,
     "spd": 4,
     "xp": 130,
     "g": 79,
@@ -1001,7 +1001,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Rustbound Zaki",
    "mechanic": "rampage",
-   "atk": 37,
+   "atk": 110,
    "spd": 5,
    "xp": 3160,
    "g": 1680,
@@ -1015,7 +1015,7 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 30,
-   "hp": 880,
+   "hp": 2640,
    "img": "assets/boss/rustboundzaki.jpg"
   },
   "quest": {
@@ -1071,8 +1071,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Stormbound Wraith": {
-    "hp": 203,
-    "atk": 15,
+    "hp": 406,
+    "atk": 46,
     "spd": 5,
     "xp": 135,
     "g": 82,
@@ -1083,8 +1083,8 @@ const ACT2_ZONES = {
     ]
    },
    "Thunder Remnant": {
-    "hp": 152,
-    "atk": 22,
+    "hp": 305,
+    "atk": 65,
     "spd": 8,
     "xp": 135,
     "g": 82,
@@ -1095,8 +1095,8 @@ const ACT2_ZONES = {
     ]
    },
    "Static Husk": {
-    "hp": 264,
-    "atk": 12,
+    "hp": 528,
+    "atk": 37,
     "spd": 4,
     "xp": 135,
     "g": 82,
@@ -1115,7 +1115,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Mezstorm Unbound",
    "mechanic": "lightning_rod",
-   "atk": 38,
+   "atk": 114,
    "spd": 5,
    "xp": 3280,
    "g": 1740,
@@ -1129,7 +1129,7 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 34,
-   "hp": 925,
+   "hp": 2775,
    "img": "assets/boss/mezstormunbound.jpg"
   },
   "quest": {
@@ -1185,8 +1185,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Guttering Wisp": {
-    "hp": 210,
-    "atk": 16,
+    "hp": 420,
+    "atk": 48,
     "spd": 5,
     "xp": 140,
     "g": 85,
@@ -1197,8 +1197,8 @@ const ACT2_ZONES = {
     ]
    },
    "Fading Ember": {
-    "hp": 158,
-    "atk": 22,
+    "hp": 315,
+    "atk": 67,
     "spd": 8,
     "xp": 140,
     "g": 85,
@@ -1209,8 +1209,8 @@ const ACT2_ZONES = {
     ]
    },
    "Forgotten Familiar": {
-    "hp": 273,
-    "atk": 13,
+    "hp": 546,
+    "atk": 38,
     "spd": 4,
     "xp": 140,
     "g": 85,
@@ -1229,7 +1229,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Fading Familiar",
    "mechanic": "freeze",
-   "atk": 39,
+   "atk": 117,
    "spd": 5,
    "xp": 3400,
    "g": 1800,
@@ -1243,7 +1243,7 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3000,
-   "hp": 970,
+   "hp": 2910,
    "img": "assets/boss/thefadingfamiliar.jpg"
   },
   "quest": {
@@ -1299,8 +1299,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Ledger Phantom": {
-    "hp": 217,
-    "atk": 17,
+    "hp": 434,
+    "atk": 50,
     "spd": 5,
     "xp": 145,
     "g": 88,
@@ -1311,8 +1311,8 @@ const ACT2_ZONES = {
     ]
    },
    "Tally Wraith": {
-    "hp": 163,
-    "atk": 23,
+    "hp": 326,
+    "atk": 70,
     "spd": 8,
     "xp": 145,
     "g": 88,
@@ -1323,8 +1323,8 @@ const ACT2_ZONES = {
     ]
    },
    "Route Ghost": {
-    "hp": 282,
-    "atk": 13,
+    "hp": 564,
+    "atk": 40,
     "spd": 4,
     "xp": 145,
     "g": 88,
@@ -1343,7 +1343,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Echo of Aisyah",
    "mechanic": "resurrect",
-   "atk": 40,
+   "atk": 120,
    "spd": 5,
    "xp": 3520,
    "g": 1860,
@@ -1356,8 +1356,8 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "lives": [
-    226,
-    216
+    678,
+    648
    ],
    "lifeNames": [
     "Gone",
@@ -1418,8 +1418,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Doubt Wraith": {
-    "hp": 224,
-    "atk": 17,
+    "hp": 448,
+    "atk": 52,
     "spd": 5,
     "xp": 150,
     "g": 91,
@@ -1430,8 +1430,8 @@ const ACT2_ZONES = {
     ]
    },
    "Exhausted Echo": {
-    "hp": 168,
-    "atk": 24,
+    "hp": 336,
+    "atk": 72,
     "spd": 8,
     "xp": 150,
     "g": 91,
@@ -1442,8 +1442,8 @@ const ACT2_ZONES = {
     ]
    },
    "Silent Weight": {
-    "hp": 291,
-    "atk": 14,
+    "hp": 582,
+    "atk": 41,
     "spd": 4,
     "xp": 150,
     "g": 91,
@@ -1462,7 +1462,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Tired Version",
    "mechanic": "drown",
-   "atk": 41,
+   "atk": 124,
    "spd": 5,
    "xp": 3640,
    "g": 1920,
@@ -1477,7 +1477,7 @@ const ACT2_ZONES = {
    "drownTurn": 4,
    "drownDmg": 30,
    "drownSaveChance": 0.45,
-   "hp": 1060,
+   "hp": 3180,
    "img": "assets/boss/thetiredversion.jpg"
   },
   "quest": {
@@ -1533,8 +1533,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Chamber Sentinel": {
-    "hp": 231,
-    "atk": 18,
+    "hp": 462,
+    "atk": 53,
     "spd": 5,
     "xp": 155,
     "g": 94,
@@ -1545,8 +1545,8 @@ const ACT2_ZONES = {
     ]
    },
    "Fractured Construct": {
-    "hp": 173,
-    "atk": 25,
+    "hp": 347,
+    "atk": 75,
     "spd": 8,
     "xp": 155,
     "g": 94,
@@ -1557,8 +1557,8 @@ const ACT2_ZONES = {
     ]
    },
    "Time-Loop Wraith": {
-    "hp": 300,
-    "atk": 14,
+    "hp": 601,
+    "atk": 43,
     "spd": 4,
     "xp": 155,
     "g": 94,
@@ -1577,7 +1577,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Architect",
    "mechanic": "phase",
-   "atk": 42,
+   "atk": 127,
    "spd": 5,
    "xp": 3760,
    "g": 1980,
@@ -1593,7 +1593,7 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 1105
+   "hp": 3315
   },
   "quest": {
    "name": "The Architect's Chamber: Clear the Way",
@@ -1648,8 +1648,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Remnant Guard": {
-    "hp": 238,
-    "atk": 18,
+    "hp": 476,
+    "atk": 55,
     "spd": 5,
     "xp": 160,
     "g": 97,
@@ -1660,8 +1660,8 @@ const ACT2_ZONES = {
     ]
    },
    "Splinter Sentinel": {
-    "hp": 179,
-    "atk": 26,
+    "hp": 357,
+    "atk": 77,
     "spd": 8,
     "xp": 160,
     "g": 97,
@@ -1672,8 +1672,8 @@ const ACT2_ZONES = {
     ]
    },
    "Echo Legion": {
-    "hp": 309,
-    "atk": 15,
+    "hp": 619,
+    "atk": 44,
     "spd": 4,
     "xp": 160,
     "g": 97,
@@ -1692,7 +1692,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Splinter Court",
    "mechanic": "resurrect",
-   "atk": 43,
+   "atk": 130,
    "spd": 5,
    "xp": 3880,
    "g": 2040,
@@ -1705,9 +1705,9 @@ const ACT2_ZONES = {
     "#4a5aa8"
    ],
    "lives": [
-    224,
-    214,
-    204
+    672,
+    642,
+    612
    ],
    "lifeNames": [
     "Joel",
@@ -1768,8 +1768,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Fracture Remnant": {
-    "hp": 245,
-    "atk": 19,
+    "hp": 490,
+    "atk": 57,
     "spd": 5,
     "xp": 165,
     "g": 100,
@@ -1780,8 +1780,8 @@ const ACT2_ZONES = {
     ]
    },
    "Broken Reality": {
-    "hp": 184,
-    "atk": 27,
+    "hp": 368,
+    "atk": 80,
     "spd": 8,
     "xp": 165,
     "g": 100,
@@ -1792,8 +1792,8 @@ const ACT2_ZONES = {
     ]
    },
    "Echo of Everything": {
-    "hp": 319,
-    "atk": 15,
+    "hp": 637,
+    "atk": 46,
     "spd": 4,
     "xp": 165,
     "g": 100,
@@ -1812,7 +1812,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The First Break",
    "mechanic": "apocalypse",
-   "atk": 45,
+   "atk": 134,
    "spd": 5,
    "xp": 4000,
    "g": 2100,
@@ -1826,7 +1826,7 @@ const ACT2_ZONES = {
    ],
    "apocalypseTurn": 6,
    "apocalypseDmg": 44,
-   "hp": 1195
+   "hp": 3585
   },
   "quest": {
    "name": "Where the Break Began: Clear the Way",
@@ -1881,8 +1881,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Rust Remnant": {
-    "hp": 252,
-    "atk": 20,
+    "hp": 504,
+    "atk": 59,
     "spd": 5,
     "xp": 170,
     "g": 103,
@@ -1893,8 +1893,8 @@ const ACT2_ZONES = {
     ]
    },
    "Decay Wisp": {
-    "hp": 189,
-    "atk": 27,
+    "hp": 378,
+    "atk": 82,
     "spd": 8,
     "xp": 170,
     "g": 103,
@@ -1905,8 +1905,8 @@ const ACT2_ZONES = {
     ]
    },
    "Unmended Shard": {
-    "hp": 328,
-    "atk": 16,
+    "hp": 655,
+    "atk": 47,
     "spd": 4,
     "xp": 170,
     "g": 103,
@@ -1925,7 +1925,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Unmended",
    "mechanic": "phase",
-   "atk": 46,
+   "atk": 137,
    "spd": 5,
    "xp": 4120,
    "g": 2160,
@@ -1941,7 +1941,7 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 1240
+   "hp": 3720
   },
   "quest": {
    "name": "The First Repair: Clear the Way",
@@ -1996,8 +1996,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Backslide Wraith": {
-    "hp": 259,
-    "atk": 20,
+    "hp": 518,
+    "atk": 61,
     "spd": 5,
     "xp": 175,
     "g": 106,
@@ -2008,8 +2008,8 @@ const ACT2_ZONES = {
     ]
    },
    "Old Habit": {
-    "hp": 194,
-    "atk": 28,
+    "hp": 389,
+    "atk": 85,
     "spd": 8,
     "xp": 175,
     "g": 106,
@@ -2020,8 +2020,8 @@ const ACT2_ZONES = {
     ]
    },
    "Setback Sentinel": {
-    "hp": 337,
-    "atk": 16,
+    "hp": 673,
+    "atk": 48,
     "spd": 4,
     "xp": 175,
     "g": 106,
@@ -2040,7 +2040,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Relapse",
    "mechanic": "inferno",
-   "atk": 47,
+   "atk": 140,
    "spd": 5,
    "xp": 4240,
    "g": 2220,
@@ -2054,7 +2054,7 @@ const ACT2_ZONES = {
    ],
    "infernoTurn": 4,
    "infernoDmg": 38,
-   "hp": 1285
+   "hp": 3855
   },
   "quest": {
    "name": "What Almost Broke Again: Clear the Way",
@@ -2109,8 +2109,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Question Wraith": {
-    "hp": 266,
-    "atk": 21,
+    "hp": 532,
+    "atk": 62,
     "spd": 5,
     "xp": 180,
     "g": 109,
@@ -2121,8 +2121,8 @@ const ACT2_ZONES = {
     ]
    },
    "What-If Echo": {
-    "hp": 200,
-    "atk": 29,
+    "hp": 399,
+    "atk": 87,
     "spd": 8,
     "xp": 180,
     "g": 109,
@@ -2133,8 +2133,8 @@ const ACT2_ZONES = {
     ]
    },
    "Quiet Fear": {
-    "hp": 346,
-    "atk": 17,
+    "hp": 692,
+    "atk": 50,
     "spd": 4,
     "xp": 180,
     "g": 109,
@@ -2153,7 +2153,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Question of After",
    "mechanic": "freeze",
-   "atk": 48,
+   "atk": 143,
    "spd": 5,
    "xp": 4360,
    "g": 2280,
@@ -2167,7 +2167,7 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3200,
-   "hp": 1330
+   "hp": 3990
   },
   "quest": {
    "name": "The Fear After the Storm: Clear the Way",
@@ -2222,8 +2222,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Unity Sentinel": {
-    "hp": 273,
-    "atk": 21,
+    "hp": 546,
+    "atk": 64,
     "spd": 5,
     "xp": 185,
     "g": 112,
@@ -2234,8 +2234,8 @@ const ACT2_ZONES = {
     ]
    },
    "Bonded Construct": {
-    "hp": 205,
-    "atk": 30,
+    "hp": 410,
+    "atk": 90,
     "spd": 8,
     "xp": 185,
     "g": 112,
@@ -2246,8 +2246,8 @@ const ACT2_ZONES = {
     ]
    },
    "Chorus Wisp": {
-    "hp": 355,
-    "atk": 17,
+    "hp": 710,
+    "atk": 51,
     "spd": 4,
     "xp": 185,
     "g": 112,
@@ -2266,7 +2266,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Unity Ward",
    "mechanic": "devour",
-   "atk": 49,
+   "atk": 147,
    "spd": 5,
    "xp": 4480,
    "g": 2340,
@@ -2281,7 +2281,7 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 40,
    "staggerPct": 0.35,
-   "hp": 1375
+   "hp": 4125
   },
   "quest": {
    "name": "Everyone, Together: Clear the Way",
@@ -2336,8 +2336,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Dawnlight Sentinel": {
-    "hp": 280,
-    "atk": 22,
+    "hp": 560,
+    "atk": 66,
     "spd": 5,
     "xp": 190,
     "g": 115,
@@ -2348,8 +2348,8 @@ const ACT2_ZONES = {
     ]
    },
    "Last Shadow": {
-    "hp": 210,
-    "atk": 31,
+    "hp": 420,
+    "atk": 92,
     "spd": 8,
     "xp": 190,
     "g": 115,
@@ -2360,8 +2360,8 @@ const ACT2_ZONES = {
     ]
    },
    "First Light Construct": {
-    "hp": 364,
-    "atk": 18,
+    "hp": 728,
+    "atk": 53,
     "spd": 4,
     "xp": 190,
     "g": 115,
@@ -2380,7 +2380,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Daybreak Incarnate",
    "mechanic": "resurrect",
-   "atk": 50,
+   "atk": 150,
    "spd": 5,
    "xp": 4600,
    "g": 2400,
@@ -2393,11 +2393,11 @@ const ACT2_ZONES = {
     "#7a3aba"
    ],
    "lives": [
-    280,
-    270,
-    260,
-    250,
-    240
+    840,
+    810,
+    780,
+    750,
+    720
    ],
    "lifeNames": [
     "Dusk",
@@ -2460,8 +2460,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Threshold Warden": {
-    "hp": 287,
-    "atk": 23,
+    "hp": 574,
+    "atk": 68,
     "spd": 5,
     "xp": 195,
     "g": 118,
@@ -2472,8 +2472,8 @@ const ACT2_ZONES = {
     ]
    },
    "Roadless Wisp": {
-    "hp": 215,
-    "atk": 32,
+    "hp": 431,
+    "atk": 95,
     "spd": 8,
     "xp": 195,
     "g": 118,
@@ -2484,8 +2484,8 @@ const ACT2_ZONES = {
     ]
    },
    "Waymarker Construct": {
-    "hp": 373,
-    "atk": 18,
+    "hp": 746,
+    "atk": 54,
     "spd": 4,
     "xp": 195,
     "g": 118,
@@ -2504,7 +2504,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Wayfinder",
    "mechanic": "phase",
-   "atk": 51,
+   "atk": 153,
    "spd": 5,
    "xp": 4720,
    "g": 2460,
@@ -2520,7 +2520,7 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 1465
+   "hp": 4395
   },
   "quest": {
    "name": "The Unmapped Road: Clear the Way",
@@ -2575,8 +2575,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Riptide Fiend": {
-    "hp": 294,
-    "atk": 23,
+    "hp": 588,
+    "atk": 70,
     "spd": 5,
     "xp": 200,
     "g": 121,
@@ -2587,8 +2587,8 @@ const ACT2_ZONES = {
     ]
    },
    "Coral Sentinel": {
-    "hp": 221,
-    "atk": 32,
+    "hp": 441,
+    "atk": 97,
     "spd": 8,
     "xp": 200,
     "g": 121,
@@ -2599,8 +2599,8 @@ const ACT2_ZONES = {
     ]
    },
    "Driftwood Horror": {
-    "hp": 382,
-    "atk": 19,
+    "hp": 764,
+    "atk": 56,
     "spd": 4,
     "xp": 200,
     "g": 121,
@@ -2619,7 +2619,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Tidereaver",
    "mechanic": "drown",
-   "atk": 52,
+   "atk": 157,
    "spd": 5,
    "xp": 4840,
    "g": 2520,
@@ -2634,7 +2634,7 @@ const ACT2_ZONES = {
    "drownTurn": 4,
    "drownDmg": 36,
    "drownSaveChance": 0.5,
-   "hp": 1510
+   "hp": 4530
   },
   "quest": {
    "name": "The Borrowed Coast: Clear the Way",
@@ -2689,8 +2689,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Salt Wraith": {
-    "hp": 301,
-    "atk": 24,
+    "hp": 602,
+    "atk": 71,
     "spd": 5,
     "xp": 205,
     "g": 124,
@@ -2701,8 +2701,8 @@ const ACT2_ZONES = {
     ]
    },
    "Ledger Enforcer": {
-    "hp": 226,
-    "atk": 33,
+    "hp": 452,
+    "atk": 100,
     "spd": 8,
     "xp": 205,
     "g": 124,
@@ -2713,8 +2713,8 @@ const ACT2_ZONES = {
     ]
    },
    "Debt Collector Construct": {
-    "hp": 391,
-    "atk": 19,
+    "hp": 783,
+    "atk": 57,
     "spd": 4,
     "xp": 205,
     "g": 124,
@@ -2733,7 +2733,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Ledgerbound",
    "mechanic": "resurrect",
-   "atk": 53,
+   "atk": 160,
    "spd": 5,
    "xp": 4960,
    "g": 2580,
@@ -2746,8 +2746,8 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "lives": [
-    288,
-    278
+    864,
+    834
    ],
    "lifeNames": [
     "The Owed",
@@ -2807,8 +2807,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Undertow Whisper": {
-    "hp": 308,
-    "atk": 24,
+    "hp": 616,
+    "atk": 73,
     "spd": 5,
     "xp": 210,
     "g": 127,
@@ -2819,8 +2819,8 @@ const ACT2_ZONES = {
     ]
    },
    "Drowned Malcontent": {
-    "hp": 231,
-    "atk": 34,
+    "hp": 462,
+    "atk": 102,
     "spd": 8,
     "xp": 210,
     "g": 127,
@@ -2831,8 +2831,8 @@ const ACT2_ZONES = {
     ]
    },
    "Silent Agitator": {
-    "hp": 400,
-    "atk": 20,
+    "hp": 801,
+    "atk": 59,
     "spd": 4,
     "xp": 210,
     "g": 127,
@@ -2851,7 +2851,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Undertow",
    "mechanic": "devour",
-   "atk": 54,
+   "atk": 163,
    "spd": 5,
    "xp": 5080,
    "g": 2640,
@@ -2866,7 +2866,7 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 42,
    "staggerPct": 0.35,
-   "hp": 1600
+   "hp": 4800
   },
   "quest": {
    "name": "The Quiet Uprising: Clear the Way",
@@ -2921,8 +2921,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Horizon Sentinel": {
-    "hp": 315,
-    "atk": 25,
+    "hp": 630,
+    "atk": 75,
     "spd": 5,
     "xp": 215,
     "g": 130,
@@ -2933,8 +2933,8 @@ const ACT2_ZONES = {
     ]
    },
    "Farlight Construct": {
-    "hp": 236,
-    "atk": 35,
+    "hp": 473,
+    "atk": 105,
     "spd": 8,
     "xp": 215,
     "g": 130,
@@ -2945,8 +2945,8 @@ const ACT2_ZONES = {
     ]
    },
    "Wandering Star Wisp": {
-    "hp": 410,
-    "atk": 20,
+    "hp": 819,
+    "atk": 60,
     "spd": 4,
     "xp": 215,
     "g": 130,
@@ -2965,7 +2965,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Horizon Keeper",
    "mechanic": "apocalypse",
-   "atk": 56,
+   "atk": 167,
    "spd": 5,
    "xp": 5200,
    "g": 2700,
@@ -2979,7 +2979,7 @@ const ACT2_ZONES = {
    ],
    "apocalypseTurn": 6,
    "apocalypseDmg": 46,
-   "hp": 1645
+   "hp": 4935
   },
   "quest": {
    "name": "Where the Walk Leads: Clear the Way",
@@ -3034,8 +3034,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Closed-Eye Acolyte": {
-    "hp": 322,
-    "atk": 26,
+    "hp": 644,
+    "atk": 77,
     "spd": 5,
     "xp": 220,
     "g": 133,
@@ -3046,8 +3046,8 @@ const ACT2_ZONES = {
     ]
    },
    "Grief Chanter": {
-    "hp": 242,
-    "atk": 36,
+    "hp": 483,
+    "atk": 108,
     "spd": 8,
     "xp": 220,
     "g": 133,
@@ -3058,8 +3058,8 @@ const ACT2_ZONES = {
     ]
    },
    "Veiled Zealot": {
-    "hp": 419,
-    "atk": 20,
+    "hp": 837,
+    "atk": 61,
     "spd": 4,
     "xp": 220,
     "g": 133,
@@ -3078,7 +3078,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Hollow Prophet",
    "mechanic": "freeze",
-   "atk": 57,
+   "atk": 170,
    "spd": 5,
    "xp": 5320,
    "g": 2760,
@@ -3092,7 +3092,7 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3200,
-   "hp": 1690,
+   "hp": 5070,
    "img": "assets/boss/thehollowprophet.jpg"
   },
   "quest": {
@@ -3148,8 +3148,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Choir Remnant": {
-    "hp": 329,
-    "atk": 26,
+    "hp": 658,
+    "atk": 79,
     "spd": 5,
     "xp": 225,
     "g": 136,
@@ -3160,8 +3160,8 @@ const ACT2_ZONES = {
     ]
    },
    "Hymnless Cantor": {
-    "hp": 247,
-    "atk": 37,
+    "hp": 494,
+    "atk": 110,
     "spd": 8,
     "xp": 225,
     "g": 136,
@@ -3172,8 +3172,8 @@ const ACT2_ZONES = {
     ]
    },
    "Candle Bearer": {
-    "hp": 428,
-    "atk": 21,
+    "hp": 855,
+    "atk": 63,
     "spd": 4,
     "xp": 225,
     "g": 136,
@@ -3192,7 +3192,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Sister Wren, the Last Believer",
    "mechanic": "resurrect",
-   "atk": 58,
+   "atk": 173,
    "spd": 5,
    "xp": 5440,
    "g": 2820,
@@ -3205,9 +3205,9 @@ const ACT2_ZONES = {
     "#7a3aba"
    ],
    "lives": [
-    322,
-    312,
-    302
+    966,
+    936,
+    906
    ],
    "lifeNames": [
     "The Doctrine",
@@ -3269,8 +3269,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Old Name": {
-    "hp": 336,
-    "atk": 27,
+    "hp": 672,
+    "atk": 80,
     "spd": 5,
     "xp": 230,
     "g": 139,
@@ -3281,8 +3281,8 @@ const ACT2_ZONES = {
     ]
    },
    "Remembered Slight": {
-    "hp": 252,
-    "atk": 38,
+    "hp": 504,
+    "atk": 113,
     "spd": 8,
     "xp": 230,
     "g": 139,
@@ -3293,8 +3293,8 @@ const ACT2_ZONES = {
     ]
    },
    "Unsent Grievance": {
-    "hp": 437,
-    "atk": 21,
+    "hp": 874,
+    "atk": 64,
     "spd": 4,
     "xp": 230,
     "g": 139,
@@ -3313,7 +3313,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Old Names",
    "mechanic": "resurrect",
-   "atk": 59,
+   "atk": 176,
    "spd": 5,
    "xp": 5560,
    "g": 2880,
@@ -3326,11 +3326,11 @@ const ACT2_ZONES = {
     "#3a7a3a"
    ],
    "lives": [
-    348,
-    343,
-    338,
-    333,
-    328
+    1044,
+    1029,
+    1014,
+    999,
+    984
    ],
    "lifeNames": [
     "The Ex-Mother-in-Law",
@@ -3393,8 +3393,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Associate Wraith": {
-    "hp": 343,
-    "atk": 27,
+    "hp": 686,
+    "atk": 82,
     "spd": 5,
     "xp": 235,
     "g": 142,
@@ -3405,8 +3405,8 @@ const ACT2_ZONES = {
     ]
    },
    "Non-Compete Bramble": {
-    "hp": 257,
-    "atk": 38,
+    "hp": 515,
+    "atk": 115,
     "spd": 8,
     "xp": 235,
     "g": 142,
@@ -3417,8 +3417,8 @@ const ACT2_ZONES = {
     ]
    },
    "Overtime Root": {
-    "hp": 446,
-    "atk": 22,
+    "hp": 892,
+    "atk": 66,
     "spd": 4,
     "xp": 235,
     "g": 142,
@@ -3437,7 +3437,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Robin C.",
    "mechanic": "rampage",
-   "atk": 60,
+   "atk": 180,
    "spd": 5,
    "xp": 5680,
    "g": 2940,
@@ -3451,7 +3451,7 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 48,
-   "hp": 1825,
+   "hp": 5475,
    "img": "assets/boss/robin.jpg"
   },
   "quest": {
@@ -3507,8 +3507,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Overtime Wraith": {
-    "hp": 350,
-    "atk": 28,
+    "hp": 700,
+    "atk": 84,
     "spd": 5,
     "xp": 240,
     "g": 145,
@@ -3519,8 +3519,8 @@ const ACT2_ZONES = {
     ]
    },
    "Off-Day Enforcer": {
-    "hp": 263,
-    "atk": 39,
+    "hp": 525,
+    "atk": 118,
     "spd": 8,
     "xp": 240,
     "g": 145,
@@ -3531,8 +3531,8 @@ const ACT2_ZONES = {
     ]
    },
    "Loading Dock Sentinel": {
-    "hp": 455,
-    "atk": 22,
+    "hp": 910,
+    "atk": 67,
     "spd": 4,
     "xp": 240,
     "g": 145,
@@ -3551,7 +3551,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Jeff, the SK",
    "mechanic": "lightning_rod",
-   "atk": 61,
+   "atk": 183,
    "spd": 5,
    "xp": 5800,
    "g": 3000,
@@ -3565,7 +3565,7 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 50,
-   "hp": 1870,
+   "hp": 5610,
    "img": "assets/boss/jeff.jpg"
   },
   "quest": {
@@ -3621,8 +3621,8 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Harvest Golem": {
-    "hp": 357,
-    "atk": 29,
+    "hp": 714,
+    "atk": 86,
     "spd": 5,
     "xp": 245,
     "g": 148,
@@ -3633,8 +3633,8 @@ const ACT2_ZONES = {
     ]
    },
    "Sunreach Guardian": {
-    "hp": 268,
-    "atk": 40,
+    "hp": 536,
+    "atk": 120,
     "spd": 8,
     "xp": 245,
     "g": 148,
@@ -3645,8 +3645,8 @@ const ACT2_ZONES = {
     ]
    },
    "Bloomwatcher": {
-    "hp": 464,
-    "atk": 23,
+    "hp": 928,
+    "atk": 69,
     "spd": 4,
     "xp": 245,
     "g": 148,
@@ -3665,7 +3665,7 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Skarrowyn, the Split Horizon",
    "mechanic": "phase",
-   "atk": 62,
+   "atk": 186,
    "spd": 5,
    "xp": 5920,
    "g": 3060,
@@ -3681,7 +3681,7 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 1915,
+   "hp": 5745,
    "img": "assets/boss/skarrowyn.jpg"
   },
   "quest": {
