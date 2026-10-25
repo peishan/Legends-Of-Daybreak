@@ -2947,6 +2947,7 @@ let currentChapter = null, jrIdx = -1, jrTyping = false, jrTypeTimer = null;
 
 ACT2_CHAPTERS.forEach(c => CHAPTERS.push(c));
 Object.assign(JPORTRAITS, ACT2_PORTRAITS);
+JPORTRAITS['Mez'] = JPORTRAITS['Mezstorm'];
 
 function renderJournalSelect(){
   const list = document.getElementById('jsel-chapter-list');

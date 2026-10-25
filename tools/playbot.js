@@ -4,6 +4,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const file = path.resolve(process.argv[2] || path.join(__dirname, '..', 'index.html'));
 const maxZones = +process.argv[3] || 9999;
+let CHAPTER_TOTAL = 0;
 
 const virtualClock = () => {
   let now = 1.7e12, seq = 0; const q = [];
@@ -81,7 +82,8 @@ const bot = async (maxZones) => {
     readChapters(); shop();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
   }
-  return { out, level: P.level, errs: window.__errs || [] };
+  const unread = CHAPTERS.filter(c => !GameState.readChapters.has(c.id)).map(c => c.id);
+  return { out, level: P.level, unread, errs: window.__errs || [] };
 };
 
 (async () => {
@@ -90,6 +92,7 @@ const bot = async (maxZones) => {
   await p.addInitScript(virtualClock);
   await p.goto('file://' + file); await p.waitForTimeout(800);
   const t0 = Date.now();
+  CHAPTER_TOTAL = await p.evaluate(() => CHAPTERS.length);
   const res = await p.evaluate(bot, maxZones);
   const rows = res.out;
   const walls = rows.filter(r => r.wall), hard = rows.filter(r => r.deaths > 0 && !r.wall);
@@ -100,6 +103,7 @@ const bot = async (maxZones) => {
   const mins = rows.map(r => r.bossMin).filter(x => x !== undefined).sort((a, b) => a - b);
   console.log('lowest HP fraction in first boss attempt: min', mins[0], 'p10', mins[Math.floor(mins.length * .1)], 'median', mins[Math.floor(mins.length / 2)], 'p90', mins[Math.floor(mins.length * .9)]);
   console.log('hardest:', rows.filter(r => r.bossMin !== undefined).sort((a, b) => a.bossMin - b.bossMin).slice(0, 8).map(r => `${r.zone} L${r.lvlIn} ${r.bossMin}`).join('; '));
+  console.log(`chapters read ${CHAPTER_TOTAL - res.unread.length}/${CHAPTER_TOTAL}`, res.unread.length ? 'unread: ' + res.unread.slice(0, 20).join(',') : '');
   console.log('page errors:', [...errs, ...res.errs].slice(0, 5));
   require('fs').writeFileSync(process.env.PLAYBOT_OUT || '/dev/null', JSON.stringify(rows, null, 1));
   await b.close();

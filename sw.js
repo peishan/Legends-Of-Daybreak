@@ -3,7 +3,7 @@
 const CACHE_VERSION = 'daybreak-v1';
 
 // App shell: network-first so updates land on the next open; falls back to cache offline.
-const SHELL = ['./', './index.html', './styles.css', './game.js', './sync.js', './act2-data.js', './act3-data.js', './manifest.json'];
+const SHELL = ['./', './index.html', './styles.css', './game.js', './sync.js', './act2-data.js', './act3-data.js', './chapters-act2.js', './manifest.json'];
 // Small assets that rarely change are precached; a missing one must not break install.
 const PRECACHE = ['./icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png'];
 
