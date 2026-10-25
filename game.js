@@ -809,6 +809,36 @@ function spendActMats(n){
   for(const [m] of stacks){ const take = Math.min(n, GameState.materials[m]); GameState.materials[m] -= take; n -= take; if(!n) break; }
 }
 
+
+/* The Endless Thinning has no fixed ceiling (as in V2): its stats are rebuilt from the player's current level at the
+   start of every battle, using the strength curve the playtest bot measured (ENDLESS_CURVE: [level, mhp, def, dmg]). */
+function curveAt(level){
+  const c = ENDLESS_CURVE; if(!c.length) return { mhp:P_FALLBACK(level), def:level, dmg:level };
+  if(level <= c[0][0]) return { mhp:c[0][1], def:c[0][2], dmg:c[0][3] };
+  for(let i = 1; i < c.length; i++){
+    if(level <= c[i][0]){ const t = (level - c[i-1][0]) / (c[i][0] - c[i-1][0]);
+      return { mhp:c[i-1][1] + t*(c[i][1]-c[i-1][1]), def:c[i-1][2] + t*(c[i][2]-c[i-1][2]), dmg:c[i-1][3] + t*(c[i][3]-c[i-1][3]) }; }
+  }
+  const a = c[c.length-2], b = c[c.length-1], t = (level - b[0]) / (b[0] - a[0]); // past the curve: keep climbing at the last slope
+  return { mhp:b[1] + t*(b[1]-a[1]), def:b[2] + t*(b[2]-a[2]), dmg:b[3] + t*(b[3]-a[3]) };
+}
+const P_FALLBACK = (l) => 80 + 14*l;
+function liveZone(zid){
+  const z = ZONES[zid]; if(!z || !z.dynamic) return;
+  const L = GameState.player.level, cal = curveAt(L), levelXp = 30 + (L-1)*25;
+  const tmpl = [{ hp:1, atk:1, spd:5 }, { hp:.75, atk:1.4, spd:8 }, { hp:1.3, atk:.8, spd:4 }];
+  Object.values(z.enemyDefs).forEach((d, k) => {
+    const t = tmpl[k % 3];
+    d.hp = Math.round(cal.dmg*4*t.hp); d.atk = Math.round((cal.def + cal.mhp*.02)*t.atk); d.spd = t.spd;
+    d.xp = Math.max(1, Math.round(levelXp*.04)); d.g = Math.round(40 + L*6);
+  });
+  const b = z.boss, atk = Math.round(cal.def + cal.mhp*.12);
+  b.atk = atk; b.xp = Math.round(levelXp*.5); b.g = Math.round(500 + L*30);
+  if(b.mechanic === 'resurrect') b.lives = b.lives.map(() => Math.round(cal.dmg*28 / b.lives.length)); else b.hp = Math.round(cal.dmg*28);
+  for(const k of ['rampageDmg','infernoDmg','rodDmg','drownDmg','devourDmg','apocalypseDmg']) if(k in b) b[k] = Math.round(atk * ({ rampageDmg:1.1, infernoDmg:1.1, rodDmg:1.1, drownDmg:1.1, devourDmg:1.2, apocalypseDmg:1.4 }[k]));
+  z.quest.xpReward = Math.round(levelXp*.2); z.quest.goldReward = Math.round(200 + L*10);
+}
+
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
 let frozenUntil = {};
 function isFrozen(key){ return frozenUntil[key] && Date.now() < frozenUntil[key]; }
@@ -1330,6 +1360,7 @@ function resetBattleUI(){
 }
 
 function startEncounter(){
+  liveZone(GameState.currentZone);
   const zone = ZONES[GameState.currentZone];
   const names = Object.keys(zone.enemyDefs);
   const name = names[Math.floor(Math.random()*names.length)];
@@ -1349,6 +1380,7 @@ function startEncounter(){
 }
 
 function startBoss(){
+  liveZone(GameState.currentZone);
   const zone = ZONES[GameState.currentZone];
   const boss = zone.boss;
   isBoss = true; inBattle = true; paused = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
@@ -1380,6 +1412,7 @@ function getReachedZoneIds(){
 function startTrainingGrind(zoneId){
   trainingMode = 'grind'; trainingZoneId = zoneId;
   showScreen('map');
+  liveZone(zoneId);
   const zone = ZONES[zoneId];
   const names = Object.keys(zone.enemyDefs);
   const name = names[Math.floor(Math.random()*names.length)];
@@ -1401,6 +1434,7 @@ function startTrainingGrind(zoneId){
 function startTrainingRematch(zoneId){
   trainingMode = 'rematch'; trainingZoneId = zoneId;
   showScreen('map');
+  liveZone(zoneId);
   const zone = ZONES[zoneId];
   const boss = zone.boss;
   isBoss = true; inBattle = true; paused = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
