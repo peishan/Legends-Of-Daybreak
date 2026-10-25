@@ -414,6 +414,31 @@
   .devourer-body:before{ content:''; position:absolute; top:28px; left:50%; transform:translateX(-50%); width:34px;height:20px; background:#000; border-radius:50%; box-shadow:inset 0 0 12px 4px #b87affaa; }
   .astral-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #b87aff; filter:drop-shadow(0 0 10px #9a4affdd); }
 
+  /* Act 2 (V2 port): element-tinted zones, journal pages and sprites */
+  .act2-body{ width:64px; height:78px; position:relative; background:linear-gradient(160deg,var(--c1,#ccc),var(--c2,#444) 70%,#0a0810); clip-path:polygon(50% 0%,92% 28%,100% 74%,70% 100%,30% 100%,0% 74%,8% 28%); box-shadow:0 0 14px var(--c1,#888); opacity:.92; }
+  .act2-body:before, .act2-body:after{ content:''; position:absolute; top:26px; width:7px; height:8px; background:#fff; border-radius:50%; box-shadow:0 0 6px 2px var(--c1,#fff); }
+  .act2-body:before{ left:18px; } .act2-body:after{ right:18px; }
+  .act2-crown{ position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-bottom:20px solid var(--c1,#fff); filter:drop-shadow(0 0 6px var(--c1,#fff)); }
+  .act2-art{ width:120px; height:160px; background-size:cover; background-position:center top; border-radius:10px; border:2px solid #0008; box-shadow:0 0 18px #000a; }
+  .jr-comic{ position:absolute; inset:0; background-size:cover; background-position:center top; opacity:.2; filter:saturate(.8); pointer-events:none; }
+  #map-scene.zone-act2-void{ background:linear-gradient(180deg,#10081c 0%, #1c1030 50%, #2a1848 100%); }
+  .theme-act2-void #jr-scene{ background:linear-gradient(180deg,#10081c 0%, #1c1030 50%, #2a1848 100%); }
+  .theme-act2-void .num{ background:#1c1030; color:#a888ff; }
+  #map-scene.zone-act2-none{ background:linear-gradient(180deg,#1a1814 0%, #262218 50%, #3a3220 100%); }
+  .theme-act2-none #jr-scene{ background:linear-gradient(180deg,#1a1814 0%, #262218 50%, #3a3220 100%); }
+  .theme-act2-none .num{ background:#262218; color:#d8c8a0; }
+  #map-scene.zone-act2-fire{ background:linear-gradient(180deg,#2a0e08 0%, #3c1a0c 50%, #522410 100%); }
+  .theme-act2-fire #jr-scene{ background:linear-gradient(180deg,#2a0e08 0%, #3c1a0c 50%, #522410 100%); }
+  .theme-act2-fire .num{ background:#3c1a0c; color:#ff8a4a; }
+  #map-scene.zone-act2-ice{ background:linear-gradient(180deg,#101c2c 0%, #1c3048 50%, #284868 100%); }
+  .theme-act2-ice #jr-scene{ background:linear-gradient(180deg,#101c2c 0%, #1c3048 50%, #284868 100%); }
+  .theme-act2-ice .num{ background:#1c3048; color:#a8e0ff; }
+  #map-scene.zone-act2-lightning{ background:linear-gradient(180deg,#14182c 0%, #1e2848 50%, #2c3c68 100%); }
+  .theme-act2-lightning #jr-scene{ background:linear-gradient(180deg,#14182c 0%, #1e2848 50%, #2c3c68 100%); }
+  .theme-act2-lightning .num{ background:#1e2848; color:#ffe066; }
+  #map-scene.zone-act2-arcane{ background:linear-gradient(180deg,#1c1030 0%, #2c1848 50%, #44206a 100%); }
+  .theme-act2-arcane #jr-scene{ background:linear-gradient(180deg,#1c1030 0%, #2c1848 50%, #44206a 100%); }
+  .theme-act2-arcane .num{ background:#2c1848; color:#e0a8ff; }
   /* Infernal Crucible zone decor */
   #map-scene.zone-crucible{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 45%, #4a1e0c 100%); }
   .magma-vein{ position:absolute; bottom:0; width:4px; background:linear-gradient(180deg, #ff6a2e, #ff2e0e); opacity:.6; box-shadow:0 0 10px 3px #ff6a2e88; }
@@ -1087,6 +1112,7 @@
 
 </div>
 
+<script src="act2-data.js"></script>
 <script>
 /* =========================================================================
    SHARED GAME STATE — single source of truth read/written by every screen
@@ -1785,6 +1811,14 @@ const ZONES = {
   }
 };
 
+/* Act 2 (ported from Legends of Daybreak V2): the world after the Nexus falls */
+ZONES['the-nexus'].nextZone = 'the-breaking';
+ZONES['the-nexus'].climax = true;
+Object.assign(ZONES, ACT2_ZONES);
+for(const id in ACT2_ZONES){
+  GameState.zoneState[id] = { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false };
+}
+
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
 let frozenUntil = {};
 function isFrozen(key){ return frozenUntil[key] && Date.now() < frozenUntil[key]; }
@@ -2043,6 +2077,16 @@ function buildZoneDecor(zone){
       scene.appendChild(a);
     }
   }
+  if(zone.theme.startsWith('zone-act2-')){
+    const acc = ACT2_ELEMENTS[zone.theme.slice(10)][3];
+    for(let i=0;i<24;i++){
+      const a = document.createElement('div'); a.className='dragon-ash'; a.style.background = acc;
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*6)+'s';
+      a.style.animationDuration=(5+Math.random()*4)+'s';
+      scene.appendChild(a);
+    }
+  }
   if(zone.theme === 'zone-nexus'){
     const colors = ['#c86cff','#ff8a4a','#a8e0ff','#ffe066','#8a5cff'];
     for(let i=0;i<30;i++){
@@ -2147,12 +2191,14 @@ function spawnEnemySprite(entry, isBossFlag){
   enemySprite.innerHTML = '';
   enemySprite.classList.toggle('boss-body', !!isBossFlag);
   const body = document.createElement('div'); body.className = entry.spriteCls || entry.cls;
+  if(entry.img){ body.className = 'act2-art'; body.style.backgroundImage = `url(${entry.img})`; }
+  else if(entry.tint){ body.style.setProperty('--c1', entry.tint[0]); body.style.setProperty('--c2', entry.tint[1]); }
   if(entry.ears){
     const l = document.createElement('div'); l.className='goblin-ear l';
     const r = document.createElement('div'); r.className='goblin-ear r';
     body.appendChild(l); body.appendChild(r);
   }
-  if(isBossFlag){
+  if(isBossFlag && !entry.img){
     const crown = document.createElement('div'); crown.className = entry.crownCls || 'crown';
     body.appendChild(crown);
   }
@@ -2327,7 +2373,7 @@ function startBoss(){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
-  playTrack(GameState.currentZone === 'the-nexus' ? 'climax' : 'antagonist');
+  playTrack(ZONES[GameState.currentZone].climax ? 'climax' : 'antagonist');
 }
 
 function getReachedZoneIds(){
@@ -2380,7 +2426,7 @@ function startTrainingRematch(zoneId){
   document.getElementById('battle-screen').classList.add('show');
   updateAutoRow();
   startTicking();
-  playTrack(zoneId === 'the-nexus' ? 'climax' : 'antagonist');
+  playTrack(ZONES[zoneId].climax ? 'climax' : 'antagonist');
 }
 
 function continueTraining(){
@@ -3882,6 +3928,8 @@ const JPORTRAITS = PORTRAITS;
 
 let currentChapter = null, jrIdx = -1, jrTyping = false, jrTypeTimer = null;
 
+ACT2_CHAPTERS.forEach(c => CHAPTERS.push(c));
+
 function renderJournalSelect(){
   const list = document.getElementById('jsel-chapter-list');
   list.innerHTML = '';
@@ -4125,6 +4173,16 @@ function buildSceneDecor(theme){
       scene.appendChild(a);
     }
   }
+  if(theme.startsWith('theme-act2-')){
+    const acc = ACT2_ELEMENTS[theme.slice(11)][3];
+    for(let i=0;i<18;i++){
+      const a = document.createElement('div'); a.className='dragon-ash'; a.style.background = acc;
+      a.style.left=(Math.random()*100)+'%';
+      a.style.animationDelay=(Math.random()*6)+'s';
+      a.style.animationDuration=(5+Math.random()*4)+'s';
+      scene.appendChild(a);
+    }
+  }
   if(theme === 'theme-nexus'){
     const colors = ['#c86cff','#ff8a4a','#a8e0ff','#ffe066','#8a5cff'];
     for(let i=0;i<36;i++){
@@ -4174,8 +4232,13 @@ function renderJrScene(){
     portraitSlot.classList.remove('show'); box.classList.add('no-portrait');
   } else {
     speakerEl.textContent = s.speaker; speakerEl.classList.add(s.speaker.toLowerCase().replace(/\s+/g, '-'));
-    document.getElementById('jr-portrait-img').src = JPORTRAITS[s.speaker] || '';
-    portraitSlot.classList.add('show'); box.classList.remove('no-portrait');
+    const pimg = JPORTRAITS[s.speaker];
+    if(pimg){
+      document.getElementById('jr-portrait-img').src = pimg;
+      portraitSlot.classList.add('show'); box.classList.remove('no-portrait');
+    } else {
+      portraitSlot.classList.remove('show'); box.classList.add('no-portrait');
+    }
   }
   typeText(s.text);
   updateJrProgress();
@@ -4213,6 +4276,10 @@ function openReader(chapterId, rebuildList){
   jrIdx = -1;
   document.getElementById('jr-end-card').classList.remove('show');
   buildSceneDecor(ch.theme);
+  if(ch.page){
+    const pg = document.createElement('div'); pg.className = 'jr-comic'; pg.style.backgroundImage = `url(${ch.page})`;
+    document.getElementById('jr-scene').prepend(pg);
+  }
   buildJrProgress(ch.scenes);
   document.getElementById('jr-tc-eyebrow').textContent = 'Chapter ' + ch.id;
   document.getElementById('jr-tc-title').textContent = ch.title;
