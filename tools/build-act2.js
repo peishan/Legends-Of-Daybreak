@@ -5,6 +5,10 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const V2 = process.argv[2];
 if (!V2) { console.error('usage: node tools/build-act2.js <v2 repo path>'); process.exit(1); }
 const OUT = path.join(__dirname, '..');
+// Per-zone player strength measured by tools/playbot.js (index = position in the full zone chain, 15 original zones first).
+// Boss/enemy stats are derived from it so fights cost a similar share of HP all the way up. Monotone-smoothed.
+const CAL = (() => { try { const c = JSON.parse(fs.readFileSync(path.join(__dirname, 'calibration.json'), 'utf8')); let m = { mhp: 0, def: 0, dmg: 0 }; return c.map(x => (m = { mhp: Math.max(m.mhp, x.mhp), def: Math.max(m.def, x.def), dmg: Math.max(m.dmg, x.dmg) })); } catch (e) { return null; } })();
+const calFor = (i) => CAL ? CAL[Math.min(i + 15, CAL.length - 1)] : null;
 
 const g = fs.readFileSync(path.join(V2, 'game.js'), 'utf8');
 const zoneRows = {};
@@ -152,18 +156,21 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
   const c = cid ? ch.find(x => x.id === cid) : { quote: '' }; if (!c) throw new Error('chapter ' + cid);
   const elem = ELEM[r.elem] ? r.elem : 'none';
   const bossName = bossOverride || c.bossName.trim();
-  const atkB = Math.round((28 + i * 1.1) * 3 * easy);
+  const cal = calFor(i);
+  const atkB = cal ? Math.round((cal.def + cal.mhp * 0.12) * easy) : Math.round((28 + i * 1.1) * 3 * easy);
   const [mech, mp] = typeof m3 === 'function' ? m3(atkB) : m3;
-  const bossHp = Math.round((520 + i * 45) * 3 * easy); // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
+  const bossHp = cal ? Math.round(cal.dmg * 28 * easy) : Math.round((520 + i * 45) * 3 * easy); // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
   const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
   if (!mp.lives) boss.hp = bossHp;
-  if (mech === 'resurrect') boss.lives = mp.lives.map(l => Math.round((l + i * 6) * 3 * easy));
+  if (mech === 'resurrect') boss.lives = cal ? mp.lives.map(() => Math.round(cal.dmg * 28 * easy / mp.lives.length)) : mp.lives.map(l => Math.round((l + i * 6) * 3 * easy));
+  const DMG_KEYS = { rampageDmg: 1.1, infernoDmg: 1.1, rodDmg: 1.1, drownDmg: 1.1, devourDmg: 1.2, apocalypseDmg: 1.4 };
+  if (cal) for (const k in DMG_KEYS) if (k in boss) boss[k] = Math.round(atkB * DMG_KEYS[k]);
   if (art) { boss.img = `assets/boss/${art}.jpg`; rs(path.join(V2, 'bosses', art + '.jpg'), path.join(OUT, boss.img), 360, 82); }
   const enemyDefs = {};
   r.en.forEach((n, k) => {
     const t = [{ hp: 1.0, atk: 1.0, spd: 5 }, { hp: 0.75, atk: 1.4, spd: 8 }, { hp: 1.3, atk: 0.8, spd: 4 }][k % 3];
-    enemyDefs[n] = { hp: Math.round((140 + i * 7) * 2 * easy * t.hp), atk: Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
+    enemyDefs[n] = { hp: cal ? Math.round(cal.dmg * 4 * easy * t.hp) : Math.round((140 + i * 7) * 2 * easy * t.hp), atk: cal ? Math.round((cal.def + cal.mhp * 0.02) * easy * t.atk) : Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
   });
   zones[id] = {
     name: zn, theme: 'zone-act2-' + elem,

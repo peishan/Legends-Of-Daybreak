@@ -91,9 +91,10 @@ const RECIPES = [
 ];
 
 function getCompanionGearBonus(name){
-  const r = RECIPES.find(r => r.type === 'companion_gear' && r.companion === name);
-  if(r && GameState.companionGear[r.id]) return r.bonus;
-  return null;
+  // Bonuses from every crafted piece stack, so the post-Nexus upgrades add to the original gear.
+  const crafted = RECIPES.filter(r => r.type === 'companion_gear' && r.companion === name && GameState.companionGear[r.id]);
+  if(!crafted.length) return null;
+  return crafted.reduce((t, r) => { for(const k in r.bonus) t[k] = (t[k]||0) + r.bonus[k]; return t; }, {});
 }
 
 /* San's real spellbook — Tier 1 & 2 (levels 1-12), matching zones built so far.
@@ -755,6 +756,23 @@ RECIPES.push(
   { id:'focus_draught', n:'Focus Draught', type:'potion', anyAct:6, manaPct:.4, r:'uncommon', d:'Restores 40% of max MP. Brewed from any 6 post-Nexus materials.' },
   { id:'greater_focus', n:'Greater Focus Draught', type:'potion', anyAct:15, manaPct:.8, r:'rare', d:'Restores 80% of max MP. Brewed from any 15 post-Nexus materials.' }
 );
+/* Companion upgrades: three pieces each, forged from the specific loot of three zones along the way. */
+const COMPANION_UPGRADES = {
+  Joel:     { names:['Splinterward Shield','Unity Bulwark','Daybreak Aegis'],        key:'dmgBonus',  amts:[8,18,36] },
+  Aisyah:   { names:['Ledgerblades','Empty-Ledger Fangs','Gilded Reckoning'],         key:'dmgBonus',  amts:[9,20,40] },
+  Mezstorm: { names:['Storm-Sealed Staff','Unbroken Gale','Estranged Thunder'],       key:'dmgBonus',  amts:[9,20,40] },
+  Eliz:     { names:['Mended Mercy','Quiet Nursery Light','Hand That Catches'],       key:'healBonus', amts:[8,18,36] },
+  Senedra:  { names:['Waymarker Bow','Pemmican Road Longbow','Roads Still Walked'],   key:'dmgBonus',  amts:[9,20,40] },
+  Zaki:     { names:['Checked-Seventeen Blade','Rustbound Edge','Steady Sword'],      key:'dmgBonus',  amts:[9,20,40] },
+  Soel:     { names:['Ember Collar','Forgotten Warmth','The Last Purr'],              key:'dmgBonus',  amts:[6,14,28] }
+};
+const UPGRADE_ZONES = ['the-breaking','what-remains-united','the-farthest-kindling'];
+Object.entries(COMPANION_UPGRADES).forEach(([who, u]) => u.names.forEach((n, t) => {
+  const loot = ZONES[UPGRADE_ZONES[t]].lootTable;
+  RECIPES.push({ id:`${who.toLowerCase()}_upgrade${t+1}`, n:`${who}\u2019s ${n}`, type:'companion_gear', companion:who,
+    mats:{ [loot[0]]:3 + t*2, [loot[1]]:2 + t*2 }, bonus:{ [u.key]:u.amts[t] }, r:['rare','rare','epic'][t],
+    d:`+${u.amts[t]} ${u.key==='healBonus'?'healing':'damage'} for ${who}. Stacks with other ${who} gear.` });
+}));
 const actMatTotal = () => Object.entries(GameState.materials).filter(([n]) => !BASE_MATS.has(n)).reduce((t,[,c]) => t + c, 0);
 function spendActMats(n){
   const stacks = Object.entries(GameState.materials).filter(([m,c]) => !BASE_MATS.has(m) && c > 0).sort((a,b) => b[1]-a[1]);
