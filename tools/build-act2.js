@@ -127,6 +127,22 @@ Z.forEach(([id, , cid, , , , , , chs]) => (chs || [cid]).forEach(c => { zoneOfCh
 const iScatter = Z.findIndex(z => z[0] === 'the-scattered-choir');
 const lateX = extra.filter(e => e[6].lv > 65);
 const Zall = [...Z.slice(0, iScatter + 1), ...extra.filter(e => e[6].lv <= 65), ...Z.slice(iScatter + 1), ...lateX];
+// V2's legendary dragons (optional hunts there) become lair zones placed near their V2 unlock levels
+const DRAGONS = [
+  ['vaelithorn', 'Vaelithorn, the Ancient Wyrm', "Vaelithorn's Roost", 'fire', 'Older than the Breaking itself. Its hoard is real, and so is the wait to earn it.', 'the-widows-watch', (a) => ['rampage', { rampageEvery: 4, rampageDmg: Math.round(a * 1.2) }]],
+  ['thessarune', 'Thessarune, the Endless Maw', "Thessarune's Maw", 'void', 'What comes after the Breaking finishes breaking. It does not breathe fire so much as unmake the air where you are standing.', 'what-almost-broke-again', (a) => ['rampage', { rampageEvery: 3, rampageDmg: Math.round(a * 1.3) }]],
+  ['nyxathorne', 'Nyxathorne, the Unmended Wound', 'The Unmended Wound', 'void', 'Every other wound in this world eventually closed. This one refused, out of pure spite, and grew something that could fight back.', 'where-the-walk-leads', (a) => ['phase', { phaseThresholds: [0.66, 0.33] }]],
+  ['corvenna', 'Corvenna, the Root That Waited', "Corvenna's Roots", 'poison', 'Even the Vale had to bury something to become the Vale. It waits, patient as everything else down here, then reaches up for exactly one of you at a time.', 'the-verdant-choir', (a) => ['devour', { devourTurn: 4, devourDmg: Math.round(a * 1.3), staggerPct: 0.35 }]],
+  ['aetherum', 'Aetherum, the Last Question', 'The Last Question', 'arcane', 'Past the deepest root, past the reason the Vale was ever unbroken. It asks, once, at turn six, whether everything still standing behind you was worth what it cost.', 'sunreach-fields', (a) => ['apocalypse', { apocalypseTurn: 6, apocalypseDmg: Math.round(a * 1.4) }]],
+];
+DRAGONS.forEach(([art, bname, zname, elem, d, after, mech]) => {
+  const short = bname.split(',')[0];
+  const row = { lv: 0, elem, d, en: [`${short} Whelp`, `${short} Scale-Guard`, 'Hoard Wraith'], loot: [`${short} Scale`, `${short} Fang`, `${short} Hoard Fragment`] };
+  const entry = [slug(zname), zname, null, mech, art, ['Scorched Hoard', '🐲', 'Scattered Hoard', 'Cinder', '🔥', '"Dragons keep what they keep. I sell what they dropped."'], row, bname, null, { cap: art === 'nyxathorne' || art === 'aetherum' }];
+  const at = Zall.findIndex(z => z[0] === after);
+  Zall.splice(at + 1, 0, entry);
+  if (after === 'sunreach-fields') lateX.unshift(entry); // Aetherum opens the later-worlds file
+});
 const lateIds = new Set(lateX.map(e => e[0]));
 const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choir', 'sunreach-fields']);
 

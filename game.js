@@ -739,11 +739,26 @@ const ZONES = {
 };
 
 /* Act 2 (ported from Legends of Daybreak V2): the world after the Nexus falls */
+const BASE_MATS = new Set(Object.values(ZONES).flatMap(z => z.lootTable)); // materials from the original fifteen zones
 ZONES['the-nexus'].nextZone = 'the-breaking';
 ZONES['the-nexus'].climax = true;
 Object.assign(ZONES, ACT2_ZONES, ACT3_ZONES);
 for(const id in Object.assign({}, ACT2_ZONES, ACT3_ZONES)){
   GameState.zoneState[id] = { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false };
+}
+
+/* Act potions: brewed from any act-zone material (anything not in BASE_MATS), scaled to max HP/MP */
+RECIPES.push(
+  { id:'restorative_draught', n:'Restorative Draught', type:'potion', anyAct:6, healPct:.35, r:'uncommon', d:'Restores 35% of max HP. Brewed from any 6 materials found after the Nexus.' },
+  { id:'greater_restorative', n:'Greater Restorative', type:'potion', anyAct:15, healPct:.7, r:'rare', d:'Restores 70% of max HP. Brewed from any 15 post-Nexus materials.' },
+  { id:'daybreak_elixir', n:'Elixir of Daybreak', type:'potion', anyAct:30, healPct:1, r:'epic', d:'Restores all HP. Brewed from any 30 post-Nexus materials.' },
+  { id:'focus_draught', n:'Focus Draught', type:'potion', anyAct:6, manaPct:.4, r:'uncommon', d:'Restores 40% of max MP. Brewed from any 6 post-Nexus materials.' },
+  { id:'greater_focus', n:'Greater Focus Draught', type:'potion', anyAct:15, manaPct:.8, r:'rare', d:'Restores 80% of max MP. Brewed from any 15 post-Nexus materials.' }
+);
+const actMatTotal = () => Object.entries(GameState.materials).filter(([n]) => !BASE_MATS.has(n)).reduce((t,[,c]) => t + c, 0);
+function spendActMats(n){
+  const stacks = Object.entries(GameState.materials).filter(([m,c]) => !BASE_MATS.has(m) && c > 0).sort((a,b) => b[1]-a[1]);
+  for(const [m] of stacks){ const take = Math.min(n, GameState.materials[m]); GameState.materials[m] -= take; n -= take; if(!n) break; }
 }
 
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
@@ -2299,25 +2314,29 @@ function usePotion(){
   if(!pReady || !inBattle || paused || isFrozen('player')) return;
   const p = GameState.player;
   const pots = GameState.potions;
-  let choice = null;
-  if(p.hp < p.mhp && pots['Greater Health Potion'] > 0) choice = 'Greater Health Potion';
-  else if(p.hp < p.mhp && pots['Health Potion'] > 0) choice = 'Health Potion';
-  else if(p.mp < p.mmp && pots['Mana Potion'] > 0) choice = 'Mana Potion';
-  else if(pots['Greater Health Potion'] > 0) choice = 'Greater Health Potion';
-  else if(pots['Health Potion'] > 0) choice = 'Health Potion';
-  else if(pots['Mana Potion'] > 0) choice = 'Mana Potion';
-  if(!choice) return;
+  const amtOf = (r, kind) => kind === 'hp' ? (r.healPct ? Math.round(p.mhp * r.healPct) : r.heal || 0) : (r.manaPct ? Math.round(p.mmp * r.manaPct) : r.mana || 0);
+  const owned = RECIPES.filter(r => r.type === 'potion' && pots[r.n] > 0);
+  // Prefer the smallest potion that covers what is missing; otherwise the biggest one available.
+  const pick = (kind, missing) => {
+    const c = owned.filter(r => amtOf(r, kind) > 0).sort((a,b) => amtOf(a, kind) - amtOf(b, kind));
+    return c.find(r => amtOf(r, kind) >= missing) || c[c.length-1];
+  };
+  let recipe = null, kind = 'hp';
+  if(p.hp < p.mhp) recipe = pick('hp', p.mhp - p.hp);
+  if(!recipe && p.mp < p.mmp){ recipe = pick('mp', p.mmp - p.mp); kind = 'mp'; }
+  if(!recipe){ recipe = pick('hp', 0); kind = 'hp'; if(!recipe){ recipe = pick('mp', 0); kind = 'mp'; } }
+  if(!recipe) return;
 
-  const recipe = RECIPES.find(r => r.n === choice);
+  const choice = recipe.n;
   pots[choice]--;
-  if(recipe.heal){
-    const amt = Math.min(recipe.heal, p.mhp - p.hp);
-    p.hp = Math.min(p.mhp, p.hp + recipe.heal);
+  if(kind === 'hp'){
+    const amt = Math.min(amtOf(recipe, 'hp'), p.mhp - p.hp);
+    p.hp = Math.min(p.mhp, p.hp + amtOf(recipe, 'hp'));
     document.getElementById('battle-log').textContent = `San drinks a ${choice}, restoring ${amt} HP.`;
     popDamage(amt, {heal:true});
-  } else if(recipe.mana){
-    const amt = Math.min(recipe.mana, p.mmp - p.mp);
-    p.mp = Math.min(p.mmp, p.mp + recipe.mana);
+  } else {
+    const amt = Math.min(amtOf(recipe, 'mp'), p.mmp - p.mp);
+    p.mp = Math.min(p.mmp, p.mp + amtOf(recipe, 'mp'));
     document.getElementById('battle-log').textContent = `San drinks a ${choice}, restoring ${amt} MP.`;
     popDamage(amt, {heal:true});
   }
@@ -2543,12 +2562,12 @@ function renderCrafting(){
   const recipeWrap = document.getElementById('inv-recipes-list');
   recipeWrap.innerHTML = '';
   RECIPES.forEach(r=>{
-    const matLine = Object.entries(r.mats).map(([m,need])=>{
+    const matLine = r.anyAct ? `<span class="${actMatTotal()>=r.anyAct?'mat-ok':'mat-short'}">Post-Nexus materials ${actMatTotal()}/${r.anyAct}</span>` : Object.entries(r.mats).map(([m,need])=>{
       const have = GameState.materials[m] || 0;
       const ok = have >= need;
       return `<span class="${ok?'mat-ok':'mat-short'}">${m} ${have}/${need}</span>`;
     }).join(' · ');
-    const craftable = Object.entries(r.mats).every(([m,need]) => (GameState.materials[m]||0) >= need);
+    const craftable = r.anyAct ? actMatTotal() >= r.anyAct : Object.entries(r.mats).every(([m,need]) => (GameState.materials[m]||0) >= need);
     const alreadyCrafted = r.type === 'companion_gear' && GameState.companionGear[r.id];
     const row = document.createElement('div');
     row.className = 'trinket-row';
@@ -2570,9 +2589,10 @@ function renderCrafting(){
 function craftItem(recipeId){
   const r = RECIPES.find(x => x.id === recipeId);
   if(!r) return;
-  const canCraft = Object.entries(r.mats).every(([m,need]) => (GameState.materials[m]||0) >= need);
+  const canCraft = r.anyAct ? actMatTotal() >= r.anyAct : Object.entries(r.mats).every(([m,need]) => (GameState.materials[m]||0) >= need);
   if(!canCraft) return;
-  Object.entries(r.mats).forEach(([m,need]) => { GameState.materials[m] -= need; });
+  if(r.anyAct) spendActMats(r.anyAct);
+  else Object.entries(r.mats).forEach(([m,need]) => { GameState.materials[m] -= need; });
   if(r.type === 'potion'){
     GameState.potions[r.n] = (GameState.potions[r.n]||0) + 1;
   } else if(r.type === 'companion_gear'){

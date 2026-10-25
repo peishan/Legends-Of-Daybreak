@@ -686,6 +686,120 @@ const ACT2_ZONES = {
   "bossPromptDesc": "Echo of Joel has noticed you.",
   "zoneClearedDesc": "The Widow's Watch goes quiet. A lighthouse where someone has been waiting for a letter that, in",
   "templeRepOnClear": 850,
+  "nextZone": "vaelithorns-roost",
+  "climax": false
+ },
+ "vaelithorns-roost": {
+  "name": "Vaelithorn's Roost",
+  "theme": "zone-act2-fire",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Older than the Breaking itself. Its hoard is real, and so is the wait to earn it."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Scorched Hoard",
+    "icon": "🐲",
+    "type": "quest",
+    "npcName": "Scattered Hoard"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Cinder",
+    "icon": "🔥",
+    "type": "merchant",
+    "name": "Cinder",
+    "line": "\"Dragons keep what they keep. I sell what they dropped.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Vaelithorn Whelp": {
+    "hp": 364,
+    "atk": 41,
+    "spd": 5,
+    "xp": 120,
+    "g": 73,
+    "cls": "act2-body",
+    "tint": [
+     "#ff8a4a",
+     "#a82a0a"
+    ]
+   },
+   "Vaelithorn Scale-Guard": {
+    "hp": 273,
+    "atk": 57,
+    "spd": 8,
+    "xp": 120,
+    "g": 73,
+    "cls": "act2-body",
+    "tint": [
+     "#ff8a4a",
+     "#a82a0a"
+    ]
+   },
+   "Hoard Wraith": {
+    "hp": 473,
+    "atk": 33,
+    "spd": 4,
+    "xp": 120,
+    "g": 73,
+    "cls": "act2-body",
+    "tint": [
+     "#ff8a4a",
+     "#a82a0a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Vaelithorn Scale",
+   "Vaelithorn Fang",
+   "Vaelithorn Hoard Fragment"
+  ],
+  "boss": {
+   "name": "Vaelithorn, the Ancient Wyrm",
+   "mechanic": "rampage",
+   "atk": 104,
+   "spd": 5,
+   "xp": 2920,
+   "g": 1560,
+   "hint": "Older than the Breaking itself",
+   "introLine": "Older than the Breaking itself. Its hoard is real, and so is the wait to earn it.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#ff8a4a",
+    "#a82a0a"
+   ],
+   "rampageEvery": 4,
+   "rampageDmg": 125,
+   "hp": 2370,
+   "img": "assets/boss/vaelithorn.jpg"
+  },
+  "quest": {
+   "name": "Vaelithorn's Roost: Clear the Way",
+   "need": 5,
+   "xpReward": 600,
+   "goldReward": 370,
+   "acceptDesc": "\"Vaelithorn's Roost: Clear the Way\" — Defeat 5 monsters in Vaelithorn's Roost. Reward: 600 XP, 370 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the scattered hoard at camp first.",
+  "bossPromptDesc": "Vaelithorn, the Ancient Wyrm has noticed you.",
+  "zoneClearedDesc": "Vaelithorn's Roost goes quiet. ",
+  "templeRepOnClear": 880,
   "nextZone": "forgotten-pemmican-roads",
   "climax": false
  },
@@ -728,11 +842,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Road Wraith": {
-    "hp": 364,
-    "atk": 41,
+    "hp": 378,
+    "atk": 43,
     "spd": 5,
-    "xp": 120,
-    "g": 73,
+    "xp": 125,
+    "g": 76,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -740,11 +854,11 @@ const ACT2_ZONES = {
     ]
    },
    "Pack Beast Husk": {
-    "hp": 273,
-    "atk": 57,
+    "hp": 284,
+    "atk": 60,
     "spd": 8,
-    "xp": 120,
-    "g": 73,
+    "xp": 125,
+    "g": 76,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -752,11 +866,11 @@ const ACT2_ZONES = {
     ]
    },
    "Toll Ghost": {
-    "hp": 473,
-    "atk": 33,
+    "hp": 491,
+    "atk": 34,
     "spd": 4,
-    "xp": 120,
-    "g": 73,
+    "xp": 125,
+    "g": 76,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -772,10 +886,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Vanished Guide",
    "mechanic": "freeze",
-   "atk": 104,
+   "atk": 107,
    "spd": 5,
-   "xp": 2920,
-   "g": 1560,
+   "xp": 3040,
+   "g": 1620,
    "hint": "Senedra's trade paths, walked by no one now",
    "introLine": "Senedra's trade paths, walked by no one now. The waymarkers still stand. The dried goods still sell themselves to nobody, in stalls nobody tends, on a road that forgot it once led somewhere.",
    "spriteCls": "act2-body",
@@ -786,20 +900,20 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.3,
    "freezeDuration": 3000,
-   "hp": 2370,
+   "hp": 2505,
    "img": "assets/boss/thevanishedguide.jpg"
   },
   "quest": {
    "name": "Forgotten Pemmican Roads: Clear the Way",
    "need": 5,
-   "xpReward": 600,
-   "goldReward": 370,
-   "acceptDesc": "\"Forgotten Pemmican Roads: Clear the Way\" — Defeat 5 monsters in Forgotten Pemmican Roads. Reward: 600 XP, 370 Gold."
+   "xpReward": 625,
+   "goldReward": 385,
+   "acceptDesc": "\"Forgotten Pemmican Roads: Clear the Way\" — Defeat 5 monsters in Forgotten Pemmican Roads. Reward: 625 XP, 385 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the faded waymarker at camp first.",
   "bossPromptDesc": "The Vanished Guide has noticed you.",
   "zoneClearedDesc": "Forgotten Pemmican Roads goes quiet. Senedra's trade routes, still standing. No one left to walk them.",
-  "templeRepOnClear": 880,
+  "templeRepOnClear": 910,
   "nextZone": "the-quiet-nursery",
   "climax": false
  },
@@ -842,11 +956,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Nursery Wraith": {
-    "hp": 378,
-    "atk": 43,
+    "hp": 392,
+    "atk": 44,
     "spd": 5,
-    "xp": 125,
-    "g": 76,
+    "xp": 130,
+    "g": 79,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -854,11 +968,11 @@ const ACT2_ZONES = {
     ]
    },
    "Uncaught Echo": {
-    "hp": 284,
-    "atk": 60,
+    "hp": 294,
+    "atk": 62,
     "spd": 8,
-    "xp": 125,
-    "g": 76,
+    "xp": 130,
+    "g": 79,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -866,11 +980,11 @@ const ACT2_ZONES = {
     ]
    },
    "Quiet Sentinel": {
-    "hp": 491,
-    "atk": 34,
+    "hp": 510,
+    "atk": 36,
     "spd": 4,
-    "xp": 125,
-    "g": 76,
+    "xp": 130,
+    "g": 79,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -886,10 +1000,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Hollow Eliz",
    "mechanic": "devour",
-   "atk": 107,
+   "atk": 110,
    "spd": 5,
-   "xp": 3040,
-   "g": 1620,
+   "xp": 3160,
+   "g": 1680,
    "hint": "A room built for a child who never got caught in time",
    "introLine": "A room built for a child who never got caught in time. The colors here are the ones Eliz always described — magic in textures no one else could perceive — except now there is no one left to perceive them at all.",
    "spriteCls": "act2-body",
@@ -901,20 +1015,20 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 34,
    "staggerPct": 0.35,
-   "hp": 2505,
+   "hp": 2640,
    "img": "assets/boss/holloweliz.jpg"
   },
   "quest": {
    "name": "The Quiet Nursery: Clear the Way",
    "need": 5,
-   "xpReward": 625,
-   "goldReward": 385,
-   "acceptDesc": "\"The Quiet Nursery: Clear the Way\" — Defeat 5 monsters in The Quiet Nursery. Reward: 625 XP, 385 Gold."
+   "xpReward": 650,
+   "goldReward": 400,
+   "acceptDesc": "\"The Quiet Nursery: Clear the Way\" — Defeat 5 monsters in The Quiet Nursery. Reward: 650 XP, 400 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the cracked rattle at camp first.",
   "bossPromptDesc": "Hollow Eliz has noticed you.",
   "zoneClearedDesc": "The Quiet Nursery goes quiet. A nursery built for a future where Eliz was not there in time. Eliz",
-  "templeRepOnClear": 910,
+  "templeRepOnClear": 940,
   "nextZone": "bladeless-barracks",
   "climax": false
  },
@@ -957,11 +1071,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Burnt Recruit": {
-    "hp": 392,
-    "atk": 44,
+    "hp": 406,
+    "atk": 46,
     "spd": 5,
-    "xp": 130,
-    "g": 79,
+    "xp": 135,
+    "g": 82,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -969,11 +1083,11 @@ const ACT2_ZONES = {
     ]
    },
    "Barracks Wraith": {
-    "hp": 294,
-    "atk": 62,
+    "hp": 305,
+    "atk": 65,
     "spd": 8,
-    "xp": 130,
-    "g": 79,
+    "xp": 135,
+    "g": 82,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -981,11 +1095,11 @@ const ACT2_ZONES = {
     ]
    },
    "Hollow Drillmaster": {
-    "hp": 510,
-    "atk": 36,
+    "hp": 528,
+    "atk": 37,
     "spd": 4,
-    "xp": 130,
-    "g": 79,
+    "xp": 135,
+    "g": 82,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -1001,10 +1115,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Rustbound Zaki",
    "mechanic": "rampage",
-   "atk": 110,
+   "atk": 114,
    "spd": 5,
-   "xp": 3160,
-   "g": 1680,
+   "xp": 3280,
+   "g": 1740,
    "hint": "Zaki trained here, once, checking his pack seventeen times",
    "introLine": "Zaki trained here, once, checking his pack seventeen times. The barracks that stand now belong to someone harder, someone who stopped checking a long time ago and never told you why.",
    "spriteCls": "act2-body",
@@ -1015,20 +1129,20 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 30,
-   "hp": 2640,
+   "hp": 2775,
    "img": "assets/boss/rustboundzaki.jpg"
   },
   "quest": {
    "name": "Bladeless Barracks: Clear the Way",
    "need": 5,
-   "xpReward": 650,
-   "goldReward": 400,
-   "acceptDesc": "\"Bladeless Barracks: Clear the Way\" — Defeat 5 monsters in Bladeless Barracks. Reward: 650 XP, 400 Gold."
+   "xpReward": 675,
+   "goldReward": 415,
+   "acceptDesc": "\"Bladeless Barracks: Clear the Way\" — Defeat 5 monsters in Bladeless Barracks. Reward: 675 XP, 415 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the training dummy at camp first.",
   "bossPromptDesc": "Rustbound Zaki has noticed you.",
   "zoneClearedDesc": "Bladeless Barracks goes quiet. Zaki, hardened past the nervous boy who checked his pack seventeen",
-  "templeRepOnClear": 940,
+  "templeRepOnClear": 970,
   "nextZone": "the-storm-that-stayed",
   "climax": false
  },
@@ -1071,11 +1185,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Stormbound Wraith": {
-    "hp": 406,
-    "atk": 46,
+    "hp": 420,
+    "atk": 48,
     "spd": 5,
-    "xp": 135,
-    "g": 82,
+    "xp": 140,
+    "g": 85,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1083,11 +1197,11 @@ const ACT2_ZONES = {
     ]
    },
    "Thunder Remnant": {
-    "hp": 305,
-    "atk": 65,
+    "hp": 315,
+    "atk": 67,
     "spd": 8,
-    "xp": 135,
-    "g": 82,
+    "xp": 140,
+    "g": 85,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1095,11 +1209,11 @@ const ACT2_ZONES = {
     ]
    },
    "Static Husk": {
-    "hp": 528,
-    "atk": 37,
+    "hp": 546,
+    "atk": 38,
     "spd": 4,
-    "xp": 135,
-    "g": 82,
+    "xp": 140,
+    "g": 85,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1115,10 +1229,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Mezstorm Unbound",
    "mechanic": "lightning_rod",
-   "atk": 114,
+   "atk": 117,
    "spd": 5,
-   "xp": 3280,
-   "g": 1740,
+   "xp": 3400,
+   "g": 1800,
    "hint": "Mezstorm's estrangement, given weather",
    "introLine": "Mezstorm's estrangement, given weather. A storm that never broke, never passed, never once let the sky remember what it looked like before the distance began.",
    "spriteCls": "act2-body",
@@ -1129,20 +1243,20 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 34,
-   "hp": 2775,
+   "hp": 2910,
    "img": "assets/boss/mezstormunbound.jpg"
   },
   "quest": {
    "name": "The Storm That Stayed: Clear the Way",
    "need": 5,
-   "xpReward": 675,
-   "goldReward": 415,
-   "acceptDesc": "\"The Storm That Stayed: Clear the Way\" — Defeat 5 monsters in The Storm That Stayed. Reward: 675 XP, 415 Gold."
+   "xpReward": 700,
+   "goldReward": 430,
+   "acceptDesc": "\"The Storm That Stayed: Clear the Way\" — Defeat 5 monsters in The Storm That Stayed. Reward: 700 XP, 430 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the storm-sealed locket at camp first.",
   "bossPromptDesc": "Mezstorm Unbound has noticed you.",
   "zoneClearedDesc": "The Storm That Stayed goes quiet. Mezstorm's estrangement from family, given permanent weather.",
-  "templeRepOnClear": 970,
+  "templeRepOnClear": 1000,
   "nextZone": "embercats-grave",
   "climax": false
  },
@@ -1185,11 +1299,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Guttering Wisp": {
-    "hp": 420,
-    "atk": 48,
+    "hp": 434,
+    "atk": 50,
     "spd": 5,
-    "xp": 140,
-    "g": 85,
+    "xp": 145,
+    "g": 88,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -1197,11 +1311,11 @@ const ACT2_ZONES = {
     ]
    },
    "Fading Ember": {
-    "hp": 315,
-    "atk": 67,
+    "hp": 326,
+    "atk": 70,
     "spd": 8,
-    "xp": 140,
-    "g": 85,
+    "xp": 145,
+    "g": 88,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -1209,11 +1323,11 @@ const ACT2_ZONES = {
     ]
    },
    "Forgotten Familiar": {
-    "hp": 546,
-    "atk": 38,
+    "hp": 564,
+    "atk": 40,
     "spd": 4,
-    "xp": 140,
-    "g": 85,
+    "xp": 145,
+    "g": 88,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -1229,10 +1343,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Fading Familiar",
    "mechanic": "freeze",
-   "atk": 117,
+   "atk": 120,
    "spd": 5,
-   "xp": 3400,
-   "g": 1800,
+   "xp": 3520,
+   "g": 1860,
    "hint": "A place that should not exist — Soel reforms from spirit flame, always, everywhere",
    "introLine": "A place that should not exist — Soel reforms from spirit flame, always, everywhere. And yet here is a grave, and here is an ember guttering low, and here is proof that even the unkillable can be forgotten if enough time passes without anyone remembering to choose them.",
    "spriteCls": "act2-body",
@@ -1243,20 +1357,20 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3000,
-   "hp": 2910,
+   "hp": 3045,
    "img": "assets/boss/thefadingfamiliar.jpg"
   },
   "quest": {
    "name": "Embercat's Grave: Clear the Way",
    "need": 5,
-   "xpReward": 700,
-   "goldReward": 430,
-   "acceptDesc": "\"Embercat's Grave: Clear the Way\" — Defeat 5 monsters in Embercat's Grave. Reward: 700 XP, 430 Gold."
+   "xpReward": 725,
+   "goldReward": 445,
+   "acceptDesc": "\"Embercat's Grave: Clear the Way\" — Defeat 5 monsters in Embercat's Grave. Reward: 725 XP, 445 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the guttering ember at camp first.",
   "bossPromptDesc": "The Fading Familiar has noticed you.",
   "zoneClearedDesc": "Embercat's Grave goes quiet. Proof that even the unkillable can be forgotten, if no one remembers",
-  "templeRepOnClear": 1000,
+  "templeRepOnClear": 1030,
   "nextZone": "the-empty-ledger",
   "climax": false
  },
@@ -1299,11 +1413,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Ledger Phantom": {
-    "hp": 434,
-    "atk": 50,
+    "hp": 448,
+    "atk": 52,
     "spd": 5,
-    "xp": 145,
-    "g": 88,
+    "xp": 150,
+    "g": 91,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1311,11 +1425,11 @@ const ACT2_ZONES = {
     ]
    },
    "Tally Wraith": {
-    "hp": 326,
-    "atk": 70,
+    "hp": 336,
+    "atk": 72,
     "spd": 8,
-    "xp": 145,
-    "g": 88,
+    "xp": 150,
+    "g": 91,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1323,11 +1437,11 @@ const ACT2_ZONES = {
     ]
    },
    "Route Ghost": {
-    "hp": 564,
-    "atk": 40,
+    "hp": 582,
+    "atk": 41,
     "spd": 4,
-    "xp": 145,
-    "g": 88,
+    "xp": 150,
+    "g": 91,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1343,10 +1457,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Echo of Aisyah",
    "mechanic": "resurrect",
-   "atk": 120,
+   "atk": 124,
    "spd": 5,
-   "xp": 3520,
-   "g": 1860,
+   "xp": 3640,
+   "g": 1920,
    "hint": "Aisyah's trade routes, kept with the same precision she always used, except every entry now reads the same wor",
    "introLine": "Aisyah's trade routes, kept with the same precision she always used, except every entry now reads the same word in a hand that used to be steady: gone, gone, gone. She has not said a word since you arrived.",
    "spriteCls": "act2-body",
@@ -1356,8 +1470,8 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "lives": [
-    678,
-    648
+    696,
+    666
    ],
    "lifeNames": [
     "Gone",
@@ -1368,14 +1482,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "The Empty Ledger: Clear the Way",
    "need": 5,
-   "xpReward": 725,
-   "goldReward": 445,
-   "acceptDesc": "\"The Empty Ledger: Clear the Way\" — Defeat 5 monsters in The Empty Ledger. Reward: 725 XP, 445 Gold."
+   "xpReward": 750,
+   "goldReward": 460,
+   "acceptDesc": "\"The Empty Ledger: Clear the Way\" — Defeat 5 monsters in The Empty Ledger. Reward: 750 XP, 460 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the blank ledger entry at camp first.",
   "bossPromptDesc": "Echo of Aisyah has noticed you.",
   "zoneClearedDesc": "The Empty Ledger goes quiet. Aisyah finally gets the reckoning every other echo already had.",
-  "templeRepOnClear": 1030,
+  "templeRepOnClear": 1060,
   "nextZone": "the-weight-you-carry",
   "climax": false
  },
@@ -1418,11 +1532,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Doubt Wraith": {
-    "hp": 448,
-    "atk": 52,
+    "hp": 462,
+    "atk": 53,
     "spd": 5,
-    "xp": 150,
-    "g": 91,
+    "xp": 155,
+    "g": 94,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1430,11 +1544,11 @@ const ACT2_ZONES = {
     ]
    },
    "Exhausted Echo": {
-    "hp": 336,
-    "atk": 72,
+    "hp": 347,
+    "atk": 75,
     "spd": 8,
-    "xp": 150,
-    "g": 91,
+    "xp": 155,
+    "g": 94,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1442,11 +1556,11 @@ const ACT2_ZONES = {
     ]
    },
    "Silent Weight": {
-    "hp": 582,
-    "atk": 41,
+    "hp": 601,
+    "atk": 43,
     "spd": 4,
-    "xp": 150,
-    "g": 91,
+    "xp": 155,
+    "g": 94,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1462,10 +1576,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Tired Version",
    "mechanic": "drown",
-   "atk": 124,
+   "atk": 127,
    "spd": 5,
-   "xp": 3640,
-   "g": 1920,
+   "xp": 3760,
+   "g": 1980,
    "hint": "A place built from every night you told Joel you were fine when you were not",
    "introLine": "A place built from every night you told Joel you were fine when you were not. Your own exhaustion, given a floor to stand on and a shape to wear. You did not know it followed you this far.",
    "spriteCls": "act2-body",
@@ -1477,20 +1591,20 @@ const ACT2_ZONES = {
    "drownTurn": 4,
    "drownDmg": 30,
    "drownSaveChance": 0.45,
-   "hp": 3180,
+   "hp": 3315,
    "img": "assets/boss/thetiredversion.jpg"
   },
   "quest": {
    "name": "The Weight You Carry: Clear the Way",
    "need": 5,
-   "xpReward": 750,
-   "goldReward": 460,
-   "acceptDesc": "\"The Weight You Carry: Clear the Way\" — Defeat 5 monsters in The Weight You Carry. Reward: 750 XP, 460 Gold."
+   "xpReward": 775,
+   "goldReward": 475,
+   "acceptDesc": "\"The Weight You Carry: Clear the Way\" — Defeat 5 monsters in The Weight You Carry. Reward: 775 XP, 475 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the practiced smile at camp first.",
   "bossPromptDesc": "The Tired Version has noticed you.",
   "zoneClearedDesc": "The Weight You Carry goes quiet. San's own exhaustion, finally given a name instead of a smile.",
-  "templeRepOnClear": 1060,
+  "templeRepOnClear": 1090,
   "nextZone": "the-architects-chamber",
   "climax": false
  },
@@ -1533,11 +1647,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Chamber Sentinel": {
-    "hp": 462,
-    "atk": 53,
+    "hp": 476,
+    "atk": 55,
     "spd": 5,
-    "xp": 155,
-    "g": 94,
+    "xp": 160,
+    "g": 97,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -1545,11 +1659,11 @@ const ACT2_ZONES = {
     ]
    },
    "Fractured Construct": {
-    "hp": 347,
-    "atk": 75,
+    "hp": 357,
+    "atk": 77,
     "spd": 8,
-    "xp": 155,
-    "g": 94,
+    "xp": 160,
+    "g": 97,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -1557,11 +1671,11 @@ const ACT2_ZONES = {
     ]
    },
    "Time-Loop Wraith": {
-    "hp": 601,
-    "atk": 43,
+    "hp": 619,
+    "atk": 44,
     "spd": 4,
-    "xp": 155,
-    "g": 94,
+    "xp": 160,
+    "g": 97,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -1577,10 +1691,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Architect",
    "mechanic": "phase",
-   "atk": 127,
+   "atk": 130,
    "spd": 5,
-   "xp": 3760,
-   "g": 1980,
+   "xp": 3880,
+   "g": 2040,
    "hint": "The place where the Planarch's death first cracked the world — not an accident, you realize now, but a door so",
    "introLine": "The place where the Planarch's death first cracked the world — not an accident, you realize now, but a door someone built on purpose and never finished closing. The chamber hums with the specific, deliberate silence of a plan.",
    "spriteCls": "act2-body",
@@ -1593,19 +1707,19 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 3315
+   "hp": 3450
   },
   "quest": {
    "name": "The Architect's Chamber: Clear the Way",
    "need": 5,
-   "xpReward": 775,
-   "goldReward": 475,
-   "acceptDesc": "\"The Architect's Chamber: Clear the Way\" — Defeat 5 monsters in The Architect's Chamber. Reward: 775 XP, 475 Gold."
+   "xpReward": 800,
+   "goldReward": 490,
+   "acceptDesc": "\"The Architect's Chamber: Clear the Way\" — Defeat 5 monsters in The Architect's Chamber. Reward: 800 XP, 490 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the unfinished blueprint at camp first.",
   "bossPromptDesc": "The Architect has noticed you.",
   "zoneClearedDesc": "The Architect's Chamber goes quiet. The Breaking was not an accident. Someone built the door.",
-  "templeRepOnClear": 1090,
+  "templeRepOnClear": 1120,
   "nextZone": "what-remains-united",
   "climax": false
  },
@@ -1648,11 +1762,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Remnant Guard": {
-    "hp": 476,
-    "atk": 55,
+    "hp": 490,
+    "atk": 57,
     "spd": 5,
-    "xp": 160,
-    "g": 97,
+    "xp": 165,
+    "g": 100,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1660,11 +1774,11 @@ const ACT2_ZONES = {
     ]
    },
    "Splinter Sentinel": {
-    "hp": 357,
-    "atk": 77,
+    "hp": 368,
+    "atk": 80,
     "spd": 8,
-    "xp": 160,
-    "g": 97,
+    "xp": 165,
+    "g": 100,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1672,11 +1786,11 @@ const ACT2_ZONES = {
     ]
    },
    "Echo Legion": {
-    "hp": 619,
-    "atk": 44,
+    "hp": 637,
+    "atk": 46,
     "spd": 4,
-    "xp": 160,
-    "g": 97,
+    "xp": 165,
+    "g": 100,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -1692,10 +1806,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Splinter Court",
    "mechanic": "resurrect",
-   "atk": 130,
+   "atk": 134,
    "spd": 5,
-   "xp": 3880,
-   "g": 2040,
+   "xp": 4000,
+   "g": 2100,
    "hint": "For the first time since the Breaking, this place does not test you alone",
    "introLine": "For the first time since the Breaking, this place does not test you alone. Every echo you have faced — Joel's, Eliz's, Zaki's, Mezstorm's, Aisyah's, your own — converges here, not as separate griefs anymore but as a single splintered court demanding to know why you keep choosing to stay whole.",
    "spriteCls": "act2-body",
@@ -1705,9 +1819,9 @@ const ACT2_ZONES = {
     "#4a5aa8"
    ],
    "lives": [
-    672,
-    642,
-    612
+    690,
+    660,
+    630
    ],
    "lifeNames": [
     "Joel",
@@ -1718,14 +1832,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "What Remains United: Clear the Way",
    "need": 5,
-   "xpReward": 800,
-   "goldReward": 490,
-   "acceptDesc": "\"What Remains United: Clear the Way\" — Defeat 5 monsters in What Remains United. Reward: 800 XP, 490 Gold."
+   "xpReward": 825,
+   "goldReward": 505,
+   "acceptDesc": "\"What Remains United: Clear the Way\" — Defeat 5 monsters in What Remains United. Reward: 825 XP, 505 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the splinter court seal at camp first.",
   "bossPromptDesc": "The Splinter Court has noticed you.",
   "zoneClearedDesc": "What Remains United goes quiet. Every grief you have survived, fused into one question: why do you",
-  "templeRepOnClear": 1120,
+  "templeRepOnClear": 1150,
   "nextZone": "where-the-break-began",
   "climax": false
  },
@@ -1768,11 +1882,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Fracture Remnant": {
-    "hp": 490,
-    "atk": 57,
+    "hp": 504,
+    "atk": 59,
     "spd": 5,
-    "xp": 165,
-    "g": 100,
+    "xp": 170,
+    "g": 103,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1780,11 +1894,11 @@ const ACT2_ZONES = {
     ]
    },
    "Broken Reality": {
-    "hp": 368,
-    "atk": 80,
+    "hp": 378,
+    "atk": 82,
     "spd": 8,
-    "xp": 165,
-    "g": 100,
+    "xp": 170,
+    "g": 103,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1792,11 +1906,11 @@ const ACT2_ZONES = {
     ]
    },
    "Echo of Everything": {
-    "hp": 637,
-    "atk": 46,
+    "hp": 655,
+    "atk": 47,
     "spd": 4,
-    "xp": 165,
-    "g": 100,
+    "xp": 170,
+    "g": 103,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -1812,10 +1926,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The First Break",
    "mechanic": "apocalypse",
-   "atk": 134,
+   "atk": 137,
    "spd": 5,
-   "xp": 4000,
-   "g": 2100,
+   "xp": 4120,
+   "g": 2160,
    "hint": "The exact moment the world first fractured, replaying itself forever at the center of everything you have surv",
    "introLine": "The exact moment the world first fractured, replaying itself forever at the center of everything you have survived. This is not another echo. This is the source — the first break, still breaking, waiting for someone to finally answer it instead of just enduring it.",
    "spriteCls": "act2-body",
@@ -1826,19 +1940,19 @@ const ACT2_ZONES = {
    ],
    "apocalypseTurn": 6,
    "apocalypseDmg": 44,
-   "hp": 3585
+   "hp": 3720
   },
   "quest": {
    "name": "Where the Break Began: Clear the Way",
    "need": 5,
-   "xpReward": 825,
-   "goldReward": 505,
-   "acceptDesc": "\"Where the Break Began: Clear the Way\" — Defeat 5 monsters in Where the Break Began. Reward: 825 XP, 505 Gold."
+   "xpReward": 850,
+   "goldReward": 520,
+   "acceptDesc": "\"Where the Break Began: Clear the Way\" — Defeat 5 monsters in Where the Break Began. Reward: 850 XP, 520 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the the first crack at camp first.",
   "bossPromptDesc": "The First Break has noticed you.",
   "zoneClearedDesc": "Where the Break Began goes quiet. Act Three ends where everything began — and proof, finally, that",
-  "templeRepOnClear": 1150,
+  "templeRepOnClear": 1180,
   "nextZone": "the-first-repair",
   "climax": true
  },
@@ -1881,11 +1995,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Rust Remnant": {
-    "hp": 504,
-    "atk": 59,
+    "hp": 518,
+    "atk": 61,
     "spd": 5,
-    "xp": 170,
-    "g": 103,
+    "xp": 175,
+    "g": 106,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1893,11 +2007,11 @@ const ACT2_ZONES = {
     ]
    },
    "Decay Wisp": {
-    "hp": 378,
-    "atk": 82,
+    "hp": 389,
+    "atk": 85,
     "spd": 8,
-    "xp": 170,
-    "g": 103,
+    "xp": 175,
+    "g": 106,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1905,11 +2019,11 @@ const ACT2_ZONES = {
     ]
    },
    "Unmended Shard": {
-    "hp": 655,
-    "atk": 47,
+    "hp": 673,
+    "atk": 48,
     "spd": 4,
-    "xp": 170,
-    "g": 103,
+    "xp": 175,
+    "g": 106,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -1925,10 +2039,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Unmended",
    "mechanic": "phase",
-   "atk": 137,
+   "atk": 140,
    "spd": 5,
-   "xp": 4120,
-   "g": 2160,
+   "xp": 4240,
+   "g": 2220,
    "hint": "Mending is slower than breaking",
    "introLine": "Mending is slower than breaking. You knew that already — you have spent a whole lifetime learning it — but knowing it and living it are different things, and the world does not want to be fixed all at once just because you finally believe it can be.",
    "spriteCls": "act2-body",
@@ -1941,19 +2055,19 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 3720
+   "hp": 3855
   },
   "quest": {
    "name": "The First Repair: Clear the Way",
    "need": 5,
-   "xpReward": 850,
-   "goldReward": 520,
-   "acceptDesc": "\"The First Repair: Clear the Way\" — Defeat 5 monsters in The First Repair. Reward: 850 XP, 520 Gold."
+   "xpReward": 875,
+   "goldReward": 535,
+   "acceptDesc": "\"The First Repair: Clear the Way\" — Defeat 5 monsters in The First Repair. Reward: 875 XP, 535 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the first repaired seam at camp first.",
   "bossPromptDesc": "The Unmended has noticed you.",
   "zoneClearedDesc": "The First Repair goes quiet. Mending is slower than breaking. The family learns to live with that.",
-  "templeRepOnClear": 1180,
+  "templeRepOnClear": 1210,
   "nextZone": "what-almost-broke-again",
   "climax": false
  },
@@ -1996,11 +2110,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Backslide Wraith": {
-    "hp": 518,
-    "atk": 61,
+    "hp": 532,
+    "atk": 62,
     "spd": 5,
-    "xp": 175,
-    "g": 106,
+    "xp": 180,
+    "g": 109,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -2008,11 +2122,11 @@ const ACT2_ZONES = {
     ]
    },
    "Old Habit": {
-    "hp": 389,
-    "atk": 85,
+    "hp": 399,
+    "atk": 87,
     "spd": 8,
-    "xp": 175,
-    "g": 106,
+    "xp": 180,
+    "g": 109,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -2020,11 +2134,11 @@ const ACT2_ZONES = {
     ]
    },
    "Setback Sentinel": {
-    "hp": 673,
-    "atk": 48,
+    "hp": 692,
+    "atk": 50,
     "spd": 4,
-    "xp": 175,
-    "g": 106,
+    "xp": 180,
+    "g": 109,
     "cls": "act2-body",
     "tint": [
      "#ff8a4a",
@@ -2040,10 +2154,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Relapse",
    "mechanic": "inferno",
-   "atk": 140,
+   "atk": 143,
    "spd": 5,
-   "xp": 4240,
-   "g": 2220,
+   "xp": 4360,
+   "g": 2280,
    "hint": "Not every day of mending goes forward",
    "introLine": "Not every day of mending goes forward. Some days the old cracks reopen, and the fear comes back exactly the way it always did, and you have to relearn — again — that a setback is not the same thing as failing.",
    "spriteCls": "act2-body",
@@ -2054,19 +2168,133 @@ const ACT2_ZONES = {
    ],
    "infernoTurn": 4,
    "infernoDmg": 38,
-   "hp": 3855
+   "hp": 3990
   },
   "quest": {
    "name": "What Almost Broke Again: Clear the Way",
    "need": 5,
-   "xpReward": 875,
-   "goldReward": 535,
-   "acceptDesc": "\"What Almost Broke Again: Clear the Way\" — Defeat 5 monsters in What Almost Broke Again. Reward: 875 XP, 535 Gold."
+   "xpReward": 900,
+   "goldReward": 550,
+   "acceptDesc": "\"What Almost Broke Again: Clear the Way\" — Defeat 5 monsters in What Almost Broke Again. Reward: 900 XP, 550 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the reopened seam at camp first.",
   "bossPromptDesc": "The Relapse has noticed you.",
   "zoneClearedDesc": "What Almost Broke Again goes quiet. Not every day of mending goes forward. The family relearns an old",
-  "templeRepOnClear": 1210,
+  "templeRepOnClear": 1240,
+  "nextZone": "thessarunes-maw",
+  "climax": false
+ },
+ "thessarunes-maw": {
+  "name": "Thessarune's Maw",
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "What comes after the Breaking finishes breaking. It does not breathe fire so much as unmake the air where you are standing."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Scorched Hoard",
+    "icon": "🐲",
+    "type": "quest",
+    "npcName": "Scattered Hoard"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Cinder",
+    "icon": "🔥",
+    "type": "merchant",
+    "name": "Cinder",
+    "line": "\"Dragons keep what they keep. I sell what they dropped.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Thessarune Whelp": {
+    "hp": 546,
+    "atk": 64,
+    "spd": 5,
+    "xp": 185,
+    "g": 112,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Thessarune Scale-Guard": {
+    "hp": 410,
+    "atk": 90,
+    "spd": 8,
+    "xp": 185,
+    "g": 112,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Hoard Wraith": {
+    "hp": 710,
+    "atk": 51,
+    "spd": 4,
+    "xp": 185,
+    "g": 112,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Thessarune Scale",
+   "Thessarune Fang",
+   "Thessarune Hoard Fragment"
+  ],
+  "boss": {
+   "name": "Thessarune, the Endless Maw",
+   "mechanic": "rampage",
+   "atk": 147,
+   "spd": 5,
+   "xp": 4480,
+   "g": 2340,
+   "hint": "What comes after the Breaking finishes breaking",
+   "introLine": "What comes after the Breaking finishes breaking. It does not breathe fire so much as unmake the air where you are standing.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "rampageEvery": 3,
+   "rampageDmg": 191,
+   "hp": 4125,
+   "img": "assets/boss/thessarune.jpg"
+  },
+  "quest": {
+   "name": "Thessarune's Maw: Clear the Way",
+   "need": 5,
+   "xpReward": 925,
+   "goldReward": 565,
+   "acceptDesc": "\"Thessarune's Maw: Clear the Way\" — Defeat 5 monsters in Thessarune's Maw. Reward: 925 XP, 565 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the scattered hoard at camp first.",
+  "bossPromptDesc": "Thessarune, the Endless Maw has noticed you.",
+  "zoneClearedDesc": "Thessarune's Maw goes quiet. ",
+  "templeRepOnClear": 1270,
   "nextZone": "the-fear-after-the-storm",
   "climax": false
  },
@@ -2109,11 +2337,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Question Wraith": {
-    "hp": 532,
-    "atk": 62,
+    "hp": 560,
+    "atk": 66,
     "spd": 5,
-    "xp": 180,
-    "g": 109,
+    "xp": 190,
+    "g": 115,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2121,11 +2349,11 @@ const ACT2_ZONES = {
     ]
    },
    "What-If Echo": {
-    "hp": 399,
-    "atk": 87,
+    "hp": 420,
+    "atk": 92,
     "spd": 8,
-    "xp": 180,
-    "g": 109,
+    "xp": 190,
+    "g": 115,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2133,11 +2361,11 @@ const ACT2_ZONES = {
     ]
    },
    "Quiet Fear": {
-    "hp": 692,
-    "atk": 50,
+    "hp": 728,
+    "atk": 53,
     "spd": 4,
-    "xp": 180,
-    "g": 109,
+    "xp": 190,
+    "g": 115,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2153,10 +2381,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Question of After",
    "mechanic": "freeze",
-   "atk": 143,
+   "atk": 150,
    "spd": 5,
-   "xp": 4360,
-   "g": 2280,
+   "xp": 4600,
+   "g": 2400,
    "hint": "What happens after? San and Joel's youth, restored by magic that was never meant to last forever — what happen",
    "introLine": "What happens after? San and Joel's youth, restored by magic that was never meant to last forever — what happens when it runs out? What happens to a family built for survival once there is finally something worth surviving for?",
    "spriteCls": "act2-body",
@@ -2167,19 +2395,19 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3200,
-   "hp": 3990
+   "hp": 4260
   },
   "quest": {
    "name": "The Fear After the Storm: Clear the Way",
    "need": 5,
-   "xpReward": 900,
-   "goldReward": 550,
-   "acceptDesc": "\"The Fear After the Storm: Clear the Way\" — Defeat 5 monsters in The Fear After the Storm. Reward: 900 XP, 550 Gold."
+   "xpReward": 950,
+   "goldReward": 580,
+   "acceptDesc": "\"The Fear After the Storm: Clear the Way\" — Defeat 5 monsters in The Fear After the Storm. Reward: 950 XP, 580 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the unanswered question at camp first.",
   "bossPromptDesc": "The Question of After has noticed you.",
   "zoneClearedDesc": "The Fear After the Storm goes quiet. San and Joel's borrowed youth, and the question neither of them has",
-  "templeRepOnClear": 1240,
+  "templeRepOnClear": 1300,
   "nextZone": "everyone-together",
   "climax": false
  },
@@ -2222,11 +2450,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Unity Sentinel": {
-    "hp": 546,
-    "atk": 64,
+    "hp": 574,
+    "atk": 68,
     "spd": 5,
-    "xp": 185,
-    "g": 112,
+    "xp": 195,
+    "g": 118,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -2234,11 +2462,11 @@ const ACT2_ZONES = {
     ]
    },
    "Bonded Construct": {
-    "hp": 410,
-    "atk": 90,
+    "hp": 431,
+    "atk": 95,
     "spd": 8,
-    "xp": 185,
-    "g": 112,
+    "xp": 195,
+    "g": 118,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -2246,11 +2474,11 @@ const ACT2_ZONES = {
     ]
    },
    "Chorus Wisp": {
-    "hp": 710,
-    "atk": 51,
+    "hp": 746,
+    "atk": 54,
     "spd": 4,
-    "xp": 185,
-    "g": 112,
+    "xp": 195,
+    "g": 118,
     "cls": "act2-body",
     "tint": [
      "#ffe066",
@@ -2266,10 +2494,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Unity Ward",
    "mechanic": "devour",
-   "atk": 147,
+   "atk": 153,
    "spd": 5,
-   "xp": 4480,
-   "g": 2340,
+   "xp": 4720,
+   "g": 2460,
    "hint": "For the first time in this entire journey, every member of this family stands in the same place, at the same t",
    "introLine": "For the first time in this entire journey, every member of this family stands in the same place, at the same time, choosing the same thing. Joel. Aisyah. Mezstorm. Eliz. Senedra. Zaki. Soel. You. Whatever comes next, it will not be faced alone.",
    "spriteCls": "act2-body",
@@ -2281,19 +2509,19 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 40,
    "staggerPct": 0.35,
-   "hp": 4125
+   "hp": 4395
   },
   "quest": {
    "name": "Everyone, Together: Clear the Way",
    "need": 5,
-   "xpReward": 925,
-   "goldReward": 565,
-   "acceptDesc": "\"Everyone, Together: Clear the Way\" — Defeat 5 monsters in Everyone, Together. Reward: 925 XP, 565 Gold."
+   "xpReward": 975,
+   "goldReward": 595,
+   "acceptDesc": "\"Everyone, Together: Clear the Way\" — Defeat 5 monsters in Everyone, Together. Reward: 975 XP, 595 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the chorus fragment at camp first.",
   "bossPromptDesc": "The Unity Ward has noticed you.",
   "zoneClearedDesc": "Everyone, Together goes quiet. Every member of this family, in the same place, choosing the same",
-  "templeRepOnClear": 1270,
+  "templeRepOnClear": 1330,
   "nextZone": "daybreak",
   "climax": false
  },
@@ -2336,11 +2564,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Dawnlight Sentinel": {
-    "hp": 560,
-    "atk": 66,
+    "hp": 588,
+    "atk": 70,
     "spd": 5,
-    "xp": 190,
-    "g": 115,
+    "xp": 200,
+    "g": 121,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2348,11 +2576,11 @@ const ACT2_ZONES = {
     ]
    },
    "Last Shadow": {
-    "hp": 420,
-    "atk": 92,
+    "hp": 441,
+    "atk": 97,
     "spd": 8,
-    "xp": 190,
-    "g": 115,
+    "xp": 200,
+    "g": 121,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2360,11 +2588,11 @@ const ACT2_ZONES = {
     ]
    },
    "First Light Construct": {
-    "hp": 728,
-    "atk": 53,
+    "hp": 764,
+    "atk": 56,
     "spd": 4,
-    "xp": 190,
-    "g": 115,
+    "xp": 200,
+    "g": 121,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2380,10 +2608,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Daybreak Incarnate",
    "mechanic": "resurrect",
-   "atk": 150,
+   "atk": 157,
    "spd": 5,
-   "xp": 4600,
-   "g": 2400,
+   "xp": 4840,
+   "g": 2520,
    "hint": "The sun that could not rise on a broken world finally has somewhere to land",
    "introLine": "The sun that could not rise on a broken world finally has somewhere to land. Not an ending — a morning. The first one this family has earned the right to actually see.",
    "spriteCls": "act2-body",
@@ -2393,11 +2621,11 @@ const ACT2_ZONES = {
     "#7a3aba"
    ],
    "lives": [
-    840,
-    810,
-    780,
-    750,
-    720
+    876,
+    846,
+    816,
+    786,
+    756
    ],
    "lifeNames": [
     "Dusk",
@@ -2410,14 +2638,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "Daybreak: Clear the Way",
    "need": 5,
-   "xpReward": 950,
-   "goldReward": 580,
-   "acceptDesc": "\"Daybreak: Clear the Way\" — Defeat 5 monsters in Daybreak. Reward: 950 XP, 580 Gold."
+   "xpReward": 1000,
+   "goldReward": 610,
+   "acceptDesc": "\"Daybreak: Clear the Way\" — Defeat 5 monsters in Daybreak. Reward: 1000 XP, 610 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the first light at camp first.",
   "bossPromptDesc": "Daybreak Incarnate has noticed you.",
   "zoneClearedDesc": "Daybreak goes quiet. Not an ending. A morning. The first one this family has earned the",
-  "templeRepOnClear": 1300,
+  "templeRepOnClear": 1360,
   "nextZone": "the-unmapped-road",
   "climax": true
  },
@@ -2460,11 +2688,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Threshold Warden": {
-    "hp": 574,
-    "atk": 68,
+    "hp": 602,
+    "atk": 71,
     "spd": 5,
-    "xp": 195,
-    "g": 118,
+    "xp": 205,
+    "g": 124,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2472,11 +2700,11 @@ const ACT2_ZONES = {
     ]
    },
    "Roadless Wisp": {
-    "hp": 431,
-    "atk": 95,
+    "hp": 452,
+    "atk": 100,
     "spd": 8,
-    "xp": 195,
-    "g": 118,
+    "xp": 205,
+    "g": 124,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2484,11 +2712,11 @@ const ACT2_ZONES = {
     ]
    },
    "Waymarker Construct": {
-    "hp": 746,
-    "atk": 54,
+    "hp": 783,
+    "atk": 57,
     "spd": 4,
-    "xp": 195,
-    "g": 118,
+    "xp": 205,
+    "g": 124,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2504,10 +2732,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Wayfinder",
    "mechanic": "phase",
-   "atk": 153,
+   "atk": 160,
    "spd": 5,
-   "xp": 4720,
-   "g": 2460,
+   "xp": 4960,
+   "g": 2580,
    "hint": "Past every border this family has ever fought to hold",
    "introLine": "Past every border this family has ever fought to hold. Not fleeing anything, for once — just curious what is actually out there, now that staying alive does not take every hour of every day.",
    "spriteCls": "act2-body",
@@ -2520,19 +2748,19 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 4395
+   "hp": 4665
   },
   "quest": {
    "name": "The Unmapped Road: Clear the Way",
    "need": 5,
-   "xpReward": 975,
-   "goldReward": 595,
-   "acceptDesc": "\"The Unmapped Road: Clear the Way\" — Defeat 5 monsters in The Unmapped Road. Reward: 975 XP, 595 Gold."
+   "xpReward": 1025,
+   "goldReward": 625,
+   "acceptDesc": "\"The Unmapped Road: Clear the Way\" — Defeat 5 monsters in The Unmapped Road. Reward: 1025 XP, 625 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the blank map edge at camp first.",
   "bossPromptDesc": "The Wayfinder has noticed you.",
   "zoneClearedDesc": "The Unmapped Road goes quiet. The family chooses to keep walking, for the first time not because",
-  "templeRepOnClear": 1330,
+  "templeRepOnClear": 1390,
   "nextZone": "the-borrowed-coast",
   "climax": false
  },
@@ -2575,11 +2803,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Riptide Fiend": {
-    "hp": 588,
-    "atk": 70,
+    "hp": 616,
+    "atk": 73,
     "spd": 5,
-    "xp": 200,
-    "g": 121,
+    "xp": 210,
+    "g": 127,
     "cls": "act2-body",
     "tint": [
      "#8ad8ff",
@@ -2587,11 +2815,11 @@ const ACT2_ZONES = {
     ]
    },
    "Coral Sentinel": {
-    "hp": 441,
-    "atk": 97,
+    "hp": 462,
+    "atk": 102,
     "spd": 8,
-    "xp": 200,
-    "g": 121,
+    "xp": 210,
+    "g": 127,
     "cls": "act2-body",
     "tint": [
      "#8ad8ff",
@@ -2599,11 +2827,11 @@ const ACT2_ZONES = {
     ]
    },
    "Driftwood Horror": {
-    "hp": 764,
-    "atk": 56,
+    "hp": 801,
+    "atk": 59,
     "spd": 4,
-    "xp": 200,
-    "g": 121,
+    "xp": 210,
+    "g": 127,
     "cls": "act2-body",
     "tint": [
      "#8ad8ff",
@@ -2619,10 +2847,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Tidereaver",
    "mechanic": "drown",
-   "atk": 157,
+   "atk": 163,
    "spd": 5,
-   "xp": 4840,
-   "g": 2520,
+   "xp": 5080,
+   "g": 2640,
    "hint": "A shoreline that never belonged to anyone long, judging by how many old names are carved into the same rocks",
    "introLine": "A shoreline that never belonged to anyone long, judging by how many old names are carved into the same rocks. The sea here remembers every one of them.",
    "spriteCls": "act2-body",
@@ -2634,19 +2862,19 @@ const ACT2_ZONES = {
    "drownTurn": 4,
    "drownDmg": 36,
    "drownSaveChance": 0.5,
-   "hp": 4530
+   "hp": 4800
   },
   "quest": {
    "name": "The Borrowed Coast: Clear the Way",
    "need": 5,
-   "xpReward": 1000,
-   "goldReward": 610,
-   "acceptDesc": "\"The Borrowed Coast: Clear the Way\" — Defeat 5 monsters in The Borrowed Coast. Reward: 1000 XP, 610 Gold."
+   "xpReward": 1050,
+   "goldReward": 640,
+   "acceptDesc": "\"The Borrowed Coast: Clear the Way\" — Defeat 5 monsters in The Borrowed Coast. Reward: 1050 XP, 640 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the rock of names at camp first.",
   "bossPromptDesc": "The Tidereaver has noticed you.",
   "zoneClearedDesc": "The Borrowed Coast goes quiet. The Borrowed Coast remembers everyone who ever passed through it.",
-  "templeRepOnClear": 1360,
+  "templeRepOnClear": 1420,
   "nextZone": "the-salt-debt",
   "climax": false
  },
@@ -2689,11 +2917,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Salt Wraith": {
-    "hp": 602,
-    "atk": 71,
+    "hp": 630,
+    "atk": 75,
     "spd": 5,
-    "xp": 205,
-    "g": 124,
+    "xp": 215,
+    "g": 130,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2701,11 +2929,11 @@ const ACT2_ZONES = {
     ]
    },
    "Ledger Enforcer": {
-    "hp": 452,
-    "atk": 100,
+    "hp": 473,
+    "atk": 105,
     "spd": 8,
-    "xp": 205,
-    "g": 124,
+    "xp": 215,
+    "g": 130,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2713,11 +2941,11 @@ const ACT2_ZONES = {
     ]
    },
    "Debt Collector Construct": {
-    "hp": 783,
-    "atk": 57,
+    "hp": 819,
+    "atk": 60,
     "spd": 4,
-    "xp": 205,
-    "g": 124,
+    "xp": 215,
+    "g": 130,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -2733,10 +2961,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Ledgerbound",
    "mechanic": "resurrect",
-   "atk": 160,
+   "atk": 167,
    "spd": 5,
-   "xp": 4960,
-   "g": 2580,
+   "xp": 5200,
+   "g": 2700,
    "hint": "A trading settlement built entirely on obligation — everyone here owes someone, who owes someone else, all the",
    "introLine": "A trading settlement built entirely on obligation — everyone here owes someone, who owes someone else, all the way down. Aisyah recognizes the architecture of it immediately, and does not love what she recognizes.",
    "spriteCls": "act2-body",
@@ -2746,8 +2974,8 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "lives": [
-    864,
-    834
+    900,
+    870
    ],
    "lifeNames": [
     "The Owed",
@@ -2757,14 +2985,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "The Salt Debt: Clear the Way",
    "need": 5,
-   "xpReward": 1025,
-   "goldReward": 625,
-   "acceptDesc": "\"The Salt Debt: Clear the Way\" — Defeat 5 monsters in The Salt Debt. Reward: 1025 XP, 625 Gold."
+   "xpReward": 1075,
+   "goldReward": 655,
+   "acceptDesc": "\"The Salt Debt: Clear the Way\" — Defeat 5 monsters in The Salt Debt. Reward: 1075 XP, 655 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the debt post at camp first.",
   "bossPromptDesc": "The Ledgerbound has noticed you.",
   "zoneClearedDesc": "The Salt Debt goes quiet. Aisyah recognizes the architecture of The Salt Debt immediately, and",
-  "templeRepOnClear": 1390,
+  "templeRepOnClear": 1450,
   "nextZone": "the-quiet-uprising",
   "climax": false
  },
@@ -2807,11 +3035,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Undertow Whisper": {
-    "hp": 616,
-    "atk": 73,
+    "hp": 644,
+    "atk": 77,
     "spd": 5,
-    "xp": 210,
-    "g": 127,
+    "xp": 220,
+    "g": 133,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2819,11 +3047,11 @@ const ACT2_ZONES = {
     ]
    },
    "Drowned Malcontent": {
-    "hp": 462,
-    "atk": 102,
+    "hp": 483,
+    "atk": 108,
     "spd": 8,
-    "xp": 210,
-    "g": 127,
+    "xp": 220,
+    "g": 133,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2831,11 +3059,11 @@ const ACT2_ZONES = {
     ]
    },
    "Silent Agitator": {
-    "hp": 801,
-    "atk": 59,
+    "hp": 837,
+    "atk": 61,
     "spd": 4,
-    "xp": 210,
-    "g": 127,
+    "xp": 220,
+    "g": 133,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -2851,10 +3079,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Undertow",
    "mechanic": "devour",
-   "atk": 163,
+   "atk": 170,
    "spd": 5,
-   "xp": 5080,
-   "g": 2640,
+   "xp": 5320,
+   "g": 2760,
    "hint": "Something under the Salt Debt has been listening to every unpaid promise for a very long time, and has finally",
    "introLine": "Something under the Salt Debt has been listening to every unpaid promise for a very long time, and has finally decided it is owed something too.",
    "spriteCls": "act2-body",
@@ -2866,19 +3094,19 @@ const ACT2_ZONES = {
    "devourTurn": 5,
    "devourDmg": 42,
    "staggerPct": 0.35,
-   "hp": 4800
+   "hp": 5070
   },
   "quest": {
    "name": "The Quiet Uprising: Clear the Way",
    "need": 5,
-   "xpReward": 1050,
-   "goldReward": 640,
-   "acceptDesc": "\"The Quiet Uprising: Clear the Way\" — Defeat 5 monsters in The Quiet Uprising. Reward: 1050 XP, 640 Gold."
+   "xpReward": 1100,
+   "goldReward": 670,
+   "acceptDesc": "\"The Quiet Uprising: Clear the Way\" — Defeat 5 monsters in The Quiet Uprising. Reward: 1100 XP, 670 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the listening stone at camp first.",
   "bossPromptDesc": "The Undertow has noticed you.",
   "zoneClearedDesc": "The Quiet Uprising goes quiet. Everything the Salt Debt never paid finally comes due.",
-  "templeRepOnClear": 1420,
+  "templeRepOnClear": 1480,
   "nextZone": "where-the-walk-leads",
   "climax": false
  },
@@ -2921,11 +3149,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Horizon Sentinel": {
-    "hp": 630,
-    "atk": 75,
+    "hp": 658,
+    "atk": 79,
     "spd": 5,
-    "xp": 215,
-    "g": 130,
+    "xp": 225,
+    "g": 136,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2933,11 +3161,11 @@ const ACT2_ZONES = {
     ]
    },
    "Farlight Construct": {
-    "hp": 473,
-    "atk": 105,
+    "hp": 494,
+    "atk": 110,
     "spd": 8,
-    "xp": 215,
-    "g": 130,
+    "xp": 225,
+    "g": 136,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2945,11 +3173,11 @@ const ACT2_ZONES = {
     ]
    },
    "Wandering Star Wisp": {
-    "hp": 819,
-    "atk": 60,
+    "hp": 855,
+    "atk": 63,
     "spd": 4,
-    "xp": 215,
-    "g": 130,
+    "xp": 225,
+    "g": 136,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -2965,10 +3193,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Horizon Keeper",
    "mechanic": "apocalypse",
-   "atk": 167,
+   "atk": 173,
    "spd": 5,
-   "xp": 5200,
-   "g": 2700,
+   "xp": 5440,
+   "g": 2820,
    "hint": "Not a destination",
    "introLine": "Not a destination. Just the furthest point this particular road has gone so far. There will be another one after it. That used to feel like a threat. It does not anymore.",
    "spriteCls": "act2-body",
@@ -2979,21 +3207,137 @@ const ACT2_ZONES = {
    ],
    "apocalypseTurn": 6,
    "apocalypseDmg": 46,
-   "hp": 4935
+   "hp": 5205
   },
   "quest": {
    "name": "Where the Walk Leads: Clear the Way",
    "need": 5,
-   "xpReward": 1075,
-   "goldReward": 655,
-   "acceptDesc": "\"Where the Walk Leads: Clear the Way\" — Defeat 5 monsters in Where the Walk Leads. Reward: 1075 XP, 655 Gold."
+   "xpReward": 1125,
+   "goldReward": 685,
+   "acceptDesc": "\"Where the Walk Leads: Clear the Way\" — Defeat 5 monsters in Where the Walk Leads. Reward: 1125 XP, 685 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the furthest marker at camp first.",
   "bossPromptDesc": "The Horizon Keeper has noticed you.",
   "zoneClearedDesc": "Where the Walk Leads goes quiet. Act Five ends not at a destination, but at the edge of the next",
-  "templeRepOnClear": 1450,
-  "nextZone": "the-hollow-vigil",
+  "templeRepOnClear": 1510,
+  "nextZone": "the-unmended-wound",
   "climax": false
+ },
+ "the-unmended-wound": {
+  "name": "The Unmended Wound",
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Every other wound in this world eventually closed. This one refused, out of pure spite, and grew something that could fight back."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Scorched Hoard",
+    "icon": "🐲",
+    "type": "quest",
+    "npcName": "Scattered Hoard"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Cinder",
+    "icon": "🔥",
+    "type": "merchant",
+    "name": "Cinder",
+    "line": "\"Dragons keep what they keep. I sell what they dropped.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Nyxathorne Whelp": {
+    "hp": 672,
+    "atk": 80,
+    "spd": 5,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Nyxathorne Scale-Guard": {
+    "hp": 504,
+    "atk": 113,
+    "spd": 8,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Hoard Wraith": {
+    "hp": 874,
+    "atk": 64,
+    "spd": 4,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Nyxathorne Scale",
+   "Nyxathorne Fang",
+   "Nyxathorne Hoard Fragment"
+  ],
+  "boss": {
+   "name": "Nyxathorne, the Unmended Wound",
+   "mechanic": "phase",
+   "atk": 176,
+   "spd": 5,
+   "xp": 5560,
+   "g": 2880,
+   "hint": "Every other wound in this world eventually closed",
+   "introLine": "Every other wound in this world eventually closed. This one refused, out of pure spite, and grew something that could fight back.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "phaseThresholds": [
+    0.66,
+    0.33
+   ],
+   "hp": 5340,
+   "img": "assets/boss/nyxathorne.jpg"
+  },
+  "quest": {
+   "name": "The Unmended Wound: Clear the Way",
+   "need": 5,
+   "xpReward": 1150,
+   "goldReward": 700,
+   "acceptDesc": "\"The Unmended Wound: Clear the Way\" — Defeat 5 monsters in The Unmended Wound. Reward: 1150 XP, 700 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the scattered hoard at camp first.",
+  "bossPromptDesc": "Nyxathorne, the Unmended Wound has noticed you.",
+  "zoneClearedDesc": "The Unmended Wound goes quiet. ",
+  "templeRepOnClear": 1540,
+  "nextZone": "the-hollow-vigil",
+  "climax": true
  },
  "the-hollow-vigil": {
   "name": "The Hollow Vigil",
@@ -3034,11 +3378,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Closed-Eye Acolyte": {
-    "hp": 644,
-    "atk": 77,
+    "hp": 686,
+    "atk": 82,
     "spd": 5,
-    "xp": 220,
-    "g": 133,
+    "xp": 235,
+    "g": 142,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -3046,11 +3390,11 @@ const ACT2_ZONES = {
     ]
    },
    "Grief Chanter": {
-    "hp": 483,
-    "atk": 108,
+    "hp": 515,
+    "atk": 115,
     "spd": 8,
-    "xp": 220,
-    "g": 133,
+    "xp": 235,
+    "g": 142,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -3058,11 +3402,11 @@ const ACT2_ZONES = {
     ]
    },
    "Veiled Zealot": {
-    "hp": 837,
-    "atk": 61,
+    "hp": 892,
+    "atk": 66,
     "spd": 4,
-    "xp": 220,
-    "g": 133,
+    "xp": 235,
+    "g": 142,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -3078,10 +3422,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Hollow Prophet",
    "mechanic": "freeze",
-   "atk": 170,
+   "atk": 180,
    "spd": 5,
-   "xp": 5320,
-   "g": 2760,
+   "xp": 5680,
+   "g": 2940,
    "hint": "A vigil kept by the Cult of the Closed Eye, where grief was taught to look like faith",
    "introLine": "A vigil kept by the Cult of the Closed Eye, where grief was taught to look like faith. The candles here have never once been lit, and the congregation keeps waiting anyway.",
    "spriteCls": "act2-body",
@@ -3092,20 +3436,20 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.35,
    "freezeDuration": 3200,
-   "hp": 5070,
+   "hp": 5475,
    "img": "assets/boss/thehollowprophet.jpg"
   },
   "quest": {
    "name": "The Hollow Vigil: Clear the Way",
    "need": 5,
-   "xpReward": 1100,
-   "goldReward": 670,
-   "acceptDesc": "\"The Hollow Vigil: Clear the Way\" — Defeat 5 monsters in The Hollow Vigil. Reward: 1100 XP, 670 Gold."
+   "xpReward": 1175,
+   "goldReward": 715,
+   "acceptDesc": "\"The Hollow Vigil: Clear the Way\" — Defeat 5 monsters in The Hollow Vigil. Reward: 1175 XP, 715 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the closed-eye altar at camp first.",
   "bossPromptDesc": "The Hollow Prophet has noticed you.",
   "zoneClearedDesc": "The Hollow Vigil goes quiet. The Cult of the Closed Eye ends not with a monster, but with a",
-  "templeRepOnClear": 1480,
+  "templeRepOnClear": 1570,
   "nextZone": "the-scattered-choir",
   "climax": false
  },
@@ -3148,11 +3492,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Choir Remnant": {
-    "hp": 658,
-    "atk": 79,
+    "hp": 700,
+    "atk": 84,
     "spd": 5,
-    "xp": 225,
-    "g": 136,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -3160,11 +3504,11 @@ const ACT2_ZONES = {
     ]
    },
    "Hymnless Cantor": {
-    "hp": 494,
-    "atk": 110,
+    "hp": 525,
+    "atk": 118,
     "spd": 8,
-    "xp": 225,
-    "g": 136,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -3172,11 +3516,11 @@ const ACT2_ZONES = {
     ]
    },
    "Candle Bearer": {
-    "hp": 855,
-    "atk": 63,
+    "hp": 910,
+    "atk": 67,
     "spd": 4,
-    "xp": 225,
-    "g": 136,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#e0a8ff",
@@ -3192,10 +3536,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Sister Wren, the Last Believer",
    "mechanic": "resurrect",
-   "atk": 173,
+   "atk": 183,
    "spd": 5,
-   "xp": 5440,
-   "g": 2820,
+   "xp": 5800,
+   "g": 3000,
    "hint": "What is left of the cult after its prophet fell — voices without a conductor, a hymn that no longer has a vers",
    "introLine": "What is left of the cult after its prophet fell — voices without a conductor, a hymn that no longer has a verse, and one believer who stayed because leaving would mean admitting what she was right about.",
    "spriteCls": "act2-body",
@@ -3205,9 +3549,9 @@ const ACT2_ZONES = {
     "#7a3aba"
    ],
    "lives": [
-    966,
-    936,
-    906
+    1020,
+    990,
+    960
    ],
    "lifeNames": [
     "The Doctrine",
@@ -3219,14 +3563,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "The Scattered Choir: Clear the Way",
    "need": 5,
-   "xpReward": 1125,
-   "goldReward": 685,
-   "acceptDesc": "\"The Scattered Choir: Clear the Way\" — Defeat 5 monsters in The Scattered Choir. Reward: 1125 XP, 685 Gold."
+   "xpReward": 1200,
+   "goldReward": 730,
+   "acceptDesc": "\"The Scattered Choir: Clear the Way\" — Defeat 5 monsters in The Scattered Choir. Reward: 1200 XP, 730 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the silent hymnal at camp first.",
   "bossPromptDesc": "Sister Wren, the Last Believer has noticed you.",
   "zoneClearedDesc": "The Scattered Choir goes quiet. The Cult of the Closed Eye finally, actually ends — not with a",
-  "templeRepOnClear": 1510,
+  "templeRepOnClear": 1600,
   "nextZone": "the-unbroken-vale",
   "climax": true
  },
@@ -3269,11 +3613,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Bramble Warden": {
-    "hp": 672,
-    "atk": 80,
+    "hp": 714,
+    "atk": 86,
     "spd": 5,
-    "xp": 230,
-    "g": 139,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3281,11 +3625,11 @@ const ACT2_ZONES = {
     ]
    },
    "Wildroot Sprite": {
-    "hp": 504,
-    "atk": 113,
+    "hp": 536,
+    "atk": 120,
     "spd": 8,
-    "xp": 230,
-    "g": 139,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3293,11 +3637,11 @@ const ACT2_ZONES = {
     ]
    },
    "Thistle Stalker": {
-    "hp": 874,
-    "atk": 64,
+    "hp": 928,
+    "atk": 69,
     "spd": 4,
-    "xp": 230,
-    "g": 139,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3313,10 +3657,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Vale Warden",
    "mechanic": "phase",
-   "atk": 176,
+   "atk": 186,
    "spd": 5,
-   "xp": 5560,
-   "g": 2880,
+   "xp": 5920,
+   "g": 3060,
    "hint": "The first stretch of ground the party has found since the Breaking that was never actually broken — or healed ",
    "introLine": "The first stretch of ground the party has found since the Breaking that was never actually broken — or healed so completely there is no telling the difference anymore. No ruins. No ash. Just green, further than anyone can see, and the strange quiet of a wound that finally closed.",
    "spriteCls": "act2-body",
@@ -3329,19 +3673,19 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 5340
+   "hp": 5745
   },
   "quest": {
    "name": "The Unbroken Vale: Clear the Way",
    "need": 5,
-   "xpReward": 1150,
-   "goldReward": 700,
-   "acceptDesc": "\"The Unbroken Vale: Clear the Way\" — Defeat 5 monsters in The Unbroken Vale. Reward: 1150 XP, 700 Gold."
+   "xpReward": 1225,
+   "goldReward": 745,
+   "acceptDesc": "\"The Unbroken Vale: Clear the Way\" — Defeat 5 monsters in The Unbroken Vale. Reward: 1225 XP, 745 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
   "bossPromptDesc": "The Vale Warden has noticed you.",
   "zoneClearedDesc": "The Unbroken Vale goes quiet. ",
-  "templeRepOnClear": 1540,
+  "templeRepOnClear": 1630,
   "nextZone": "the-verdant-choir",
   "climax": false
  },
@@ -3384,11 +3728,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Rootbound Acolyte": {
-    "hp": 686,
-    "atk": 82,
+    "hp": 728,
+    "atk": 88,
     "spd": 5,
-    "xp": 235,
-    "g": 142,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3396,11 +3740,11 @@ const ACT2_ZONES = {
     ]
    },
    "Hollow Chorister": {
-    "hp": 515,
-    "atk": 115,
+    "hp": 546,
+    "atk": 123,
     "spd": 8,
-    "xp": 235,
-    "g": 142,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3408,11 +3752,11 @@ const ACT2_ZONES = {
     ]
    },
    "Bloomveiled Sentinel": {
-    "hp": 892,
-    "atk": 66,
+    "hp": 946,
+    "atk": 70,
     "spd": 4,
-    "xp": 235,
-    "g": 142,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3428,10 +3772,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Last Vigil",
    "mechanic": "rampage",
-   "atk": 180,
+   "atk": 190,
    "spd": 5,
-   "xp": 5680,
-   "g": 2940,
+   "xp": 6040,
+   "g": 3120,
    "hint": "Fallen columns, half-swallowed by root and bloom, arranged in a circle too deliberate to be an accident of gro",
    "introLine": "Fallen columns, half-swallowed by root and bloom, arranged in a circle too deliberate to be an accident of growth. Something was built here, once, and something has been quietly guarding what is left of it ever since — not fiercely. Patiently, the way only something that has waited a very long time can afford to be.",
    "spriteCls": "act2-body",
@@ -3441,20 +3785,135 @@ const ACT2_ZONES = {
     "#3a7a3a"
    ],
    "rampageEvery": 3,
-   "rampageDmg": 198,
-   "hp": 5475
+   "rampageDmg": 209,
+   "hp": 5880
   },
   "quest": {
    "name": "The Verdant Choir: Clear the Way",
    "need": 5,
-   "xpReward": 1175,
-   "goldReward": 715,
-   "acceptDesc": "\"The Verdant Choir: Clear the Way\" — Defeat 5 monsters in The Verdant Choir. Reward: 1175 XP, 715 Gold."
+   "xpReward": 1250,
+   "goldReward": 760,
+   "acceptDesc": "\"The Verdant Choir: Clear the Way\" — Defeat 5 monsters in The Verdant Choir. Reward: 1250 XP, 760 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
   "bossPromptDesc": "The Last Vigil has noticed you.",
   "zoneClearedDesc": "The Verdant Choir goes quiet. ",
-  "templeRepOnClear": 1570,
+  "templeRepOnClear": 1660,
+  "nextZone": "corvennas-roots",
+  "climax": false
+ },
+ "corvennas-roots": {
+  "name": "Corvenna's Roots",
+  "theme": "zone-act2-poison",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Even the Vale had to bury something to become the Vale. It waits, patient as everything else down here, then reaches up for exactly one of you at a time."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Scorched Hoard",
+    "icon": "🐲",
+    "type": "quest",
+    "npcName": "Scattered Hoard"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Cinder",
+    "icon": "🔥",
+    "type": "merchant",
+    "name": "Cinder",
+    "line": "\"Dragons keep what they keep. I sell what they dropped.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Corvenna Whelp": {
+    "hp": 742,
+    "atk": 89,
+    "spd": 5,
+    "xp": 255,
+    "g": 154,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Corvenna Scale-Guard": {
+    "hp": 557,
+    "atk": 125,
+    "spd": 8,
+    "xp": 255,
+    "g": 154,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Hoard Wraith": {
+    "hp": 965,
+    "atk": 72,
+    "spd": 4,
+    "xp": 255,
+    "g": 154,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Corvenna Scale",
+   "Corvenna Fang",
+   "Corvenna Hoard Fragment"
+  ],
+  "boss": {
+   "name": "Corvenna, the Root That Waited",
+   "mechanic": "devour",
+   "atk": 193,
+   "spd": 5,
+   "xp": 6160,
+   "g": 3180,
+   "hint": "Even the Vale had to bury something to become the Vale",
+   "introLine": "Even the Vale had to bury something to become the Vale. It waits, patient as everything else down here, then reaches up for exactly one of you at a time.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#9aff8a",
+    "#3a7a3a"
+   ],
+   "devourTurn": 4,
+   "devourDmg": 251,
+   "staggerPct": 0.35,
+   "hp": 6015,
+   "img": "assets/boss/corvenna.jpg"
+  },
+  "quest": {
+   "name": "Corvenna's Roots: Clear the Way",
+   "need": 5,
+   "xpReward": 1275,
+   "goldReward": 775,
+   "acceptDesc": "\"Corvenna's Roots: Clear the Way\" — Defeat 5 monsters in Corvenna's Roots. Reward: 1275 XP, 775 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the scattered hoard at camp first.",
+  "bossPromptDesc": "Corvenna, the Root That Waited has noticed you.",
+  "zoneClearedDesc": "Corvenna's Roots goes quiet. ",
+  "templeRepOnClear": 1690,
   "nextZone": "where-the-old-names-wait",
   "climax": false
  },
@@ -3497,11 +3956,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Old Name": {
-    "hp": 700,
-    "atk": 84,
+    "hp": 756,
+    "atk": 91,
     "spd": 5,
-    "xp": 240,
-    "g": 145,
+    "xp": 260,
+    "g": 157,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3509,11 +3968,11 @@ const ACT2_ZONES = {
     ]
    },
    "Remembered Slight": {
-    "hp": 525,
-    "atk": 118,
+    "hp": 567,
+    "atk": 128,
     "spd": 8,
-    "xp": 240,
-    "g": 145,
+    "xp": 260,
+    "g": 157,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3521,11 +3980,11 @@ const ACT2_ZONES = {
     ]
    },
    "Unsent Grievance": {
-    "hp": 910,
-    "atk": 67,
+    "hp": 983,
+    "atk": 73,
     "spd": 4,
-    "xp": 240,
-    "g": 145,
+    "xp": 260,
+    "g": 157,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3541,10 +4000,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Old Names",
    "mechanic": "resurrect",
-   "atk": 183,
+   "atk": 196,
    "spd": 5,
-   "xp": 5800,
-   "g": 3000,
+   "xp": 6280,
+   "g": 3240,
    "hint": "The Vale builds confrontations from memory, not accuracy",
    "introLine": "The Vale builds confrontations from memory, not accuracy. Here every old name that ever had a claim on you waits in a row, sharpened by the years, still expecting you to answer.",
    "spriteCls": "act2-body",
@@ -3554,11 +4013,11 @@ const ACT2_ZONES = {
     "#3a7a3a"
    ],
    "lives": [
-    1080,
-    1065,
-    1050,
-    1035,
-    1020
+    1152,
+    1137,
+    1122,
+    1107,
+    1092
    ],
    "lifeNames": [
     "The Ex-Mother-in-Law",
@@ -3571,14 +4030,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "Where the Old Names Wait: Clear the Way",
    "need": 5,
-   "xpReward": 1200,
-   "goldReward": 730,
-   "acceptDesc": "\"Where the Old Names Wait: Clear the Way\" — Defeat 5 monsters in Where the Old Names Wait. Reward: 1200 XP, 730 Gold."
+   "xpReward": 1300,
+   "goldReward": 790,
+   "acceptDesc": "\"Where the Old Names Wait: Clear the Way\" — Defeat 5 monsters in Where the Old Names Wait. Reward: 1300 XP, 790 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the old name stone at camp first.",
   "bossPromptDesc": "The Old Names has noticed you.",
   "zoneClearedDesc": "Where the Old Names Wait goes quiet. San faces the wraith of the woman who never once called her a",
-  "templeRepOnClear": 1600,
+  "templeRepOnClear": 1720,
   "nextZone": "the-retainers-hollow",
   "climax": false
  },
@@ -3621,11 +4080,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Associate Wraith": {
-    "hp": 714,
-    "atk": 86,
+    "hp": 770,
+    "atk": 93,
     "spd": 5,
-    "xp": 245,
-    "g": 148,
+    "xp": 265,
+    "g": 160,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3633,11 +4092,11 @@ const ACT2_ZONES = {
     ]
    },
    "Non-Compete Bramble": {
-    "hp": 536,
-    "atk": 120,
+    "hp": 578,
+    "atk": 130,
     "spd": 8,
-    "xp": 245,
-    "g": 148,
+    "xp": 265,
+    "g": 160,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3645,11 +4104,11 @@ const ACT2_ZONES = {
     ]
    },
    "Overtime Root": {
-    "hp": 928,
-    "atk": 69,
+    "hp": 1001,
+    "atk": 74,
     "spd": 4,
-    "xp": 245,
-    "g": 148,
+    "xp": 265,
+    "g": 160,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3665,10 +4124,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Robin C.",
    "mechanic": "rampage",
-   "atk": 186,
+   "atk": 200,
    "spd": 5,
-   "xp": 5920,
-   "g": 3060,
+   "xp": 6400,
+   "g": 3300,
    "hint": "A patch of the Vale that never grew right — silverleaf trees bent into rows like filing cabinets, roots knotte",
    "introLine": "A patch of the Vale that never grew right — silverleaf trees bent into rows like filing cabinets, roots knotted tight as a signature nobody actually got to read in full. There is an office here, standing where an office has no business standing. San recognizes the smell of it before she recognizes anything else: burnt coffee, cold fluorescent light, and somebody else's overtime.",
    "spriteCls": "act2-body",
@@ -3679,20 +4138,20 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 48,
-   "hp": 5745,
+   "hp": 6285,
    "img": "assets/boss/robin.jpg"
   },
   "quest": {
    "name": "The Retainer's Hollow: Clear the Way",
    "need": 5,
-   "xpReward": 1225,
-   "goldReward": 745,
-   "acceptDesc": "\"The Retainer's Hollow: Clear the Way\" — Defeat 5 monsters in The Retainer's Hollow. Reward: 1225 XP, 745 Gold."
+   "xpReward": 1325,
+   "goldReward": 805,
+   "acceptDesc": "\"The Retainer's Hollow: Clear the Way\" — Defeat 5 monsters in The Retainer's Hollow. Reward: 1325 XP, 805 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the filing tree at camp first.",
   "bossPromptDesc": "Robin C. has noticed you.",
   "zoneClearedDesc": "The Retainer's Hollow goes quiet. San finally confronts Robin — and finds nine years does not need",
-  "templeRepOnClear": 1630,
+  "templeRepOnClear": 1750,
   "nextZone": "the-treeline-detail",
   "climax": false
  },
@@ -3735,11 +4194,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Overtime Wraith": {
-    "hp": 728,
-    "atk": 88,
+    "hp": 784,
+    "atk": 95,
     "spd": 5,
-    "xp": 250,
-    "g": 151,
+    "xp": 270,
+    "g": 163,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3747,11 +4206,11 @@ const ACT2_ZONES = {
     ]
    },
    "Off-Day Enforcer": {
-    "hp": 546,
-    "atk": 123,
+    "hp": 588,
+    "atk": 133,
     "spd": 8,
-    "xp": 250,
-    "g": 151,
+    "xp": 270,
+    "g": 163,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3759,11 +4218,11 @@ const ACT2_ZONES = {
     ]
    },
    "Loading Dock Sentinel": {
-    "hp": 946,
-    "atk": 70,
+    "hp": 1019,
+    "atk": 76,
     "spd": 4,
-    "xp": 250,
-    "g": 151,
+    "xp": 270,
+    "g": 163,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3779,10 +4238,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Jeff, the SK",
    "mechanic": "lightning_rod",
-   "atk": 190,
+   "atk": 203,
    "spd": 5,
-   "xp": 6040,
-   "g": 3120,
+   "xp": 6520,
+   "g": 3360,
    "hint": "Another patch of green quietly ruined by something that has no business out here — a loading dock bolted onto ",
    "introLine": "Another patch of green quietly ruined by something that has no business out here — a loading dock bolted onto the edge of the vale, floodlights running on a generator nobody asked permission to install. Past the treeline, the brush has clearly been cleared, over and over, by people who were never given a choice about it.",
    "spriteCls": "act2-body",
@@ -3793,20 +4252,20 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 50,
-   "hp": 5880,
+   "hp": 6420,
    "img": "assets/boss/jeff.jpg"
   },
   "quest": {
    "name": "The Treeline Detail: Clear the Way",
    "need": 5,
-   "xpReward": 1250,
-   "goldReward": 760,
-   "acceptDesc": "\"The Treeline Detail: Clear the Way\" — Defeat 5 monsters in The Treeline Detail. Reward: 1250 XP, 760 Gold."
+   "xpReward": 1350,
+   "goldReward": 820,
+   "acceptDesc": "\"The Treeline Detail: Clear the Way\" — Defeat 5 monsters in The Treeline Detail. Reward: 1350 XP, 820 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the bolted loading dock at camp first.",
   "bossPromptDesc": "Jeff, the SK has noticed you.",
   "zoneClearedDesc": "The Treeline Detail goes quiet. Jeff remembers Joel perfectly — he was his favorite, once, right up",
-  "templeRepOnClear": 1660,
+  "templeRepOnClear": 1780,
   "nextZone": "sunreach-fields",
   "climax": false
  },
@@ -3849,11 +4308,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Harvest Golem": {
-    "hp": 742,
-    "atk": 89,
+    "hp": 798,
+    "atk": 97,
     "spd": 5,
-    "xp": 255,
-    "g": 154,
+    "xp": 275,
+    "g": 166,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3861,11 +4320,11 @@ const ACT2_ZONES = {
     ]
    },
    "Sunreach Guardian": {
-    "hp": 557,
-    "atk": 125,
+    "hp": 599,
+    "atk": 135,
     "spd": 8,
-    "xp": 255,
-    "g": 154,
+    "xp": 275,
+    "g": 166,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3873,11 +4332,11 @@ const ACT2_ZONES = {
     ]
    },
    "Bloomwatcher": {
-    "hp": 965,
-    "atk": 72,
+    "hp": 1037,
+    "atk": 77,
     "spd": 4,
-    "xp": 255,
-    "g": 154,
+    "xp": 275,
+    "g": 166,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3893,10 +4352,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Skarrowyn, the Split Horizon",
    "mechanic": "phase",
-   "atk": 193,
+   "atk": 206,
    "spd": 5,
-   "xp": 6160,
-   "g": 3180,
+   "xp": 6640,
+   "g": 3420,
    "hint": "A whole community living here, quietly, for who knows how long — fields actually under cultivation, harvests a",
    "introLine": "A whole community living here, quietly, for who knows how long — fields actually under cultivation, harvests actually being brought in. Nobody out this far seems to know or care what the rest of the world has been through. They just kept growing things, the entire time.",
    "spriteCls": "act2-body",
@@ -3909,21 +4368,21 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 6015,
+   "hp": 6555,
    "img": "assets/boss/skarrowyn.jpg"
   },
   "quest": {
    "name": "Sunreach Fields: Clear the Way",
    "need": 5,
-   "xpReward": 1275,
-   "goldReward": 775,
-   "acceptDesc": "\"Sunreach Fields: Clear the Way\" — Defeat 5 monsters in Sunreach Fields. Reward: 1275 XP, 775 Gold."
+   "xpReward": 1375,
+   "goldReward": 835,
+   "acceptDesc": "\"Sunreach Fields: Clear the Way\" — Defeat 5 monsters in Sunreach Fields. Reward: 1375 XP, 835 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the leaning harvest at camp first.",
   "bossPromptDesc": "Skarrowyn, the Split Horizon has noticed you.",
   "zoneClearedDesc": "Sunreach Fields goes quiet. Skarrowyn and Nyxathorne both fall, and Varel and Mimi build the",
-  "templeRepOnClear": 1690,
-  "nextZone": "the-rootbound-sanctuary",
+  "templeRepOnClear": 1810,
+  "nextZone": "the-last-question",
   "climax": true
  }
 };
