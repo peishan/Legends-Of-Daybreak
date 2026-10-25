@@ -27,7 +27,7 @@
 
   /* ================= HUB ================= */
   #screen-hub{ background:linear-gradient(180deg,#171320 0%, #0f0c16 100%); }
-  #hub-content{ padding:16px 16px calc(90px + env(safe-area-inset-bottom)); }
+  #hub-content{ padding:16px 16px 16px; }
   #hub-status{ display:flex; align-items:center; gap:12px; background:#211b2aee; border:1px solid #3a3350; border-radius:16px; padding:12px 14px; margin-bottom:16px; }
   #hub-status img{ width:48px;height:48px;border-radius:50%; object-fit:cover; border:2px solid var(--sun); flex-shrink:0; }
   #hub-status-body{ flex:1; min-width:0; }
@@ -83,11 +83,11 @@
   #hub-save-row button{ background:#211b2aee; border:1px solid #3a3350; color:var(--muted); font-family:'Karla',sans-serif;
     font-size:10.5px; font-weight:700; padding:8px 12px; border-radius:16px; cursor:pointer; }
   #hub-save-row button:active{ opacity:.7; }
-  #hub-reset-row{ text-align:center; margin:8px 0 70px; }
+  #hub-reset-row{ text-align:center; margin:8px 0 24px; }
   #hub-reset-btn{ background:none; border:none; color:var(--muted); font-family:'Karla',sans-serif; font-size:10.5px; text-decoration:underline; cursor:pointer; opacity:.6; }
   #hub-reset-btn.confirm{ color:#e0728a; opacity:1; }
 
-  #hub-quest-strip{ position:absolute; left:0; right:0; bottom:0; z-index:10; padding:10px 16px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(0deg,#0f0c16 60%, transparent); }
+  #hub-quest-strip{ position:sticky; bottom:0; z-index:10; padding:10px 16px calc(12px + env(safe-area-inset-bottom)); background:linear-gradient(0deg,#0f0c16 60%, transparent); }
   #hub-quest-strip-inner{ display:flex; align-items:center; gap:10px; background:#211b2aee; border:1px solid #3a3350; border-radius:12px; padding:10px 12px; }
   #hub-quest-strip-inner .qi{ font-size:16px; }
   #hub-quest-strip-inner .qt{ flex:1; }
@@ -882,3 +882,25 @@
   .replay-btn, .next-btn{ font-family:'Karla',sans-serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; border:none; padding:11px 20px; border-radius:20px; cursor:pointer; font-weight:700; }
   .replay-btn{ background:transparent; color:var(--muted); border:1px solid var(--panel-edge); }
   .next-btn{ background:#f0c98a; color:#241a12; }
+
+  /* Cloud backup + install */
+  #hub-save-row2{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+  #hub-save-row2 button{ background:#211b2aee; border:1px solid #3a3350; color:var(--muted); font-family:'Karla',sans-serif; font-size:11px; padding:8px 12px; border-radius:10px; cursor:pointer; }
+  #sync-content{ padding:70px 16px 50px; }
+  .sync-note{ font-family:'Karla',sans-serif; font-size:12px; line-height:1.5; color:var(--muted); margin:0 2px 12px; }
+  .sync-card{ background:#211b2aee; border:1px solid #3a3350; border-radius:14px; padding:14px; margin-bottom:12px; }
+  .sync-h{ font-family:'Spectral',serif; font-weight:600; font-size:14px; color:var(--cream); margin-bottom:8px; }
+  .sync-h span{ font-family:'Karla',sans-serif; font-weight:400; font-size:11px; color:var(--muted); }
+  #sync-content input{ width:100%; padding:10px; border-radius:10px; border:1px solid #3a3350; background:#120f1a; color:var(--cream); font-family:'Karla',sans-serif; font-size:13px; margin-bottom:8px; user-select:text; }
+  .sync-row{ display:flex; gap:8px; }
+  .sync-row input{ flex:1; }
+  .sync-btn{ display:block; width:100%; padding:11px; margin-bottom:8px; border-radius:12px; border:1px solid #3a3350; background:#2a2236; color:var(--cream); font-family:'Karla',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer; }
+  .sync-btn.small{ width:auto; flex-shrink:0; padding:0 12px; margin-bottom:8px; }
+  .sync-btn.primary{ background:var(--sun-soft); color:#241a12; border:none; }
+  .sync-btn.ghost{ background:none; }
+  .sync-btn:disabled{ opacity:.45; }
+  #sync-id-display{ display:block; word-break:break-all; user-select:all; background:#120f1a; border:1px solid #3a3350; border-radius:10px; padding:10px; margin-bottom:10px; font-size:12px; color:var(--sun-soft); }
+  #sync-status{ display:none; padding:10px 12px; border-radius:10px; margin-bottom:12px; font-family:'Karla',sans-serif; font-size:12.5px; background:#2a2236; color:var(--cream); }
+  #sync-status.show{ display:block; }
+  #sync-status.ok{ background:#1c3a2a; color:#bff0d2; }
+  #sync-status.bad{ background:#3d1c24; color:#f6c1cc; }

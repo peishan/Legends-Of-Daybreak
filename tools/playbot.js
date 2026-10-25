@@ -1,8 +1,8 @@
 // Scripted playthrough: drives the real game code in headless Chromium on a virtual clock and reports where it gets hard.
-// Usage: NODE_PATH=$(npm root -g) node tools/playbot.js [path/to/daybreak_app.html] [maxZones]
+// Usage: NODE_PATH=$(npm root -g) node tools/playbot.js [path/to/index.html] [maxZones]
 const { chromium } = require('playwright');
 const path = require('path');
-const file = path.resolve(process.argv[2] || path.join(__dirname, '..', 'daybreak_app.html'));
+const file = path.resolve(process.argv[2] || path.join(__dirname, '..', 'index.html'));
 const maxZones = +process.argv[3] || 9999;
 
 const virtualClock = () => {
