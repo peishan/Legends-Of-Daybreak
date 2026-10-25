@@ -3227,8 +3227,236 @@ const ACT2_ZONES = {
   "bossPromptDesc": "Sister Wren, the Last Believer has noticed you.",
   "zoneClearedDesc": "The Scattered Choir goes quiet. The Cult of the Closed Eye finally, actually ends — not with a",
   "templeRepOnClear": 1510,
-  "nextZone": "where-the-old-names-wait",
+  "nextZone": "the-unbroken-vale",
   "climax": true
+ },
+ "the-unbroken-vale": {
+  "name": "The Unbroken Vale",
+  "theme": "zone-act2-poison",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "The first stretch of ground the party has found since the Breaking that was never actually broken — or healed so completely there is no telling the difference anymore. No ruins. No ash. Just green, further than anyone can see, and the strange quiet of a wound that finally closed."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Bramble Warden": {
+    "hp": 672,
+    "atk": 80,
+    "spd": 5,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Wildroot Sprite": {
+    "hp": 504,
+    "atk": 113,
+    "spd": 8,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Thistle Stalker": {
+    "hp": 874,
+    "atk": 64,
+    "spd": 4,
+    "xp": 230,
+    "g": 139,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Unbroken Root",
+   "First Bloom Petal",
+   "Soil That Remembers Nothing"
+  ],
+  "boss": {
+   "name": "The Vale Warden",
+   "mechanic": "phase",
+   "atk": 176,
+   "spd": 5,
+   "xp": 5560,
+   "g": 2880,
+   "hint": "The first stretch of ground the party has found since the Breaking that was never actually broken — or healed ",
+   "introLine": "The first stretch of ground the party has found since the Breaking that was never actually broken — or healed so completely there is no telling the difference anymore. No ruins. No ash. Just green, further than anyone can see, and the strange quiet of a wound that finally closed.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#9aff8a",
+    "#3a7a3a"
+   ],
+   "phaseThresholds": [
+    0.66,
+    0.33
+   ],
+   "hp": 5340
+  },
+  "quest": {
+   "name": "The Unbroken Vale: Clear the Way",
+   "need": 5,
+   "xpReward": 1150,
+   "goldReward": 700,
+   "acceptDesc": "\"The Unbroken Vale: Clear the Way\" — Defeat 5 monsters in The Unbroken Vale. Reward: 1150 XP, 700 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Vale Warden has noticed you.",
+  "zoneClearedDesc": "The Unbroken Vale goes quiet. ",
+  "templeRepOnClear": 1540,
+  "nextZone": "the-verdant-choir",
+  "climax": false
+ },
+ "the-verdant-choir": {
+  "name": "The Verdant Choir",
+  "theme": "zone-act2-poison",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Fallen columns, half-swallowed by root and bloom, arranged in a circle too deliberate to be an accident of growth. Something was built here, once, and something has been quietly guarding what is left of it ever since — not fiercely. Patiently, the way only something that has waited a very long time can afford to be."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Rootbound Acolyte": {
+    "hp": 686,
+    "atk": 82,
+    "spd": 5,
+    "xp": 235,
+    "g": 142,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Hollow Chorister": {
+    "hp": 515,
+    "atk": 115,
+    "spd": 8,
+    "xp": 235,
+    "g": 142,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   },
+   "Bloomveiled Sentinel": {
+    "hp": 892,
+    "atk": 66,
+    "spd": 4,
+    "xp": 235,
+    "g": 142,
+    "cls": "act2-body",
+    "tint": [
+     "#9aff8a",
+     "#3a7a3a"
+    ]
+   }
+  },
+  "lootTable": [
+   "Weathered Hymnal Page",
+   "A Bell That Still Rings",
+   "Sanctum Moss"
+  ],
+  "boss": {
+   "name": "The Last Vigil",
+   "mechanic": "rampage",
+   "atk": 180,
+   "spd": 5,
+   "xp": 5680,
+   "g": 2940,
+   "hint": "Fallen columns, half-swallowed by root and bloom, arranged in a circle too deliberate to be an accident of gro",
+   "introLine": "Fallen columns, half-swallowed by root and bloom, arranged in a circle too deliberate to be an accident of growth. Something was built here, once, and something has been quietly guarding what is left of it ever since — not fiercely. Patiently, the way only something that has waited a very long time can afford to be.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#9aff8a",
+    "#3a7a3a"
+   ],
+   "rampageEvery": 3,
+   "rampageDmg": 198,
+   "hp": 5475
+  },
+  "quest": {
+   "name": "The Verdant Choir: Clear the Way",
+   "need": 5,
+   "xpReward": 1175,
+   "goldReward": 715,
+   "acceptDesc": "\"The Verdant Choir: Clear the Way\" — Defeat 5 monsters in The Verdant Choir. Reward: 1175 XP, 715 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Last Vigil has noticed you.",
+  "zoneClearedDesc": "The Verdant Choir goes quiet. ",
+  "templeRepOnClear": 1570,
+  "nextZone": "where-the-old-names-wait",
+  "climax": false
  },
  "where-the-old-names-wait": {
   "name": "Where the Old Names Wait",
@@ -3269,11 +3497,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Old Name": {
-    "hp": 672,
-    "atk": 80,
+    "hp": 700,
+    "atk": 84,
     "spd": 5,
-    "xp": 230,
-    "g": 139,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3281,11 +3509,11 @@ const ACT2_ZONES = {
     ]
    },
    "Remembered Slight": {
-    "hp": 504,
-    "atk": 113,
+    "hp": 525,
+    "atk": 118,
     "spd": 8,
-    "xp": 230,
-    "g": 139,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3293,11 +3521,11 @@ const ACT2_ZONES = {
     ]
    },
    "Unsent Grievance": {
-    "hp": 874,
-    "atk": 64,
+    "hp": 910,
+    "atk": 67,
     "spd": 4,
-    "xp": 230,
-    "g": 139,
+    "xp": 240,
+    "g": 145,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3313,10 +3541,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Old Names",
    "mechanic": "resurrect",
-   "atk": 176,
+   "atk": 183,
    "spd": 5,
-   "xp": 5560,
-   "g": 2880,
+   "xp": 5800,
+   "g": 3000,
    "hint": "The Vale builds confrontations from memory, not accuracy",
    "introLine": "The Vale builds confrontations from memory, not accuracy. Here every old name that ever had a claim on you waits in a row, sharpened by the years, still expecting you to answer.",
    "spriteCls": "act2-body",
@@ -3326,11 +3554,11 @@ const ACT2_ZONES = {
     "#3a7a3a"
    ],
    "lives": [
-    1044,
-    1029,
-    1014,
-    999,
-    984
+    1080,
+    1065,
+    1050,
+    1035,
+    1020
    ],
    "lifeNames": [
     "The Ex-Mother-in-Law",
@@ -3343,14 +3571,14 @@ const ACT2_ZONES = {
   "quest": {
    "name": "Where the Old Names Wait: Clear the Way",
    "need": 5,
-   "xpReward": 1150,
-   "goldReward": 700,
-   "acceptDesc": "\"Where the Old Names Wait: Clear the Way\" — Defeat 5 monsters in Where the Old Names Wait. Reward: 1150 XP, 700 Gold."
+   "xpReward": 1200,
+   "goldReward": 730,
+   "acceptDesc": "\"Where the Old Names Wait: Clear the Way\" — Defeat 5 monsters in Where the Old Names Wait. Reward: 1200 XP, 730 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the old name stone at camp first.",
   "bossPromptDesc": "The Old Names has noticed you.",
   "zoneClearedDesc": "Where the Old Names Wait goes quiet. San faces the wraith of the woman who never once called her a",
-  "templeRepOnClear": 1540,
+  "templeRepOnClear": 1600,
   "nextZone": "the-retainers-hollow",
   "climax": false
  },
@@ -3393,11 +3621,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Associate Wraith": {
-    "hp": 686,
-    "atk": 82,
+    "hp": 714,
+    "atk": 86,
     "spd": 5,
-    "xp": 235,
-    "g": 142,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3405,11 +3633,11 @@ const ACT2_ZONES = {
     ]
    },
    "Non-Compete Bramble": {
-    "hp": 515,
-    "atk": 115,
+    "hp": 536,
+    "atk": 120,
     "spd": 8,
-    "xp": 235,
-    "g": 142,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3417,11 +3645,11 @@ const ACT2_ZONES = {
     ]
    },
    "Overtime Root": {
-    "hp": 892,
-    "atk": 66,
+    "hp": 928,
+    "atk": 69,
     "spd": 4,
-    "xp": 235,
-    "g": 142,
+    "xp": 245,
+    "g": 148,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3437,10 +3665,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Robin C.",
    "mechanic": "rampage",
-   "atk": 180,
+   "atk": 186,
    "spd": 5,
-   "xp": 5680,
-   "g": 2940,
+   "xp": 5920,
+   "g": 3060,
    "hint": "A patch of the Vale that never grew right — silverleaf trees bent into rows like filing cabinets, roots knotte",
    "introLine": "A patch of the Vale that never grew right — silverleaf trees bent into rows like filing cabinets, roots knotted tight as a signature nobody actually got to read in full. There is an office here, standing where an office has no business standing. San recognizes the smell of it before she recognizes anything else: burnt coffee, cold fluorescent light, and somebody else's overtime.",
    "spriteCls": "act2-body",
@@ -3451,20 +3679,20 @@ const ACT2_ZONES = {
    ],
    "rampageEvery": 3,
    "rampageDmg": 48,
-   "hp": 5475,
+   "hp": 5745,
    "img": "assets/boss/robin.jpg"
   },
   "quest": {
    "name": "The Retainer's Hollow: Clear the Way",
    "need": 5,
-   "xpReward": 1175,
-   "goldReward": 715,
-   "acceptDesc": "\"The Retainer's Hollow: Clear the Way\" — Defeat 5 monsters in The Retainer's Hollow. Reward: 1175 XP, 715 Gold."
+   "xpReward": 1225,
+   "goldReward": 745,
+   "acceptDesc": "\"The Retainer's Hollow: Clear the Way\" — Defeat 5 monsters in The Retainer's Hollow. Reward: 1225 XP, 745 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the filing tree at camp first.",
   "bossPromptDesc": "Robin C. has noticed you.",
   "zoneClearedDesc": "The Retainer's Hollow goes quiet. San finally confronts Robin — and finds nine years does not need",
-  "templeRepOnClear": 1570,
+  "templeRepOnClear": 1630,
   "nextZone": "the-treeline-detail",
   "climax": false
  },
@@ -3507,11 +3735,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Overtime Wraith": {
-    "hp": 700,
-    "atk": 84,
+    "hp": 728,
+    "atk": 88,
     "spd": 5,
-    "xp": 240,
-    "g": 145,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3519,11 +3747,11 @@ const ACT2_ZONES = {
     ]
    },
    "Off-Day Enforcer": {
-    "hp": 525,
-    "atk": 118,
+    "hp": 546,
+    "atk": 123,
     "spd": 8,
-    "xp": 240,
-    "g": 145,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3531,11 +3759,11 @@ const ACT2_ZONES = {
     ]
    },
    "Loading Dock Sentinel": {
-    "hp": 910,
-    "atk": 67,
+    "hp": 946,
+    "atk": 70,
     "spd": 4,
-    "xp": 240,
-    "g": 145,
+    "xp": 250,
+    "g": 151,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3551,10 +3779,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Jeff, the SK",
    "mechanic": "lightning_rod",
-   "atk": 183,
+   "atk": 190,
    "spd": 5,
-   "xp": 5800,
-   "g": 3000,
+   "xp": 6040,
+   "g": 3120,
    "hint": "Another patch of green quietly ruined by something that has no business out here — a loading dock bolted onto ",
    "introLine": "Another patch of green quietly ruined by something that has no business out here — a loading dock bolted onto the edge of the vale, floodlights running on a generator nobody asked permission to install. Past the treeline, the brush has clearly been cleared, over and over, by people who were never given a choice about it.",
    "spriteCls": "act2-body",
@@ -3565,20 +3793,20 @@ const ACT2_ZONES = {
    ],
    "rodTurns": 3,
    "rodDmg": 50,
-   "hp": 5610,
+   "hp": 5880,
    "img": "assets/boss/jeff.jpg"
   },
   "quest": {
    "name": "The Treeline Detail: Clear the Way",
    "need": 5,
-   "xpReward": 1200,
-   "goldReward": 730,
-   "acceptDesc": "\"The Treeline Detail: Clear the Way\" — Defeat 5 monsters in The Treeline Detail. Reward: 1200 XP, 730 Gold."
+   "xpReward": 1250,
+   "goldReward": 760,
+   "acceptDesc": "\"The Treeline Detail: Clear the Way\" — Defeat 5 monsters in The Treeline Detail. Reward: 1250 XP, 760 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the bolted loading dock at camp first.",
   "bossPromptDesc": "Jeff, the SK has noticed you.",
   "zoneClearedDesc": "The Treeline Detail goes quiet. Jeff remembers Joel perfectly — he was his favorite, once, right up",
-  "templeRepOnClear": 1600,
+  "templeRepOnClear": 1660,
   "nextZone": "sunreach-fields",
   "climax": false
  },
@@ -3621,11 +3849,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Harvest Golem": {
-    "hp": 714,
-    "atk": 86,
+    "hp": 742,
+    "atk": 89,
     "spd": 5,
-    "xp": 245,
-    "g": 148,
+    "xp": 255,
+    "g": 154,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3633,11 +3861,11 @@ const ACT2_ZONES = {
     ]
    },
    "Sunreach Guardian": {
-    "hp": 536,
-    "atk": 120,
+    "hp": 557,
+    "atk": 125,
     "spd": 8,
-    "xp": 245,
-    "g": 148,
+    "xp": 255,
+    "g": 154,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3645,11 +3873,11 @@ const ACT2_ZONES = {
     ]
    },
    "Bloomwatcher": {
-    "hp": 928,
-    "atk": 69,
+    "hp": 965,
+    "atk": 72,
     "spd": 4,
-    "xp": 245,
-    "g": 148,
+    "xp": 255,
+    "g": 154,
     "cls": "act2-body",
     "tint": [
      "#9aff8a",
@@ -3665,10 +3893,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Skarrowyn, the Split Horizon",
    "mechanic": "phase",
-   "atk": 186,
+   "atk": 193,
    "spd": 5,
-   "xp": 5920,
-   "g": 3060,
+   "xp": 6160,
+   "g": 3180,
    "hint": "A whole community living here, quietly, for who knows how long — fields actually under cultivation, harvests a",
    "introLine": "A whole community living here, quietly, for who knows how long — fields actually under cultivation, harvests actually being brought in. Nobody out this far seems to know or care what the rest of the world has been through. They just kept growing things, the entire time.",
    "spriteCls": "act2-body",
@@ -3681,21 +3909,21 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 5745,
+   "hp": 6015,
    "img": "assets/boss/skarrowyn.jpg"
   },
   "quest": {
    "name": "Sunreach Fields: Clear the Way",
    "need": 5,
-   "xpReward": 1225,
-   "goldReward": 745,
-   "acceptDesc": "\"Sunreach Fields: Clear the Way\" — Defeat 5 monsters in Sunreach Fields. Reward: 1225 XP, 745 Gold."
+   "xpReward": 1275,
+   "goldReward": 775,
+   "acceptDesc": "\"Sunreach Fields: Clear the Way\" — Defeat 5 monsters in Sunreach Fields. Reward: 1275 XP, 775 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the leaning harvest at camp first.",
   "bossPromptDesc": "Skarrowyn, the Split Horizon has noticed you.",
   "zoneClearedDesc": "Sunreach Fields goes quiet. Skarrowyn and Nyxathorne both fall, and Varel and Mimi build the",
-  "templeRepOnClear": 1630,
-  "nextZone": null,
+  "templeRepOnClear": 1690,
+  "nextZone": "the-rootbound-sanctuary",
   "climax": true
  }
 };

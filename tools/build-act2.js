@@ -10,7 +10,8 @@ const g = fs.readFileSync(path.join(V2, 'game.js'), 'utf8');
 const zoneRows = {};
 for (const m of g.matchAll(/\{ n: (['"])(.+?)\1, lv: (\d+), elem: '(\w+)', d: (['"])([\s\S]*?)\5, en: \[([^\]]*)\], loot: \[([^\]]*)\]/g)) {
   const list = s => [...s.matchAll(/'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"/g)].map(x => (x[1] ?? x[2]).replace(/\\'/g, "'"));
-  zoneRows[m[2].replace(/\\'/g, "'")] = { lv: +m[3], elem: m[4], d: m[6].replace(/\\'/g, "'"), en: list(m[7]), loot: list(m[8]) };
+  const un = s => s.replace(/\\u2019/g, '\u2019').replace(/\\u2014/g, '\u2014').replace(/\\'/g, "'");
+  zoneRows[un(m[2])] = { lv: +m[3], elem: m[4], d: un(m[6]), en: list(m[7]).map(un), loot: list(m[8]).map(un) };
 }
 const ch = (() => { const s = fs.readFileSync(path.join(V2, 'journey2daybreak/chapters-data.js'), 'utf8'); return new Function(s + ';return CHAPTERS')(); })();
 
@@ -52,6 +53,53 @@ const Z = [
   ['the-treeline-detail', 'The Treeline Detail', 87, ['lightning_rod', { rodTurns: 3, rodDmg: 50 }], 'jeff', ['Loading Dock', '📦', 'Bolted Loading Dock', 'Gantry', '🔦', '"Floodlights run on a generator nobody asked permission for. Supplies, though, are real."']],
   ['sunreach-fields', 'Sunreach Fields', 94, ['phase', { phaseThresholds: [0.66, 0.33] }], 'skarrowyn', ['Leaning Harvest', '🌾', 'Leaning Harvest', 'Reap', '🧺', '"Every stalk here leans the same direction. Ask yourself why."'], null, 'Skarrowyn, the Split Horizon', [94, 95]],
 ];
+
+// ---- Later worlds (V2 zones from the Verdant Reach onward): generated from V2's zone rows and boss table ----
+const un2 = s => s.replace(/\\u2019/g, '’').replace(/\\u2014/g, '—').replace(/\\'/g, "'").replace(/’/g, "'");
+const v2Boss = {};
+for (const m of g.matchAll(/\{ n: ('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"), zone: ('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"), hp: (\d+)/g)) {
+  const zn = un2(m[2].slice(1, -1)), hp = +m[3];
+  if (!v2Boss[zn] || hp > v2Boss[zn].hp) v2Boss[zn] = { name: un2(m[1].slice(1, -1)).replace('SK* ', 'SK '), hp };
+}
+const slug = s => s.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const WORLDS = [ // [max V2 level, quest, merchant, easy?]
+  [100, ['Green Marker', '🌿', 'Green Marker', 'Fern', '🍃', '"Fresh from the Vale. Mind the roots."']],
+  [300, ['Dead Terminal', '🖥️', 'Dead Terminal', 'Liang', '🧰', '"I fix what the system forgot to switch off."']],
+  [400, ['Drafting Table', '📐', 'Drafting Table', 'Scrivener', '🖋️', '"Every door was a drawing first. I sell the erasers."']],
+  [500, ['Roadwarden Post', '🛤️', 'Roadwarden Post', 'Warden', '🪙', '"The toll is gentleness. Pay what you can."']],
+  [550, ['Cat Shrine', '🐈', 'Cat Shrine', 'Whisker', '🐟', '"Nothing here bites. Much."'], true],
+  [650, ['Tide Pillar', '🌊', 'Tide Pillar', 'Reef', '🐚', '"The water took everything but the bargains."']],
+  [750, ['Crypt Door', '⚰️', 'Crypt Door', 'Undertaker', '🕯️', '"Nothing here ended. Everything is for sale."']],
+  [850, ['Stone Face', '🗿', 'Stone Face', 'Veil', '🪞', '"Do not look at the goods. Look at the price."']],
+  [950, ['Wind Perch', '🪶', 'Wind Perch', 'Falconer', '🦅', '"Feathers, favours, and clean air."']],
+  [1050, ['Brass Lamp', '🪔', 'Brass Lamp', 'Djinn', '✨', '"Say exactly what you mean. I will."']],
+  [1150, ['Standing Stone', '🗻', 'Standing Stone', 'Elder', '🔥', '"Older than the word market."']],
+  [9999, ['Jade Altar', '🏯', 'Jade Altar', 'Monk', '🍵', '"Tea first. Ascension after."']],
+];
+const MECHS = [
+  (a) => ['phase', { phaseThresholds: [0.66, 0.33] }], (a) => ['rampage', { rampageEvery: 3, rampageDmg: Math.round(a * 1.1) }],
+  (a) => ['freeze', { freezeChance: 0.3, freezeDuration: 3000 }], (a) => ['drown', { drownTurn: 4, drownDmg: Math.round(a * 1.1), drownSaveChance: 0.5 }],
+  (a) => ['devour', { devourTurn: 5, devourDmg: Math.round(a * 1.2), staggerPct: 0.35 }], (a) => ['lightning_rod', { rodTurns: 3, rodDmg: Math.round(a * 1.1) }],
+  (a) => ['inferno', { infernoTurn: 4, infernoDmg: Math.round(a * 1.1) }], (a) => ['apocalypse', { apocalypseTurn: 6, apocalypseDmg: Math.round(a * 1.3) }],
+];
+const gFrom = g.indexOf("n: 'The Unbroken Vale'"), gTo = g.indexOf('VOYAGE: SEA EXPLORATION');
+const laterNames = [...g.slice(gFrom - 6, gTo).matchAll(/\{ n: (['"])(.+?)\1, lv: (\d+)/g)].map(m => un2(m[2])).filter(n => n !== 'The Endless Thinning');
+const norm = s => un2(s);
+const rowFor = n => Object.entries(zoneRows).find(([k]) => norm(k) === norm(n))?.[1];
+const done = new Set(['The Retainer\'s Hollow', 'The Treeline Detail', 'Sunreach Fields']);
+const extraIds = new Set(), extra = [];
+laterNames.filter(n => !done.has(n)).forEach(n => {
+  const r = rowFor(n); if (!r) return;
+  const w = WORLDS.find(w => r.lv <= w[0]);
+  const id = slug(n), real = v2Boss[norm(n)];
+  const isCap = real && real.hp > 1000000;
+  const bname = real ? real.name : 'Alpha ' + r.en[r.en.length - 1].replace(/^(A|An|The) /, '').split(',')[0];
+  const mi = extra.length % MECHS.length;
+  const mech = isCap ? (a) => ['resurrect', { lives: [150, 140, 130, 120, 110], lifeNames: ['First', 'Second', 'Third', 'Fourth', 'Last'] }] : MECHS[mi];
+  extra.push([id, n, null, mech, null, w[1], r, bname, null, { easy: !!w[2], cap: isCap || r.lv === 100 || ['The Rootbound Sanctuary'].includes(n) }]);
+  extraIds.add(id);
+});
+
 const ELEM = { // [bg top, mid, bottom, accent, accent2]
   water: ['#08182a', '#0e2c48', '#144a68', '#8ad8ff', '#2a6a9a'], poison: ['#0c1c10', '#16301a', '#244a26', '#9aff8a', '#3a7a3a'],
   void: ['#10081c', '#1c1030', '#2a1848', '#a888ff', '#5a3a9a'], none: ['#1a1814', '#262218', '#3a3220', '#d8c8a0', '#6a5a3a'],
@@ -76,23 +124,30 @@ const rs = (s, d, w, q) => execFileSync('python3', ['-I', '-c', resize, s, d, St
 
 const zoneOfChapter = {};
 Z.forEach(([id, , cid, , , , , , chs]) => (chs || [cid]).forEach(c => { zoneOfChapter[c] = id; }));
+const iScatter = Z.findIndex(z => z[0] === 'the-scattered-choir');
+const lateX = extra.filter(e => e[6].lv > 65);
+const Zall = [...Z.slice(0, iScatter + 1), ...extra.filter(e => e[6].lv <= 65), ...Z.slice(iScatter + 1), ...lateX];
+const lateIds = new Set(lateX.map(e => e[0]));
 const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choir', 'sunreach-fields']);
 
-Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride], i) => {
+Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride, , opts], i) => {
+  const easy = opts && opts.easy ? 0.5 : 1;
   const r = rowOverride || zoneRows[zn]; if (!r) throw new Error('V2 zone not found: ' + zn);
-  const c = ch.find(x => x.id === cid); if (!c) throw new Error('chapter ' + cid);
+  const c = cid ? ch.find(x => x.id === cid) : { quote: '' }; if (!c) throw new Error('chapter ' + cid);
   const elem = ELEM[r.elem] ? r.elem : 'none';
   const bossName = bossOverride || c.bossName.trim();
-  const bossHp = (520 + i * 45) * 3; // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
-  const boss = Object.assign({ name: bossName, mechanic: mech, atk: Math.round((28 + i * 1.1) * 3), spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
+  const atkB = Math.round((28 + i * 1.1) * 3 * easy);
+  const [mech, mp] = typeof m3 === 'function' ? m3(atkB) : m3;
+  const bossHp = Math.round((520 + i * 45) * 3 * easy); // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
+  const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
   if (!mp.lives) boss.hp = bossHp;
-  if (mech === 'resurrect') boss.lives = mp.lives.map(l => (l + i * 6) * 3);
+  if (mech === 'resurrect') boss.lives = mp.lives.map(l => Math.round((l + i * 6) * 3 * easy));
   if (art) { boss.img = `assets/boss/${art}.jpg`; rs(path.join(V2, 'bosses', art + '.jpg'), path.join(OUT, boss.img), 360, 82); }
   const enemyDefs = {};
   r.en.forEach((n, k) => {
     const t = [{ hp: 1.0, atk: 1.0, spd: 5 }, { hp: 0.75, atk: 1.4, spd: 8 }, { hp: 1.3, atk: 0.8, spd: 4 }][k % 3];
-    enemyDefs[n] = { hp: Math.round((140 + i * 7) * 2 * t.hp), atk: Math.round((10 + i * 0.6) * 3 * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
+    enemyDefs[n] = { hp: Math.round((140 + i * 7) * 2 * easy * t.hp), atk: Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
   });
   zones[id] = {
     name: zn, theme: 'zone-act2-' + elem,
@@ -109,8 +164,8 @@ Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mL
     bossPromptDesc: `${bossName} has noticed you.`,
     zoneClearedDesc: `${zn} goes quiet. ${c.quote}`,
     templeRepOnClear: 700 + i * 30,
-    nextZone: i + 1 < Z.length ? Z[i + 1][0] : null,
-    climax: CLIMAX.has(id),
+    nextZone: i + 1 < Zall.length ? Zall[i + 1][0] : null,
+    climax: CLIMAX.has(id) || !!(opts && opts.cap),
   };
 });
 
@@ -137,8 +192,11 @@ for (const [name, src] of Object.entries(PORT)) {
   const dst = 'assets/portraits/' + name.toLowerCase().replace(/\W+/g, '_') + '.jpg';
   rs(path.join(V2, src), path.join(OUT, dst), 160, 82); portraits[name] = dst;
 }
+const zones3 = {};
+for (const id of lateIds) { zones3[id] = zones[id]; delete zones[id]; }
+fs.writeFileSync(path.join(OUT, 'act3-data.js'), `// Generated by tools/build-act2.js from Legends of Daybreak V2 — the later worlds (Verdant Reach end to Ascension).\nconst ACT3_ZONES = ${JSON.stringify(zones3)};\n`);
 const body = `// Generated by tools/build-act2.js from Legends of Daybreak V2 — the world after the Nexus (chapters 21-126).\n` +
   `const ACT2_ELEMENTS = ${JSON.stringify(ELEM)};\nconst ACT2_ZONES = ${JSON.stringify(zones, null, 1)};\nconst ACT2_CHAPTERS = ${JSON.stringify(chapters)};\nconst ACT2_PORTRAITS = ${JSON.stringify(portraits)};\n`;
 fs.writeFileSync(path.join(OUT, 'act2-data.js'), body);
-console.log('zones', Object.keys(zones).length, 'chapters', chapters.length, 'bytes', body.length);
+console.log('zones', Object.keys(zones).length, 'act3', Object.keys(zones3).length, 'chapters', chapters.length, 'bytes', body.length);
 const speakers = new Set(); chapters.forEach(c => c.scenes.forEach(s => speakers.add(s.speaker))); console.log([...speakers].join(', '));
