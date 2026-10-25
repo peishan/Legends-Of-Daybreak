@@ -414,30 +414,67 @@
   .devourer-body:before{ content:''; position:absolute; top:28px; left:50%; transform:translateX(-50%); width:34px;height:20px; background:#000; border-radius:50%; box-shadow:inset 0 0 12px 4px #b87affaa; }
   .astral-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #b87aff; filter:drop-shadow(0 0 10px #9a4affdd); }
 
+  /* Act 2 journal motifs */
+  #jr-scene [class^="m2-"]{ position:absolute; pointer-events:none; }
+  .m2-crack{ width:3px; background:linear-gradient(180deg,transparent,var(--m2a,#e0a8ff),transparent); box-shadow:0 0 12px 2px var(--m2a,#e0a8ff); opacity:.55; animation:m2pulse 3.2s ease-in-out infinite; }
+  #jr-scene[data-motif=mend] .m2-crack{ background:linear-gradient(180deg,transparent,#ffd98a,transparent); box-shadow:0 0 10px 2px #ffd98a88; }
+  .m2-pillar{ bottom:0; background:linear-gradient(180deg,#00000066,#000000cc); clip-path:polygon(0 12%,40% 0,100% 18%,100% 100%,0 100%); }
+  .m2-ash{ top:-4px; width:3px; height:3px; border-radius:50%; background:#c8b8a0; opacity:.6; animation:ashfall 6s linear infinite; }
+  .m2-wave{ left:-10%; width:120%; height:60%; bottom:-30%; border-radius:45%; background:#4a78b055; animation:m2wave 7s ease-in-out infinite alternate; }
+  .m2-wave.w2{ background:#2a4a8077; bottom:-34%; animation-duration:9s; }
+  .m2-wave.w3{ background:#10204499; bottom:-40%; animation-duration:11s; }
+  .m2-line{ height:2px; background:#a8d0ff55; border-radius:2px; animation:m2drift 8s ease-in-out infinite alternate; }
+  .m2-gear{ border-radius:50%; border:10px dashed #ffffff22; box-shadow:inset 0 0 0 8px #00000033; animation:m2spin 16s linear infinite; }
+  .m2-sea{ left:0; right:0; bottom:0; height:30%; background:linear-gradient(180deg,#1c2850,#0a1020); }
+  .m2-tower{ left:68%; bottom:30%; width:26px; height:34%; background:#0a0e1c; clip-path:polygon(25% 0,75% 0,100% 100%,0 100%); }
+  .m2-beam{ left:72%; bottom:62%; width:120%; height:60px; transform-origin:0 50%; background:linear-gradient(90deg,#fff0b0aa,transparent); clip-path:polygon(0 40%,100% 0,100% 100%,0 60%); animation:m2sweep 7s ease-in-out infinite alternate; }
+  .m2-road{ left:0; right:0; bottom:0; height:60%; background:linear-gradient(180deg,#0000,#2a2216); clip-path:polygon(46% 0,54% 0,100% 100%,0 100%); }
+  .m2-marker{ width:10px; height:44px; background:#d8c8a0aa; border-radius:2px; }
+  .m2-mobile{ left:50%; top:0; width:2px; height:28%; background:#d8c8a066; transform-origin:top; animation:m2sway 5s ease-in-out infinite alternate; box-shadow:-34px 80px 0 6px #f0e0b0aa, 30px 110px 0 5px #e0a8ffaa, 0 150px 0 7px #a8e0ffaa; }
+  .m2-star{ width:3px; height:3px; border-radius:50%; background:#fff; animation:twinkle 2.6s infinite ease-in-out; }
+  .m2-star.soft{ background:#f0e0b0; opacity:.6; }
+  .m2-flash{ inset:0; background:#c8d8ff; opacity:0; animation:m2flash 6s infinite; }
+  .m2-rain{ top:-20px; width:1px; height:26px; background:#a8c0e099; animation:m2rain .7s linear infinite; }
+  .m2-ember{ bottom:-6px; width:4px; height:4px; border-radius:50%; background:#ff9a4a; box-shadow:0 0 8px 2px #ff6a2e88; animation:m2rise 6s linear infinite; }
+  .m2-rule{ height:1px; background:#d8c8a066; animation:m2drift 6s ease-in-out infinite alternate; }
+  .m2-glow{ left:20%; right:20%; bottom:10%; height:55%; background:radial-gradient(ellipse at 50% 70%,#ffd98a55,transparent 70%); }
+  .m2-figure{ bottom:0; width:34px; background:#05030acc; border-radius:17px 17px 0 0; animation:m2pulse 4s ease-in-out infinite; }
+  .m2-sun{ left:50%; bottom:22%; width:150px; height:150px; margin-left:-75px; border-radius:50%; background:radial-gradient(circle,#fff4c0,#ffb85a 55%,transparent 72%); animation:m2dawn 9s ease-out forwards; }
+  .m2-ground{ left:0; right:0; bottom:0; height:24%; background:linear-gradient(180deg,#2a1c20,#0a0608); }
+  #jr-scene[data-motif=horizon] .m2-sun{ opacity:.45; animation:none; transform:translateY(40px); }
+  @keyframes m2pulse{ 0%,100%{opacity:.25;} 50%{opacity:.7;} }
+  @keyframes m2wave{ from{ transform:translateX(-4%) rotate(-1deg);} to{ transform:translateX(4%) rotate(1deg);} }
+  @keyframes m2drift{ from{ transform:translateX(-16px); opacity:.2;} to{ transform:translateX(16px); opacity:.6;} }
+  @keyframes m2spin{ to{ transform:rotate(360deg); } }
+  @keyframes m2sweep{ from{ transform:rotate(-14deg);} to{ transform:rotate(14deg);} }
+  @keyframes m2sway{ from{ transform:rotate(-5deg);} to{ transform:rotate(5deg);} }
+  @keyframes m2flash{ 0%,88%,100%{opacity:0;} 90%{opacity:.5;} 92%{opacity:.05;} 94%{opacity:.4;} }
+  @keyframes m2rain{ to{ transform:translateY(900px); } }
+  @keyframes m2rise{ from{ transform:translateY(0); opacity:.9;} to{ transform:translateY(-700px); opacity:0;} }
+  @keyframes m2dawn{ from{ transform:translateY(90px); opacity:.2;} to{ transform:translateY(-20px); opacity:1;} }
   /* Act 2 (V2 port): element-tinted zones, journal pages and sprites */
   .act2-body{ width:64px; height:78px; position:relative; background:linear-gradient(160deg,var(--c1,#ccc),var(--c2,#444) 70%,#0a0810); clip-path:polygon(50% 0%,92% 28%,100% 74%,70% 100%,30% 100%,0% 74%,8% 28%); box-shadow:0 0 14px var(--c1,#888); opacity:.92; }
   .act2-body:before, .act2-body:after{ content:''; position:absolute; top:26px; width:7px; height:8px; background:#fff; border-radius:50%; box-shadow:0 0 6px 2px var(--c1,#fff); }
   .act2-body:before{ left:18px; } .act2-body:after{ right:18px; }
   .act2-crown{ position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-bottom:20px solid var(--c1,#fff); filter:drop-shadow(0 0 6px var(--c1,#fff)); }
   .act2-art{ width:120px; height:160px; background-size:cover; background-position:center top; border-radius:10px; border:2px solid #0008; box-shadow:0 0 18px #000a; }
-  .jr-comic{ position:absolute; inset:0; background-size:cover; background-position:center top; opacity:.2; filter:saturate(.8); pointer-events:none; }
   #map-scene.zone-act2-void{ background:linear-gradient(180deg,#10081c 0%, #1c1030 50%, #2a1848 100%); }
-  .theme-act2-void #jr-scene{ background:linear-gradient(180deg,#10081c 0%, #1c1030 50%, #2a1848 100%); }
+  #jr-scene.theme-act2-void{ background:linear-gradient(180deg,#10081c 0%, #1c1030 50%, #2a1848 100%); }
   .theme-act2-void .num{ background:#1c1030; color:#a888ff; }
   #map-scene.zone-act2-none{ background:linear-gradient(180deg,#1a1814 0%, #262218 50%, #3a3220 100%); }
-  .theme-act2-none #jr-scene{ background:linear-gradient(180deg,#1a1814 0%, #262218 50%, #3a3220 100%); }
+  #jr-scene.theme-act2-none{ background:linear-gradient(180deg,#1a1814 0%, #262218 50%, #3a3220 100%); }
   .theme-act2-none .num{ background:#262218; color:#d8c8a0; }
   #map-scene.zone-act2-fire{ background:linear-gradient(180deg,#2a0e08 0%, #3c1a0c 50%, #522410 100%); }
-  .theme-act2-fire #jr-scene{ background:linear-gradient(180deg,#2a0e08 0%, #3c1a0c 50%, #522410 100%); }
+  #jr-scene.theme-act2-fire{ background:linear-gradient(180deg,#2a0e08 0%, #3c1a0c 50%, #522410 100%); }
   .theme-act2-fire .num{ background:#3c1a0c; color:#ff8a4a; }
   #map-scene.zone-act2-ice{ background:linear-gradient(180deg,#101c2c 0%, #1c3048 50%, #284868 100%); }
-  .theme-act2-ice #jr-scene{ background:linear-gradient(180deg,#101c2c 0%, #1c3048 50%, #284868 100%); }
+  #jr-scene.theme-act2-ice{ background:linear-gradient(180deg,#101c2c 0%, #1c3048 50%, #284868 100%); }
   .theme-act2-ice .num{ background:#1c3048; color:#a8e0ff; }
   #map-scene.zone-act2-lightning{ background:linear-gradient(180deg,#14182c 0%, #1e2848 50%, #2c3c68 100%); }
-  .theme-act2-lightning #jr-scene{ background:linear-gradient(180deg,#14182c 0%, #1e2848 50%, #2c3c68 100%); }
+  #jr-scene.theme-act2-lightning{ background:linear-gradient(180deg,#14182c 0%, #1e2848 50%, #2c3c68 100%); }
   .theme-act2-lightning .num{ background:#1e2848; color:#ffe066; }
   #map-scene.zone-act2-arcane{ background:linear-gradient(180deg,#1c1030 0%, #2c1848 50%, #44206a 100%); }
-  .theme-act2-arcane #jr-scene{ background:linear-gradient(180deg,#1c1030 0%, #2c1848 50%, #44206a 100%); }
+  #jr-scene.theme-act2-arcane{ background:linear-gradient(180deg,#1c1030 0%, #2c1848 50%, #44206a 100%); }
   .theme-act2-arcane .num{ background:#2c1848; color:#e0a8ff; }
   /* Infernal Crucible zone decor */
   #map-scene.zone-crucible{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 45%, #4a1e0c 100%); }
@@ -702,13 +739,13 @@
   #jr-scene{ position:absolute; inset:0; overflow:hidden; }
   .sky{ position:absolute; inset:0; }
   .porch{ position:absolute; bottom:0; left:0; right:0; height:34%; border-top:2px solid #1c130ccc; }
-  .theme-rain #jr-scene{ background:linear-gradient(180deg,#141a26 0%,#232c40 55%,#3c2c1f 100%); }
+  #jr-scene.theme-rain{ background:linear-gradient(180deg,#141a26 0%,#232c40 55%,#3c2c1f 100%); }
   .theme-rain .porch{ background:linear-gradient(180deg,#3c2c1f 0%, #241a12 100%); }
   .theme-rain .lamp{ position:absolute; top:8px; left:18px; width:10px;height:22px;background:#e2a355; border-radius:2px 2px 6px 6px; box-shadow:0 0 24px 10px #e2a35566; animation:flicker 3.2s infinite ease-in-out; }
   @keyframes flicker{ 0%,100%{opacity:1;} 45%{opacity:.85;} 47%{opacity:1;} 72%{opacity:.9;} }
   .drop{ position:absolute; top:-20px; width:1.5px; height:60px; background:linear-gradient(180deg, transparent, #cdd8e8aa); animation-name:fall; animation-timing-function:linear; animation-iteration-count:infinite; }
   @keyframes fall{ to{ transform:translateY(120vh); } }
-  .theme-awaken #jr-scene{ background:radial-gradient(ellipse at 50% 100%, #241d3a 0%, #100b1c 70%); }
+  #jr-scene.theme-awaken{ background:radial-gradient(ellipse at 50% 100%, #241d3a 0%, #100b1c 70%); }
   .moon{ position:absolute; border-radius:50%; }
   .moon.silver{ top:8%; left:14%; width:54px; height:54px; background:radial-gradient(circle at 35% 35%, #f3edf7, #c9c2da 60%, transparent 75%); box-shadow:0 0 40px #cfc7e455; }
   .moon.red{ top:14%; right:16%; width:34px; height:34px; background:radial-gradient(circle at 35% 35%, #ff9a8a, #a4402f 60%, transparent 75%); box-shadow:0 0 30px #c04a3866; }
@@ -718,17 +755,17 @@
   .mark-glow{ position:absolute; bottom:30%; left:50%; transform:translateX(-50%); width:40px; height:40px; border-radius:50%; background:radial-gradient(circle, #b9a4ffaa, transparent 70%); opacity:0; transition:opacity 1.2s ease; filter:blur(2px); }
   .theme-awaken.reveal-mark .mark-glow{ opacity:1; animation:pulseglow 2.4s infinite ease-in-out; }
   @keyframes pulseglow{ 0%,100%{transform:translateX(-50%) scale(1);} 50%{transform:translateX(-50%) scale(1.3);} }
-  .theme-bond #jr-scene{ background:linear-gradient(180deg,#1b1712 0%,#2a2118 55%,#3a2c1c 100%); }
+  #jr-scene.theme-bond{ background:linear-gradient(180deg,#1b1712 0%,#2a2118 55%,#3a2c1c 100%); }
   .theme-bond .doorway{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:120px; height:60%; background:radial-gradient(ellipse at 50% 100%, #e2a35533, transparent 70%); }
   .fire-flicker{ position:absolute; bottom:0; left:0; right:0; height:40%; background:radial-gradient(ellipse at 50% 100%, #e2a35522, transparent 75%); animation:fireflick 2.4s infinite ease-in-out; }
   @keyframes fireflick{ 0%,100%{opacity:.7;} 50%{opacity:1;} }
   .ember-p{ position:absolute; bottom:20%; width:3px;height:3px;border-radius:50%; background:#f0c98a; box-shadow:0 0 6px 2px #f0c98a; animation:rise 3.6s ease-in infinite; }
   @keyframes rise{ 0%{ transform:translateY(0) scale(1); opacity:.9; } 100%{ transform:translateY(-200px) scale(.3); opacity:0; } }
-  .theme-blade #jr-scene{ background:linear-gradient(180deg,#1a1114 0%,#241318 55%,#2e1a1e 100%); }
+  #jr-scene.theme-blade{ background:linear-gradient(180deg,#1a1114 0%,#241318 55%,#2e1a1e 100%); }
   .fog{ position:absolute; bottom:0; left:0; right:0; height:36%; background:linear-gradient(180deg, transparent, #3a1f2266); filter:blur(6px); }
   .glint{ position:absolute; width:3px; height:14px; background:linear-gradient(180deg,#fff,transparent); opacity:0; animation:glint 3.2s infinite ease-in-out; }
   @keyframes glint{ 0%,85%,100%{opacity:0;} 90%{opacity:.9;} 95%{opacity:0;} }
-  .theme-campfire #jr-scene{ background:radial-gradient(ellipse at 50% 100%, #2a1a12 0%, #0f0c14 65%); }
+  #jr-scene.theme-campfire{ background:radial-gradient(ellipse at 50% 100%, #2a1a12 0%, #0f0c14 65%); }
   .campfire-glow{ position:absolute; bottom:0; left:0; right:0; height:46%; background:radial-gradient(ellipse at 50% 100%, #e2843344, transparent 72%); animation:campfireflick 2.2s infinite ease-in-out; }
   @keyframes campfireflick{ 0%,100%{opacity:.75;} 40%{opacity:1;} 60%{opacity:.85;} }
   .campfire-core{ position:absolute; bottom:6%; left:50%; transform:translateX(-50%); width:20px; height:26px; background:radial-gradient(circle, #ffcf7c, #e2843c 55%, transparent 80%); border-radius:50% 50% 40% 40%; filter:blur(1px); animation:coreflick 1.4s infinite ease-in-out; }
@@ -737,7 +774,7 @@
   .silhouette.left{ left:38%; } .silhouette.right{ right:38%; }
 
   /* --- theme: healer (ch6, Eliz) --- */
-  .theme-healer #jr-scene{ background:radial-gradient(ellipse at 50% 60%, #1a2e22 0%, #0d1712 70%); }
+  #jr-scene.theme-healer{ background:radial-gradient(ellipse at 50% 60%, #1a2e22 0%, #0d1712 70%); }
   .heal-glow{ position:absolute; bottom:20%; left:50%; transform:translateX(-50%); width:120px; height:120px; border-radius:50%;
     background:radial-gradient(circle, #8fe8a866, transparent 70%); filter:blur(4px); animation:healpulse 3s infinite ease-in-out; }
   @keyframes healpulse{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:.7; } 50%{ transform:translateX(-50%) scale(1.2); opacity:1; } }
@@ -746,7 +783,7 @@
   @keyframes motefloat{ 0%{ transform:translateY(0); opacity:0; } 20%{opacity:1;} 100%{ transform:translateY(-180px); opacity:0; } }
 
   /* --- theme: storm (ch7, Mezstorm) --- */
-  .theme-storm #jr-scene{ background:linear-gradient(180deg,#171b26 0%,#232c3d 55%,#2e3b52 100%); }
+  #jr-scene.theme-storm{ background:linear-gradient(180deg,#171b26 0%,#232c3d 55%,#2e3b52 100%); }
   .storm-flash{ position:absolute; inset:0; background:#dce8ff; opacity:0; animation:lightningflash 6s infinite; }
   @keyframes lightningflash{
     0%, 92%, 100%{ opacity:0; }
@@ -758,44 +795,44 @@
     animation:twinkle 1.4s infinite ease-in-out; }
 
   /* --- theme: scout (ch8, Senedra) --- */
-  .theme-scout #jr-scene{ background:linear-gradient(180deg,#2a3a28 0%,#3a4a2e 45%,#5a6a3a 100%); }
+  #jr-scene.theme-scout{ background:linear-gradient(180deg,#2a3a28 0%,#3a4a2e 45%,#5a6a3a 100%); }
   .theme-scout .light-mote{ background:#f0e0a0; box-shadow:0 0 8px 3px #e8c878aa; }
   .theme-scout .star{ opacity:.5; }
 
   /* --- theme: warrior (ch9, Zaki) --- */
-  .theme-warrior #jr-scene{ background:radial-gradient(ellipse at 50% 100%, #2a1a12 0%, #100b09 70%); }
+  #jr-scene.theme-warrior{ background:radial-gradient(ellipse at 50% 100%, #2a1a12 0%, #100b09 70%); }
   .theme-warrior .ember-p{ background:#ff9d6a; box-shadow:0 0 6px 2px #ff9d6a; }
 
   /* --- theme: shadow (ch8, Shadows of the Past) --- */
-  .theme-shadow #jr-scene{ background:radial-gradient(ellipse at 50% 70%, #1a1512 0%, #0a0806 75%); }
+  #jr-scene.theme-shadow{ background:radial-gradient(ellipse at 50% 70%, #1a1512 0%, #0a0806 75%); }
   .theme-shadow .light-mote{ background:#c8c0b0; box-shadow:0 0 8px 3px #8a8270aa; }
 
   /* --- theme: frozen (ch9, The Frozen Crown) --- */
-  .theme-frozen #jr-scene{ background:linear-gradient(180deg,#1a2838 0%,#243850 60%,#345068 100%); }
+  #jr-scene.theme-frozen{ background:linear-gradient(180deg,#1a2838 0%,#243850 60%,#345068 100%); }
 
   /* --- theme: void (ch10, Into the Void) --- */
-  .theme-void #jr-scene{ background:radial-gradient(ellipse at 50% 50%, #1e1430 0%, #0e0a18 80%); }
+  #jr-scene.theme-void{ background:radial-gradient(ellipse at 50% 50%, #1e1430 0%, #0e0a18 80%); }
 
   /* --- theme: star (ch11, Starlight Ascension — the finale) --- */
-  .theme-star #jr-scene{ background:linear-gradient(180deg,#0e0e28 0%, #1a1a3e 50%, #3a2a5e 100%); }
+  #jr-scene.theme-star{ background:linear-gradient(180deg,#0e0e28 0%, #1a1a3e 50%, #3a2a5e 100%); }
 
   /* --- theme: planar (ch12, Planar Convergence) --- */
-  .theme-planar #jr-scene{ background:linear-gradient(180deg,#1a0e28 0%, #2a1440 50%, #3a1c56 100%); }
+  #jr-scene.theme-planar{ background:linear-gradient(180deg,#1a0e28 0%, #2a1440 50%, #3a1c56 100%); }
 
   /* --- theme: astral (ch13, The Astral Threshold — Mezstorm's arc) --- */
-  .theme-astral #jr-scene{ background:linear-gradient(180deg,#140a24 0%, #241238 50%, #341a4e 100%); }
+  #jr-scene.theme-astral{ background:linear-gradient(180deg,#140a24 0%, #241238 50%, #341a4e 100%); }
 
   /* --- theme: crucible (ch14, Heart of Fire — Joel's arc) --- */
-  .theme-crucible #jr-scene{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 50%, #4a1e0c 100%); }
+  #jr-scene.theme-crucible{ background:linear-gradient(180deg,#2a0a0a 0%, #3a1408 50%, #4a1e0c 100%); }
 
   /* --- theme: veil (ch15, The Shattered Veil — Aisyah's arc) --- */
-  .theme-veil #jr-scene{ background:linear-gradient(180deg,#10182a 0%, #1c2840 50%, #283860 100%); }
+  #jr-scene.theme-veil{ background:linear-gradient(180deg,#10182a 0%, #1c2840 50%, #283860 100%); }
 
   /* --- theme: dragon (ch18, The Last Letter — Joel's arc continues) --- */
-  .theme-dragon #jr-scene{ background:linear-gradient(180deg,#241410 0%, #341c10 50%, #442408 100%); }
+  #jr-scene.theme-dragon{ background:linear-gradient(180deg,#241410 0%, #341c10 50%, #442408 100%); }
 
   /* --- theme: nexus (ch20, The Planarch — true series finale) --- */
-  .theme-nexus #jr-scene{ background:linear-gradient(180deg,#140a24 0%, #241440 30%, #3a1440 55%, #2a1c50 80%, #10182a 100%); }
+  #jr-scene.theme-nexus{ background:linear-gradient(180deg,#140a24 0%, #241440 30%, #3a1440 55%, #2a1c50 80%, #10182a 100%); }
 
   #jr-titlecard{ position:absolute; inset:0; z-index:30; background:#0b0e14; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 12%; transition:opacity 1.1s ease, visibility 1.1s; }
   #jr-titlecard.hide{ opacity:0; visibility:hidden; }
@@ -814,6 +851,7 @@
   #jr-box.no-portrait{ padding-left:18px; }
   #jr-speaker{ font-family:'Spectral',serif; font-weight:600; font-size:14px; margin-bottom:6px; display:inline-block; }
   #jr-speaker.narrator{ color:var(--muted); font-style:italic; font-weight:400; }
+  #jr-speaker:not(.narrator){ color:var(--sun-soft); }
   #jr-speaker.joel{ color:#7fb8e0; }
   #jr-speaker.soel{ color:#ff9d5c; }
   #jr-speaker.aisyah{ color:#e0728a; }
@@ -3952,9 +3990,49 @@ function renderJournalSelect(){
   });
 }
 
+/* Act 2 journal scenes — pure CSS/DOM, one motif per chapter */
+function buildAct2Motif(scene, motif){
+  const mk = (cls, style, parent) => { const d = document.createElement('div'); d.className = cls; if(style) d.style.cssText = style; (parent||scene).appendChild(d); return d; };
+  const rnd = (a,b) => a + Math.random()*(b-a);
+  scene.dataset.motif = motif;
+  if(motif === 'cracks' || motif === 'mend'){
+    for(let i=0;i<7;i++) mk('m2-crack', `left:${8+i*13+rnd(-3,3)}%; height:${rnd(35,85)}%; top:${rnd(0,15)}%; transform:rotate(${rnd(-14,14)}deg); animation-delay:${rnd(0,3)}s`);
+  } else if(motif === 'pillars'){
+    [8,24,52,70,88].forEach(x=> mk('m2-pillar', `left:${x}%; height:${rnd(28,52)}%; width:${rnd(26,44)}px`));
+    for(let i=0;i<16;i++) mk('m2-ash', `left:${rnd(0,100)}%; animation-delay:${rnd(0,6)}s; animation-duration:${rnd(5,9)}s`);
+  } else if(motif === 'water'){
+    for(let i=0;i<5;i++) mk('m2-line', `top:${rnd(8,55)}%; left:${rnd(5,50)}%; width:${rnd(30,55)}%; animation-delay:${rnd(0,5)}s`);
+    mk('m2-wave w1'); mk('m2-wave w2'); mk('m2-wave w3');
+  } else if(motif === 'gears'){
+    [[12,18,90],[78,30,120],[30,62,70],[66,70,100]].forEach(([x,y,sz],i)=> mk('m2-gear', `left:${x}%; top:${y}%; width:${sz}px; height:${sz}px; animation-duration:${14+i*4}s; animation-direction:${i%2?'reverse':'normal'}`));
+  } else if(motif === 'beam'){
+    mk('m2-sea'); mk('m2-tower'); mk('m2-beam');
+    for(let i=0;i<14;i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,45)}%; animation-delay:${rnd(0,3)}s`);
+  } else if(motif === 'road'){
+    mk('m2-road');
+    [18,30,44,60].forEach((y,i)=> mk('m2-marker', `top:${100-y}%; transform:scale(${0.4+i*0.25}); left:${i%2? 62:30}%`));
+  } else if(motif === 'mobile'){
+    mk('m2-mobile');
+    for(let i=0;i<22;i++) mk('m2-star soft', `left:${rnd(0,100)}%; top:${rnd(0,80)}%; animation-delay:${rnd(0,4)}s`);
+  } else if(motif === 'storm'){
+    mk('m2-flash');
+    for(let i=0;i<34;i++) mk('m2-rain', `left:${rnd(0,100)}%; animation-delay:${rnd(0,1.5)}s; animation-duration:${rnd(.5,.9)}s`);
+  } else if(motif === 'embers'){
+    for(let i=0;i<26;i++) mk('m2-ember', `left:${rnd(0,100)}%; animation-delay:${rnd(0,6)}s; animation-duration:${rnd(4,8)}s`);
+  } else if(motif === 'ledger'){
+    for(let i=0;i<12;i++) mk('m2-rule', `top:${6+i*8}%; width:${rnd(40,85)}%; left:${rnd(4,14)}%; animation-delay:${rnd(0,4)}s`);
+  } else if(motif === 'figures'){
+    mk('m2-glow');
+    for(let i=0;i<8;i++) mk('m2-figure', `left:${6+i*12}%; height:${rnd(24,38)}%; animation-delay:${rnd(0,3)}s`);
+  } else if(motif === 'horizon' || motif === 'dawn'){
+    mk('m2-sun'); mk('m2-ground');
+    for(let i=0;i<10;i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,35)}%; animation-delay:${rnd(0,3)}s`);
+  }
+}
+
 function buildSceneDecor(theme){
   const scene = document.getElementById('jr-scene');
-  scene.className = theme;
+  scene.className = theme; delete scene.dataset.motif;
   scene.innerHTML = '';
   if(theme === 'theme-rain'){
     scene.innerHTML = `<div class="sky"><div class="lamp"></div></div><div class="porch"></div>`;
@@ -4273,13 +4351,10 @@ function showJrEnd(ch){
 function openReader(chapterId, rebuildList){
   currentChapter = chapterId;
   const ch = CHAPTERS.find(c=>c.id===chapterId);
-  jrIdx = -1;
+  jrIdx = -1; clearInterval(jrTypeTimer); jrTyping = false;
   document.getElementById('jr-end-card').classList.remove('show');
   buildSceneDecor(ch.theme);
-  if(ch.page){
-    const pg = document.createElement('div'); pg.className = 'jr-comic'; pg.style.backgroundImage = `url(${ch.page})`;
-    document.getElementById('jr-scene').prepend(pg);
-  }
+  if(ch.motif) buildAct2Motif(document.getElementById('jr-scene'), ch.motif);
   buildJrProgress(ch.scenes);
   document.getElementById('jr-tc-eyebrow').textContent = 'Chapter ' + ch.id;
   document.getElementById('jr-tc-title').textContent = ch.title;
