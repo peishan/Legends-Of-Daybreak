@@ -414,6 +414,12 @@
   .devourer-body:before{ content:''; position:absolute; top:28px; left:50%; transform:translateX(-50%); width:34px;height:20px; background:#000; border-radius:50%; box-shadow:inset 0 0 12px 4px #b87affaa; }
   .astral-crown{ position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:0;height:0; border-left:17px solid transparent; border-right:17px solid transparent; border-bottom:19px solid #b87aff; filter:drop-shadow(0 0 10px #9a4affdd); }
 
+  #map-scene.zone-act2-water{ background:linear-gradient(180deg,#08182a 0%, #0e2c48 50%, #144a68 100%); }
+  #jr-scene.theme-act2-water{ background:linear-gradient(180deg,#08182a 0%, #0e2c48 50%, #144a68 100%); }
+  .theme-act2-water .num{ background:#0e2c48; color:#8ad8ff; }
+  #map-scene.zone-act2-poison{ background:linear-gradient(180deg,#0c1c10 0%, #16301a 50%, #244a26 100%); }
+  #jr-scene.theme-act2-poison{ background:linear-gradient(180deg,#0c1c10 0%, #16301a 50%, #244a26 100%); }
+  .theme-act2-poison .num{ background:#16301a; color:#9aff8a; }
   /* Act 2 journal motifs */
   #jr-scene [class^="m2-"]{ position:absolute; pointer-events:none; }
   .m2-crack{ width:3px; background:linear-gradient(180deg,transparent,var(--m2a,#e0a8ff),transparent); box-shadow:0 0 12px 2px var(--m2a,#e0a8ff); opacity:.55; animation:m2pulse 3.2s ease-in-out infinite; }
@@ -3388,7 +3394,7 @@ function closeBattle(fled){
     setTimeout(()=>{
       document.getElementById('battle-cb-eyebrow').textContent = 'Zone Cleared';
       document.getElementById('battle-cb-title').textContent = zone.name;
-      document.getElementById('battle-cb-rewards').textContent = zone.nextZone ? (ZONES[zone.nextZone].name + ' is now open') : 'The journey is complete';
+      document.getElementById('battle-cb-rewards').textContent = zone.nextZone ? (ZONES[zone.nextZone].name + ' is now open') : 'The road ahead is still unwritten';
       cb.classList.add('show'); setTimeout(()=>cb.classList.remove('show'), 2800);
     }, 300);
   } else if(!fled && zs.quest.done && !zs.bossUnlocked){
@@ -3967,6 +3973,7 @@ const JPORTRAITS = PORTRAITS;
 let currentChapter = null, jrIdx = -1, jrTyping = false, jrTypeTimer = null;
 
 ACT2_CHAPTERS.forEach(c => CHAPTERS.push(c));
+Object.assign(JPORTRAITS, ACT2_PORTRAITS);
 
 function renderJournalSelect(){
   const list = document.getElementById('jsel-chapter-list');

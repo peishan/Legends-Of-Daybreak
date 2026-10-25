@@ -37,8 +37,23 @@ const Z = [
   ['the-fear-after-the-storm', 'The Fear After the Storm', 39, ['freeze', { freezeChance: 0.35, freezeDuration: 3200 }], null, ['Open Question', '❓', 'Unanswered Question', 'Maybe', '⏳', '"Borrowed time, by the hour. Spend it well."']],
   ['everyone-together', 'Everyone, Together', 40, ['devour', { devourTurn: 5, devourDmg: 40, staggerPct: 0.35 }], null, ['Chorus Stone', '🎶', 'Chorus Fragment', 'Hearth', '🏠', '"Everyone eats first. Then we talk about prices."']],
   ['daybreak', 'Daybreak', 41, ['resurrect', { lives: [160, 150, 140, 130, 120], lifeNames: ['Dusk', 'Hollow', 'Echo', 'Break', 'Dawn'] }], null, ['First Light', '🌅', 'First Light', 'Morning', '☀️', '"Nothing for sale. Take what you need. You earned the morning."']],
+  ['the-unmapped-road', 'The Unmapped Road', 49, ['phase', { phaseThresholds: [0.66, 0.33] }], null, ['Blank Map', '🗺️', 'Blank Map Edge', 'Wend', '🥾', '"Nothing here is charted, so nothing here is overpriced. Yet."']],
+  ['the-borrowed-coast', 'The Borrowed Coast', 50, ['drown', { drownTurn: 4, drownDmg: 36, drownSaveChance: 0.5 }], null, ['Carved Rock', '🪨', 'Rock of Names', 'Brine', '🐚', '"Every name on these rocks paid once. The sea keeps the receipts."']],
+  ['the-salt-debt', 'The Salt Debt', 51, ['resurrect', { lives: [150, 140], lifeNames: ['The Owed', 'The Owing'] }], null, ['Debt Post', '⚖️', 'Debt Post', 'Tally', '🧂', '"I will sell you salt. You will owe me salt. We both know how this goes."']],
+  ['the-quiet-uprising', 'The Quiet Uprising', 52, ['devour', { devourTurn: 5, devourDmg: 42, staggerPct: 0.35 }], null, ['Listening Stone', '👂', 'Listening Stone', 'Murmur', '🕯️', '"Keep your voice down. It has been listening for a long time."']],
+  ['where-the-walk-leads', 'Where the Walk Leads', 53, ['apocalypse', { apocalypseTurn: 6, apocalypseDmg: 46 }], null, ['Far Marker', '🧭', 'Furthest Marker', 'Farwell', '🎒', '"There will be another road after this one. Pack accordingly."']],
+  ['the-hollow-vigil', 'The Hollow Vigil', 54, ['freeze', { freezeChance: 0.35, freezeDuration: 3200 }], 'thehollowprophet', ['Closed Eye', '👁️', 'Closed-Eye Altar', 'Vesper', '🕯️', '"Grief candles, unlit. Take one if you must. Do not light it here."'],
+    { elem: 'void', d: 'A vigil kept by the Cult of the Closed Eye, where grief was taught to look like faith. The candles here have never once been lit, and the congregation keeps waiting anyway.', en: ['Closed-Eye Acolyte', 'Grief Chanter', 'Veiled Zealot'], loot: ['Unlit Candle', 'Acolyte\'s Veil', 'Hollow Hymnal'] }],
+  ['the-scattered-choir', 'The Scattered Choir', 57, ['resurrect', { lives: [160, 150, 140], lifeNames: ['The Doctrine', 'The Habit', 'The Last Believer'] }], 'sisterwren', ['Silent Hymnal', '📜', 'Silent Hymnal', 'Cantor', '🔔', '"The choir is gone. The songs are not. Buy one, hum it quietly."'],
+    { elem: 'arcane', d: 'What is left of the cult after its prophet fell — voices without a conductor, a hymn that no longer has a verse, and one believer who stayed because leaving would mean admitting what she was right about.', en: ['Choir Remnant', 'Hymnless Cantor', 'Candle Bearer'], loot: ['Cracked Bell', 'Torn Hymn Sheet', 'Last Candle'] }],
+  ['where-the-old-names-wait', 'Where the Old Names Wait', 79, ['resurrect', { lives: [180, 175, 170, 165, 160], lifeNames: ['The Ex-Mother-in-Law', 'The Ex-Husband', 'The Village Ex', 'The Brunei Ex', 'The Stepfather'] }], null, ['Name Stone', '🪦', 'Old Name Stone', 'Ledger', '📜', '"I remember all of them. You do not have to. Not today."'],
+    { elem: 'poison', d: 'The Vale builds confrontations from memory, not accuracy. Here every old name that ever had a claim on you waits in a row, sharpened by the years, still expecting you to answer.', en: ['Old Name', 'Remembered Slight', 'Unsent Grievance'], loot: ['Faded Photograph', 'Old Grievance', 'Unwritten Reply'] }, 'The Old Names', [79, 80, 81, 82, 83]],
+  ['the-retainers-hollow', "The Retainer's Hollow", 86, ['rampage', { rampageEvery: 3, rampageDmg: 48 }], 'robin', ['Filing Tree', '🗄️', 'Filing Tree', 'Overtime', '☕', '"Burnt coffee, one dollar. Cold fluorescent light, free."']],
+  ['the-treeline-detail', 'The Treeline Detail', 87, ['lightning_rod', { rodTurns: 3, rodDmg: 50 }], 'jeff', ['Loading Dock', '📦', 'Bolted Loading Dock', 'Gantry', '🔦', '"Floodlights run on a generator nobody asked permission for. Supplies, though, are real."']],
+  ['sunreach-fields', 'Sunreach Fields', 94, ['phase', { phaseThresholds: [0.66, 0.33] }], 'skarrowyn', ['Leaning Harvest', '🌾', 'Leaning Harvest', 'Reap', '🧺', '"Every stalk here leans the same direction. Ask yourself why."'], null, 'Skarrowyn, the Split Horizon', [94, 95]],
 ];
 const ELEM = { // [bg top, mid, bottom, accent, accent2]
+  water: ['#08182a', '#0e2c48', '#144a68', '#8ad8ff', '#2a6a9a'], poison: ['#0c1c10', '#16301a', '#244a26', '#9aff8a', '#3a7a3a'],
   void: ['#10081c', '#1c1030', '#2a1848', '#a888ff', '#5a3a9a'], none: ['#1a1814', '#262218', '#3a3220', '#d8c8a0', '#6a5a3a'],
   fire: ['#2a0e08', '#3c1a0c', '#522410', '#ff8a4a', '#a82a0a'], ice: ['#101c2c', '#1c3048', '#284868', '#a8e0ff', '#3a6a9a'],
   lightning: ['#14182c', '#1e2848', '#2c3c68', '#ffe066', '#4a5aa8'], arcane: ['#1c1030', '#2c1848', '#44206a', '#e0a8ff', '#7a3aba'],
@@ -59,11 +74,15 @@ if im.width>w: im=im.resize((w,round(im.height*w/im.width)),Image.LANCZOS)
 im.save(dst,'JPEG',quality=q,optimize=True)`;
 const rs = (s, d, w, q) => execFileSync('python3', ['-I', '-c', resize, s, d, String(w), String(q)]);
 
-Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mLine]], i) => {
-  const r = zoneRows[zn]; if (!r) throw new Error('V2 zone not found: ' + zn);
+const zoneOfChapter = {};
+Z.forEach(([id, , cid, , , , , , chs]) => (chs || [cid]).forEach(c => { zoneOfChapter[c] = id; }));
+const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choir', 'sunreach-fields']);
+
+Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride], i) => {
+  const r = rowOverride || zoneRows[zn]; if (!r) throw new Error('V2 zone not found: ' + zn);
   const c = ch.find(x => x.id === cid); if (!c) throw new Error('chapter ' + cid);
   const elem = ELEM[r.elem] ? r.elem : 'none';
-  const bossName = c.bossName.trim();
+  const bossName = bossOverride || c.bossName.trim();
   const bossHp = 520 + i * 45;
   const boss = Object.assign({ name: bossName, mechanic: mech, atk: 28 + Math.round(i * 1.1), spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
@@ -91,13 +110,35 @@ Z.forEach(([id, zn, cid, [mech, mp], art, [qLabel, qIcon, qNpc, mName, mIcon, mL
     zoneClearedDesc: `${zn} goes quiet. ${c.quote}`,
     templeRepOnClear: 700 + i * 30,
     nextZone: i + 1 < Z.length ? Z[i + 1][0] : null,
-    climax: id === 'where-the-break-began' || id === 'daybreak',
+    climax: CLIMAX.has(id),
   };
-  chapters.push({ id: cid, unlockType: 'boss', unlockAt: bossName, icon: c.icon, theme: 'theme-act2-' + elem, title: c.title,
-    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: 400 + i * 20, motif: MOTIF[cid] });
 });
-const body = `// Generated by tools/build-act2.js from Legends of Daybreak V2 — Act 2: the aftermath (chapters 21-41).\n` +
-  `const ACT2_ELEMENTS = ${JSON.stringify(ELEM)};\nconst ACT2_ZONES = ${JSON.stringify(zones, null, 1)};\nconst ACT2_CHAPTERS = ${JSON.stringify(chapters)};\n`;
+
+// Journal chapters 21-126, in order. Boss chapters unlock on their zone's boss; story-only chapters
+// unlock on the most recent boss (and, as always, on the previous chapter being read).
+const motifFor = (id, boss) => MOTIF[id] || (id <= 48 ? 'dawn' : id <= 53 ? (id === 50 ? 'water' : 'road') : boss ? 'figures' : id <= 57 ? 'embers' : id <= 72 ? 'ledger' : id <= 78 ? 'pillars' : id <= 85 ? 'figures' : id <= 87 ? 'pillars' : id <= 93 ? 'embers' : id <= 95 ? 'horizon' : ['dawn', 'horizon', 'mend', 'embers'][id % 4]);
+let lastZone = 'daybreak', n = 0;
+for (let id = 21; id <= 126; id++) {
+  const c = ch.find(x => x.id === id);
+  if (!c || !c.scenes.length) continue;
+  const zid = zoneOfChapter[id];
+  if (zid) lastZone = zid;
+  const z = zones[lastZone], elem = z.theme.slice(10);
+  chapters.push({ id, unlockType: 'boss', unlockAt: z.boss.name, icon: c.icon, theme: 'theme-act2-' + elem, title: c.title,
+    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: 400 + n * 8, motif: motifFor(id, !!zid) });
+  n++;
+}
+// Speaker portraits V1 doesn't already have: V2 character portraits, plus boss art for boss speakers
+const PORT = { 'Ser Aldric': 'journey2daybreak/assets/portraits/ser_aldric.jpg', 'Sister Wren': 'journey2daybreak/assets/portraits/sister_wren.jpg',
+  'Hollow Prophet': 'bosses/thehollowprophet.jpg', 'Robin': 'bosses/robin.jpg', 'Jeff': 'bosses/jeff.jpg', 'The Foreman': 'bosses/theforeman.jpg', 'Echo of Joel': 'bosses/echoofjoel.jpg' };
+fs.mkdirSync(path.join(OUT, 'assets/portraits'), { recursive: true });
+const portraits = {};
+for (const [name, src] of Object.entries(PORT)) {
+  const dst = 'assets/portraits/' + name.toLowerCase().replace(/\W+/g, '_') + '.jpg';
+  rs(path.join(V2, src), path.join(OUT, dst), 160, 82); portraits[name] = dst;
+}
+const body = `// Generated by tools/build-act2.js from Legends of Daybreak V2 — the world after the Nexus (chapters 21-126).\n` +
+  `const ACT2_ELEMENTS = ${JSON.stringify(ELEM)};\nconst ACT2_ZONES = ${JSON.stringify(zones, null, 1)};\nconst ACT2_CHAPTERS = ${JSON.stringify(chapters)};\nconst ACT2_PORTRAITS = ${JSON.stringify(portraits)};\n`;
 fs.writeFileSync(path.join(OUT, 'act2-data.js'), body);
 console.log('zones', Object.keys(zones).length, 'chapters', chapters.length, 'bytes', body.length);
 const speakers = new Set(); chapters.forEach(c => c.scenes.forEach(s => speakers.add(s.speaker))); console.log([...speakers].join(', '));
