@@ -744,9 +744,37 @@ const ZONES = {
 const BASE_MATS = new Set(Object.values(ZONES).flatMap(z => z.lootTable)); // materials from the original fifteen zones
 ZONES['the-nexus'].nextZone = 'the-breaking';
 ZONES['the-nexus'].climax = true;
-Object.keys(ZONES).forEach((id, k) => { ZONES[id].lv = 1 + k * 2; }); // original fifteen zones: Lv 1-29
 Object.assign(ZONES, ACT2_ZONES, ACT3_ZONES);
-for(const id in Object.assign({}, ACT2_ZONES, ACT3_ZONES)){
+
+/* Early-game zones from V2 that the original fifteen didn't cover. They slot into the original chain and take their
+   numbers from the zone they follow (x mult), so they sit at the right difficulty without separate tuning. */
+ACT1_EXTRAS.forEach(({ after, id, mult, zone }) => {
+  const base = ZONES[after];
+  const scale = (v) => Math.max(1, Math.round(v * mult));
+  const baseEnemies = Object.values(base.enemyDefs);
+  Object.values(zone.enemyDefs).forEach((d, k) => {
+    const b = baseEnemies[k % baseEnemies.length];
+    d.hp = scale(b.hp); d.atk = scale(b.atk); d.spd = b.spd; d.xp = scale(b.xp); d.g = scale(b.g);
+  });
+  const bb = base.boss, nb = zone.boss, keep = { name:nb.name, hint:nb.hint, introLine:nb.introLine, spriteCls:nb.spriteCls, crownCls:nb.crownCls, tint:nb.tint, img:nb.img };
+  zone.boss = Object.assign(JSON.parse(JSON.stringify(bb)), keep);
+  for(const k of ['hp','atk','xp','g','rampageDmg','infernoDmg','rodDmg','drownDmg','devourDmg','apocalypseDmg']) if(typeof zone.boss[k] === 'number') zone.boss[k] = scale(zone.boss[k]);
+  if(zone.boss.lives) zone.boss.lives = zone.boss.lives.map(scale);
+  zone.quest.xpReward = scale(bb.xp * 0.3 + base.quest.xpReward * 0.5); zone.quest.goldReward = scale(base.quest.goldReward);
+  zone.quest.acceptDesc = `"${zone.quest.name}" \u2014 Defeat ${zone.quest.need} monsters in ${zone.name}. Reward: ${zone.quest.xpReward} XP, ${zone.quest.goldReward} Gold.`;
+  zone.templeRepOnClear = scale(base.templeRepOnClear);
+  zone.nextZone = base.nextZone; base.nextZone = id;
+  ZONES[id] = zone;
+});
+// Object key order is the chain order (activeZoneId walks it), so rebuild it by following nextZone from the start.
+(() => {
+  const order = []; let cur = 'whispering-woods';
+  while(cur){ order.push(cur); cur = ZONES[cur].nextZone; }
+  order.forEach(id => { const z = ZONES[id]; delete ZONES[id]; ZONES[id] = z; });
+  const early = order.slice(0, order.indexOf('the-nexus') + 1);
+  early.forEach((id, k) => { ZONES[id].lv = 1 + Math.round(k * 28 / (early.length - 1)); }); // original zones + V2 extras: Lv 1-29
+})();
+for(const id in Object.assign({}, ACT1_EXTRAS.reduce((o, e) => (o[e.id] = 1, o), {}), ACT2_ZONES, ACT3_ZONES)){
   GameState.zoneState[id] = { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false };
 }
 
@@ -2942,44 +2970,85 @@ function renderJournalSelect(){
   });
 }
 
-/* Act 2 journal scenes — pure CSS/DOM, one motif per chapter */
-function buildAct2Motif(scene, motif){
-  const mk = (cls, style, parent) => { const d = document.createElement('div'); d.className = cls; if(style) d.style.cssText = style; (parent||scene).appendChild(d); return d; };
-  const rnd = (a,b) => a + Math.random()*(b-a);
-  scene.dataset.motif = motif;
-  if(motif === 'cracks' || motif === 'mend'){
-    for(let i=0;i<7;i++) mk('m2-crack', `left:${8+i*13+rnd(-3,3)}%; height:${rnd(35,85)}%; top:${rnd(0,15)}%; transform:rotate(${rnd(-14,14)}deg); animation-delay:${rnd(0,3)}s`);
-  } else if(motif === 'pillars'){
-    [8,24,52,70,88].forEach(x=> mk('m2-pillar', `left:${x}%; height:${rnd(28,52)}%; width:${rnd(26,44)}px`));
-    for(let i=0;i<16;i++) mk('m2-ash', `left:${rnd(0,100)}%; animation-delay:${rnd(0,6)}s; animation-duration:${rnd(5,9)}s`);
-  } else if(motif === 'water'){
-    for(let i=0;i<5;i++) mk('m2-line', `top:${rnd(8,55)}%; left:${rnd(5,50)}%; width:${rnd(30,55)}%; animation-delay:${rnd(0,5)}s`);
-    mk('m2-wave w1'); mk('m2-wave w2'); mk('m2-wave w3');
-  } else if(motif === 'gears'){
-    [[12,18,90],[78,30,120],[30,62,70],[66,70,100]].forEach(([x,y,sz],i)=> mk('m2-gear', `left:${x}%; top:${y}%; width:${sz}px; height:${sz}px; animation-duration:${14+i*4}s; animation-direction:${i%2?'reverse':'normal'}`));
-  } else if(motif === 'beam'){
-    mk('m2-sea'); mk('m2-tower'); mk('m2-beam');
-    for(let i=0;i<14;i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,45)}%; animation-delay:${rnd(0,3)}s`);
-  } else if(motif === 'road'){
-    mk('m2-road');
-    [18,30,44,60].forEach((y,i)=> mk('m2-marker', `top:${100-y}%; transform:scale(${0.4+i*0.25}); left:${i%2? 62:30}%`));
-  } else if(motif === 'mobile'){
-    mk('m2-mobile');
-    for(let i=0;i<22;i++) mk('m2-star soft', `left:${rnd(0,100)}%; top:${rnd(0,80)}%; animation-delay:${rnd(0,4)}s`);
-  } else if(motif === 'storm'){
-    mk('m2-flash');
-    for(let i=0;i<34;i++) mk('m2-rain', `left:${rnd(0,100)}%; animation-delay:${rnd(0,1.5)}s; animation-duration:${rnd(.5,.9)}s`);
-  } else if(motif === 'embers'){
-    for(let i=0;i<26;i++) mk('m2-ember', `left:${rnd(0,100)}%; animation-delay:${rnd(0,6)}s; animation-duration:${rnd(4,8)}s`);
-  } else if(motif === 'ledger'){
-    for(let i=0;i<12;i++) mk('m2-rule', `top:${6+i*8}%; width:${rnd(40,85)}%; left:${rnd(4,14)}%; animation-delay:${rnd(0,4)}s`);
-  } else if(motif === 'figures'){
-    mk('m2-glow');
-    for(let i=0;i<8;i++) mk('m2-figure', `left:${6+i*12}%; height:${rnd(24,38)}%; animation-delay:${rnd(0,3)}s`);
-  } else if(motif === 'horizon' || motif === 'dawn'){
-    mk('m2-sun'); mk('m2-ground');
-    for(let i=0;i<10;i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,35)}%; animation-delay:${rnd(0,3)}s`);
-  }
+/* Act 2 journal scenes: pure CSS/DOM. Each chapter gets one or two motifs (picked from its text by
+   tools/build-act2.js), drawn with a per-chapter seed and hue shift so no two chapters look alike. */
+function buildAct2Motif(scene, motifs, seed){
+  let a = (seed * 2654435761) >>> 0;
+  const rand = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const rnd = (lo, hi) => lo + rand() * (hi - lo);
+  const layer = document.createElement('div'); layer.className = 'm2-layer';
+  layer.style.setProperty('--hue', Math.round(rnd(-22, 22)) + 'deg');
+  scene.appendChild(layer);
+  scene.dataset.motif = motifs[0];
+  motifs.forEach((motif, mi) => {
+    const N = (n) => mi ? Math.max(2, Math.ceil(n / 2)) : n;   // the second motif is a lighter accent
+    const mk = (cls, style) => { const d = document.createElement('div'); d.className = cls; if(style) d.style.cssText = style; layer.appendChild(d); return d; };
+    const dl = (m) => `animation-delay:${rnd(0, m).toFixed(2)}s`;
+    switch(motif){
+      case 'cracks': case 'mend':
+        for(let i=0;i<N(7);i++) mk('m2-crack', `left:${rnd(4,96)}%; height:${rnd(35,85)}%; top:${rnd(0,15)}%; transform:rotate(${rnd(-16,16)}deg); ${dl(3)}`); break;
+      case 'pillars':
+        for(let i=0;i<N(5);i++) mk('m2-pillar', `left:${rnd(4,92)}%; height:${rnd(22,55)}%; width:${rnd(24,46)}px`);
+        for(let i=0;i<N(16);i++) mk('m2-ash', `left:${rnd(0,100)}%; ${dl(6)}; animation-duration:${rnd(5,9)}s`); break;
+      case 'water':
+        for(let i=0;i<N(5);i++) mk('m2-line', `top:${rnd(8,55)}%; left:${rnd(5,50)}%; width:${rnd(30,55)}%; ${dl(5)}`);
+        mk('m2-wave w1'); if(!mi){ mk('m2-wave w2'); mk('m2-wave w3'); } break;
+      case 'gears':
+        for(let i=0;i<N(4);i++){ const sz = rnd(60,130); mk('m2-gear', `left:${rnd(2,80)}%; top:${rnd(6,75)}%; width:${sz}px; height:${sz}px; animation-duration:${rnd(12,24)}s; animation-direction:${i%2?'reverse':'normal'}`); } break;
+      case 'beam':
+        mk('m2-sea'); mk('m2-tower'); mk('m2-beam');
+        for(let i=0;i<N(14);i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,45)}%; ${dl(3)}`); break;
+      case 'road':
+        mk('m2-road');
+        [18,30,44,60].forEach((y,i)=> mk('m2-marker', `top:${100-y}%; transform:scale(${0.4+i*0.25}); left:${i%2? rnd(58,66):rnd(26,34)}%`)); break;
+      case 'mobile':
+        mk('m2-mobile');
+        for(let i=0;i<N(22);i++) mk('m2-star soft', `left:${rnd(0,100)}%; top:${rnd(0,80)}%; ${dl(4)}`); break;
+      case 'storm':
+        mk('m2-flash');
+        for(let i=0;i<N(34);i++) mk('m2-rain', `left:${rnd(0,100)}%; ${dl(1.5)}; animation-duration:${rnd(.5,.9)}s`); break;
+      case 'embers':
+        for(let i=0;i<N(26);i++) mk('m2-ember', `left:${rnd(0,100)}%; ${dl(6)}; animation-duration:${rnd(4,8)}s`); break;
+      case 'ledger':
+        for(let i=0;i<N(12);i++) mk('m2-rule', `top:${6+i*8}%; width:${rnd(40,85)}%; left:${rnd(4,14)}%; ${dl(4)}`); break;
+      case 'figures':
+        mk('m2-glow');
+        for(let i=0;i<N(8);i++) mk('m2-figure', `left:${6+i*12}%; height:${rnd(22,40)}%; ${dl(3)}`); break;
+      case 'horizon': case 'dawn':
+        mk('m2-sun'); mk('m2-ground');
+        for(let i=0;i<N(10);i++) mk('m2-star', `left:${rnd(0,100)}%; top:${rnd(0,35)}%; ${dl(3)}`); break;
+      case 'doors':
+        for(let i=0;i<N(5);i++){ const d = mk('m2-door', `left:${6+i*18+rnd(-2,2)}%; height:${rnd(34,52)}%; ${dl(4)}`); if(i === 2 || rand() < .25) d.classList.add('ajar'); } break;
+      case 'mirror':
+        for(let i=0;i<N(5);i++) mk('m2-shard', `left:${rnd(2,88)}%; height:${rnd(35,70)}%; transform:skewX(${rnd(-14,14)}deg); ${dl(5)}`); break;
+      case 'snow':
+        for(let i=0;i<N(40);i++) mk('m2-flake', `left:${rnd(0,100)}%; width:${rnd(2,5)}px; height:${rnd(2,5)}px; animation-duration:${rnd(6,12)}s; ${dl(8)}`); break;
+      case 'leaves':
+        for(let i=0;i<N(18);i++) mk('m2-leaf', `left:${rnd(0,100)}%; transform:rotate(${rnd(0,360)}deg); animation-duration:${rnd(7,13)}s; ${dl(9)}`); break;
+      case 'office':
+        for(let r=0;r<5;r++) for(let c=0;c<N(6);c++) mk('m2-win', `left:${8+c*15}%; top:${6+r*13}%; ${dl(6)}`);
+        mk('m2-tube'); break;
+      case 'phone':
+        mk('m2-phone');
+        for(let i=0;i<N(3);i++) mk('m2-ping', `animation-delay:${i*1.1}s`); break;
+      case 'letters':
+        for(let i=0;i<N(12);i++) mk('m2-paper', `left:${rnd(0,95)}%; transform:rotate(${rnd(-25,25)}deg); animation-duration:${rnd(8,15)}s; ${dl(10)}`); break;
+      case 'rings':
+        for(let i=0;i<N(4);i++) mk('m2-ripple', `left:${rnd(30,60)}%; top:${rnd(25,45)}%; animation-delay:${i*1.4}s`); break;
+      case 'candles':
+        for(let i=0;i<N(9);i++) mk('m2-candle', `left:${6+i*10.5+rnd(-2,2)}%; height:${rnd(34,92)}px; ${dl(2)}`); break;
+      case 'clock':
+        mk('m2-clock'); mk('m2-hand h'); mk('m2-hand m'); break;
+      case 'constellation': {
+        const pts = Array.from({length:N(9)}, () => [rnd(6,94), rnd(5,55)]);
+        pts.forEach(([x,y]) => mk('m2-star', `left:${x}%; top:${y}%; width:4px; height:4px; ${dl(3)}`));
+        pts.slice(1).forEach(([x,y],i) => { const [px,py] = pts[i]; const dx = (x-px)*4.3, dy = (y-py)*7; // approx px in a 430x700 scene
+          mk('m2-link', `left:${px}%; top:${py}%; width:${Math.hypot(dx,dy).toFixed(0)}px; transform:rotate(${Math.atan2(dy,dx).toFixed(3)}rad)`); });
+        break; }
+      case 'fog':
+        for(let i=0;i<N(5);i++) mk('m2-fog', `top:${rnd(5,70)}%; width:${rnd(55,95)}%; height:${rnd(90,170)}px; animation-duration:${rnd(14,26)}s; ${dl(10)}`); break;
+    }
+  });
 }
 
 function buildSceneDecor(theme){
@@ -3306,7 +3375,7 @@ function openReader(chapterId, rebuildList){
   jrIdx = -1; clearInterval(jrTypeTimer); jrTyping = false;
   document.getElementById('jr-end-card').classList.remove('show');
   buildSceneDecor(ch.theme);
-  if(ch.motif) buildAct2Motif(document.getElementById('jr-scene'), ch.motif);
+  if(ch.motifs || ch.motif) buildAct2Motif(document.getElementById('jr-scene'), ch.motifs || [ch.motif], ch.id);
   buildJrProgress(ch.scenes);
   document.getElementById('jr-tc-eyebrow').textContent = 'Chapter ' + ch.id;
   document.getElementById('jr-tc-title').textContent = ch.title;

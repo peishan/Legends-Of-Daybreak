@@ -904,3 +904,34 @@
   #sync-status.show{ display:block; }
   #sync-status.ok{ background:#1c3a2a; color:#bff0d2; }
   #sync-status.bad{ background:#3d1c24; color:#f6c1cc; }
+
+  /* Act 2 journal motifs, part 2: per-chapter variety */
+  .m2-layer{ inset:0; filter:hue-rotate(var(--hue,0deg)); }
+  .m2-door{ bottom:0; width:13%; background:linear-gradient(180deg,#0a0810,#050309); border:2px solid #ffffff22; border-bottom:none; border-radius:40% 40% 0 0 / 14% 14% 0 0; box-shadow:inset 0 0 22px #00000099; animation:m2pulse 5s ease-in-out infinite; }
+  .m2-door.ajar{ background:linear-gradient(90deg,#050309 55%,#ffe9a8 55%,#fff6d8 100%); box-shadow:0 0 28px 4px #ffd98a66, inset 0 0 22px #00000099; }
+  .m2-shard{ top:8%; width:46px; background:linear-gradient(110deg,#ffffff08,#ffffff30 50%,#ffffff08); border:1px solid #ffffff26; animation:m2glint 6s ease-in-out infinite alternate; }
+  .m2-flake{ top:-8px; border-radius:50%; background:#e8f4ff; opacity:.8; animation:m2snow 9s linear infinite; }
+  .m2-leaf{ top:-20px; width:12px; height:20px; border-radius:100% 0 100% 0; background:linear-gradient(135deg,#7ac86a,#2f6a2f); opacity:.8; animation:m2leaf 10s linear infinite; }
+  .m2-win{ width:10%; height:8%; background:#ffe9a8; opacity:.12; animation:m2flick 4s steps(2,end) infinite; }
+  .m2-tube{ left:8%; right:8%; top:2%; height:3px; background:#e8f4ff; box-shadow:0 0 14px 4px #e8f4ff88; animation:m2flick 2.3s steps(2,end) infinite; }
+  .m2-phone{ left:50%; top:26%; width:74px; height:130px; margin-left:-37px; border-radius:14px; border:2px solid #ffffff44; background:linear-gradient(180deg,#9ad8ff44,#9ad8ff11); box-shadow:0 0 26px #9ad8ff66; animation:m2pulse 2.4s ease-in-out infinite; }
+  .m2-ping{ left:50%; top:26%; width:74px; height:130px; margin-left:-37px; border-radius:20px; border:2px solid #9ad8ff; opacity:0; animation:m2ping 3.4s ease-out infinite; }
+  .m2-paper{ top:-40px; width:26px; height:34px; background:#efe6d0; border-radius:2px; opacity:.55; box-shadow:0 0 6px #0006; animation:m2paper 11s linear infinite; }
+  .m2-ripple{ width:24px; height:24px; margin:-12px; border-radius:50%; border:2px solid #ffffff55; opacity:0; animation:m2ripple 5.6s ease-out infinite; }
+  .m2-candle{ bottom:6%; width:10px; background:linear-gradient(180deg,#f5ecd6,#cfc3a2); border-radius:2px; }
+  .m2-candle:before{ content:''; position:absolute; left:50%; top:-16px; width:9px; height:16px; margin-left:-4.5px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:radial-gradient(circle at 50% 70%,#fff6c0,#ff9a3a 60%,transparent 75%); box-shadow:0 0 18px 6px #ffa03a77; animation:m2flame 1.4s ease-in-out infinite alternate; }
+  .m2-clock{ left:50%; top:16%; width:200px; height:200px; margin-left:-100px; border-radius:50%; border:3px dashed #ffffff30; }
+  .m2-hand{ left:50%; top:calc(16% + 100px); width:3px; background:#ffffff66; transform-origin:50% 0; }
+  .m2-hand.h{ height:56px; animation:m2spin 120s linear infinite; }
+  .m2-hand.m{ height:84px; animation:m2spin 14s linear infinite; }
+  .m2-link{ height:1px; background:#ffffff44; transform-origin:0 50%; }
+  .m2-fog{ left:-20%; border-radius:50%; background:radial-gradient(ellipse,#ffffff26,transparent 70%); filter:blur(10px); animation:m2fog 20s ease-in-out infinite alternate; }
+  @keyframes m2glint{ from{ opacity:.25; transform:translateX(-10px) skewX(-6deg);} to{ opacity:.8; transform:translateX(10px) skewX(6deg);} }
+  @keyframes m2snow{ from{ transform:translate(0,0);} to{ transform:translate(40px,900px);} }
+  @keyframes m2leaf{ 0%{ transform:translate(0,0) rotate(0deg);} 50%{ transform:translate(-40px,420px) rotate(180deg);} 100%{ transform:translate(30px,900px) rotate(360deg);} }
+  @keyframes m2flick{ 0%,100%{ opacity:.12;} 50%{ opacity:.55;} }
+  @keyframes m2ping{ 0%{ transform:scale(1); opacity:.7;} 100%{ transform:scale(3); opacity:0;} }
+  @keyframes m2paper{ 0%{ transform:translate(0,0) rotate(0deg);} 100%{ transform:translate(-60px,900px) rotate(220deg);} }
+  @keyframes m2ripple{ 0%{ transform:scale(1); opacity:.7;} 100%{ transform:scale(14); opacity:0;} }
+  @keyframes m2flame{ from{ transform:scale(.9,1) translateY(1px);} to{ transform:scale(1.1,1.12) translateY(-1px);} }
+  @keyframes m2fog{ from{ transform:translateX(-8%);} to{ transform:translateX(30%);} }

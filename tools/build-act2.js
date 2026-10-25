@@ -5,10 +5,10 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const V2 = process.argv[2];
 if (!V2) { console.error('usage: node tools/build-act2.js <v2 repo path>'); process.exit(1); }
 const OUT = path.join(__dirname, '..');
-// Per-zone player strength measured by tools/playbot.js (index = position in the full zone chain, 15 original zones first).
+// Per-zone player strength measured by tools/playbot.js (index = position in the full zone chain, 23 original-era zones first).
 // Boss/enemy stats are derived from it so fights cost a similar share of HP all the way up. Monotone-smoothed.
 const CAL = (() => { try { const c = JSON.parse(fs.readFileSync(path.join(__dirname, 'calibration.json'), 'utf8')); let m = { mhp: 0, def: 0, dmg: 0 }; return c.map(x => (m = { mhp: Math.max(m.mhp, x.mhp), def: Math.max(m.def, x.def), dmg: Math.max(m.dmg, x.dmg) })); } catch (e) { return null; } })();
-const calFor = (i) => CAL ? CAL[Math.min(i + 15, CAL.length - 1)] : null;
+const calFor = (i) => CAL ? CAL[Math.min(i + 23, CAL.length - 1)] : null;
 
 const g = fs.readFileSync(path.join(V2, 'game.js'), 'utf8');
 const zoneRows = {};
@@ -150,6 +150,12 @@ DRAGONS.forEach(([art, bname, zname, elem, d, after, mech]) => {
 const lateIds = new Set(lateX.map(e => e[0]));
 const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choir', 'sunreach-fields']);
 
+// The Static Fields (V2 Lv 41) has no boss or chapter in V2, so it gets a generated guardian after The Empty Ledger.
+{
+  const row = rowFor('The Static Fields');
+  const at = Zall.findIndex(z => z[0] === 'the-empty-ledger');
+  Zall.splice(at + 1, 0, ['the-static-fields', 'The Static Fields', null, MECHS[5], null, ['Dead Signal', '📡', 'Humming Wreckage', 'Static', '🔌', '"Corroded circuits, mostly. One of them is still listening."'], row, 'Alpha ' + row.en[row.en.length - 1], null, {}]);
+}
 // Recommended levels follow V2's zone levels (V2 tops out at 1250), kept strictly rising along this game's chain.
 const LV_FIX = { 'the-hollow-vigil': 56, 'the-scattered-choir': 57, 'where-the-old-names-wait': 70, vaelithorn: 35, thessarune: 48, nyxathorne: 55, corvenna: 65, aetherum: 92 };
 const lvT = [];
@@ -166,17 +172,19 @@ const chapCount = {};
 const chapXp = {};
 Zall.forEach(([id], k) => { chapXp[id] = Math.round(budget[k] * 0.12 / (chapCount[id] || 1)); });
 
-Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride, , opts], i) => {
+let EARLY = false; // early-game extras get placeholder numbers; the engine rescales them from a neighbouring original zone
+const budgetAt = (i) => EARLY ? 0 : budget[i];
+function buildZone([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride, , opts], i) {
   const easy = opts && opts.easy ? 0.5 : 1;
   const r = rowOverride || zoneRows[zn]; if (!r) throw new Error('V2 zone not found: ' + zn);
   const c = cid ? ch.find(x => x.id === cid) : { quote: '' }; if (!c) throw new Error('chapter ' + cid);
   const elem = ELEM[r.elem] ? r.elem : 'none';
   const bossName = bossOverride || c.bossName.trim();
-  const cal = calFor(i);
+  const cal = EARLY ? null : calFor(i);
   const atkB = cal ? Math.round((cal.def + cal.mhp * 0.12) * easy) : Math.round((28 + i * 1.1) * 3 * easy);
   const [mech, mp] = typeof m3 === 'function' ? m3(atkB) : m3;
   const bossHp = cal ? Math.round(cal.dmg * 28 * easy) : Math.round((520 + i * 45) * 3 * easy); // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
-  const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: Math.round(budget[i] * 0.5), g: 1200 + i * 60,
+  const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: Math.round(budgetAt(i) * 0.5), g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
   if (!mp.lives) boss.hp = bossHp;
   if (mech === 'resurrect') boss.lives = cal ? mp.lives.map(() => Math.round(cal.dmg * 28 * easy / mp.lives.length)) : mp.lives.map(l => Math.round((l + i * 6) * 3 * easy));
@@ -186,10 +194,10 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
   const enemyDefs = {};
   r.en.forEach((n, k) => {
     const t = [{ hp: 1.0, atk: 1.0, spd: 5 }, { hp: 0.75, atk: 1.4, spd: 8 }, { hp: 1.3, atk: 0.8, spd: 4 }][k % 3];
-    enemyDefs[n] = { hp: cal ? Math.round(cal.dmg * 4 * easy * t.hp) : Math.round((140 + i * 7) * 2 * easy * t.hp), atk: cal ? Math.round((cal.def + cal.mhp * 0.02) * easy * t.atk) : Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: Math.max(1, Math.round(budget[i] * 0.03)), g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
+    enemyDefs[n] = { hp: cal ? Math.round(cal.dmg * 4 * easy * t.hp) : Math.round((140 + i * 7) * 2 * easy * t.hp), atk: cal ? Math.round((cal.def + cal.mhp * 0.02) * easy * t.atk) : Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: Math.max(1, Math.round(budgetAt(i) * 0.03)), g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
   });
   zones[id] = {
-    name: zn, lv: lvT[i], theme: 'zone-act2-' + elem,
+    name: zn, lv: EARLY ? ((opts && opts.lv) || 0) : lvT[i], theme: 'zone-act2-' + elem,
     nodes: {
       camp: { x: 60, y: 620, label: 'Camp', icon: '⛺', type: 'camp', desc: r.d },
       quest: { x: 100, y: 400, label: qLabel, icon: qIcon, type: 'quest', npcName: qNpc },
@@ -197,20 +205,67 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
       encounter: { x: 230, y: 90, label: 'Threshold', icon: '🚪', type: 'encounter' },
     },
     enemyDefs, lootTable: r.loot, boss,
-    quest: { name: `${zn}: Clear the Way`, need: 5, xpReward: Math.round(budget[i] * 0.2), goldReward: 280 + i * 15,
-      acceptDesc: `"${zn}: Clear the Way" — Defeat 5 monsters in ${zn}. Reward: ${Math.round(budget[i] * 0.2)} XP, ${280 + i * 15} Gold.` },
+    quest: { name: `${zn}: Clear the Way`, need: 5, xpReward: Math.round(budgetAt(i) * 0.2), goldReward: 280 + i * 15,
+      acceptDesc: `"${zn}: Clear the Way" — Defeat 5 monsters in ${zn}. Reward: ${Math.round(budgetAt(i) * 0.2)} XP, ${280 + i * 15} Gold.` },
     encounterLockedDesc: `Something waits ahead. You should look at the ${qNpc.toLowerCase()} at camp first.`,
     bossPromptDesc: `${bossName} has noticed you.`,
     zoneClearedDesc: `${zn} goes quiet. ${c.quote}`,
     templeRepOnClear: 700 + i * 30,
-    nextZone: i + 1 < Zall.length ? Zall[i + 1][0] : null,
+    nextZone: EARLY ? null : i + 1 < Zall.length ? Zall[i + 1][0] : null,
     climax: CLIMAX.has(id) || !!(opts && opts.cap),
   };
+}
+Zall.forEach((t, i) => buildZone(t, i));
+
+// V2's early-game zones that V1's own fifteen didn't cover. They slot into the original chain by level.
+const EARLY_ZONES = [
+  ['serpents-coil', "Serpent's Coil", 'stormhold', ['rampage', { rampageEvery: 3, rampageDmg: 0 }]],
+  ['the-fulcrum', 'The Fulcrum', 'abyssal-depths', ['phase', { phaseThresholds: [0.66, 0.33] }]],
+  ['the-scorched-vein', 'The Scorched Vein', 'infernal-crucible', ['inferno', { infernoTurn: 4, infernoDmg: 0 }]],
+  ['tidal-abyss', 'Tidal Abyss', 'fractured-veil', ['drown', { drownTurn: 4, drownDmg: 0, drownSaveChance: 0.5 }]],
+  ['the-shattered-crown', 'The Shattered Crown', 'dragons-maw', ['freeze', { freezeChance: 0.3, freezeDuration: 3000 }]],
+  ['the-hollow-throne', 'The Hollow Throne', 'the-shattered-crown', ['rampage', { rampageEvery: 3, rampageDmg: 0 }]],
+  ['the-final-spire', 'The Final Spire', 'the-hollow-throne', ['lightning_rod', { rodTurns: 3, rodDmg: 0 }]],
+  ['the-apex', 'The Apex', 'the-final-spire', ['apocalypse', { apocalypseTurn: 6, apocalypseDmg: 0 }]],
+];
+EARLY = true;
+const act1Extras = EARLY_ZONES.map(([id, zn, after, mech], k) => {
+  const row = rowFor(zn); if (!row) throw new Error('V2 zone not found: ' + zn);
+  const real = v2Boss[zn];
+  const w = [['Scorched Hoard', '🔥', 'Scorched Hoard', 'Cinder', '🪙', '"Scavenged from the deeper dark. Prices are what they are."']][0];
+  buildZone([id, zn, null, () => mech, null, w, row, real ? real.name : 'Alpha ' + row.en[row.en.length - 1].replace(/^(A|An|The) /, '').split(',')[0], null, { lv: row.lv }], k);
+  const zone = zones[id]; delete zones[id];
+  return { after, id, mult: 1.12, zone };
 });
+EARLY = false;
 
 // Journal chapters 21-126, in order. Boss chapters unlock on their zone's boss; story-only chapters
 // unlock on the most recent boss (and, as always, on the previous chapter being read).
 const motifFor = (id, boss) => MOTIF[id] || (id <= 48 ? 'dawn' : id <= 53 ? (id === 50 ? 'water' : 'road') : boss ? 'figures' : id <= 57 ? 'embers' : id <= 72 ? 'ledger' : id <= 78 ? 'pillars' : id <= 85 ? 'figures' : id <= 87 ? 'pillars' : id <= 93 ? 'embers' : id <= 95 ? 'horizon' : ['dawn', 'horizon', 'mend', 'embers'][id % 4]);
+// Pick up to two scene motifs from a chapter's own words; the first chapters 21-41 keep their hand-picked primary.
+const RULES = {
+  cracks: 'break broke broken fracture crack shatter splinter split tear', pillars: 'ruin stone temple sanctum hall ancient pillar', water: 'water tide sea drown coast rain flood reef river wave',
+  gears: 'machine mechanic system overtime shift factory dock foreman automat job firm gear', beam: 'lighthouse watch beacon watcher signal', road: 'road walk path route map journey trade wayfind guide step',
+  mobile: 'nursery baby child cradle kitten sleep soft', embers: 'ember fire burn kindle spark flame warmth cat soel', storm: 'storm thunder lightning', ledger: 'ledger debt number account money dollar pay owe charge asset tally balance loan cost price',
+  figures: 'family together everyone unity crew court party group', horizon: 'horizon beyond distance window vision far', dawn: 'dawn morning sun daybreak begin first', mend: 'mend repair seam heal slow gentle rest',
+  doors: 'door threshold gate enter open key index architect', mirror: 'mirror echo reflect version same self', snow: 'cold frost ice snow frozen winter', leaves: 'vale grove root tree green verdant forest garden harvest field sunreach',
+  office: 'office firm retainer desk employer fluorescent hollow', phone: 'phone call cellphone voice message text signal', letters: 'letter write wrote note page ink paper', rings: 'listen hear sound hum ripple whisper silence uprising',
+  candles: 'vigil prayer believ faith wren prophet grief candle mourn', clock: 'time hour clock late wait age youth years deadline', constellation: 'star night sky cosmos dream', fog: 'fog mist forgot memory remember haze ghost wraith',
+};
+const FALLBACK = ['dawn', 'horizon', 'fog', 'constellation', 'leaves', 'mend', 'rings', 'embers'];
+function pickMotifs(id, c, forcedPrimary) {
+  const text = (c.title + ' ' + c.summary + ' ' + c.quote + ' ' + c.scenes.slice(0, 3).map(s => s[1]).join(' ')).toLowerCase();
+  const score = Object.entries(RULES).map(([m, words]) => [m, words.split(' ').reduce((t, w) => t + (text.match(new RegExp('\\b' + w, 'g')) || []).length * (new RegExp('\\b' + w).test(c.title.toLowerCase()) ? 3 : 1), 0)]);
+  const ranked = score.filter(([, s]) => s > 0).sort((a, b) => b[1] - a[1]).map(([m]) => m);
+  const prev = pickMotifs.prev || [];
+  let list = ranked.length ? ranked : [FALLBACK[id % FALLBACK.length]];
+  if (forcedPrimary) list = [forcedPrimary, ...list.filter(m => m !== forcedPrimary)];
+  else if (list[0] === prev[0] && list[1]) list = [list[1], list[0], ...list.slice(2)]; // don't repeat the previous chapter's scene
+  const out = [list[0], list.find((m, i) => i > 0 && m !== list[0]) || FALLBACK[(id + 3) % FALLBACK.length]];
+  if (out[1] === out[0]) out[1] = FALLBACK[(id + 5) % FALLBACK.length];
+  pickMotifs.prev = out;
+  return out;
+}
 let lastZone = 'daybreak', n = 0;
 for (let id = 21; id <= 126; id++) {
   const c = ch.find(x => x.id === id);
@@ -219,7 +274,7 @@ for (let id = 21; id <= 126; id++) {
   if (zid) lastZone = zid;
   const z = zones[lastZone], elem = z.theme.slice(10);
   chapters.push({ id, unlockType: 'boss', unlockAt: z.boss.name, icon: c.icon, theme: 'theme-act2-' + elem, title: c.title,
-    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: chapXp[lastZone], motif: motifFor(id, !!zid) });
+    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: chapXp[lastZone], motifs: pickMotifs(id, c, MOTIF[id]) });
   n++;
 }
 // Speaker portraits V1 doesn't already have: V2 character portraits, plus boss art for boss speakers
@@ -235,7 +290,7 @@ const zones3 = {};
 for (const id of lateIds) { zones3[id] = zones[id]; delete zones[id]; }
 fs.writeFileSync(path.join(OUT, 'act3-data.js'), `// Generated by tools/build-act2.js from Legends of Daybreak V2 — the later worlds (Verdant Reach end to Ascension).\nconst ACT3_ZONES = ${JSON.stringify(zones3)};\n`);
 const body = `// Generated by tools/build-act2.js from Legends of Daybreak V2 — the world after the Nexus (chapters 21-126).\n` +
-  `const ACT2_ELEMENTS = ${JSON.stringify(ELEM)};\nconst ACT2_ZONES = ${JSON.stringify(zones, null, 1)};\nconst ACT2_CHAPTERS = ${JSON.stringify(chapters)};\nconst ACT2_PORTRAITS = ${JSON.stringify(portraits)};\n`;
+  `const ACT1_EXTRAS = ${JSON.stringify(act1Extras)};\nconst ACT2_ELEMENTS = ${JSON.stringify(ELEM)};\nconst ACT2_ZONES = ${JSON.stringify(zones, null, 1)};\nconst ACT2_CHAPTERS = ${JSON.stringify(chapters)};\nconst ACT2_PORTRAITS = ${JSON.stringify(portraits)};\n`;
 fs.writeFileSync(path.join(OUT, 'act2-data.js'), body);
 console.log('zones', Object.keys(zones).length, 'act3', Object.keys(zones3).length, 'chapters', chapters.length, 'bytes', body.length);
 const speakers = new Set(); chapters.forEach(c => c.scenes.forEach(s => speakers.add(s.speaker))); console.log([...speakers].join(', '));

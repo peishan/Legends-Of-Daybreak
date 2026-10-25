@@ -76,7 +76,7 @@ const bot = async (maxZones) => {
       startBoss(); fight(); if (rec.bossMin === undefined) rec.bossMin = Math.round(lowest * 100) / 100;
       if (!zs.bossDefeated) { rec.deaths++; for (let g = 0; g < 12; g++) { startEncounter(); fight(); rec.grind++; } shop(); }
     }
-    if (!zs.bossDefeated) { rec.wall = true; out.push(rec); break; }
+    if (!zs.bossDefeated) { rec.wall = true; zs.bossDefeated = true; grantXP(z.boss.xp); } // report the wall, then skip past it so later zones still get measured
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
     readChapters(); shop();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
