@@ -3304,7 +3304,7 @@ function closeBattle(fled){
     setTimeout(()=>{
       document.getElementById('battle-cb-eyebrow').textContent = 'Zone Cleared';
       document.getElementById('battle-cb-title').textContent = zone.name;
-      document.getElementById('battle-cb-rewards').textContent = zone.nextZone ? (ZONES[zone.nextZone].name + ' is now open') : 'More zones coming soon';
+      document.getElementById('battle-cb-rewards').textContent = zone.nextZone ? (ZONES[zone.nextZone].name + ' is now open') : 'The journey is complete';
       cb.classList.add('show'); setTimeout(()=>cb.classList.remove('show'), 2800);
     }, 300);
   } else if(!fled && zs.quest.done && !zs.bossUnlocked){
