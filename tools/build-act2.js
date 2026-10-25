@@ -150,6 +150,22 @@ DRAGONS.forEach(([art, bname, zname, elem, d, after, mech]) => {
 const lateIds = new Set(lateX.map(e => e[0]));
 const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choir', 'sunreach-fields']);
 
+// Recommended levels follow V2's zone levels (V2 tops out at 1250), kept strictly rising along this game's chain.
+const LV_FIX = { 'the-hollow-vigil': 56, 'the-scattered-choir': 57, 'where-the-old-names-wait': 70, vaelithorn: 35, thessarune: 48, nyxathorne: 55, corvenna: 65, aetherum: 92 };
+const lvT = [];
+Zall.forEach((z, k) => {
+  const row = z[6] || zoneRows[z[1]];
+  const v2 = (row && row.lv) || LV_FIX[z[0]] || LV_FIX[z[4]] || 0;
+  lvT.push(Math.max(v2, k ? lvT[k - 1] + 1 : 30));
+});
+const cumXp = (l) => 30 * l + 25 * l * (l - 1) / 2;
+const budget = lvT.map((l, k) => 1.12 * cumXp(k + 1 < lvT.length ? lvT[k + 1] : l + 10) - 1.12 * cumXp(l)); // XP to get from this zone's level to the next zone's
+// chapters granted per zone (story chapters ride on the latest boss zone)
+const chapCount = {};
+{ let lz = 'daybreak'; for (let id = 21; id <= 126; id++) { const c = ch.find(x => x.id === id); if (!c || !c.scenes.length) continue; if (zoneOfChapter[id]) lz = zoneOfChapter[id]; chapCount[lz] = (chapCount[lz] || 0) + 1; } }
+const chapXp = {};
+Zall.forEach(([id], k) => { chapXp[id] = Math.round(budget[k] * 0.12 / (chapCount[id] || 1)); });
+
 Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine], rowOverride, bossOverride, , opts], i) => {
   const easy = opts && opts.easy ? 0.5 : 1;
   const r = rowOverride || zoneRows[zn]; if (!r) throw new Error('V2 zone not found: ' + zn);
@@ -160,7 +176,7 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
   const atkB = cal ? Math.round((cal.def + cal.mhp * 0.12) * easy) : Math.round((28 + i * 1.1) * 3 * easy);
   const [mech, mp] = typeof m3 === 'function' ? m3(atkB) : m3;
   const bossHp = cal ? Math.round(cal.dmg * 28 * easy) : Math.round((520 + i * 45) * 3 * easy); // tuned by headless fights: V1's curve left these bosses dying in ~8 casts
-  const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: 2200 + i * 120, g: 1200 + i * 60,
+  const boss = Object.assign({ name: bossName, mechanic: mech, atk: atkB, spd: 5, xp: Math.round(budget[i] * 0.5), g: 1200 + i * 60,
     hint: r.d.split('. ')[0].slice(0, 110), introLine: r.d, spriteCls: 'act2-body', crownCls: 'act2-crown', tint: [ELEM[elem][3], ELEM[elem][4]] }, mp);
   if (!mp.lives) boss.hp = bossHp;
   if (mech === 'resurrect') boss.lives = cal ? mp.lives.map(() => Math.round(cal.dmg * 28 * easy / mp.lives.length)) : mp.lives.map(l => Math.round((l + i * 6) * 3 * easy));
@@ -170,10 +186,10 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
   const enemyDefs = {};
   r.en.forEach((n, k) => {
     const t = [{ hp: 1.0, atk: 1.0, spd: 5 }, { hp: 0.75, atk: 1.4, spd: 8 }, { hp: 1.3, atk: 0.8, spd: 4 }][k % 3];
-    enemyDefs[n] = { hp: cal ? Math.round(cal.dmg * 4 * easy * t.hp) : Math.round((140 + i * 7) * 2 * easy * t.hp), atk: cal ? Math.round((cal.def + cal.mhp * 0.02) * easy * t.atk) : Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: 90 + i * 5, g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
+    enemyDefs[n] = { hp: cal ? Math.round(cal.dmg * 4 * easy * t.hp) : Math.round((140 + i * 7) * 2 * easy * t.hp), atk: cal ? Math.round((cal.def + cal.mhp * 0.02) * easy * t.atk) : Math.round((10 + i * 0.6) * 3 * easy * t.atk), spd: t.spd, xp: Math.max(1, Math.round(budget[i] * 0.03)), g: 55 + i * 3, cls: 'act2-body', tint: [ELEM[elem][3], ELEM[elem][4]] };
   });
   zones[id] = {
-    name: zn, theme: 'zone-act2-' + elem,
+    name: zn, lv: lvT[i], theme: 'zone-act2-' + elem,
     nodes: {
       camp: { x: 60, y: 620, label: 'Camp', icon: '⛺', type: 'camp', desc: r.d },
       quest: { x: 100, y: 400, label: qLabel, icon: qIcon, type: 'quest', npcName: qNpc },
@@ -181,8 +197,8 @@ Zall.forEach(([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mLine],
       encounter: { x: 230, y: 90, label: 'Threshold', icon: '🚪', type: 'encounter' },
     },
     enemyDefs, lootTable: r.loot, boss,
-    quest: { name: `${zn}: Clear the Way`, need: 5, xpReward: 450 + i * 25, goldReward: 280 + i * 15,
-      acceptDesc: `"${zn}: Clear the Way" — Defeat 5 monsters in ${zn}. Reward: ${450 + i * 25} XP, ${280 + i * 15} Gold.` },
+    quest: { name: `${zn}: Clear the Way`, need: 5, xpReward: Math.round(budget[i] * 0.2), goldReward: 280 + i * 15,
+      acceptDesc: `"${zn}: Clear the Way" — Defeat 5 monsters in ${zn}. Reward: ${Math.round(budget[i] * 0.2)} XP, ${280 + i * 15} Gold.` },
     encounterLockedDesc: `Something waits ahead. You should look at the ${qNpc.toLowerCase()} at camp first.`,
     bossPromptDesc: `${bossName} has noticed you.`,
     zoneClearedDesc: `${zn} goes quiet. ${c.quote}`,
@@ -203,7 +219,7 @@ for (let id = 21; id <= 126; id++) {
   if (zid) lastZone = zid;
   const z = zones[lastZone], elem = z.theme.slice(10);
   chapters.push({ id, unlockType: 'boss', unlockAt: z.boss.name, icon: c.icon, theme: 'theme-act2-' + elem, title: c.title,
-    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: 400 + n * 8, motif: motifFor(id, !!zid) });
+    sub: c.quote, summary: c.summary, scenes: c.scenes.map(([speaker, text]) => ({ speaker, text })), xpReward: chapXp[lastZone], motif: motifFor(id, !!zid) });
   n++;
 }
 // Speaker portraits V1 doesn't already have: V2 character portraits, plus boss art for boss speakers

@@ -236,16 +236,17 @@ function renderHub(){
   const ctaTitle = document.getElementById('hub-cta-title');
   const ctaSub = document.getElementById('hub-cta-sub');
   ctaTitle.textContent = activeZone.name;
-  if(activeZS.bossDefeated){ ctaSub.textContent = 'Explore freely'; }
-  else if(activeZS.bossUnlocked){ ctaSub.textContent = `The ${activeZone.boss.name} awaits`; }
-  else if(activeZS.quest.done){ ctaSub.textContent = 'Return to face the boss'; }
-  else if(activeZS.quest.started){ ctaSub.textContent = `${activeZone.quest.name}: ${activeZS.quest.count}/${activeZone.quest.need} monsters`; }
-  else { ctaSub.textContent = 'Begin exploring'; }
+  const lvTag = `Lv ${activeZone.lv} \u00b7 `;
+  if(activeZS.bossDefeated){ ctaSub.textContent = lvTag + 'Explore freely'; }
+  else if(activeZS.bossUnlocked){ ctaSub.textContent = lvTag + `The ${activeZone.boss.name} awaits`; }
+  else if(activeZS.quest.done){ ctaSub.textContent = lvTag + 'Return to face the boss'; }
+  else if(activeZS.quest.started){ ctaSub.textContent = lvTag + `${activeZone.quest.name}: ${activeZS.quest.count}/${activeZone.quest.need} monsters`; }
+  else { ctaSub.textContent = lvTag + 'Begin exploring'; }
 
   // Map tile
   const allCleared = Object.values(GameState.zoneState).every(z => z.bossDefeated);
   const mapProgress = activeZS.bossDefeated ? 100 : Math.round((activeZS.quest.count/activeZone.quest.need)*70);
-  document.getElementById('hub-map-status').textContent = allCleared ? 'All zones cleared' : activeZone.name;
+  document.getElementById('hub-map-status').textContent = allCleared ? 'All zones cleared' : `${activeZone.name} \u00b7 Lv ${activeZone.lv}`;
   document.getElementById('hub-map-progress').style.width = mapProgress+'%';
   document.getElementById('hub-map-badge').classList.toggle('show', !allCleared);
 
@@ -743,6 +744,7 @@ const ZONES = {
 const BASE_MATS = new Set(Object.values(ZONES).flatMap(z => z.lootTable)); // materials from the original fifteen zones
 ZONES['the-nexus'].nextZone = 'the-breaking';
 ZONES['the-nexus'].climax = true;
+Object.keys(ZONES).forEach((id, k) => { ZONES[id].lv = 1 + k * 2; }); // original fifteen zones: Lv 1-29
 Object.assign(ZONES, ACT2_ZONES, ACT3_ZONES);
 for(const id in Object.assign({}, ACT2_ZONES, ACT3_ZONES)){
   GameState.zoneState[id] = { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false };
@@ -1413,7 +1415,7 @@ function renderTrainingScreen(){
     const row = document.createElement('div');
     row.className = 'training-row';
     row.innerHTML = `<div class="tr-icon2">⚔️</div>
-      <div class="tr-body2"><div class="tr-name2">${zone.name}</div><div class="tr-sub2">${Object.keys(zone.enemyDefs).join(', ')}</div></div>
+      <div class="tr-body2"><div class="tr-name2">${zone.name}</div><div class="tr-sub2">Lv ${zone.lv} \u00b7 ${Object.keys(zone.enemyDefs).join(', ')}</div></div>
       <button class="tr-btn2">Grind</button>`;
     row.querySelector('.tr-btn2').addEventListener('click', ()=> startTrainingGrind(zid));
     grindList.appendChild(row);
