@@ -1,5 +1,329 @@
 <!DOCTYPE html>
-<html>
-<head><meta http-equiv="refresh" content="0; url=daybreak_app.html"></head>
-<body></body>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0c16">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daybreak">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<title>Legends of Daybreak</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <audio id="bgm" loop></audio>
+  <button id="music-toggle-btn">🎵</button>
+
+  <!-- ============ HUB ============ -->
+  <div id="screen-hub" class="screen active">
+    <div id="hub-content">
+      <div id="hub-status">
+        <img id="hub-avatar" src="">
+        <div id="hub-status-body">
+          <div class="hs-row1"><span class="hs-name">San</span><span class="hs-lvl" id="hub-lvl">Lv 1</span></div>
+          <div class="hs-bar-row"><span class="hs-bar-label">HP</span><div class="hs-bar-track"><div class="hs-bar-fill hp" id="hub-hp-fill" style="width:100%"></div></div></div>
+          <div class="hs-bar-row"><span class="hs-bar-label">MP</span><div class="hs-bar-track"><div class="hs-bar-fill mp" id="hub-mp-fill" style="width:100%"></div></div></div>
+          <div class="hs-bar-row"><span class="hs-bar-label">XP</span><div class="hs-bar-track"><div class="hs-bar-fill xp" id="hub-xp-fill" style="width:0%"></div></div></div>
+        </div>
+        <div id="hub-gold-chip">🪙 <span id="hub-gold">0</span></div>
+      </div>
+
+      <button id="hub-continue-btn">
+        <div class="cta-icon">🌲</div>
+        <div class="cta-body">
+          <div class="cta-eyebrow">Continue Adventure</div>
+          <div class="cta-title" id="hub-cta-title">Whispering Woods</div>
+          <div class="cta-sub" id="hub-cta-sub">Begin exploring</div>
+        </div>
+        <div class="cta-arrow">→</div>
+      </button>
+
+      <div class="hub-section-label">Explore</div>
+      <div id="hub-grid">
+        <div class="hub-tile" id="hub-tile-map">
+          <div class="t-badge" id="hub-map-badge">In Progress</div>
+          <div class="t-icon">🗺️</div>
+          <div class="t-title">Map</div>
+          <div class="t-status" id="hub-map-status">Whispering Woods</div>
+          <div class="t-progress"><div class="t-progress-fill" id="hub-map-progress" style="width:0%"></div></div>
+        </div>
+        <div class="hub-tile" id="hub-tile-journal">
+          <div class="t-badge" id="hub-journal-badge">New</div>
+          <div class="t-icon">📖</div>
+          <div class="t-title">Journal</div>
+          <div class="t-status" id="hub-journal-status">0 of 5 chapters unlocked</div>
+          <div class="t-progress"><div class="t-progress-fill" id="hub-journal-progress" style="width:0%"></div></div>
+        </div>
+        <div class="hub-tile" id="hub-tile-party">
+          <div class="t-icon">🛡️</div>
+          <div class="t-title">Party</div>
+          <div class="t-status" id="hub-party-status">0 of 7 companions joined</div>
+          <div class="t-progress"><div class="t-progress-fill" id="hub-party-progress" style="width:0%"></div></div>
+        </div>
+        <div class="hub-tile" id="hub-tile-inventory">
+          <div class="t-icon">🎁</div>
+          <div class="t-title">Inventory</div>
+          <div class="t-status" id="hub-inventory-status">0 gold</div>
+          <div class="t-progress"><div class="t-progress-fill" style="width:0%"></div></div>
+        </div>
+        <div class="hub-tile" id="hub-tile-training">
+          <div class="t-icon">⚔️</div>
+          <div class="t-title">Training Grounds</div>
+          <div class="t-status">Free grind &amp; boss rematches</div>
+          <div class="t-progress"><div class="t-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="hub-section-label">Party Roster</div>
+      <div id="hub-roster"></div>
+
+      <div id="hub-save-row">
+        <button id="hub-export-btn">⬇️ Export Save</button>
+        <button id="hub-import-btn">⬆️ Import Save</button>
+        <input type="file" id="hub-import-file" accept="application/json,.json" style="display:none;">
+      </div>
+      <div id="hub-save-row2">
+        <button id="hub-sync-btn">☁️ Cloud Backup</button>
+        <button id="hub-install-btn" style="display:none;">📲 Install App</button>
+      </div>
+      <div id="hub-reset-row"><button id="hub-reset-btn">New Game (erase save)</button></div>
+    </div>
+
+    <div id="hub-quest-strip">
+      <div id="hub-quest-strip-inner">
+        <div class="qi">🗡️</div>
+        <div class="qt"><b>Active Quest</b><span id="hub-quest-text">Talk to the Signpost</span></div>
+        <div id="hub-quest-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MAP / BATTLE ============ -->
+  <div id="screen-map" class="screen">
+    <div class="back-btn" id="map-back-btn">←</div>
+    <div id="map-scene"></div>
+    <div id="map-hud">
+      <div id="map-lvl-chip">
+        <div class="lvl-row"><span class="lvl-name">San</span><span class="lvl-num" id="map-lvl-num">Lv 1</span></div>
+        <div class="xpbar-track"><div class="xpbar-fill" id="map-xp-fill" style="width:0%"></div></div>
+      </div>
+      <div id="map-quest-chip">
+        <div class="qi">🗺️</div>
+        <div class="qt"><b id="map-quest-title">First Steps</b><span id="map-quest-progress-text">Talk to the signpost</span>
+          <div id="map-quest-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+    <div id="map-quest-banner"><div class="qb-eyebrow">Quest Started</div><div class="qb-title">First Steps — Defeat 3 monsters</div></div>
+    <div id="map-levelup-banner"><div class="qb-eyebrow">Level Up</div><div class="qb-title" id="map-levelup-text">San reached Level 2</div></div>
+    <div id="map-toast-wrap"><div class="toast-card" id="map-toast"></div></div>
+
+    <div id="battle-screen">
+      <div id="battle-enemy-stage">
+        <div class="warning-banner" id="battle-warning-banner">Rampage incoming!</div>
+        <div id="battle-enemy-info">
+          <div class="e-name"><span id="battle-e-name">Goblin</span><span id="battle-e-hint" style="font-weight:400; font-size:10px; color:var(--muted);"></span></div>
+          <div class="hpbar-track"><div class="hpbar-fill" id="battle-e-hp-fill" style="width:100%"></div></div>
+          <div class="atb-track"><div class="atb-fill" id="battle-e-atb-fill"></div></div>
+        </div>
+        <div class="enemy-sprite" id="battle-enemy-sprite"></div>
+      </div>
+      <div id="battle-party-bar">
+        <div class="p-card" id="battle-p-card">
+          <img id="battle-p-img" src="">
+          <div style="flex:1">
+            <div class="p-name"><span>San</span></div>
+            <div class="hpbar-track"><div class="hpbar-fill" id="battle-p-hp-fill" style="width:100%"></div></div>
+            <div class="mpbar-track"><div class="mpbar-fill" id="battle-p-mp-fill" style="width:100%"></div></div>
+            <div class="atb-track"><div class="atb-fill" id="battle-p-atb-fill"></div></div>
+          </div>
+        </div>
+        <div id="battle-companions"></div>
+      </div>
+      <div id="battle-log">A Goblin blocks the path.</div>
+      <div id="battle-auto-row"><span class="lbl">Auto-Attack</span><div id="battle-auto-toggle"><div class="knob"></div></div></div>
+      <button id="battle-act-potion">Use Potion (0)</button>
+      <div id="spell-panel"><div id="spell-panel-list"></div></div>
+      <div id="battle-actions">
+        <button id="battle-act-spells"><span>✨ Spells</span><span class="cost">Tap to choose</span></button>
+        <button id="battle-act-attack"><span>Basic Attack</span><span class="cost">0 MP · 1d4 physical</span></button>
+      </div>
+      <div id="battle-result">
+        <div class="eyebrow" id="battle-res-eyebrow">Victory</div>
+        <div class="title-main" id="battle-res-title">Goblin defeated</div>
+        <div class="rewards" id="battle-res-rewards"></div>
+        <button id="battle-result-continue-btn">Continue</button>
+        <button id="battle-result-leave-btn" style="display:none;">Leave Training Grounds</button>
+      </div>
+    </div>
+    <div id="battle-complete-banner">
+      <div class="eyebrow" id="battle-cb-eyebrow">Quest Complete</div>
+      <div class="title-main" id="battle-cb-title">First Steps</div>
+      <div class="rewards" id="battle-cb-rewards">+50 XP · +20 Gold</div>
+    </div>
+  </div>
+
+  <!-- ============ INVENTORY ============ -->
+  <div id="screen-inventory" class="screen">
+    <div class="back-btn" id="inv-back-btn">←</div>
+    <div id="inv-content">
+      <div id="inv-gold-row"><span class="g-label">Gold</span><span class="g-amt" id="inv-gold">🪙 0</span></div>
+
+      <div class="inv-section-label">Equipped</div>
+      <div id="inv-equipped"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Weapons</div>
+      <div id="inv-weapon-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Armor</div>
+      <div id="inv-armor-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Headwear</div>
+      <div id="inv-head-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Handwear</div>
+      <div id="inv-hands-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Footwear</div>
+      <div id="inv-feet-list"></div>
+
+      <div class="inv-section-label">Ribald's Armory — Rings</div>
+      <div id="inv-ring-list"></div>
+
+      <div class="inv-section-label">Lewis's Trinket Shop</div>
+      <div id="inv-shop-list"></div>
+
+      <div class="inv-section-label">Temple Trinket Shelf</div>
+      <div id="inv-shelf-area"></div>
+
+      <div class="inv-section-label">Materials</div>
+      <div id="inv-materials-list" class="mat-chip-wrap"></div>
+
+      <div class="inv-section-label">Potions</div>
+      <div id="inv-potions-list" class="mat-chip-wrap"></div>
+
+      <div class="inv-section-label">Crafting</div>
+      <div id="inv-recipes-list"></div>
+    </div>
+  </div>
+
+  <!-- ============ PARTY ============ -->
+  <div id="screen-party" class="screen">
+    <div class="back-btn" id="party-back-btn">←</div>
+    <div id="party-content">
+      <div class="inv-section-label">Always in the Party</div>
+      <div id="party-fixed-list"></div>
+
+      <div class="inv-section-label">Familiar</div>
+      <div id="party-familiar-list"></div>
+
+      <div class="inv-section-label" id="party-optional-label">Optional Companions</div>
+      <div id="party-optional-list"></div>
+    </div>
+  </div>
+
+  <!-- ============ CLOUD BACKUP (GitHub Gist) ============ -->
+  <div id="screen-sync" class="screen">
+    <div class="back-btn" id="sync-back-btn">←</div>
+    <div id="sync-content">
+      <div class="inv-section-label">Cloud Backup · GitHub Gist</div>
+      <p class="sync-note">Back up your save to a private GitHub Gist and restore it on any device. Nothing syncs automatically: you push and pull yourself, so one device can never silently overwrite another.</p>
+      <div id="sync-status"></div>
+
+      <div class="sync-card">
+        <div class="sync-h">1 · GitHub token <span>(stays on this device)</span></div>
+        <p class="sync-note">Create a <b>classic</b> token with only the <b>gist</b> scope: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic). Fine-grained tokens cannot use Gists.</p>
+        <input id="sync-token" type="password" placeholder="Paste GitHub token" autocomplete="off">
+        <button class="sync-btn" id="sync-save-token">Save &amp; verify token</button>
+      </div>
+
+      <div class="sync-card">
+        <div class="sync-h">2 · Backup ID</div>
+        <div id="sync-linked" style="display:none;">
+          <p class="sync-note">This device is linked to backup ID:</p>
+          <code id="sync-id-display"></code>
+          <button class="sync-btn" id="sync-copy-id">📋 Copy backup ID</button>
+          <button class="sync-btn ghost" id="sync-unlink">Unlink this device</button>
+          <p class="sync-note" id="sync-times"></p>
+        </div>
+        <div id="sync-unlinked">
+          <p class="sync-note">No backup linked yet. Push below to create one, or paste the ID from your other device to link to it.</p>
+          <div class="sync-row"><input id="sync-id-input" type="text" placeholder="Paste backup ID" autocomplete="off"><button class="sync-btn small" id="sync-paste-id">📋 Paste</button></div>
+          <button class="sync-btn" id="sync-link">Link to existing backup</button>
+        </div>
+      </div>
+
+      <button class="sync-btn primary" id="sync-push">☁️ Push (upload this device’s save)</button>
+      <button class="sync-btn ghost" id="sync-pull">☁️ Pull (overwrite this device)</button>
+      <p class="sync-note">Backups are <i>secret</i> gists: unlisted, but anyone with the ID and the link can read them. Don’t share the ID publicly. Your token is never stored in the save.</p>
+    </div>
+  </div>
+
+  <!-- ============ TRAINING GROUNDS ============ -->
+  <div id="screen-training" class="screen">
+    <div class="back-btn" id="training-back-btn">←</div>
+    <div id="training-content">
+      <div class="inv-section-label">Free Grind — Any Zone You've Reached</div>
+      <div id="training-grind-list"></div>
+
+      <div class="inv-section-label">Boss Rematch — Refight Bosses You've Beaten</div>
+      <div id="training-rematch-list"></div>
+    </div>
+  </div>
+
+  <!-- ============ JOURNAL SELECT ============ -->
+  <div id="screen-journal-select" class="screen">
+    <div class="back-btn" id="jsel-back-btn">←</div>
+    <div id="jsel-content">
+      <div class="sel-eyebrow">Daybreak</div>
+      <div class="sel-title">Journal</div>
+      <div id="jsel-chapter-list"></div>
+    </div>
+  </div>
+
+  <!-- ============ JOURNAL READER ============ -->
+  <div id="screen-journal-reader" class="screen">
+    <div class="back-btn" id="jr-back-btn">←</div>
+    <div id="jr-scene"></div>
+    <div id="jr-titlecard">
+      <div class="eyebrow" id="jr-tc-eyebrow">Chapter 1</div>
+      <div class="title-main" id="jr-tc-title">The Rain and the Kitten</div>
+      <div class="title-sub" id="jr-tc-sub">How Soel came to be.</div>
+      <div class="tap-hint">tap to begin</div>
+    </div>
+    <div id="jr-dialogue-wrap">
+      <div id="jr-portrait-slot"><img id="jr-portrait-img" src="" alt=""></div>
+      <div id="jr-box" class="no-portrait">
+        <div id="jr-speaker"></div>
+        <div id="jr-text"></div>
+        <div id="jr-advance">▾</div>
+      </div>
+      <div id="jr-progress"></div>
+    </div>
+    <div id="jr-end-card">
+      <div class="eyebrow">End of chapter</div>
+      <div class="title-main" id="jr-ec-title">Chapter complete</div>
+      <div class="rewards" id="jr-ec-xp"></div>
+      <div class="end-btns">
+        <button class="replay-btn" onclick="openReader(currentChapter,true)">Replay</button>
+        <button class="next-btn" onclick="backToJournalSelect()">Journal</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="hub-toast"></div>
+
+</div>
+
+<script src="act2-data.js"></script>
+<script src="act3-data.js"></script>
+<script src="chapters-act2.js"></script>
+<script src="game.js"></script>
+<script src="sync.js"></script>
+</body>
 </html>
