@@ -197,7 +197,8 @@ const GameState = {
     'dragons-maw': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false },
     'the-nexus': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
   },
-  readChapters: new Set()
+  readChapters: new Set(),
+  guild: { joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }
 };
 function activeZoneId(){
   for(const id in ZONES){ if(!GameState.zoneState[id].bossDefeated) return id; }
@@ -846,6 +847,10 @@ let playerBuffDef = 0, playerBuffUntil = 0;
 function getPlayerBuffDef(){ return Date.now() < playerBuffUntil ? playerBuffDef : 0; }
 let elizReviveReadyAt = 0;
 let trainingMode = null, trainingZoneId = null;
+// The boss definition for the fight in progress. Mechanics read it instead of the current zone's own boss, so training
+// rematches and Temple Hunts behave like the boss actually on screen.
+let currentBossDef = null, silencedUntil = 0;
+function fightBoss(){ return currentBossDef || ZONES[GameState.currentZone].boss; }
 let bossDamageDealt = 0;
 
 function isCompanionActive(name){ return activeCompanions.includes(name) && GameState.companions[name].hp > 0; }
@@ -1360,6 +1365,7 @@ function resetBattleUI(){
 }
 
 function startEncounter(){
+  currentBossDef = null; silencedUntil = 0; trainingMode = null; trainingZoneId = null;
   liveZone(GameState.currentZone);
   const zone = ZONES[GameState.currentZone];
   const names = Object.keys(zone.enemyDefs);
@@ -1383,6 +1389,7 @@ function startBoss(){
   liveZone(GameState.currentZone);
   const zone = ZONES[GameState.currentZone];
   const boss = zone.boss;
+  currentBossDef = boss; silencedUntil = 0; trainingMode = null; trainingZoneId = null;
   isBoss = true; inBattle = true; paused = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
   const hp = boss.mechanic === 'resurrect' ? boss.lives[0] : boss.hp;
   currentEnemy = { name: boss.name, hp, mhp: hp, atk: boss.atk, spd: boss.spd, xp: boss.xp, g: boss.g, mechanic: boss.mechanic };
@@ -1412,6 +1419,7 @@ function getReachedZoneIds(){
 function startTrainingGrind(zoneId){
   trainingMode = 'grind'; trainingZoneId = zoneId;
   showScreen('map');
+  currentBossDef = null; silencedUntil = 0;
   liveZone(zoneId);
   const zone = ZONES[zoneId];
   const names = Object.keys(zone.enemyDefs);
@@ -1437,6 +1445,7 @@ function startTrainingRematch(zoneId){
   liveZone(zoneId);
   const zone = ZONES[zoneId];
   const boss = zone.boss;
+  currentBossDef = boss; silencedUntil = 0;
   isBoss = true; inBattle = true; paused = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
   const baseHp = boss.mechanic === 'resurrect' ? boss.lives[0] : boss.hp;
   const hp = Math.round(baseHp * 1.5);
@@ -1454,7 +1463,8 @@ function startTrainingRematch(zoneId){
 }
 
 function continueTraining(){
-  if(trainingMode === 'rematch') startTrainingRematch(trainingZoneId);
+  if(trainingMode === 'hunt') startHunt(currentHuntId);
+  else if(trainingMode === 'rematch') startTrainingRematch(trainingZoneId);
   else startTrainingGrind(trainingZoneId);
 }
 
@@ -1462,8 +1472,10 @@ function leaveTraining(){
   document.getElementById('battle-screen').classList.remove('show');
   document.getElementById('battle-result').classList.remove('show');
   stopTicking(); inBattle = false;
-  trainingMode = null; trainingZoneId = null;
-  showScreen('training');
+  const wasHunt = trainingMode === 'hunt';
+  trainingMode = null; trainingZoneId = null; currentBossDef = null;
+  if(wasHunt && window.renderGuild) renderGuild();
+  showScreen(wasHunt ? 'guild' : 'training');
   playTrack(null);
 }
 document.getElementById('battle-result-leave-btn').addEventListener('click', leaveTraining);
@@ -1631,7 +1643,11 @@ function playerAct(type){
   const gearAtk = getPlayerAtkBonus();
   let dmg = roll(4) + lvlBonus + gearAtk;
   let critText = '';
-  if(isCompanionActive('Senedra') && Math.random() < 0.2){ dmg *= 2; critText = ' A critical hit!'; }
+  if(isBoss && currentEnemy.mechanic === 'blind' && Math.random() < 0.3){
+    document.getElementById('battle-log').textContent = 'Blinded, San strikes at empty air.';
+    pATB = 0; pReady = false; hideSpellPanel(); updateBattleBars(); return;
+  }
+  if((isCompanionActive('Senedra') && Math.random() < 0.2) || (window.guildCrit && Math.random() < guildCrit())){ dmg *= 2; critText = ' A critical hit!'; }
   document.getElementById('battle-log').textContent = `San strikes with a quick blow.${critText}`;
   currentEnemy.hp = Math.max(0, currentEnemy.hp - dmg);
   if(isBoss) bossDamageDealt += dmg;
@@ -1648,6 +1664,7 @@ function playerAct(type){
 
 function castSpell(spellId){
   if(!pReady || !inBattle || paused || isFrozen('player')) return;
+  if(Date.now() < silencedUntil){ document.getElementById('battle-log').textContent = 'San is silenced and cannot cast.'; return; }
   const spell = SPELLS.find(s=>s.id===spellId);
   if(!spell || GameState.player.level < spell.ul) return;
   const p = GameState.player;
@@ -1665,10 +1682,14 @@ function castSpell(spellId){
   } else {
     const lvlBonus = Math.floor(p.level/2);
     const gearAtk = getPlayerAtkBonus();
+    if(isBoss && currentEnemy.mechanic === 'blind' && Math.random() < 0.3){
+      document.getElementById('battle-log').textContent = `San ${spell.verb}, but the blind foe is not where the spell lands.`;
+      pATB = 0; pReady = false; hideSpellPanel(); updateBattleBars(); checkEnemyDefeatedOrResurrect(); return;
+    }
     let dmg = rollDice(spell.dice) + lvlBonus + gearAtk;
     if(isCompanionActive('Mezstorm')) dmg = Math.round(dmg * 1.15);
     let critText = '';
-    if(isCompanionActive('Senedra') && Math.random() < 0.2){ dmg *= 2; critText = ' A critical hit!'; }
+    if((isCompanionActive('Senedra') && Math.random() < 0.2) || (window.guildCrit && Math.random() < guildCrit())){ dmg *= 2; critText = ' A critical hit!'; }
     let procText = '';
     if(spell.proc && Math.random() < spell.proc.chance){
       dmg += spell.proc.bonus;
@@ -1712,7 +1733,7 @@ function renderSpellPanel(){
   SPELLS.filter(s=>p.level>=s.ul).forEach(s=>{
     const btn = document.createElement('button');
     btn.className = 'spell-row';
-    btn.disabled = !pReady || p.mp < s.cost || isFrozen('player');
+    btn.disabled = !pReady || p.mp < s.cost || isFrozen('player') || Date.now() < silencedUntil;
     const desc = s.kind==='restore' ? (s.restoreHp ? 'Restores all HP' : `Restores ${Math.round(s.restoreMp*100)}% MP`) : s.kind==='buff' ? `+${s.buffDef} DEF, brief ward` : `${s.dice} dmg${s.proc?` · ${Math.round(s.proc.chance*100)}% ${s.proc.label}`:''}${s.lifesteal?' · lifesteal':''}`;
     btn.innerHTML = `<div class="sp-body"><div class="sp-name">${s.n}</div><div class="sp-desc">${desc}</div></div><div class="sp-cost">${s.cost} MP</div>`;
     btn.addEventListener('click', ()=> castSpell(s.id));
@@ -1722,7 +1743,7 @@ function renderSpellPanel(){
 
 function checkPhaseShift(){
   if(!isBoss || !currentEnemy || currentEnemy.mechanic !== 'phase' || currentEnemy.hp <= 0) return;
-  const boss = ZONES[GameState.currentZone].boss;
+  const boss = fightBoss();
   const pct = currentEnemy.hp / currentEnemy.mhp;
   if(bossPhaseIndex < boss.phaseThresholds.length && pct <= boss.phaseThresholds[bossPhaseIndex]){
     bossPhaseIndex++;
@@ -1743,7 +1764,7 @@ function checkPhaseShift(){
 function checkEnemyDefeatedOrResurrect(){
   if(currentEnemy.hp > 0) return;
   if(isBoss && currentEnemy.mechanic === 'resurrect'){
-    const boss = ZONES[GameState.currentZone].boss;
+    const boss = fightBoss();
     if(bossLifeIndex < boss.lives.length - 1){ doResurrect(boss); return; }
   }
   paused = true; setTimeout(onVictory, 450);
@@ -1772,49 +1793,59 @@ function doResurrect(boss){
 
 function enemyAct(){
   if(!inBattle) return;
+  if(isBoss && currentEnemy.mechanic === 'silence'){
+    bossTurnCount++;
+    if(bossTurnCount % 4 === 0){
+      silencedUntil = Date.now() + 7000;
+      const wb = document.getElementById('battle-warning-banner');
+      wb.textContent = `${theBoss(currentEnemy.name)} falls silent. Your spells fade!`; wb.classList.add('show'); setTimeout(()=>wb.classList.remove('show'), 1400);
+      document.getElementById('battle-log').textContent = 'A hush spreads. San cannot cast for a few moments.';
+      if(document.getElementById('spell-panel').classList.contains('show')) hideSpellPanel();
+    }
+  }
   if(isBoss && currentEnemy.mechanic === 'rampage'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.rampageEvery === 0){ doRampage(); return; }
+    if(bossTurnCount % fightBoss().rampageEvery === 0){ doRampage(); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'inferno'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.infernoTurn === 0){ startInfernoCharge(); return; }
+    if(bossTurnCount % fightBoss().infernoTurn === 0){ startInfernoCharge(); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'lightning_rod'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.rodTurns === 0){ doLightningRod(); return; }
+    if(bossTurnCount % fightBoss().rodTurns === 0){ doLightningRod(); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'freeze'){
-    const boss = ZONES[GameState.currentZone].boss;
+    const boss = fightBoss();
     if(Math.random() < boss.freezeChance){ doFreeze(boss); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'drown'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.drownTurn === 0){ doDrown(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().drownTurn === 0){ doDrown(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'devour'){
     bossTurnCount++;
-    if(bossTurnCount === ZONES[GameState.currentZone].boss.devourTurn){ doDevour(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount === fightBoss().devourTurn){ doDevour(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'cosmic'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.cosmicPhaseTurns === 0){ doCosmicPhase(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().cosmicPhaseTurns === 0){ doCosmicPhase(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'planar_shift'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.shiftTurn === 0){ doPlanarShift(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().shiftTurn === 0){ doPlanarShift(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'astral_phase'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.shiftTurn === 0){ doAstralPhase(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().shiftTurn === 0){ doAstralPhase(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'reality_weave'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.weaveTurn === 0){ doRealityWeave(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().weaveTurn === 0){ doRealityWeave(fightBoss()); return; }
   }
   if(isBoss && currentEnemy.mechanic === 'apocalypse'){
     bossTurnCount++;
-    if(bossTurnCount % ZONES[GameState.currentZone].boss.apocalypseTurn === 0){ doApocalypse(ZONES[GameState.currentZone].boss); return; }
+    if(bossTurnCount % fightBoss().apocalypseTurn === 0){ doApocalypse(fightBoss()); return; }
   }
   const es = document.getElementById('battle-enemy-sprite');
   es.classList.add('attacking');
@@ -2145,7 +2176,7 @@ function doApocalypse(boss){
 }
 
 function doLightningRod(){
-  const boss = ZONES[GameState.currentZone].boss;
+  const boss = fightBoss();
   const es = document.getElementById('battle-enemy-sprite');
   es.classList.add('attacking');
   const targets = livingTargets();
@@ -2163,7 +2194,7 @@ function doLightningRod(){
 
 function startInfernoCharge(){
   bossCharging = true;
-  const boss = ZONES[GameState.currentZone].boss;
+  const boss = fightBoss();
   const wb = document.getElementById('battle-warning-banner');
   wb.textContent = `${theBoss(currentEnemy.name)} is charging an inferno — attack to interrupt!`;
   wb.classList.add('show');
@@ -2210,7 +2241,7 @@ function unleashInferno(boss){
 
 function doRampage(){
   paused = true;
-  const boss = ZONES[GameState.currentZone].boss;
+  const boss = fightBoss();
   const wb = document.getElementById('battle-warning-banner');
   wb.textContent = `${theBoss(currentEnemy.name)} is enraging!`;
   wb.classList.add('show');
@@ -2282,8 +2313,11 @@ function onVictory(){
   inBattle = false; stopTicking();
   const p = GameState.player;
   p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
-  const goldMult = isCompanionActive('Aisyah') ? 1.2 : 1;
+  const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1);
+  const xpMult = window.guildXpMult ? guildXpMult() : 1;
 
+  if(trainingMode === 'hunt'){ huntVictory(); return; }
+  if(window.guildOnDefeat) guildOnDefeat(currentEnemy.name, isBoss);
   if(trainingMode){
     let xpGain, goldGain, title, rewardHtml;
     if(trainingMode === 'rematch'){
@@ -2292,7 +2326,7 @@ function onVictory(){
       title = `${currentEnemy.name} defeated!`;
       rewardHtml = `+${xpGain} XP · +${goldGain} Gold<br>Rematch victory — no zone progress lost or gained.`;
     } else {
-      xpGain = currentEnemy.xp;
+      xpGain = Math.round(currentEnemy.xp * xpMult);
       goldGain = Math.round(currentEnemy.g * goldMult);
       title = `${currentEnemy.name} defeated`;
       rewardHtml = `+${xpGain} XP · +${goldGain} Gold`;
@@ -2326,7 +2360,7 @@ function onVictory(){
     const bossGold = Math.round(zone.boss.g * goldMult);
     p.gold += bossGold;
     p.templeRep += zone.templeRepOnClear;
-    xpGain = zone.boss.xp;
+    xpGain = Math.round(zone.boss.xp * xpMult);
     title = `${zone.boss.name} defeated!`;
     rewardHtml = `+${zone.boss.xp} XP · +${bossGold} Gold<br>${zone.name} cleared.<br>The Temple hears of your deeds (+${zone.templeRepOnClear} rep).`;
   } else {
@@ -2334,7 +2368,7 @@ function onVictory(){
     q.count = Math.min(zone.quest.need, q.count + 1);
     const killGold = Math.round(currentEnemy.g * goldMult);
     p.gold += killGold;
-    xpGain = currentEnemy.xp;
+    xpGain = Math.round(currentEnemy.xp * xpMult);
     const loot = zone.lootTable[Math.floor(Math.random()*zone.lootTable.length)];
     if(loot in GameState.potions){ GameState.potions[loot] = (GameState.potions[loot] || 0) + 1; }
     else { GameState.materials[loot] = (GameState.materials[loot] || 0) + 1; }
@@ -3467,6 +3501,7 @@ function getSaveData(){
     currentZone: GameState.currentZone,
     zoneState: GameState.zoneState,
     readChapters: Array.from(GameState.readChapters),
+    guild: GameState.guild,
     activePartyChoice: GameState.activePartyChoice,
     partyManualMode: GameState.partyManualMode
   };
@@ -3483,6 +3518,7 @@ function applySaveData(data){
     if(data.zoneState && data.zoneState[id]) Object.assign(GameState.zoneState[id], data.zoneState[id]);
   });
   GameState.readChapters = new Set(data.readChapters || []);
+  GameState.guild = Object.assign({ joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }, data.guild || {});
   GameState.activePartyChoice = data.activePartyChoice || [];
   GameState.partyManualMode = data.partyManualMode || false;
 }

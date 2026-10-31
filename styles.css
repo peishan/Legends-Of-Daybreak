@@ -935,3 +935,6 @@
   @keyframes m2ripple{ 0%{ transform:scale(1); opacity:.7;} 100%{ transform:scale(14); opacity:0;} }
   @keyframes m2flame{ from{ transform:scale(.9,1) translateY(1px);} to{ transform:scale(1.1,1.12) translateY(-1px);} }
   @keyframes m2fog{ from{ transform:translateX(-8%);} to{ transform:translateX(30%);} }
+
+  #guild-content{ padding:70px 16px 50px; }
+  #screen-guild{ background:linear-gradient(180deg,#171320,#0e0b12); }

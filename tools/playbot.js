@@ -57,6 +57,21 @@ const bot = async (maxZones) => {
       for (let k = 0; k < 4; k++) { const can = r.anyAct ? actMatTotal() >= r.anyAct : Object.entries(r.mats).every(([m, n]) => (GameState.materials[m] || 0) >= n); if (!can) break; craftItem(r.id); if (r.type === 'companion_gear') break; }
     }
   }
+  const hunts = [];
+  function guildStep() {
+    if (!GameState.zoneState['whispering-woods'].bossDefeated) return;
+    GameState.guild.joined = true;
+    for (const it of GUILD_SHOP.slice().reverse()) {
+      if (!GameState.guild.owned[it.n] && guildRank().rank >= it.minRank && GameState.guild.repBal >= it.cost) buyGuildItem(it);
+    }
+    for (const h of HUNTS) {
+      if (huntDone(h) || huntUnlocked(h)) continue;
+      P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
+      let tries = 0;
+      while (!huntDone(h) && tries++ < 4) { startHunt(h.id); fight(); const low = lowest; if (!huntDone(h)) { for (let g = 0; g < 6; g++) { startEncounter(); fight(); } } else hunts.push({ hunt: h.id, lvl: P.level, tries, low: Math.round(low * 100) / 100 }); }
+      if (!huntDone(h)) hunts.push({ hunt: h.id, lvl: P.level, failed: true });
+    }
+  }
   function readChapters() {
     let more = true;
     while (more) { more = false; for (const c of CHAPTERS) if (!GameState.readChapters.has(c.id) && isChapterUnlocked(c)) { GameState.readChapters.add(c.id); if (c.xpReward) grantXP(c.xpReward); more = true; } }
@@ -74,22 +89,26 @@ const bot = async (maxZones) => {
     zs.bossUnlocked = true;
     while (!zs.bossDefeated && rec.bossTries < 8) {
       rec.bossTries++; P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-      startBoss(); fight(); if (rec.bossMin === undefined) rec.bossMin = Math.round(lowest * 100) / 100;
+      startBoss(); if (window.__botDebug && rec.bossTries === 1) rec.pre = { mhp: P.mhp, hp: P.hp, def: getPlayerDefBonus(), atk: getPlayerAtkBonus(), lvl: P.level, boss: currentEnemy && [currentEnemy.hp, currentEnemy.atk], party: getActiveCompanions() };
+      fight(); if (window.__botDebug && rec.bossTries === 1) rec.post = { errs: (window.__errs || []).slice(-2), inBattle, hp: P.hp, enemyHp: currentEnemy.hp, paused, log: document.getElementById('battle-log').textContent };
+      void 0; if (rec.bossMin === undefined) rec.bossMin = Math.round(lowest * 100) / 100;
       if (!zs.bossDefeated) { rec.deaths++; for (let g = 0; g < 12; g++) { startEncounter(); fight(); rec.grind++; } shop(); }
     }
+    if (!zs.bossDefeated && window.__botDebug) rec.debug = { inBattle, enemy: currentEnemy && [currentEnemy.name, currentEnemy.hp, currentEnemy.mhp], paused, pReady, eReady, hp: P.hp, log: document.getElementById('battle-log').textContent, errs: (window.__errs || []).slice(-3) };
     if (!zs.bossDefeated) { rec.wall = true; zs.bossDefeated = true; grantXP(z.boss.xp); } // report the wall, then skip past it so later zones still get measured
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    readChapters(); shop();
+    readChapters(); shop(); guildStep();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
   }
   const unread = CHAPTERS.filter(c => !GameState.readChapters.has(c.id)).map(c => c.id);
-  return { out, level: P.level, unread, errs: window.__errs || [] };
+  return { out, level: P.level, unread, hunts, guild: { rank: guildRank().name, rep: GameState.guild.rep, owned: Object.keys(GameState.guild.owned).length }, errs: window.__errs || [] };
 };
 
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 430, height: 880 } });
   const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.addInitScript(virtualClock);
+  if (process.env.BOT_DEBUG) await p.addInitScript(() => { window.__botDebug = true; });
   await p.goto('file://' + file); await p.waitForTimeout(800);
   const t0 = Date.now();
   CHAPTER_TOTAL = await p.evaluate(() => CHAPTERS.length);
@@ -103,6 +122,7 @@ const bot = async (maxZones) => {
   const mins = rows.map(r => r.bossMin).filter(x => x !== undefined).sort((a, b) => a - b);
   console.log('lowest HP fraction in first boss attempt: min', mins[0], 'p10', mins[Math.floor(mins.length * .1)], 'median', mins[Math.floor(mins.length / 2)], 'p90', mins[Math.floor(mins.length * .9)]);
   console.log('hardest:', rows.filter(r => r.bossMin !== undefined).sort((a, b) => a.bossMin - b.bossMin).slice(0, 8).map(r => `${r.zone} L${r.lvlIn} ${r.bossMin}`).join('; '));
+  console.log('guild:', JSON.stringify(res.guild), '| hunts:', res.hunts.map(x => `${x.hunt}@L${x.lvl}${x.failed ? ' FAILED' : ' tries ' + x.tries + ' low ' + x.low}`).join('; '));
   console.log(`chapters read ${CHAPTER_TOTAL - res.unread.length}/${CHAPTER_TOTAL}`, res.unread.length ? 'unread: ' + res.unread.slice(0, 20).join(',') : '');
   console.log('page errors:', [...errs, ...res.errs].slice(0, 5));
   require('fs').writeFileSync(process.env.PLAYBOT_OUT || '/dev/null', JSON.stringify(rows, null, 1));

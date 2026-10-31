@@ -71,6 +71,11 @@
           <div class="t-status" id="hub-inventory-status">0 gold</div>
           <div class="t-progress"><div class="t-progress-fill" style="width:0%"></div></div>
         </div>
+        <div class="hub-tile" id="hub-tile-guild">
+          <div class="t-icon">🛡️</div>
+          <div class="t-title">Guild Hall</div>
+          <div class="t-status" id="hub-guild-status">Contracts · Temple Hunts</div>
+        </div>
         <div class="hub-tile" id="hub-tile-training">
           <div class="t-icon">⚔️</div>
           <div class="t-title">Training Grounds</div>
@@ -264,6 +269,12 @@
     </div>
   </div>
 
+  <!-- ============ GUILD HALL ============ -->
+  <div id="screen-guild" class="screen">
+    <div class="back-btn" id="guild-back-btn">←</div>
+    <div id="guild-content"></div>
+  </div>
+
   <!-- ============ TRAINING GROUNDS ============ -->
   <div id="screen-training" class="screen">
     <div class="back-btn" id="training-back-btn">←</div>
@@ -324,6 +335,7 @@
 <script src="act3-data.js"></script>
 <script src="chapters-act2.js"></script>
 <script src="game.js"></script>
+<script src="guild.js"></script>
 <script src="sync.js"></script>
 </body>
 </html>
