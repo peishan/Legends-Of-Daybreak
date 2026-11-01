@@ -74,6 +74,8 @@ const bot = async (maxZones) => {
     }
   }
   const siegeLog = [];
+  window.__svCalls = 0; { const _sv = siegeVictory; siegeVictory = function () { window.__svCalls++; try { return _sv.apply(this, arguments); } catch (e) { (window.__errs = window.__errs || []).push('siegeVictory: ' + e.stack); throw e; } }; }
+  window.__ovCalls = []; { const _ov = onVictory; onVictory = function () { window.__ovCalls.push([trainingMode, isBoss]); return _ov.apply(this, arguments); }; }
   function libraryStep() {
     if (!libUnlocked()) return;
     for (const who of Object.keys(RESEARCHERS)) {
@@ -87,8 +89,8 @@ const bot = async (maxZones) => {
     window.__dayShift = (window.__dayShift || 0) + 86400000; // a day passes between zones
     if (!siegeAvailable()) return;
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    const tier = siegeTier(); startSiege(); fight(1500); const won = document.getElementById('battle-result').classList.contains('show');
-    siegeLog.push({ lvl: P.level, tier, won, frac: Math.round(siegeState().frac * 100) });
+    const tier = siegeTier(); startSiege(); const hp0 = currentEnemy.hp, mhp0 = currentEnemy.mhp, mp0 = P.mp; fight(1500); const hp1 = currentEnemy.hp; const won = document.getElementById('battle-result').classList.contains('show');
+    siegeLog.push({ lvl: P.level, tier, won, frac: Math.round(siegeState().frac * 100), hp0, hp1, mhp0, mp0, mp1: P.mp, php: P.hp, inB: inBattle, sv: window.__svCalls, ov: JSON.stringify(window.__ovCalls.slice(-2)), tm: trainingMode });
     if (trainingMode) leaveTraining();
   }
   function readChapters() {

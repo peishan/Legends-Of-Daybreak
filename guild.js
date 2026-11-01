@@ -195,7 +195,13 @@ const SIEGE_TIERS = [
   ['What the Mythic Guild Faces', 'The kind of threat that does not show up for guilds that never got this far. It showed up because they did.'],
   ['The Eternal Vigil', 'There is, technically, nothing left to prove. They fight it together anyway: not because they have to, but because that was always the actual point of any of this.']
 ];
-const siegeState = () => (GameState.guild.siege = Object.assign({ tier:1, frac:1, day:-1, kills:0 }, GameState.guild.siege || {}));
+// One shared object: callers hold on to it and mutate it, so it must never be replaced by a copy.
+const siegeState = () => {
+  const g = GameState.guild;
+  if(!g.siege) g.siege = { tier:1, frac:1, day:-1, kills:0 };
+  for(const [k, v] of Object.entries({ tier:1, frac:1, day:-1, kills:0 })) if(g.siege[k] === undefined) g.siege[k] = v;
+  return g.siege;
+};
 const siegeTier = () => Math.min(siegeState().tier, 10, guildRank().rank);
 function siegeBossDef(){
   const t = siegeTier(), L = GameState.player.level, cal = curveAt(L), [name, desc] = SIEGE_TIERS[t - 1];
