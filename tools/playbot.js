@@ -28,9 +28,9 @@ const bot = async (maxZones) => {
   const P = GameState.player, out = [], adv = window.__advance;
   const pickSpell = () => SPELLS.filter(s => s.kind === 'damage' && P.level >= s.ul && P.mp >= s.cost).sort((a, b) => b.cost - a.cost)[0];
   let lowest = 1;
-  function fight() {
+  function fight(maxSteps = 4000) {
     let steps = 0; lowest = 1;
-    while (steps++ < 4000) {
+    while (steps++ < maxSteps) {
       adv(100);
       lowest = Math.min(lowest, P.hp / P.mhp);
       if (!inBattle) break;
@@ -41,7 +41,7 @@ const bot = async (maxZones) => {
     }
     adv(2000); // let a retreat timer finish
     if (!inBattle && document.getElementById('battle-screen').classList.contains('show') && document.getElementById('battle-result').classList.contains('show')) closeBattle(false);
-    return steps < 4000;
+    return steps < maxSteps;
   }
   const dmgScore = t => (t.atk || 0) * 2 + (t.def || 0) * 1.5 + (t.hp || 0) / 4;
   function shop() {
@@ -86,7 +86,7 @@ const bot = async (maxZones) => {
     window.__dayShift = (window.__dayShift || 0) + 86400000; // a day passes between zones
     if (!siegeAvailable()) return;
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    const tier = siegeTier(); startSiege(); fight(); const won = document.getElementById('battle-result').classList.contains('show');
+    const tier = siegeTier(); startSiege(); fight(1500); const won = document.getElementById('battle-result').classList.contains('show');
     siegeLog.push({ lvl: P.level, tier, won, frac: Math.round(siegeState().frac * 100) });
     if (trainingMode) leaveTraining();
   }
@@ -145,5 +145,6 @@ const bot = async (maxZones) => {
   console.log(`chapters read ${CHAPTER_TOTAL - res.unread.length}/${CHAPTER_TOTAL}`, res.unread.length ? 'unread: ' + res.unread.slice(0, 20).join(',') : '');
   console.log('page errors:', [...errs, ...res.errs].slice(0, 5));
   require('fs').writeFileSync(process.env.PLAYBOT_OUT || '/dev/null', JSON.stringify(rows, null, 1));
+  if (process.env.PLAYBOT_SIEGE) require('fs').writeFileSync(process.env.PLAYBOT_SIEGE, JSON.stringify(res.siege));
   await b.close();
 })();

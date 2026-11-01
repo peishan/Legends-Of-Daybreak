@@ -98,7 +98,11 @@ function equipGuildItem(it){
 function buyGuildItem(it){
   const g = GameState.guild;
   if(g.owned[it.n] || g.repBal < it.cost || guildRank().rank < it.minRank) return;
-  g.repBal -= it.cost; g.owned[it.n] = true; equipGuildItem(it); saveGame(); renderGuild();
+  g.repBal -= it.cost; g.owned[it.n] = true;
+  // Only equip automatically when it beats what you are wearing; otherwise it waits in the shop for an Equip tap.
+  const cur = GameState.player[it.field], score = (x) => x ? (x.atk || 0) * 2 + (x.def || 0) * 1.5 + (x.hp || 0) / 4 : -1;
+  if(score(it) > score(cur)) equipGuildItem(it);
+  saveGame(); renderGuild();
 }
 
 /* ---------- Temple Hunts: the Cult of the Closed Eye ---------- */
