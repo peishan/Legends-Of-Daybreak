@@ -191,7 +191,7 @@ Zall.forEach((z, k) => {
   lvT.push(Math.max(v2, k ? lvT[k - 1] + 1 : 30));
 });
 const cumXp = (l) => 30 * l + 25 * l * (l - 1) / 2;
-const budget = lvT.map((l, k) => 1.12 * cumXp(k + 1 < lvT.length ? lvT[k + 1] : l + 10) - 1.12 * cumXp(l)); // XP to get from this zone's level to the next zone's
+const budget = lvT.map((l, k) => 0.92 * cumXp(k + 1 < lvT.length ? lvT[k + 1] : l + 10) - 0.92 * cumXp(l)); // XP to get from this zone's level to the next zone's
 // chapters granted per zone (story chapters ride on the latest boss zone)
 const chapCount = {};
 { let lz = 'daybreak'; for (let id = 21; id <= 126; id++) { const c = ch.find(x => x.id === id); if (!c || !c.scenes.length) continue; if (zoneOfChapter[id]) lz = zoneOfChapter[id]; chapCount[lz] = (chapCount[lz] || 0) + 1; } }
