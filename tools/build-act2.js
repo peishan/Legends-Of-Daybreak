@@ -187,7 +187,7 @@ const LV_FORCE = {};
   ROMAN.forEach((rn, k) => {
     const id = 'the-endless-thinning-depth-' + rn.toLowerCase(), name = 'The Endless Thinning, Depth ' + rn;
     LV_FORCE[id] = 110 + k * 10;
-    Zall.splice(at + 1 + k, 0, [id, name, null, MECHS[(k * 5 + 2) % MECHS.length], null, WORLDS[0][1], Object.assign({}, row, { lv: 110 + k * 10 }), bosses[k], null, { dynamic: true }]);
+    Zall.splice(at + 1 + k, 0, [id, name, null, MECHS[(k * 5 + 2) % MECHS.length], null, WORLDS[0][1], Object.assign({}, row, { lv: 110 + k * 10 }), bosses[k], null, { dynamic: true, dynFactor: 0.8 }]);
   });
 }
 // The Endless Thinning (V2: no fixed ceiling, enemies read the player's level live) goes last; the engine rescales it per battle.
@@ -252,7 +252,7 @@ function buildZone([id, zn, cid, m3, art, [qLabel, qIcon, qNpc, mName, mIcon, mL
     templeRepOnClear: 700 + i * 30,
     nextZone: EARLY ? null : i + 1 < Zall.length ? Zall[i + 1][0] : null,
     climax: CLIMAX.has(id) || !!(opts && opts.cap),
-    ...(opts && opts.dynamic ? { dynamic: true } : {}),
+    ...(opts && opts.dynamic ? { dynamic: true, dynFactor: opts.dynFactor || 1 } : {}),
   };
 }
 Zall.forEach((t, i) => buildZone(t, i));

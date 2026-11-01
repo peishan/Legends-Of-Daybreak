@@ -830,16 +830,16 @@ function curveAt(level){
 const P_FALLBACK = (l) => 80 + 14*l;
 function liveZone(zid){
   const z = ZONES[zid]; if(!z || !z.dynamic) return;
-  const L = GameState.player.level, cal = curveAt(L), levelXp = 30 + (L-1)*25;
+  const L = GameState.player.level, cal = curveAt(L), levelXp = 30 + (L-1)*25, f = z.dynFactor || 1;
   const tmpl = [{ hp:1, atk:1, spd:5 }, { hp:.75, atk:1.4, spd:8 }, { hp:1.3, atk:.8, spd:4 }];
   Object.values(z.enemyDefs).forEach((d, k) => {
     const t = tmpl[k % 3];
-    d.hp = Math.round(cal.dmg*4*t.hp); d.atk = Math.round((cal.def + cal.mhp*.02)*t.atk); d.spd = t.spd;
+    d.hp = Math.round(cal.dmg*4*t.hp*f); d.atk = Math.round((cal.def + cal.mhp*.02)*t.atk*f); d.spd = t.spd;
     d.xp = Math.max(1, Math.round(levelXp*.04)); d.g = Math.round(40 + L*6);
   });
-  const b = z.boss, atk = Math.round(cal.def + cal.mhp*.12);
+  const b = z.boss, atk = Math.round((cal.def + cal.mhp*.12)*f);
   b.atk = atk; b.xp = Math.round(levelXp*.5); b.g = Math.round(500 + L*30);
-  if(b.mechanic === 'resurrect') b.lives = b.lives.map(() => Math.round(cal.dmg*28 / b.lives.length)); else b.hp = Math.round(cal.dmg*28);
+  if(b.mechanic === 'resurrect') b.lives = b.lives.map(() => Math.round(cal.dmg*28*f / b.lives.length)); else b.hp = Math.round(cal.dmg*28*f);
   for(const k of ['rampageDmg','infernoDmg','rodDmg','drownDmg','devourDmg','apocalypseDmg']) if(k in b) b[k] = Math.round(atk * ({ rampageDmg:1.1, infernoDmg:1.1, rodDmg:1.1, drownDmg:1.1, devourDmg:1.2, apocalypseDmg:1.4 }[k]));
   z.quest.xpReward = Math.round(levelXp*.2); z.quest.goldReward = Math.round(200 + L*10);
 }
