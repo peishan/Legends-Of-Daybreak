@@ -26,7 +26,8 @@ const virtualClock = () => {
 
 const bot = async (maxZones) => {
   const P = GameState.player, out = [], adv = window.__advance;
-  const pickSpell = () => SPELLS.filter(s => s.kind === 'damage' && P.level >= s.ul && P.mp >= s.cost).sort((a, b) => b.cost - a.cost)[0];
+  const spellOk = (s) => s.kind === 'damage' && P.level >= s.ul && (!s.research || (GameState.library && GameState.library.done.includes(s.research)));
+  const pickSpell = () => SPELLS.filter(s => spellOk(s) && P.mp >= s.cost).sort((a, b) => b.cost - a.cost)[0];
   let lowest = 1;
   function fight(maxSteps = 4000) {
     let steps = 0; lowest = 1;
@@ -97,7 +98,7 @@ const bot = async (maxZones) => {
   const ids = Object.keys(ZONES).slice(0, maxZones);
   for (const zid of ids) {
     const z = ZONES[zid], zs = GameState.zoneState[zid];
-    const best = SPELLS.filter(x => x.kind === 'damage' && P.level >= x.ul).sort((a, b) => b.cost - a.cost)[0];
+    const best = SPELLS.filter(spellOk).sort((a, b) => b.cost - a.cost)[0];
     const [dn, ds] = best.dice.split('d').map(Number);
     const rec = { zone: z.name, lvlIn: P.level, grind: 0, bossTries: 0, deaths: 0,
       cal: { lvl: P.level, mhp: P.mhp, def: getPlayerDefBonus(), dmg: Math.round((dn * (ds + 1) / 2 + Math.floor(P.level / 2) + getPlayerAtkBonus()) * (best.mult || 1) * (window.libraryMult ? libraryMult() : 1)) } };
