@@ -793,19 +793,19 @@ RECIPES.push(
 );
 /* Companion upgrades: three pieces each, forged from the specific loot of three zones along the way. */
 const COMPANION_UPGRADES = {
-  Joel:     { names:['Splinterward Shield','Unity Bulwark','Daybreak Aegis'],        key:'dmgBonus',  amts:[8,18,36] },
-  Aisyah:   { names:['Ledgerblades','Empty-Ledger Fangs','Gilded Reckoning'],         key:'dmgBonus',  amts:[9,20,40] },
-  Mezstorm: { names:['Storm-Sealed Staff','Unbroken Gale','Estranged Thunder'],       key:'dmgBonus',  amts:[9,20,40] },
-  Eliz:     { names:['Mended Mercy','Quiet Nursery Light','Hand That Catches'],       key:'healBonus', amts:[8,18,36] },
-  Senedra:  { names:['Waymarker Bow','Pemmican Road Longbow','Roads Still Walked'],   key:'dmgBonus',  amts:[9,20,40] },
-  Zaki:     { names:['Checked-Seventeen Blade','Rustbound Edge','Steady Sword'],      key:'dmgBonus',  amts:[9,20,40] },
-  Soel:     { names:['Ember Collar','Forgotten Warmth','The Last Purr'],              key:'dmgBonus',  amts:[6,14,28] }
+  Joel:     { names:['Splinterward Shield','Unity Bulwark','Daybreak Aegis','Roadwarden’s Wall','Ascendant Bulwark'],       key:'dmgBonus',  amts:[8,18,36,90,220] },
+  Aisyah:   { names:['Ledgerblades','Empty-Ledger Fangs','Gilded Reckoning','Ledger of Every Name','Debt Paid in Full'],     key:'dmgBonus',  amts:[9,20,40,100,240] },
+  Mezstorm: { names:['Storm-Sealed Staff','Unbroken Gale','Estranged Thunder','The Storm That Finally Broke','Weather of Her Own'], key:'dmgBonus', amts:[9,20,40,100,240] },
+  Eliz:     { names:['Mended Mercy','Quiet Nursery Light','Hand That Catches','Hand That Never Lets Go','The Mended World’s Mercy'], key:'healBonus', amts:[8,18,36,90,220] },
+  Senedra:  { names:['Waymarker Bow','Pemmican Road Longbow','Roads Still Walked','Every Road, Walked','Maps Without Edges'], key:'dmgBonus', amts:[9,20,40,100,240] },
+  Zaki:     { names:['Checked-Seventeen Blade','Rustbound Edge','Steady Sword','Sword Unchecked','Blade Without Doubt'],     key:'dmgBonus',  amts:[9,20,40,100,240] },
+  Soel:     { names:['Ember Collar','Forgotten Warmth','The Last Purr','Warmth Remembered','Embercat Ascendant'],             key:'dmgBonus',  amts:[6,14,28,70,170] }
 };
-const UPGRADE_ZONES = ['the-breaking','what-remains-united','the-farthest-kindling'];
+const UPGRADE_ZONES = ['the-breaking','what-remains-united','the-farthest-kindling','the-last-page-of-the-index','what-watches-everything-else'];
 Object.entries(COMPANION_UPGRADES).forEach(([who, u]) => u.names.forEach((n, t) => {
   const loot = ZONES[UPGRADE_ZONES[t]].lootTable;
   RECIPES.push({ id:`${who.toLowerCase()}_upgrade${t+1}`, n:`${who}\u2019s ${n}`, type:'companion_gear', companion:who,
-    mats:{ [loot[0]]:3 + t*2, [loot[1]]:2 + t*2 }, bonus:{ [u.key]:u.amts[t] }, r:['rare','rare','epic'][t],
+    mats:{ [loot[0]]:3 + t*2, [loot[1]]:2 + t*2 }, bonus:{ [u.key]:u.amts[t] }, r:['rare','rare','epic','epic','epic'][t],
     d:`+${u.amts[t]} ${u.key==='healBonus'?'healing':'damage'} for ${who}. Stacks with other ${who} gear.` });
 }));
 const actMatTotal = () => Object.entries(GameState.materials).filter(([n]) => !BASE_MATS.has(n)).reduce((t,[,c]) => t + c, 0);
@@ -843,6 +843,33 @@ function liveZone(zid){
   for(const k of ['rampageDmg','infernoDmg','rodDmg','drownDmg','devourDmg','apocalypseDmg']) if(k in b) b[k] = Math.round(atk * ({ rampageDmg:1.1, infernoDmg:1.1, rodDmg:1.1, drownDmg:1.1, devourDmg:1.2, apocalypseDmg:1.4 }[k]));
   z.quest.xpReward = Math.round(levelXp*.2); z.quest.goldReward = Math.round(200 + L*10);
 }
+
+
+/* Levels 330-1250 (and beyond): V2 stops adding spells at 300, but its zones run to 1250, so the book keeps growing, themed on
+   the later worlds. Gear carries most damage this late, so these scale mainly through a multiplier on the whole cast. */
+(() => {
+  const late = [
+    ['index_of_doors','Index of Doors',330,'d','the Architect’s drawn doors, all opening at once'], ['careful_door_ward','Careful Door Ward',390,'b','a ward built like a door someone kept properly'],
+    ['roadwardens_toll','Roadwarden’s Toll',450,'d','the toll they chose to pay, collected at once'], ['hearth_between_worlds','Hearth Between Worlds',510,'rh','a fire that never left the porch'],
+    ['tide_that_remembers','The Tide That Remembers',570,'d','the water that remembers why it rose'], ['taotie_reckoning','The Taotie’s Reckoning',630,'d','the debt, finally come due'],
+    ['undying_ward','Ward of the Undying',690,'b','the refusal of an ending, turned to a shield'], ['last_refusal','The Last Refusal',750,'d','what should have been let go, let go at last'],
+    ['gaze_unlooked','The Gaze Unlooked',810,'d','the thing worth not looking at, looked at once'], ['skyward_vow','Skyward Vow',870,'d','an old vow, still standing watch'],
+    ['three_skies','Where Three Skies Overlap',930,'b','every sky at once, closing ranks'], ['say_exactly','Say Exactly What You Mean',990,'d','a wish worded perfectly'],
+    ['first_wish','The First Wish',1050,'rm','the first wish ever granted, answered again'], ['before_anyone_asked','Before Anyone Asked',1110,'d','what was built before permission existed'],
+    ['slow_ascent','The Slow Ascent',1170,'d','cultivation, patient and unhurried'], ['what_ascension_looks_like','What Ascension Looks Like',1230,'d','the last step, taken'],
+    ['endless_one','The Endless, First Depth',1400,'d','the thinning, thinned further'], ['endless_two','The Endless, Second Depth',1600,'d','what is left when nearly everything is spent'],
+    ['endless_three','The Endless, Third Depth',1800,'d','the line, held by no one but you'], ['endless_four','The Endless, Fourth Depth',2000,'d','the far side of keeping going'],
+    ['endless_five','The Endless, Fifth Depth',2500,'d','a morning that does not need an ending'], ['endless_six','The Endless, Last Depth',3000,'d','daybreak, and then daybreak again']
+  ];
+  late.forEach(([id, n, ul, kind, verb], k) => {
+    const cost = Math.round(90 + k * 14), mult = +(1.05 + k * 0.1).toFixed(2);
+    if(kind === 'd') SPELLS.push({ id, n, ul, cost, dice:`${6 + (k >> 1)}d14`, kind:'damage', mult, proc:{ chance:.4, label:k % 3 === 0 ? 'burn' : k % 3 === 1 ? 'shock' : 'poison', bonus:ul }, verb:`brings ${verb}` });
+    else if(kind === 'b') SPELLS.push({ id, n, ul, cost:Math.round(cost * .5), kind:'buff', buffDef:Math.round(ul * 0.9), buffDuration:12000, verb:`raises ${verb}` });
+    else if(kind === 'rh') SPELLS.push({ id, n, ul, cost:Math.round(cost * .5), kind:'restore', restoreHp:1, verb:`kindles ${verb}` });
+    else SPELLS.push({ id, n, ul, cost:Math.round(cost * .4), kind:'restore', restoreMp:1, verb:`recalls ${verb}` });
+  });
+  SPELLS.sort((a, b) => a.ul - b.ul);
+})();
 
 let currentEnemy = null, isBoss = false, inBattle = false, paused = false, bossTurnCount = 0, bossLifeIndex = 0, bossPhaseIndex = 0, bossCharging = false;
 let frozenUntil = {};
@@ -2501,20 +2528,24 @@ const TEMPLE_TRINKETS = [
    (matches where our zones currently sit), plus his two signature rare pieces. */
 
 /* Act gear: twelve tiers per slot, each unlocking once enough zones have been cleared. */
-const ACT_GEAR_TIERS = ['Mended','Ashen','Daybreak','Wayfarer’s','Verdant','Portal-Forged','Roadwarden’s','Tidebound','Undying','Skyborne','Firstborn','Ascendant'];
+const ACT_GEAR_TIERS = ['Mended','Ashen','Daybreak','Wayfarer’s','Verdant','Portal-Forged','Roadwarden’s','Tidebound','Undying','Skyborne','Firstborn','Ascendant',
+  'Thinning-Wrought','Deep-Index','Hollowsung','Ledgerless','Unwatched','Wishbound','Slow-Climbed','Last-Step',
+  'Endless I','Endless II','Endless III','Endless IV','Endless V','Endless VI','Endless VII','Endless VIII','Endless IX','Endless X'];
 const ACT_GEAR_BASE = { weapon:['Staff',1,0,0], armor:['Robe',0,1,6], head:['Circlet',0,.5,3], hands:['Gloves',.5,.5,2], feet:['Boots',0,.5,3], ring:['Ring',.7,.2,2], trinket:['Charm',.4,.4,4] };
 function actGear(slot){
   const [base, a, d, h] = ACT_GEAR_BASE[slot];
   return ACT_GEAR_TIERS.map((pre, t) => {
-    const k = 10 * Math.pow(1.5, t);
-    return { n:`${pre} ${base}`, atk:Math.round(a*k), def:Math.round(d*k), hp:Math.round(h*k), r:t<3?'uncommon':t<7?'rare':'epic', price:Math.round(400*Math.pow(1.7,t)), needCleared:15 + t*12 };
+    // tiers 1-12 grow 1.5x each; later tiers grow gently (calibrated against the bot's late-game strength)
+    const k = t <= 11 ? 10 * Math.pow(1.5, t) : 10 * Math.pow(1.5, 11) * Math.pow(1.22, t - 11);
+    const gate = t <= 11 ? { needCleared:15 + t*12 } : t <= 19 ? { needCleared:147 + (t - 11) * 5 } : { needLevel:1300 + (t - 20) * 150 };
+    return Object.assign({ n:`${pre} ${base}`, atk:Math.round(a*k), def:Math.round(d*k), hp:Math.round(h*k), r:t<3?'uncommon':t<7?'rare':'epic', price:Math.round(400*Math.pow(1.7,Math.min(t, 14))*(t > 14 ? Math.pow(1.35, t - 14) : 1)) }, gate);
   });
 }
 function clearedZoneCount(){ return Object.values(GameState.zoneState).filter(z=>z.bossDefeated).length; }
 function visibleShopItems(items){
-  const open = items.filter(t => !t.needCleared || clearedZoneCount() >= t.needCleared);
-  const act = open.filter(t => t.needCleared);
-  return open.filter(t => !t.needCleared).concat(act.slice(-3)); // newest three act tiers
+  const open = items.filter(t => (!t.needCleared || clearedZoneCount() >= t.needCleared) && (!t.needLevel || GameState.player.level >= t.needLevel));
+  const act = open.filter(t => t.needCleared || t.needLevel);
+  return open.filter(t => !t.needCleared && !t.needLevel).concat(act.slice(-3)); // newest three act tiers
 }
 const WEAPON_SHOP = [
   { n:'Worn Dagger',      atk:2, def:0, hp:0, r:'common',   price:20 },
@@ -2821,7 +2852,7 @@ const CHAPTERS = [
       { speaker:'Joel', text:"\u201cDo you ever think about them?\u201d he asks, not looking up. You know who he means. You have always known." },
       { speaker:'San', text:"You stare into the flames. \u201cEvery day,\u201d you admit. \u201cThe youngest was only one. He was learning to walk. I left before he learned my name.\u201d" },
       { speaker:'Narrator', text:"The words hang in the air like smoke. You have never said this out loud. Not to Joel. Not to anyone. The shame has been a stone in your chest for years, growing heavier with each birthday you missed, each milestone you only heard about through strained silence." },
-      { speaker:'San', text:"\u201cHer grandmother fed him lies,\u201d you say, and your voice is steadier than you feel. \u201cAbout me. About my family. She made me feel small in my own home. And I was \u2014 I was so tired, Joel. I was drowning in a house that was never mine, in a life that was never mine. I didn\u2019t know I was autistic then. I just knew I was broken somehow, and I couldn\u2019t fix it fast enough for them.\u201d" },
+      { speaker:'San', text:"\u201cHis grandmother fed him lies,\u201d you say, and your voice is steadier than you feel. \u201cAbout me. About my family. She made me feel small in my own home. And I was \u2014 I was so tired, Joel. I was drowning in a house that was never mine, in a life that was never mine. I didn\u2019t know I was autistic then. I just knew I was broken somehow, and I couldn\u2019t fix it fast enough for them.\u201d" },
       { speaker:'Joel', text:"\u201cMy daughter,\u201d he says quietly. \u201cShe is one year older than your eldest. She was born after we broke. Before that, I had already taken the job in Brunei. I didn\u2019t leave her mother \u2014 I left for work.\u201d He pauses, the fire catching the lines around his eyes. \u201cHer mother found someone new. Had another baby. I send money every month. My mother visits, gives it to her. Holds her. Tells her about me. I have never watched her first steps. Never heard her first word. I visit every two years, when my contract renews. It is not the same. It is never the same.\u201d" },
       { speaker:'Narrator', text:"The fire pops. Sparks rise into a sky with two moons. You think of Brunei. You think of the small apartment where you tried to be a wife, a mother, a daughter-in-law, everything to everyone, until there was nothing left of you but exhaustion and the certainty that you were failing at all of it." },
       { speaker:'San', text:"\u201cMez left home young,\u201d you say, and the old grief surfaces, familiar as a scar. \u201cShe was strong. She made money. She could give Mum and Dad things I never could. And I was \u2014 I was stuck. In the marriage. In my own head. In the fear that if I left, I would be proving them right. That I was never good enough.\u201d" },

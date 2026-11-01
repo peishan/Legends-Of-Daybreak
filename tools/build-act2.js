@@ -177,6 +177,19 @@ const CLIMAX = new Set(['where-the-break-began', 'daybreak', 'the-scattered-choi
   if (!row || at < 0) throw new Error('voyage zone placement failed: ' + name + ' / ' + after);
   Zall.splice(at + 1, 0, [slug(name), name, null, MECHS[(k * 3 + 1) % MECHS.length], null, WORLDS[5][1], row, 'Alpha ' + row.en[row.en.length - 1].replace(/^(A|An|The) /, '').split(',')[0], null, {}]);
 });
+// V2 jumps from Lv 100 straight to Lv 210. Ten dynamic "depths" of The Endless Thinning bridge it (Lv 110-200), so every level has
+// a zone, contracts and a boss to fight; like the Endless Thinning itself, their stats are rebuilt from the player's level.
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+const LV_FORCE = {};
+{
+  const row = rowFor('The Endless Thinning'), at = Zall.findIndex(z => z[0] === 'the-farthest-kindling');
+  const bosses = ['The Thinning Remembers', 'What the Fraying Kept', 'The Hollow Between Lines', 'Something Worn to a Thread', 'The Last Held Breath', 'What Stayed After the Others', 'The Quiet Under the Noise', 'A Line Walked Alone', 'The Weight of Keeping Watch', 'Where the Thinning Turns Back'];
+  ROMAN.forEach((rn, k) => {
+    const id = 'the-endless-thinning-depth-' + rn.toLowerCase(), name = 'The Endless Thinning, Depth ' + rn;
+    LV_FORCE[id] = 110 + k * 10;
+    Zall.splice(at + 1 + k, 0, [id, name, null, MECHS[(k * 5 + 2) % MECHS.length], null, WORLDS[0][1], Object.assign({}, row, { lv: 110 + k * 10 }), bosses[k], null, { dynamic: true }]);
+  });
+}
 // The Endless Thinning (V2: no fixed ceiling, enemies read the player's level live) goes last; the engine rescales it per battle.
 {
   const row = rowFor('The Endless Thinning');
@@ -187,7 +200,7 @@ const LV_FIX = { 'the-hollow-vigil': 56, 'the-scattered-choir': 57, 'where-the-o
 const lvT = [];
 Zall.forEach((z, k) => {
   const row = z[6] || zoneRows[z[1]];
-  const v2 = (row && row.lv) || LV_FIX[z[0]] || LV_FIX[z[4]] || 0;
+  const v2 = LV_FORCE[z[0]] || (row && row.lv) || LV_FIX[z[0]] || LV_FIX[z[4]] || 0;
   lvT.push(Math.max(v2, k ? lvT[k - 1] + 1 : 30));
 });
 const cumXp = (l) => 30 * l + 25 * l * (l - 1) / 2;

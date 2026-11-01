@@ -4538,6 +4538,1160 @@ const ACT2_ZONES = {
   "nextZone": "the-last-question",
   "climax": true
  },
+ "the-endless-thinning-depth-i": {
+  "name": "The Endless Thinning, Depth I",
+  "lv": 110,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1772,
+    "atk": 761,
+    "spd": 5,
+    "xp": 798,
+    "g": 193,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1329,
+    "atk": 1065,
+    "spd": 8,
+    "xp": 798,
+    "g": 193,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2304,
+    "atk": 608,
+    "spd": 4,
+    "xp": 798,
+    "g": 193,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "The Thinning Remembers",
+   "mechanic": "freeze",
+   "atk": 1313,
+   "spd": 5,
+   "xp": 13306,
+   "g": 3960,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "freezeChance": 0.3,
+   "freezeDuration": 3000,
+   "hp": 12404
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth I: Clear the Way",
+   "need": 5,
+   "xpReward": 5322,
+   "goldReward": 970,
+   "acceptDesc": "\"The Endless Thinning, Depth I: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth I. Reward: 5322 XP, 970 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Thinning Remembers has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth I goes quiet. ",
+  "templeRepOnClear": 2080,
+  "nextZone": "the-endless-thinning-depth-ii",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-ii": {
+  "name": "The Endless Thinning, Depth II",
+  "lv": 120,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1784,
+    "atk": 763,
+    "spd": 5,
+    "xp": 867,
+    "g": 196,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1338,
+    "atk": 1068,
+    "spd": 8,
+    "xp": 867,
+    "g": 196,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2319,
+    "atk": 610,
+    "spd": 4,
+    "xp": 867,
+    "g": 196,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "What the Fraying Kept",
+   "mechanic": "apocalypse",
+   "atk": 1325,
+   "spd": 5,
+   "xp": 14456,
+   "g": 4020,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "apocalypseTurn": 6,
+   "apocalypseDmg": 1855,
+   "hp": 12488
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth II: Clear the Way",
+   "need": 5,
+   "xpReward": 5782,
+   "goldReward": 985,
+   "acceptDesc": "\"The Endless Thinning, Depth II: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth II. Reward: 5782 XP, 985 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "What the Fraying Kept has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth II goes quiet. ",
+  "templeRepOnClear": 2110,
+  "nextZone": "the-endless-thinning-depth-iii",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-iii": {
+  "name": "The Endless Thinning, Depth III",
+  "lv": 130,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1788,
+    "atk": 763,
+    "spd": 5,
+    "xp": 936,
+    "g": 199,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1341,
+    "atk": 1068,
+    "spd": 8,
+    "xp": 936,
+    "g": 199,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2324,
+    "atk": 610,
+    "spd": 4,
+    "xp": 936,
+    "g": 199,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "The Hollow Between Lines",
+   "mechanic": "devour",
+   "atk": 1328,
+   "spd": 5,
+   "xp": 15606,
+   "g": 4080,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "devourTurn": 5,
+   "devourDmg": 1594,
+   "staggerPct": 0.35,
+   "hp": 12516
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth III: Clear the Way",
+   "need": 5,
+   "xpReward": 6242,
+   "goldReward": 1000,
+   "acceptDesc": "\"The Endless Thinning, Depth III: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth III. Reward: 6242 XP, 1000 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Hollow Between Lines has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth III goes quiet. ",
+  "templeRepOnClear": 2140,
+  "nextZone": "the-endless-thinning-depth-iv",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-iv": {
+  "name": "The Endless Thinning, Depth IV",
+  "lv": 140,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1792,
+    "atk": 763,
+    "spd": 5,
+    "xp": 1005,
+    "g": 202,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1344,
+    "atk": 1069,
+    "spd": 8,
+    "xp": 1005,
+    "g": 202,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2330,
+    "atk": 611,
+    "spd": 4,
+    "xp": 1005,
+    "g": 202,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "Something Worn to a Thread",
+   "mechanic": "rampage",
+   "atk": 1330,
+   "spd": 5,
+   "xp": 16756,
+   "g": 4140,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "rampageEvery": 3,
+   "rampageDmg": 1463,
+   "hp": 12544
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth IV: Clear the Way",
+   "need": 5,
+   "xpReward": 6702,
+   "goldReward": 1015,
+   "acceptDesc": "\"The Endless Thinning, Depth IV: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth IV. Reward: 6702 XP, 1015 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "Something Worn to a Thread has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth IV goes quiet. ",
+  "templeRepOnClear": 2170,
+  "nextZone": "the-endless-thinning-depth-v",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-v": {
+  "name": "The Endless Thinning, Depth V",
+  "lv": 150,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1792,
+    "atk": 764,
+    "spd": 5,
+    "xp": 1074,
+    "g": 205,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1344,
+    "atk": 1069,
+    "spd": 8,
+    "xp": 1074,
+    "g": 205,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2330,
+    "atk": 611,
+    "spd": 4,
+    "xp": 1074,
+    "g": 205,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "The Last Held Breath",
+   "mechanic": "inferno",
+   "atk": 1332,
+   "spd": 5,
+   "xp": 17906,
+   "g": 4200,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "infernoTurn": 4,
+   "infernoDmg": 1465,
+   "hp": 12544
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth V: Clear the Way",
+   "need": 5,
+   "xpReward": 7162,
+   "goldReward": 1030,
+   "acceptDesc": "\"The Endless Thinning, Depth V: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth V. Reward: 7162 XP, 1030 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Last Held Breath has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth V goes quiet. ",
+  "templeRepOnClear": 2200,
+  "nextZone": "the-endless-thinning-depth-vi",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-vi": {
+  "name": "The Endless Thinning, Depth VI",
+  "lv": 160,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1792,
+    "atk": 764,
+    "spd": 5,
+    "xp": 1143,
+    "g": 208,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1344,
+    "atk": 1069,
+    "spd": 8,
+    "xp": 1143,
+    "g": 208,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2330,
+    "atk": 611,
+    "spd": 4,
+    "xp": 1143,
+    "g": 208,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "What Stayed After the Others",
+   "mechanic": "drown",
+   "atk": 1332,
+   "spd": 5,
+   "xp": 19056,
+   "g": 4260,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "drownTurn": 4,
+   "drownDmg": 1465,
+   "drownSaveChance": 0.5,
+   "hp": 12544
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth VI: Clear the Way",
+   "need": 5,
+   "xpReward": 7622,
+   "goldReward": 1045,
+   "acceptDesc": "\"The Endless Thinning, Depth VI: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth VI. Reward: 7622 XP, 1045 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "What Stayed After the Others has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth VI goes quiet. ",
+  "templeRepOnClear": 2230,
+  "nextZone": "the-endless-thinning-depth-vii",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-vii": {
+  "name": "The Endless Thinning, Depth VII",
+  "lv": 170,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 1892,
+    "atk": 777,
+    "spd": 5,
+    "xp": 1212,
+    "g": 211,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 1419,
+    "atk": 1088,
+    "spd": 8,
+    "xp": 1212,
+    "g": 211,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 2460,
+    "atk": 622,
+    "spd": 4,
+    "xp": 1212,
+    "g": 211,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "The Quiet Under the Noise",
+   "mechanic": "phase",
+   "atk": 1362,
+   "spd": 5,
+   "xp": 20206,
+   "g": 4320,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "phaseThresholds": [
+    0.66,
+    0.33
+   ],
+   "hp": 13244
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth VII: Clear the Way",
+   "need": 5,
+   "xpReward": 8082,
+   "goldReward": 1060,
+   "acceptDesc": "\"The Endless Thinning, Depth VII: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth VII. Reward: 8082 XP, 1060 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Quiet Under the Noise has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth VII goes quiet. ",
+  "templeRepOnClear": 2260,
+  "nextZone": "the-endless-thinning-depth-viii",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-viii": {
+  "name": "The Endless Thinning, Depth VIII",
+  "lv": 180,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 4472,
+    "atk": 777,
+    "spd": 5,
+    "xp": 1281,
+    "g": 214,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 3354,
+    "atk": 1088,
+    "spd": 8,
+    "xp": 1281,
+    "g": 214,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 5814,
+    "atk": 622,
+    "spd": 4,
+    "xp": 1281,
+    "g": 214,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "A Line Walked Alone",
+   "mechanic": "lightning_rod",
+   "atk": 1364,
+   "spd": 5,
+   "xp": 21356,
+   "g": 4380,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "rodTurns": 3,
+   "rodDmg": 1500,
+   "hp": 31304
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth VIII: Clear the Way",
+   "need": 5,
+   "xpReward": 8542,
+   "goldReward": 1075,
+   "acceptDesc": "\"The Endless Thinning, Depth VIII: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth VIII. Reward: 8542 XP, 1075 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "A Line Walked Alone has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth VIII goes quiet. ",
+  "templeRepOnClear": 2290,
+  "nextZone": "the-endless-thinning-depth-ix",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-ix": {
+  "name": "The Endless Thinning, Depth IX",
+  "lv": 190,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 4696,
+    "atk": 804,
+    "spd": 5,
+    "xp": 1350,
+    "g": 217,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 3522,
+    "atk": 1126,
+    "spd": 8,
+    "xp": 1350,
+    "g": 217,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 6105,
+    "atk": 644,
+    "spd": 4,
+    "xp": 1350,
+    "g": 217,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "The Weight of Keeping Watch",
+   "mechanic": "freeze",
+   "atk": 1527,
+   "spd": 5,
+   "xp": 22506,
+   "g": 4440,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "freezeChance": 0.3,
+   "freezeDuration": 3000,
+   "hp": 32872
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth IX: Clear the Way",
+   "need": 5,
+   "xpReward": 9002,
+   "goldReward": 1090,
+   "acceptDesc": "\"The Endless Thinning, Depth IX: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth IX. Reward: 9002 XP, 1090 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "The Weight of Keeping Watch has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth IX goes quiet. ",
+  "templeRepOnClear": 2320,
+  "nextZone": "the-endless-thinning-depth-x",
+  "climax": false,
+  "dynamic": true
+ },
+ "the-endless-thinning-depth-x": {
+  "name": "The Endless Thinning, Depth X",
+  "lv": 200,
+  "theme": "zone-act2-void",
+  "nodes": {
+   "camp": {
+    "x": 60,
+    "y": 620,
+    "label": "Camp",
+    "icon": "⛺",
+    "type": "camp",
+    "desc": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going."
+   },
+   "quest": {
+    "x": 100,
+    "y": 400,
+    "label": "Green Marker",
+    "icon": "🌿",
+    "type": "quest",
+    "npcName": "Green Marker"
+   },
+   "merchant": {
+    "x": 230,
+    "y": 300,
+    "label": "Fern",
+    "icon": "🍃",
+    "type": "merchant",
+    "name": "Fern",
+    "line": "\"Fresh from the Vale. Mind the roots.\""
+   },
+   "encounter": {
+    "x": 230,
+    "y": 90,
+    "label": "Threshold",
+    "icon": "🚪",
+    "type": "encounter"
+   }
+  },
+  "enemyDefs": {
+   "Unspooling Current": {
+    "hp": 4712,
+    "atk": 807,
+    "spd": 5,
+    "xp": 1419,
+    "g": 220,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "Whatever Keeps Arriving": {
+    "hp": 3534,
+    "atk": 1130,
+    "spd": 8,
+    "xp": 1419,
+    "g": 220,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   },
+   "A Ground Still Being Asked": {
+    "hp": 6126,
+    "atk": 646,
+    "spd": 4,
+    "xp": 1419,
+    "g": 220,
+    "cls": "act2-body",
+    "tint": [
+     "#a888ff",
+     "#5a3a9a"
+    ]
+   }
+  },
+  "lootTable": [
+   "A Thread With No End",
+   "Proof It Never Actually Stops",
+   "Something the Ground Kept Anyway"
+  ],
+  "boss": {
+   "name": "Where the Thinning Turns Back",
+   "mechanic": "apocalypse",
+   "atk": 1542,
+   "spd": 5,
+   "xp": 23656,
+   "g": 4500,
+   "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
+   "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
+   "spriteCls": "act2-body",
+   "crownCls": "act2-crown",
+   "tint": [
+    "#a888ff",
+    "#5a3a9a"
+   ],
+   "apocalypseTurn": 6,
+   "apocalypseDmg": 2159,
+   "hp": 32984
+  },
+  "quest": {
+   "name": "The Endless Thinning, Depth X: Clear the Way",
+   "need": 5,
+   "xpReward": 9462,
+   "goldReward": 1105,
+   "acceptDesc": "\"The Endless Thinning, Depth X: Clear the Way\" — Defeat 5 monsters in The Endless Thinning, Depth X. Reward: 9462 XP, 1105 Gold."
+  },
+  "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
+  "bossPromptDesc": "Where the Thinning Turns Back has noticed you.",
+  "zoneClearedDesc": "The Endless Thinning, Depth X goes quiet. ",
+  "templeRepOnClear": 2350,
+  "nextZone": "the-threshold-district",
+  "climax": false,
+  "dynamic": true
+ },
  "the-reef-that-swallowed-a-fleet": {
   "name": "The Reef That Swallowed a Fleet",
   "lv": 561,
@@ -4578,11 +5732,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Something Nesting in the Wreckage": {
-    "hp": 5536,
-    "atk": 2046,
+    "hp": 11204,
+    "atk": 2158,
     "spd": 5,
     "xp": 3516,
-    "g": 307,
+    "g": 337,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4590,11 +5744,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Reef-Warden, Territorial": {
-    "hp": 4152,
-    "atk": 2864,
+    "hp": 8403,
+    "atk": 3022,
     "spd": 8,
     "xp": 3516,
-    "g": 307,
+    "g": 337,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4602,11 +5756,11 @@ const ACT2_ZONES = {
     ]
    },
    "The Fleet, Still Restless": {
-    "hp": 7197,
-    "atk": 1637,
+    "hp": 14565,
+    "atk": 1727,
     "spd": 4,
     "xp": 3516,
-    "g": 307,
+    "g": 337,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4622,10 +5776,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Alpha Fleet",
    "mechanic": "rampage",
-   "atk": 3831,
+   "atk": 4135,
    "spd": 5,
    "xp": 58602,
-   "g": 6240,
+   "g": 6840,
    "hint": "Hull after hull, stacked across decades of bad weather and worse luck, coral growing over cannon and cargo ali",
    "introLine": "Hull after hull, stacked across decades of bad weather and worse luck, coral growing over cannon and cargo alike until the wreck and the reef stopped being two different things.",
    "spriteCls": "act2-body",
@@ -4635,20 +5789,20 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "rampageEvery": 3,
-   "rampageDmg": 4214,
-   "hp": 38752
+   "rampageDmg": 4549,
+   "hp": 78428
   },
   "quest": {
    "name": "The Reef That Swallowed a Fleet: Clear the Way",
    "need": 5,
    "xpReward": 23441,
-   "goldReward": 1540,
-   "acceptDesc": "\"The Reef That Swallowed a Fleet: Clear the Way\" — Defeat 5 monsters in The Reef That Swallowed a Fleet. Reward: 23441 XP, 1540 Gold."
+   "goldReward": 1690,
+   "acceptDesc": "\"The Reef That Swallowed a Fleet: Clear the Way\" — Defeat 5 monsters in The Reef That Swallowed a Fleet. Reward: 23441 XP, 1690 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the tide pillar at camp first.",
   "bossPromptDesc": "Alpha Fleet has noticed you.",
   "zoneClearedDesc": "The Reef That Swallowed a Fleet goes quiet. ",
-  "templeRepOnClear": 3220,
+  "templeRepOnClear": 3520,
   "nextZone": "where-the-merfolk-chose-to-stay",
   "climax": false
  },
@@ -4692,11 +5846,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Something the Island Grew": {
-    "hp": 5688,
-    "atk": 2055,
+    "hp": 11404,
+    "atk": 2164,
     "spd": 5,
     "xp": 3640,
-    "g": 316,
+    "g": 346,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4704,11 +5858,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Guardian With No Chart Entry": {
-    "hp": 4266,
-    "atk": 2876,
+    "hp": 8553,
+    "atk": 3029,
     "spd": 8,
     "xp": 3640,
-    "g": 316,
+    "g": 346,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4716,11 +5870,11 @@ const ACT2_ZONES = {
     ]
    },
    "Whatever Actually Lives Here": {
-    "hp": 7394,
-    "atk": 1644,
+    "hp": 14825,
+    "atk": 1731,
     "spd": 4,
     "xp": 3640,
-    "g": 316,
+    "g": 346,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4736,10 +5890,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Alpha Whatever Actually Lives Here",
    "mechanic": "devour",
-   "atk": 3883,
+   "atk": 4168,
    "spd": 5,
    "xp": 60672,
-   "g": 6420,
+   "g": 7020,
    "hint": "Parco insists he has charted this exact spot before, several times, under several different names",
    "introLine": "Parco insists he has charted this exact spot before, several times, under several different names. The island disagrees with all of them and offers no name of its own.",
    "spriteCls": "act2-body",
@@ -4749,21 +5903,21 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "devourTurn": 5,
-   "devourDmg": 4660,
+   "devourDmg": 5002,
    "staggerPct": 0.35,
-   "hp": 39816
+   "hp": 79828
   },
   "quest": {
    "name": "An Island With No Name on Any Chart: Clear the Way",
    "need": 5,
    "xpReward": 24269,
-   "goldReward": 1585,
-   "acceptDesc": "\"An Island With No Name on Any Chart: Clear the Way\" — Defeat 5 monsters in An Island With No Name on Any Chart. Reward: 24269 XP, 1585 Gold."
+   "goldReward": 1735,
+   "acceptDesc": "\"An Island With No Name on Any Chart: Clear the Way\" — Defeat 5 monsters in An Island With No Name on Any Chart. Reward: 24269 XP, 1735 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the tide pillar at camp first.",
   "bossPromptDesc": "Alpha Whatever Actually Lives Here has noticed you.",
   "zoneClearedDesc": "An Island With No Name on Any Chart goes quiet. ",
-  "templeRepOnClear": 3310,
+  "templeRepOnClear": 3610,
   "nextZone": "the-ground-the-orcs-still-miss",
   "climax": false
  },
@@ -4807,11 +5961,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Something That Stilled the Water": {
-    "hp": 6252,
-    "atk": 2150,
+    "hp": 13072,
+    "atk": 2371,
     "spd": 5,
     "xp": 3765,
-    "g": 325,
+    "g": 355,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4819,11 +5973,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Presence, Patient and Unmoving": {
-    "hp": 4689,
-    "atk": 3010,
+    "hp": 9804,
+    "atk": 3320,
     "spd": 8,
     "xp": 3765,
-    "g": 325,
+    "g": 355,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4831,11 +5985,11 @@ const ACT2_ZONES = {
     ]
    },
    "The Calm, Given Teeth": {
-    "hp": 8128,
-    "atk": 1720,
+    "hp": 16994,
+    "atk": 1897,
     "spd": 4,
     "xp": 3765,
-    "g": 325,
+    "g": 355,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4851,10 +6005,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Alpha Calm",
    "mechanic": "apocalypse",
-   "atk": 4084,
+   "atk": 4547,
    "spd": 5,
    "xp": 62742,
-   "g": 6600,
+   "g": 7200,
    "hint": "No wind",
    "introLine": "No wind. No current. Not even the ordinary stillness of a calm day — something here has simply decided the sea should stop moving, and the sea, for reasons nobody aboard can explain, has agreed.",
    "spriteCls": "act2-body",
@@ -4864,20 +6018,20 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "apocalypseTurn": 6,
-   "apocalypseDmg": 5718,
-   "hp": 43764
+   "apocalypseDmg": 6366,
+   "hp": 91504
   },
   "quest": {
    "name": "The Becalmed Waters: Clear the Way",
    "need": 5,
    "xpReward": 25097,
-   "goldReward": 1630,
-   "acceptDesc": "\"The Becalmed Waters: Clear the Way\" — Defeat 5 monsters in The Becalmed Waters. Reward: 25097 XP, 1630 Gold."
+   "goldReward": 1780,
+   "acceptDesc": "\"The Becalmed Waters: Clear the Way\" — Defeat 5 monsters in The Becalmed Waters. Reward: 25097 XP, 1780 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the tide pillar at camp first.",
   "bossPromptDesc": "Alpha Calm has noticed you.",
   "zoneClearedDesc": "The Becalmed Waters goes quiet. ",
-  "templeRepOnClear": 3400,
+  "templeRepOnClear": 3700,
   "nextZone": "where-the-first-warning-still-stands",
   "climax": false
  },
@@ -4921,11 +6075,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Whatever Tends the Light": {
-    "hp": 6428,
-    "atk": 2154,
+    "hp": 13440,
+    "atk": 2377,
     "spd": 5,
     "xp": 3889,
-    "g": 334,
+    "g": 364,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4933,11 +6087,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Warden With No One Left to Report To": {
-    "hp": 4821,
-    "atk": 3016,
+    "hp": 10080,
+    "atk": 3328,
     "spd": 8,
     "xp": 3889,
-    "g": 334,
+    "g": 364,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4945,11 +6099,11 @@ const ACT2_ZONES = {
     ]
    },
    "The Light’s Own Guardian": {
-    "hp": 8356,
-    "atk": 1723,
+    "hp": 17472,
+    "atk": 1902,
     "spd": 4,
     "xp": 3889,
-    "g": 334,
+    "g": 364,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -4965,10 +6119,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Alpha Light’s Own Guardian",
    "mechanic": "freeze",
-   "atk": 4111,
+   "atk": 4582,
    "spd": 5,
    "xp": 64812,
-   "g": 6780,
+   "g": 7380,
    "hint": "No keeper",
    "introLine": "No keeper. No ship has serviced it in longer than anyone aboard can guess. And yet the light turns, steady, every night, warning ships away from rocks that have not seen a wreck in just as long.",
    "spriteCls": "act2-body",
@@ -4979,19 +6133,19 @@ const ACT2_ZONES = {
    ],
    "freezeChance": 0.3,
    "freezeDuration": 3000,
-   "hp": 44996
+   "hp": 94080
   },
   "quest": {
    "name": "A Lighthouse That Still Burns: Clear the Way",
    "need": 5,
    "xpReward": 25925,
-   "goldReward": 1675,
-   "acceptDesc": "\"A Lighthouse That Still Burns: Clear the Way\" — Defeat 5 monsters in A Lighthouse That Still Burns. Reward: 25925 XP, 1675 Gold."
+   "goldReward": 1825,
+   "acceptDesc": "\"A Lighthouse That Still Burns: Clear the Way\" — Defeat 5 monsters in A Lighthouse That Still Burns. Reward: 25925 XP, 1825 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the tide pillar at camp first.",
   "bossPromptDesc": "Alpha Light’s Own Guardian has noticed you.",
   "zoneClearedDesc": "A Lighthouse That Still Burns goes quiet. ",
-  "templeRepOnClear": 3490,
+  "templeRepOnClear": 3790,
   "nextZone": "the-relic-nobody-should-reach-for",
   "climax": false
  },
@@ -5035,11 +6189,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Something Past the Edge of the Map": {
-    "hp": 11368,
-    "atk": 2161,
+    "hp": 13964,
+    "atk": 2384,
     "spd": 5,
     "xp": 449,
-    "g": 343,
+    "g": 373,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -5047,11 +6201,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Guardian of Uncharted Water": {
-    "hp": 8526,
-    "atk": 3025,
+    "hp": 10473,
+    "atk": 3338,
     "spd": 8,
     "xp": 449,
-    "g": 343,
+    "g": 373,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -5059,11 +6213,11 @@ const ACT2_ZONES = {
     ]
    },
    "Whatever the Old Cartographers Refused to Name": {
-    "hp": 14778,
-    "atk": 1729,
+    "hp": 18153,
+    "atk": 1907,
     "spd": 4,
     "xp": 449,
-    "g": 343,
+    "g": 373,
     "cls": "act2-body",
     "tint": [
      "#d8c8a0",
@@ -5079,10 +6233,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "Alpha Whatever the Old Cartographers Refused to Name",
    "mechanic": "lightning_rod",
-   "atk": 4151,
+   "atk": 4624,
    "spd": 5,
    "xp": 7489,
-   "g": 6960,
+   "g": 7560,
    "hint": "Every chart Parco owns simply stops here, the edge of the page left blank rather than guessed at",
    "introLine": "Every chart Parco owns simply stops here, the edge of the page left blank rather than guessed at. Whatever comes after the blank space, no one has apparently returned to describe.",
    "spriteCls": "act2-body",
@@ -5092,20 +6246,20 @@ const ACT2_ZONES = {
     "#6a5a3a"
    ],
    "rodTurns": 3,
-   "rodDmg": 4566,
-   "hp": 79576
+   "rodDmg": 5086,
+   "hp": 97748
   },
   "quest": {
    "name": "Where the Old Maps End: Clear the Way",
    "need": 5,
    "xpReward": 2996,
-   "goldReward": 1720,
-   "acceptDesc": "\"Where the Old Maps End: Clear the Way\" — Defeat 5 monsters in Where the Old Maps End. Reward: 2996 XP, 1720 Gold."
+   "goldReward": 1870,
+   "acceptDesc": "\"Where the Old Maps End: Clear the Way\" — Defeat 5 monsters in Where the Old Maps End. Reward: 2996 XP, 1870 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the tide pillar at camp first.",
   "bossPromptDesc": "Alpha Whatever the Old Cartographers Refused to Name has noticed you.",
   "zoneClearedDesc": "Where the Old Maps End goes quiet. ",
-  "templeRepOnClear": 3580,
+  "templeRepOnClear": 3880,
   "nextZone": "the-debt-finally-come-due",
   "climax": false
  },
@@ -5149,11 +6303,11 @@ const ACT2_ZONES = {
   },
   "enemyDefs": {
    "Unspooling Current": {
-    "hp": 28092,
-    "atk": 3627,
+    "hp": 28444,
+    "atk": 3647,
     "spd": 5,
     "xp": 8671,
-    "g": 529,
+    "g": 559,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -5161,11 +6315,11 @@ const ACT2_ZONES = {
     ]
    },
    "Whatever Keeps Arriving": {
-    "hp": 21069,
-    "atk": 5077,
+    "hp": 21333,
+    "atk": 5106,
     "spd": 8,
     "xp": 8671,
-    "g": 529,
+    "g": 559,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -5173,11 +6327,11 @@ const ACT2_ZONES = {
     ]
    },
    "A Ground Still Being Asked": {
-    "hp": 36520,
-    "atk": 2901,
+    "hp": 36977,
+    "atk": 2918,
     "spd": 4,
     "xp": 8671,
-    "g": 529,
+    "g": 559,
     "cls": "act2-body",
     "tint": [
      "#a888ff",
@@ -5193,10 +6347,10 @@ const ACT2_ZONES = {
   "boss": {
    "name": "The Thinning, Unbroken",
    "mechanic": "phase",
-   "atk": 7279,
+   "atk": 7404,
    "spd": 5,
    "xp": 144521,
-   "g": 10680,
+   "g": 11280,
    "hint": "Past even the farthest kindling, the ground stops bothering to have an edge at all",
    "introLine": "Past even the farthest kindling, the ground stops bothering to have an edge at all. It does not get easier the longer you hold it, and it does not get harder because someone decided it should — it simply keeps matching whatever you actually bring to it, exactly, every single time. There is no farther than this. There is only however far you are each willing to keep going.",
    "spriteCls": "act2-body",
@@ -5209,19 +6363,19 @@ const ACT2_ZONES = {
     0.66,
     0.33
    ],
-   "hp": 196644
+   "hp": 199108
   },
   "quest": {
    "name": "The Endless Thinning: Clear the Way",
    "need": 5,
    "xpReward": 57808,
-   "goldReward": 2650,
-   "acceptDesc": "\"The Endless Thinning: Clear the Way\" — Defeat 5 monsters in The Endless Thinning. Reward: 57808 XP, 2650 Gold."
+   "goldReward": 2800,
+   "acceptDesc": "\"The Endless Thinning: Clear the Way\" — Defeat 5 monsters in The Endless Thinning. Reward: 57808 XP, 2800 Gold."
   },
   "encounterLockedDesc": "Something waits ahead. You should look at the green marker at camp first.",
   "bossPromptDesc": "The Thinning, Unbroken has noticed you.",
   "zoneClearedDesc": "The Endless Thinning goes quiet. ",
-  "templeRepOnClear": 5440,
+  "templeRepOnClear": 5740,
   "nextZone": null,
   "climax": true,
   "dynamic": true

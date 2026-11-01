@@ -28,20 +28,21 @@ const repFor = (lv) => Math.round(12 + lv * 0.9);
 
 // One kill contract and one boss contract per zone, built from the live zone data so they always match what can be fought.
 let _contractCache = null;
+const cLv = (c) => c.dyn ? Math.max(c.lv, GameState.player.level) : c.lv; // The Endless Thinning's contracts follow your level
 function allContracts(){
   if(_contractCache) return _contractCache;
   const out = [];
   Object.entries(ZONES).forEach(([zid, z]) => {
     const names = Object.keys(z.enemyDefs), target = names[names.length - 1];
-    out.push({ id:'k:' + zid, zid, kind:'kill', target, need:6, lv:z.lv, name:`${target} Cull`, desc:`Defeat 6 ${target} for the Guild` });
-    out.push({ id:'b:' + zid, zid, kind:'boss', target:z.boss.name, need:1, lv:z.lv, name:`Contract: ${z.boss.name}`, desc:`Defeat ${z.boss.name} for the Guild` });
+    out.push({ id:'k:' + zid, zid, kind:'kill', target, need:6, lv:z.lv, dyn:!!z.dynamic, name:`${target} Cull`, desc:`Defeat 6 ${target} for the Guild` });
+    out.push({ id:'b:' + zid, zid, kind:'boss', target:z.boss.name, need:1, lv:z.lv, dyn:!!z.dynamic, name:`Contract: ${z.boss.name}`, desc:`Defeat ${z.boss.name} for the Guild` });
   });
   return (_contractCache = out);
 }
 function contractReward(c){
-  const z = ZONES[c.zid];
-  if(c.kind === 'kill') return { xp:Math.round(z.quest.xpReward * 0.1), gold:Math.round(z.quest.goldReward * 1.5), rep:repFor(c.lv) };
-  return { xp:Math.round(z.boss.xp * 0.05), gold:Math.round(z.boss.g * 0.8), rep:Math.round(repFor(c.lv) * 1.6) };
+  const z = ZONES[c.zid]; if(z.dynamic) liveZone(c.zid);
+  if(c.kind === 'kill') return { xp:Math.round(z.quest.xpReward * 0.1), gold:Math.round(z.quest.goldReward * 1.5), rep:repFor(cLv(c)) };
+  return { xp:Math.round(z.boss.xp * 0.05), gold:Math.round(z.boss.g * 0.8), rep:Math.round(repFor(cLv(c)) * 1.6) };
 }
 function contractState(id){
   const g = GameState.guild, wk = guildWeek();
@@ -50,12 +51,12 @@ function contractState(id){
   return s;
 }
 const contractDone = (id) => { const s = GameState.guild.contracts[id]; return !!(s && s.week === guildWeek() && s.done); };
-const onBoard = (c) => c.lv >= GameState.player.level - 10 && c.lv <= GameState.player.level + 14;
+const onBoard = (c) => cLv(c) >= GameState.player.level - 10 && cLv(c) <= GameState.player.level + 14;
 function pruneContracts(){ const wk = guildWeek(), cs = GameState.guild.contracts; for(const k in cs) if(cs[k].week !== wk) delete cs[k]; }
 function openContracts(){
   const lv = GameState.player.level;
   return allContracts().filter(c => onBoard(c) && !contractDone(c.id))
-    .sort((a, b) => Math.abs(a.lv - lv) - Math.abs(b.lv - lv) || a.id.localeCompare(b.id)).slice(0, 8);
+    .sort((a, b) => Math.abs(cLv(a) - lv) - Math.abs(cLv(b) - lv) || a.id.localeCompare(b.id)).slice(0, 8);
 }
 function completeContract(c){
   const s = contractState(c.id); s.done = true;
@@ -298,7 +299,7 @@ function renderGuild(){
     const board = openContracts();
     html += board.length ? board.map(c => { const s = g.contracts[c.id] || { count:0 }, r = contractReward(c);
       return `<div class="trinket-row"><div class="tr-icon r-${c.kind === 'boss' ? 'epic' : 'rare'}">${c.kind === 'boss' ? '\u{1F409}' : '⚔️'}</div><div class="tr-body"><div class="tr-name">${h(c.name)}</div>
-        <div class="tr-stats">${h(c.desc)} · ${ZONES[c.zid].name} (Lv ${c.lv})</div><div class="tr-mats">${s.count}/${c.need} · +${r.xp} XP · +${r.gold}G · +${r.rep} Rep</div></div></div>`; }).join('')
+        <div class="tr-stats">${h(c.desc)} · ${ZONES[c.zid].name} (Lv ${cLv(c)}${c.dyn ? '+' : ''})</div><div class="tr-mats">${s.count}/${c.need} · +${r.xp} XP · +${r.gold}G · +${r.rep} Rep</div></div></div>`; }).join('')
       : '<p class="sync-note">No contracts match your level right now. New ones post every day.</p>';
     html += `<div class="inv-section-label">Guild Shop · spend Rep</div>`;
     html += GUILD_SHOP.map(it => { const owned = g.owned[it.n], locked = rank.rank < it.minRank, equipped = p[it.field] && p[it.field].n === it.n;
