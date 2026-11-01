@@ -40,8 +40,8 @@ function allContracts(){
 }
 function contractReward(c){
   const z = ZONES[c.zid];
-  if(c.kind === 'kill') return { xp:Math.round(z.quest.xpReward * 0.4), gold:Math.round(z.quest.goldReward * 1.5), rep:repFor(c.lv) };
-  return { xp:Math.round(z.boss.xp * 0.2), gold:Math.round(z.boss.g * 0.8), rep:Math.round(repFor(c.lv) * 1.6) };
+  if(c.kind === 'kill') return { xp:Math.round(z.quest.xpReward * 0.1), gold:Math.round(z.quest.goldReward * 1.5), rep:repFor(c.lv) };
+  return { xp:Math.round(z.boss.xp * 0.05), gold:Math.round(z.boss.g * 0.8), rep:Math.round(repFor(c.lv) * 1.6) };
 }
 function contractState(id){
   const g = GameState.guild, wk = guildWeek();

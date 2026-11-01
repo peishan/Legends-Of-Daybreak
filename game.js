@@ -1478,6 +1478,7 @@ function leaveTraining(){
   document.getElementById('battle-screen').classList.remove('show');
   document.getElementById('battle-result').classList.remove('show');
   stopTicking(); inBattle = false;
+  if(trainingMode === 'siege' && window.siegeEnd) siegeEnd();
   const wasHunt = trainingMode === 'hunt' || trainingMode === 'siege';
   trainingMode = null; trainingZoneId = null; currentBossDef = null;
   if(wasHunt && window.renderGuild) renderGuild();
