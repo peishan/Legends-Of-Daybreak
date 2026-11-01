@@ -72,6 +72,24 @@ const bot = async (maxZones) => {
       if (!huntDone(h)) hunts.push({ hunt: h.id, lvl: P.level, failed: true });
     }
   }
+  const siegeLog = [];
+  function libraryStep() {
+    if (!libUnlocked()) return;
+    for (const who of Object.keys(RESEARCHERS)) {
+      const th = lib().threads[who];
+      if (!th.pending) { const q = nextQuestion(who); const best = q.options.map((o, i) => [o.breakthroughValue, i]).sort((a, b) => b[0] - a[0])[0][1]; answerQuestion(who, q.id, best); }
+      for (const id of Object.keys(LIBRARY_ACTIONS)) if (LIBRARY_ACTIONS[id].researcher === who && actionAvailable(id) && !lib().active[who] && P.gold >= libraryActionCost(LIBRARY_ACTIONS[id])) startAction(id);
+    }
+  }
+  function siegeStep() {
+    if (!GameState.guild.joined) return;
+    window.__dayShift = (window.__dayShift || 0) + 86400000; // a day passes between zones
+    if (!siegeAvailable()) return;
+    P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
+    const tier = siegeTier(); startSiege(); fight(); const won = document.getElementById('battle-result').classList.contains('show');
+    siegeLog.push({ lvl: P.level, tier, won, frac: Math.round(siegeState().frac * 100) });
+    if (trainingMode) leaveTraining();
+  }
   function readChapters() {
     let more = true;
     while (more) { more = false; for (const c of CHAPTERS) if (!GameState.readChapters.has(c.id) && isChapterUnlocked(c)) { GameState.readChapters.add(c.id); if (c.xpReward) grantXP(c.xpReward); more = true; } }
@@ -82,7 +100,7 @@ const bot = async (maxZones) => {
     const best = SPELLS.filter(x => x.kind === 'damage' && P.level >= x.ul).sort((a, b) => b.cost - a.cost)[0];
     const [dn, ds] = best.dice.split('d').map(Number);
     const rec = { zone: z.name, lvlIn: P.level, grind: 0, bossTries: 0, deaths: 0,
-      cal: { lvl: P.level, mhp: P.mhp, def: getPlayerDefBonus(), dmg: Math.round(dn * (ds + 1) / 2 + Math.floor(P.level / 2) + getPlayerAtkBonus()) } };
+      cal: { lvl: P.level, mhp: P.mhp, def: getPlayerDefBonus(), dmg: Math.round((dn * (ds + 1) / 2 + Math.floor(P.level / 2) + getPlayerAtkBonus()) * (best.mult || 1) * (window.libraryMult ? libraryMult() : 1)) } };
     enterZone(zid); zs.quest.started = true;
     let guard = 0;
     while (!zs.quest.done && guard++ < 60) { startEncounter(); fight(); }
@@ -97,11 +115,11 @@ const bot = async (maxZones) => {
     if (!zs.bossDefeated && window.__botDebug) rec.debug = { inBattle, enemy: currentEnemy && [currentEnemy.name, currentEnemy.hp, currentEnemy.mhp], paused, pReady, eReady, hp: P.hp, log: document.getElementById('battle-log').textContent, errs: (window.__errs || []).slice(-3) };
     if (!zs.bossDefeated) { rec.wall = true; zs.bossDefeated = true; grantXP(z.boss.xp); } // report the wall, then skip past it so later zones still get measured
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    readChapters(); shop(); guildStep();
+    readChapters(); shop(); guildStep(); libraryStep(); siegeStep();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
   }
   const unread = CHAPTERS.filter(c => !GameState.readChapters.has(c.id)).map(c => c.id);
-  return { out, level: P.level, unread, hunts, guild: { rank: guildRank().name, rep: GameState.guild.rep, owned: Object.keys(GameState.guild.owned).length }, errs: window.__errs || [] };
+  return { out, level: P.level, unread, hunts, siege: siegeLog, library: { total: lib().total, done: lib().done, wins: lib().wins }, guild: { rank: guildRank().name, rep: GameState.guild.rep, owned: Object.keys(GameState.guild.owned).length }, errs: window.__errs || [] };
 };
 
 (async () => {
@@ -123,6 +141,7 @@ const bot = async (maxZones) => {
   console.log('lowest HP fraction in first boss attempt: min', mins[0], 'p10', mins[Math.floor(mins.length * .1)], 'median', mins[Math.floor(mins.length / 2)], 'p90', mins[Math.floor(mins.length * .9)]);
   console.log('hardest:', rows.filter(r => r.bossMin !== undefined).sort((a, b) => a.bossMin - b.bossMin).slice(0, 8).map(r => `${r.zone} L${r.lvlIn} ${r.bossMin}`).join('; '));
   console.log('guild:', JSON.stringify(res.guild), '| hunts:', res.hunts.map(x => `${x.hunt}@L${x.lvl}${x.failed ? ' FAILED' : ' tries ' + x.tries + ' low ' + x.low}`).join('; '));
+  const sg = res.siege; console.log('siege attempts', sg.length, 'broken', sg.filter(x => x.won).length, 'tiers reached', Math.max(...sg.map(x => x.tier)), '| library', JSON.stringify(res.library));
   console.log(`chapters read ${CHAPTER_TOTAL - res.unread.length}/${CHAPTER_TOTAL}`, res.unread.length ? 'unread: ' + res.unread.slice(0, 20).join(',') : '');
   console.log('page errors:', [...errs, ...res.errs].slice(0, 5));
   require('fs').writeFileSync(process.env.PLAYBOT_OUT || '/dev/null', JSON.stringify(rows, null, 1));

@@ -93,8 +93,11 @@ const RECIPES = [
 function getCompanionGearBonus(name){
   // Bonuses from every crafted piece stack, so the post-Nexus upgrades add to the original gear.
   const crafted = RECIPES.filter(r => r.type === 'companion_gear' && r.companion === name && GameState.companionGear[r.id]);
-  if(!crafted.length) return null;
-  return crafted.reduce((t, r) => { for(const k in r.bonus) t[k] = (t[k]||0) + r.bonus[k]; return t; }, {});
+  const extra = window.libraryCompanionBonus ? libraryCompanionBonus(name) : null;
+  if(!crafted.length && !extra) return null;
+  const total = crafted.reduce((t, r) => { for(const k in r.bonus) t[k] = (t[k]||0) + r.bonus[k]; return t; }, {});
+  if(extra) for(const k in extra) total[k] = (total[k]||0) + extra[k];
+  return total;
 }
 
 /* San's real spellbook — Tier 1 & 2 (levels 1-12), matching zones built so far.
@@ -198,7 +201,8 @@ const GameState = {
     'the-nexus': { quest:{count:0,started:false,done:false}, bossUnlocked:false, bossDefeated:false }
   },
   readChapters: new Set(),
-  guild: { joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }
+  guild: { joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} },
+  library: null
 };
 function activeZoneId(){
   for(const id in ZONES){ if(!GameState.zoneState[id].bossDefeated) return id; }
@@ -1234,6 +1238,7 @@ let activeCompanions = [];
 let companionATB = {};
 
 function getActiveCompanions(){
+  if(trainingMode === 'siege') return ROSTER.filter(r => GameState.player.level >= r.joinLvl).map(r => r.name); // the whole roster shows up
   autoFillPartySlots();
   const fixed = ROSTER.filter(r => r.fixed && GameState.player.level >= r.joinLvl).map(r => r.name);
   const familiar = ROSTER.filter(r => r.familiar && GameState.player.level >= r.joinLvl).map(r => r.name);
@@ -1463,7 +1468,8 @@ function startTrainingRematch(zoneId){
 }
 
 function continueTraining(){
-  if(trainingMode === 'hunt') startHunt(currentHuntId);
+  if(trainingMode === 'siege') leaveTraining();
+  else if(trainingMode === 'hunt') startHunt(currentHuntId);
   else if(trainingMode === 'rematch') startTrainingRematch(trainingZoneId);
   else startTrainingGrind(trainingZoneId);
 }
@@ -1472,7 +1478,7 @@ function leaveTraining(){
   document.getElementById('battle-screen').classList.remove('show');
   document.getElementById('battle-result').classList.remove('show');
   stopTicking(); inBattle = false;
-  const wasHunt = trainingMode === 'hunt';
+  const wasHunt = trainingMode === 'hunt' || trainingMode === 'siege';
   trainingMode = null; trainingZoneId = null; currentBossDef = null;
   if(wasHunt && window.renderGuild) renderGuild();
   showScreen(wasHunt ? 'guild' : 'training');
@@ -1642,6 +1648,7 @@ function playerAct(type){
   const lvlBonus = Math.floor(p.level/2);
   const gearAtk = getPlayerAtkBonus();
   let dmg = roll(4) + lvlBonus + gearAtk;
+  dmg = Math.round(dmg * (window.libraryMult ? libraryMult() : 1));
   let critText = '';
   if(isBoss && currentEnemy.mechanic === 'blind' && Math.random() < 0.3){
     document.getElementById('battle-log').textContent = 'Blinded, San strikes at empty air.';
@@ -1666,7 +1673,7 @@ function castSpell(spellId){
   if(!pReady || !inBattle || paused || isFrozen('player')) return;
   if(Date.now() < silencedUntil){ document.getElementById('battle-log').textContent = 'San is silenced and cannot cast.'; return; }
   const spell = SPELLS.find(s=>s.id===spellId);
-  if(!spell || GameState.player.level < spell.ul) return;
+  if(!spell || GameState.player.level < spell.ul || (spell.research && !(GameState.library && GameState.library.done.includes(spell.research)))) return;
   const p = GameState.player;
   if(p.mp < spell.cost) return;
   p.mp -= spell.cost;
@@ -1687,6 +1694,7 @@ function castSpell(spellId){
       pATB = 0; pReady = false; hideSpellPanel(); updateBattleBars(); checkEnemyDefeatedOrResurrect(); return;
     }
     let dmg = rollDice(spell.dice) + lvlBonus + gearAtk;
+    dmg = Math.round(dmg * (spell.mult || 1) * (window.libraryMult ? libraryMult() : 1));
     if(isCompanionActive('Mezstorm')) dmg = Math.round(dmg * 1.15);
     let critText = '';
     if((isCompanionActive('Senedra') && Math.random() < 0.2) || (window.guildCrit && Math.random() < guildCrit())){ dmg *= 2; critText = ' A critical hit!'; }
@@ -1730,7 +1738,7 @@ function renderSpellPanel(){
   const p = GameState.player;
   const list = document.getElementById('spell-panel-list');
   list.innerHTML = '';
-  SPELLS.filter(s=>p.level>=s.ul).forEach(s=>{
+  SPELLS.filter(s=>p.level>=s.ul && (!s.research || (GameState.library && GameState.library.done.includes(s.research)))).forEach(s=>{
     const btn = document.createElement('button');
     btn.className = 'spell-row';
     btn.disabled = !pReady || p.mp < s.cost || isFrozen('player') || Date.now() < silencedUntil;
@@ -2311,12 +2319,14 @@ function grantXP(amount){
 
 function onVictory(){
   inBattle = false; stopTicking();
+  if(window.libraryOnWin) libraryOnWin();
   const p = GameState.player;
   p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
   const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1);
   const xpMult = window.guildXpMult ? guildXpMult() : 1;
 
   if(trainingMode === 'hunt'){ huntVictory(); return; }
+  if(trainingMode === 'siege'){ siegeVictory(); return; }
   if(window.guildOnDefeat) guildOnDefeat(currentEnemy.name, isBoss);
   if(trainingMode){
     let xpGain, goldGain, title, rewardHtml;
@@ -3502,6 +3512,7 @@ function getSaveData(){
     zoneState: GameState.zoneState,
     readChapters: Array.from(GameState.readChapters),
     guild: GameState.guild,
+    library: GameState.library,
     activePartyChoice: GameState.activePartyChoice,
     partyManualMode: GameState.partyManualMode
   };
@@ -3518,6 +3529,7 @@ function applySaveData(data){
     if(data.zoneState && data.zoneState[id]) Object.assign(GameState.zoneState[id], data.zoneState[id]);
   });
   GameState.readChapters = new Set(data.readChapters || []);
+  GameState.library = data.library || null;
   GameState.guild = Object.assign({ joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }, data.guild || {});
   GameState.activePartyChoice = data.activePartyChoice || [];
   GameState.partyManualMode = data.partyManualMode || false;

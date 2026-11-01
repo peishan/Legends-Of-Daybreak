@@ -23,7 +23,7 @@ window.guildGoldMult = () => 1 + guildSum('gold');
 window.guildXpMult = () => 1 + guildSum('xp');
 window.guildCrit = () => guildSum('crit');
 
-const guildWeek = () => Math.floor(Date.now() / 86400000); // contracts repost daily: V1 has no in-game calendar, and weekly would make ranks take months
+const guildWeek = () => Math.floor((Date.now() + (window.__dayShift || 0)) / 86400000); // contracts repost daily: V1 has no in-game calendar, and weekly would make ranks take months
 const repFor = (lv) => Math.round(12 + lv * 0.9);
 
 // One kill contract and one boss contract per zone, built from the live zone data so they always match what can be fought.
@@ -176,6 +176,90 @@ function huntVictory(){
   saveGame();
 }
 
+/* ---------- Guild Siege: the whole roster against one escalating foe ---------- */
+// One attempt a day; the boss keeps its wounds between attempts. Every companion who has joined fights alongside San
+// (V2: "every recruited member attacks each turn"). Beating a tier needs that rank to unlock the next.
+const SIEGE_TIERS = [
+  ['What the Initiates Face Together', 'Nobody’s first guild siege is supposed to be easy. It is supposed to be survivable, and only because there are enough hands on it at once.'],
+  ['The Associates’ Reckoning', 'Bigger than anything any one of them signed up to face alone. That was rather the point of joining in the first place.'],
+  ['What the Adventurers Carry', 'Every contract before this one was practice. This is the first thing that actually needed the whole roster to mean it.'],
+  ['The Veterans’ Line', 'The kind of fight that separates who just wears the sigil from who actually shows up when the sigil is tested.'],
+  ['What the Champions Hold', 'It does not care how many titles are standing against it. It only cares how many are still standing by the end.'],
+  ['The Guildmaster’s Trial', 'Every Guildmaster before this one faced something like it. None of them faced it alone, and neither will this one.'],
+  ['What the Legends Actually Cost', 'Reputation this size was never free. This is simply the bill finally coming due, all at once, to everyone who helped earn it.'],
+  ['The Paragons’ Reckoning', 'Almost nothing left that challenges any one of them individually. This was built to need all of them at once instead.'],
+  ['What the Mythic Guild Faces', 'The kind of threat that does not show up for guilds that never got this far. It showed up because they did.'],
+  ['The Eternal Vigil', 'There is, technically, nothing left to prove. They fight it together anyway: not because they have to, but because that was always the actual point of any of this.']
+];
+const siegeState = () => (GameState.guild.siege = Object.assign({ tier:1, frac:1, day:-1, kills:0 }, GameState.guild.siege || {}));
+const siegeTier = () => Math.min(siegeState().tier, 10, guildRank().rank);
+function siegeBossDef(){
+  const t = siegeTier(), L = GameState.player.level, cal = curveAt(L), [name, desc] = SIEGE_TIERS[t - 1];
+  const atk = Math.round((cal.def + cal.mhp * 0.09) * (0.9 + t * 0.03));
+  const hp = Math.round(cal.dmg * 28 * 7 * (1 + (t - 1) * 0.3)); // roughly five or six good attempts at tier 1, more as it escalates
+  return { name, mechanic:'phase', phaseThresholds:[0.66, 0.33], hp, atk, spd:5, xp:0, g:0, hint:desc.split('. ')[0] + '.', introLine:desc, spriteCls:'act2-body', crownCls:'act2-crown', tint:['#ffd98a', '#8a5a2a'] };
+}
+function siegeAvailable(){ const g = GameState.guild; return g.joined && siegeState().day !== guildWeek(); }
+function startSiege(){
+  if(!siegeAvailable()) return;
+  const st = siegeState(), boss = siegeBossDef();
+  st.day = guildWeek(); saveGame();
+  trainingMode = 'siege'; trainingZoneId = null;
+  showScreen('map');
+  currentBossDef = boss; silencedUntil = 0;
+  isBoss = true; inBattle = true; paused = false; bossTurnCount = 0; bossLifeIndex = 0; bossPhaseIndex = 0; bossCharging = false;
+  const hp = Math.max(1, Math.round(boss.hp * st.frac));
+  // the phase mechanic should already be past the thresholds the boss has crossed in earlier attempts
+  bossPhaseIndex = boss.phaseThresholds.filter(t => st.frac <= t).length;
+  currentEnemy = { name:boss.name, hp, mhp:boss.hp, atk:boss.atk, spd:boss.spd, xp:0, g:0, mechanic:'phase' };
+  document.getElementById('battle-e-name').textContent = boss.name + ' (Guild Siege)';
+  document.getElementById('battle-e-hint').textContent = boss.hint;
+  spawnEnemySprite(boss, true);
+  document.getElementById('battle-screen').classList.add('boss-mode');
+  document.getElementById('battle-log').textContent = 'The whole guild takes the field.';
+  resetBattleUI();
+  document.getElementById('battle-screen').classList.add('show');
+  updateAutoRow();
+  startTicking();
+  playTrack('climax');
+}
+function siegeEnd(){
+  const st = siegeState();
+  if(currentEnemy && currentEnemy.hp > 0 && currentEnemy.mhp){
+    st.frac = Math.max(0.01, currentEnemy.hp / currentEnemy.mhp);
+    showHubToast(`Siege attempt over. ${SIEGE_TIERS[siegeTier() - 1][0]} stands at ${Math.round(st.frac * 100)}%. Try again tomorrow.`);
+  }
+  saveGame();
+}
+function siegeVictory(){
+  const p = GameState.player, g = GameState.guild, st = siegeState(), t = siegeTier();
+  const L = p.level, levelXp = 30 + (L - 1) * 25;
+  const xp = Math.round(levelXp * (0.8 + t * 0.25) * guildXpMult()), gold = Math.round(L * 90 * t * guildGoldMult());
+  const rep = Math.round(repFor(L) * 12 * (1 + t * 0.5));
+  g.rep += rep; g.repBal += rep; p.gold += gold; st.kills++; st.frac = 1;
+  const advanced = st.tier === t && t < 10; if(advanced) st.tier = t + 1;
+  const leveled = grantXP(xp);
+  updateMapHud();
+  document.getElementById('battle-res-eyebrow').textContent = 'Siege Broken';
+  document.getElementById('battle-res-title').textContent = `${SIEGE_TIERS[t - 1][0]} falls`;
+  document.getElementById('battle-res-rewards').innerHTML = `+${xp} XP · +${gold} Gold · +${rep} Guild Rep` + (advanced ? '<br>The next siege tier opens as your rank allows.' : '');
+  document.getElementById('battle-result').classList.add('show');
+  const contBtn = document.getElementById('battle-result-continue-btn');
+  contBtn.textContent = 'Back to the Hall'; contBtn.onclick = () => leaveTraining();
+  document.getElementById('battle-result-leave-btn').style.display = 'none';
+  if(leveled) setTimeout(() => { document.getElementById('map-levelup-text').textContent = `San reached Level ${p.level}`; flashBanner(document.getElementById('map-levelup-banner')); }, 200);
+  saveGame();
+}
+// A lost or ended siege/hunt attempt drops back into the Guild Hall rather than a stale map.
+const _closeBattle = closeBattle;
+closeBattle = function(fled){
+  const mode = trainingMode;
+  if(mode === 'siege' && inBattleWasSiege()) siegeEnd();
+  _closeBattle(fled);
+  if(mode === 'siege' || (mode === 'hunt' && fled)){ trainingMode = null; currentBossDef = null; renderGuild(); showScreen('guild'); }
+};
+const inBattleWasSiege = () => !!currentEnemy;
+
 /* ---------- Guild Hall screen ---------- */
 const h = (s) => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 function renderGuild(){
@@ -194,6 +278,12 @@ function renderGuild(){
       <div class="lk-progress-track"><div class="lk-progress-fill" style="width:${next ? Math.min(100, (g.rep - rank.repReq) / (next.repReq - rank.repReq) * 100) : 100}%"></div></div>
       <p class="sync-note">${g.rep} lifetime Rep${next ? ` · ${next.repReq - g.rep} to ${h(next.name)}` : ' · max rank'} · <b>${g.repBal}</b> Rep to spend</p>
       <p class="sync-note">Active bonuses: +${Math.round(guildSum('gold') * 100)}% gold, +${Math.round(guildSum('xp') * 100)}% XP, +${Math.round(guildSum('crit') * 100)}% crit</p></div>`;
+    const st = siegeState(), sb = siegeBossDef();
+    html += `<div class="inv-section-label">Guild Siege \u00b7 the whole roster, one attempt a day</div><div class="sync-card"><div class="sync-h">${h(sb.name)} <span>Tier ${siegeTier()}/10 \u00b7 ${st.kills} broken</span></div>
+      <p class="sync-note">${h(sb.introLine)}</p>
+      <div class="lk-progress-track"><div class="lk-progress-fill" style="width:${Math.round(st.frac * 100)}%"></div></div>
+      <p class="sync-note">${Math.round(st.frac * 100)}% of its strength remains. Wounds carry over between attempts. Every companion who has joined fights with you. ${siegeTier() < 10 && st.tier > siegeTier() ? 'Your rank must rise before the next tier opens.' : ''}</p>
+      <button class="sync-btn primary" id="guild-siege" ${siegeAvailable() ? '' : 'disabled'}>${siegeAvailable() ? 'Join the siege' : 'Next attempt tomorrow'}</button></div>`;
     html += `<div class="inv-section-label">Contract Board · reposts daily</div>`;
     const board = openContracts();
     html += board.length ? board.map(c => { const s = g.contracts[c.id] || { count:0 }, r = contractReward(c);
@@ -214,6 +304,8 @@ function renderGuild(){
       <div class="tr-stats">${h(x.desc.split('. ')[0])}.</div><div class="tr-mats">${lock ? h(lock) : 'Special: ' + ({ blind:'blinds you (30% misses)', silence:'silences your spells', apocalypse:'unavoidable apocalypse', cosmic:'cycles cosmic phases', rampage:'rampages' }[x.mech])}</div></div>
       <button class="tr-buy" data-hunt="${x.id}" ${lock ? 'disabled' : ''}>${done ? 'Hunt Again' : 'Hunt'}</button></div>`; }).join('');
   root.innerHTML = html;
+  const siegeBtn = document.getElementById('guild-siege');
+  if(siegeBtn) siegeBtn.addEventListener('click', startSiege);
   const join = document.getElementById('guild-join');
   if(join) join.addEventListener('click', () => { g.joined = true; saveGame(); renderGuild(); });
   root.querySelectorAll('[data-hunt]').forEach(b => b.addEventListener('click', () => startHunt(b.dataset.hunt)));
