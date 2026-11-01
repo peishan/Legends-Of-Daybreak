@@ -108,6 +108,7 @@ const bot = async (maxZones) => {
     while (!zs.bossDefeated && rec.bossTries < 8) {
       rec.bossTries++; P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
       startBoss(); if (window.__botDebug && rec.bossTries === 1) rec.pre = { mhp: P.mhp, hp: P.hp, def: getPlayerDefBonus(), atk: getPlayerAtkBonus(), lvl: P.level, boss: currentEnemy && [currentEnemy.hp, currentEnemy.atk], party: getActiveCompanions() };
+      if (window.__botDebug && rec.bossTries === 2) { const tr = []; for (let i = 0; i < 400; i++) { adv(100); if (i % 25 === 0) tr.push([i, currentEnemy.hp, P.hp, Object.values(GameState.companions).map(c => c.hp).join('/'), paused, inBattle, trainingMode, isBoss, document.getElementById('battle-log').textContent.slice(0, 40)]); if (!inBattle) { tr.push(['end', i]); break; } if (pReady && !paused) { const sp = pickSpell(); if (sp) castSpell(sp.id); else playerAct('attack'); } } rec.trace = tr; }
       fight(); if (window.__botDebug && rec.bossTries === 1) rec.post = { errs: (window.__errs || []).slice(-2), inBattle, hp: P.hp, enemyHp: currentEnemy.hp, paused, log: document.getElementById('battle-log').textContent };
       void 0; if (rec.bossMin === undefined) rec.bossMin = Math.round(lowest * 100) / 100;
       if (!zs.bossDefeated) { rec.deaths++; for (let g = 0; g < 12; g++) { startEncounter(); fight(); rec.grind++; } shop(); }
