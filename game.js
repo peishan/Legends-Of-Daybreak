@@ -63,6 +63,11 @@ const ROSTER = [
   { name:'Soel', joinLvl:10, familiar:true }
 ];
 const OPTIONAL_PARTY_SLOTS = 2;
+// V2's recruitable allies join the roster but only unlock once recruited (see allies.js)
+ALLIES.forEach(a => { ROSTER.push({ name:a.name, joinLvl:1, ally:true }); PORTRAITS[a.name] = (typeof ACT2_PORTRAITS !== 'undefined' && ACT2_PORTRAITS[a.name]) || initialAvatar(a.name, a.color); });
+const rosterUnlocked = (r) => GameState.player.level >= r.joinLvl && (!r.ally || allyRecruited(r.name));
+const rosterLockText = (r) => r.ally ? allyHint(r.name) : 'Lv ' + r.joinLvl;
+const optionalSlots = () => OPTIONAL_PARTY_SLOTS + Math.min(3, Math.floor(allyCount() / 3)); // more recruits, more room in the party
 
 const COMPANION_COMBAT = {
   Joel:     { spd:4, dmgDie:4, dmgBonus:1, verb:'bashes {t} with his shield.' },
@@ -73,6 +78,7 @@ const COMPANION_COMBAT = {
   Zaki:     { spd:4, dmgDie:5, dmgBonus:1, verb:'cleaves at {t}.' },
   Soel:     { spd:9, dmgDie:3, dmgBonus:1, verb:'pounces on {t} with surprising ferocity.' }
 };
+ALLIES.forEach(a => { COMPANION_COMBAT[a.name] = a.combat; });
 
 /* Real recipes from the source game — trimmed to what's craftable with materials
    already dropping in Whispering Woods / Cursed Catacombs / Crystal Caverns.
@@ -93,7 +99,7 @@ const RECIPES = [
 function getCompanionGearBonus(name){
   // Bonuses from every crafted piece stack, so the post-Nexus upgrades add to the original gear.
   const crafted = RECIPES.filter(r => r.type === 'companion_gear' && r.companion === name && GameState.companionGear[r.id]);
-  const extra = window.libraryCompanionBonus ? libraryCompanionBonus(name) : null;
+  const extra = [window.libraryCompanionBonus ? libraryCompanionBonus(name) : null, window.allyBonus ? allyBonus(name) : null].reduce((t, x) => { if(x) for(const k in x) (t = t || {})[k] = (t[k] || 0) + x[k]; return t; }, null);
   if(!crafted.length && !extra) return null;
   const total = crafted.reduce((t, r) => { for(const k in r.bonus) t[k] = (t[k]||0) + r.bonus[k]; return t; }, {});
   if(extra) for(const k in extra) total[k] = (total[k]||0) + extra[k];
@@ -175,7 +181,8 @@ const GameState = {
     Eliz:     { hp:95,  mhp:95 },
     Senedra:  { hp:90,  mhp:90 },
     Zaki:     { hp:110, mhp:110 },
-    Soel:     { hp:40,  mhp:40 }
+    Soel:     { hp:40,  mhp:40 },
+    ...Object.fromEntries(ALLIES.map(a => [a.name, { hp:a.hp, mhp:a.hp }]))
   },
   materials: {},
   potions: { 'Health Potion':0, 'Mana Potion':0, 'Greater Health Potion':0 },
@@ -202,7 +209,8 @@ const GameState = {
   },
   readChapters: new Set(),
   guild: { joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} },
-  library: null
+  library: null,
+  allies: { seen:[] }
 };
 function activeZoneId(){
   for(const id in ZONES){ if(!GameState.zoneState[id].bossDefeated) return id; }
@@ -263,7 +271,7 @@ function renderHub(){
   document.getElementById('hub-journal-badge').classList.toggle('show', hasUnread);
 
   // Party tile
-  const joined = ROSTER.filter(c => p.level >= c.joinLvl);
+  const joined = ROSTER.filter(c => rosterUnlocked(c));
   document.getElementById('hub-party-status').textContent = `${joined.length} of ${ROSTER.length} companions joined`;
   document.getElementById('hub-party-progress').style.width = (joined.length/ROSTER.length*100)+'%';
 
@@ -275,15 +283,15 @@ function renderHub(){
   roster.innerHTML = '';
   const activeNow = getActiveCompanions();
   ROSTER.forEach(c=>{
-    const unlocked = p.level >= c.joinLvl;
+    const unlocked = rosterUnlocked(c);
     const isActive = activeNow.includes(c.name);
     const benched = unlocked && !c.fixed && !c.familiar && !isActive;
     const el = document.createElement('div');
     el.className = 'roster-item' + (unlocked ? '' : ' locked') + (benched ? ' benched' : '');
-    const statusLabel = !unlocked ? ('Lv '+c.joinLvl) : (benched ? 'Benched' : 'Joined');
+    const statusLabel = !unlocked ? rosterLockText(c) : (benched ? 'Benched' : 'Joined');
     el.innerHTML = `<div class="roster-avatar"><img src="${PORTRAITS[c.name]}"></div><div class="roster-name">${c.name}</div><div class="roster-lvl">${statusLabel}</div>`;
     el.addEventListener('click', ()=>{
-      if(!unlocked) showHubToast(`${c.name} joins at Level ${c.joinLvl}.`);
+      if(!unlocked) showHubToast(`${c.name} joins when you ${c.ally ? rosterLockText(c) : 'reach ' + rosterLockText(c)}.`);
       else if(benched) showHubToast(`${c.name} is benched — manage your party to bring them along.`);
       else showHubToast(`${c.name} is in your party.`);
     });
@@ -1265,13 +1273,13 @@ let activeCompanions = [];
 let companionATB = {};
 
 function getActiveCompanions(){
-  if(trainingMode === 'siege') return ROSTER.filter(r => GameState.player.level >= r.joinLvl).map(r => r.name); // the whole roster shows up
+  if(trainingMode === 'siege') return ROSTER.filter(r => rosterUnlocked(r)).map(r => r.name); // the whole roster shows up
   autoFillPartySlots();
-  const fixed = ROSTER.filter(r => r.fixed && GameState.player.level >= r.joinLvl).map(r => r.name);
-  const familiar = ROSTER.filter(r => r.familiar && GameState.player.level >= r.joinLvl).map(r => r.name);
+  const fixed = ROSTER.filter(r => r.fixed && rosterUnlocked(r)).map(r => r.name);
+  const familiar = ROSTER.filter(r => r.familiar && rosterUnlocked(r)).map(r => r.name);
   const optional = GameState.activePartyChoice.filter(name => {
     const r = ROSTER.find(x => x.name === name);
-    return r && GameState.player.level >= r.joinLvl;
+    return r && rosterUnlocked(r);
   });
   return [...fixed, ...familiar, ...optional];
 }
@@ -1283,13 +1291,13 @@ function getOptionalRoster(){
 function autoFillPartySlots(){
   GameState.activePartyChoice = GameState.activePartyChoice.filter(name => {
     const r = ROSTER.find(x => x.name === name);
-    return r && GameState.player.level >= r.joinLvl;
+    return r && rosterUnlocked(r);
   });
   if(GameState.partyManualMode) return;
   getOptionalRoster().forEach(r => {
-    if(GameState.player.level >= r.joinLvl &&
+    if(rosterUnlocked(r) &&
        !GameState.activePartyChoice.includes(r.name) &&
-       GameState.activePartyChoice.length < OPTIONAL_PARTY_SLOTS){
+       GameState.activePartyChoice.length < optionalSlots()){
       GameState.activePartyChoice.push(r.name);
     }
   });
@@ -1299,7 +1307,7 @@ function setPartyMember(name, wantActive){
   GameState.partyManualMode = true;
   const idx = GameState.activePartyChoice.indexOf(name);
   if(wantActive){
-    if(idx === -1 && GameState.activePartyChoice.length < OPTIONAL_PARTY_SLOTS){
+    if(idx === -1 && GameState.activePartyChoice.length < optionalSlots()){
       GameState.activePartyChoice.push(name);
     }
   } else {
@@ -1326,27 +1334,27 @@ function renderPartyScreen(){
   const familiarWrap = document.getElementById('party-familiar-list');
   familiarWrap.innerHTML = '';
   ROSTER.filter(r=>r.familiar).forEach(r=>{
-    const unlocked = p.level >= r.joinLvl;
+    const unlocked = rosterUnlocked(r);
     const row = document.createElement('div');
     row.className = 'party-row' + (unlocked ? '' : ' locked');
     row.innerHTML = `<div class="pr-avatar"><img src="${PORTRAITS[r.name]}"></div>
-      <div class="pr-body"><div class="pr-name">${r.name}</div><div class="pr-sub">${unlocked ? "Doesn't take a party slot" : 'Unlocks at Lv '+r.joinLvl}</div></div>`;
+      <div class="pr-body"><div class="pr-name">${r.name}</div><div class="pr-sub">${unlocked ? "Doesn't take a party slot" : 'Unlocks: '+rosterLockText(r)}</div></div>`;
     familiarWrap.appendChild(row);
   });
 
   const optionalRoster = getOptionalRoster();
   const slotsUsed = GameState.activePartyChoice.length;
-  document.getElementById('party-optional-label').textContent = `Optional Party — ${slotsUsed}/${OPTIONAL_PARTY_SLOTS} Slots`;
+  document.getElementById('party-optional-label').textContent = `Optional Party — ${slotsUsed}/${optionalSlots()} Slots`;
 
   const optWrap = document.getElementById('party-optional-list');
   optWrap.innerHTML = '';
   optionalRoster.forEach(r=>{
-    const unlocked = p.level >= r.joinLvl;
+    const unlocked = rosterUnlocked(r);
     const isActive = GameState.activePartyChoice.includes(r.name);
-    const slotsFull = slotsUsed >= OPTIONAL_PARTY_SLOTS;
+    const slotsFull = slotsUsed >= optionalSlots();
     const row = document.createElement('div');
     row.className = 'party-row' + (unlocked ? '' : ' locked');
-    const sub = !unlocked ? `Unlocks at Lv ${r.joinLvl}` : (isActive ? 'In your active party' : 'Benched');
+    const sub = !unlocked ? `Unlocks: ${rosterLockText(r)}` : (isActive ? 'In your active party' : 'Benched');
     const btnLabel = isActive ? 'Remove' : 'Add';
     const btnDisabled = !unlocked || (!isActive && slotsFull);
     row.innerHTML = `<div class="pr-avatar"><img src="${PORTRAITS[r.name]}"></div>
@@ -1645,6 +1653,7 @@ function livingTargets(){
 
 function companionAct(name){
   if(!inBattle || !currentEnemy || currentEnemy.hp <= 0) return;
+  if(window.allyOnAct) allyOnAct(name);
   const combat = COMPANION_COMBAT[name];
   const gear = getCompanionGearBonus(name);
   if(combat.heals){
@@ -2350,7 +2359,7 @@ function onVictory(){
   if(window.libraryOnWin) libraryOnWin();
   const p = GameState.player;
   p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
-  const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1);
+  const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1) * (window.allyGoldMult ? allyGoldMult() : 1);
   const xpMult = window.guildXpMult ? guildXpMult() : 1;
 
   if(trainingMode === 'hunt'){ huntVictory(); return; }
@@ -2599,7 +2608,7 @@ function getPlayerAtkBonus(){
 function getPlayerDefBonus(){
   const p = GameState.player;
   return (p.equippedWeapon?.def||0) + (p.equippedArmor?.def||0) + (p.equippedAmulet?.def||0) +
-    (p.equippedHead?.def||0) + (p.equippedHands?.def||0) + (p.equippedFeet?.def||0) + (p.equippedRing?.def||0) + getPlayerBuffDef();
+    (p.equippedHead?.def||0) + (p.equippedHands?.def||0) + (p.equippedFeet?.def||0) + (p.equippedRing?.def||0) + getPlayerBuffDef() + (window.allyDefAura ? allyDefAura() : 0);
 }
 
 function trinketStatLine(t){
@@ -3468,6 +3477,7 @@ function jrNext(){
 function showJrEnd(ch){
   const wasRead = GameState.readChapters.has(ch.id);
   GameState.readChapters.add(ch.id);
+  if(window.allyCheck) allyCheck();
   document.getElementById('jr-ec-title').textContent = 'Chapter ' + ch.id + ' complete';
   const xpEl = document.getElementById('jr-ec-xp');
   if(!wasRead && ch.xpReward > 0){
@@ -3545,6 +3555,7 @@ function getSaveData(){
     readChapters: Array.from(GameState.readChapters),
     guild: GameState.guild,
     library: GameState.library,
+    allies: GameState.allies,
     activePartyChoice: GameState.activePartyChoice,
     partyManualMode: GameState.partyManualMode
   };
@@ -3562,6 +3573,7 @@ function applySaveData(data){
   });
   GameState.readChapters = new Set(data.readChapters || []);
   GameState.library = data.library || null;
+  GameState.allies = data.allies || { seen:[] };
   GameState.guild = Object.assign({ joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }, data.guild || {});
   GameState.activePartyChoice = data.activePartyChoice || [];
   GameState.partyManualMode = data.partyManualMode || false;
