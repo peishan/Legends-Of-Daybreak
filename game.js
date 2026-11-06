@@ -1505,6 +1505,7 @@ function startTrainingRematch(zoneId){
 
 function continueTraining(){
   if(trainingMode === 'siege') leaveTraining();
+  else if(trainingMode === 'war') startWar(false);
   else if(trainingMode === 'hunt') startHunt(currentHuntId);
   else if(trainingMode === 'rematch') startTrainingRematch(trainingZoneId);
   else startTrainingGrind(trainingZoneId);
@@ -1515,7 +1516,8 @@ function leaveTraining(){
   document.getElementById('battle-result').classList.remove('show');
   stopTicking(); inBattle = false;
   if(trainingMode === 'siege' && window.siegeEnd) siegeEnd();
-  const wasHunt = trainingMode === 'hunt' || trainingMode === 'siege';
+  if(trainingMode === 'war' && window.warEnd) warEnd();
+  const wasHunt = trainingMode === 'hunt' || trainingMode === 'siege' || trainingMode === 'war';
   trainingMode = null; trainingZoneId = null; currentBossDef = null;
   if(wasHunt && window.renderGuild) renderGuild();
   showScreen(wasHunt ? 'guild' : 'training');
@@ -2359,6 +2361,7 @@ function onVictory(){
   inBattle = false; stopTicking();
   if(window.libraryOnWin) libraryOnWin();
   if(window.bondsOnWin) bondsOnWin();
+  if(window.holdOnWin) holdOnWin();
   const p = GameState.player;
   p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
   const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1) * (window.allyGoldMult ? allyGoldMult() : 1) * (window.bondGoldMult ? bondGoldMult() : 1);
@@ -2366,6 +2369,7 @@ function onVictory(){
 
   if(trainingMode === 'hunt'){ huntVictory(); return; }
   if(trainingMode === 'siege'){ siegeVictory(); return; }
+  if(trainingMode === 'war'){ warVictory(); return; }
   if(window.guildOnDefeat) guildOnDefeat(currentEnemy.name, isBoss);
   if(trainingMode){
     let xpGain, goldGain, title, rewardHtml;

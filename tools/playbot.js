@@ -93,6 +93,23 @@ const bot = async (maxZones) => {
     siegeLog.push({ lvl: P.level, tier, won, frac: Math.round(siegeState().frac * 100), hp0, hp1, mhp0, mp0, mp1: P.mp, php: P.hp, inB: inBattle, sv: window.__svCalls, ov: JSON.stringify(window.__ovCalls.slice(-2)), tm: trainingMode });
     if (trainingMode) leaveTraining();
   }
+  const warLog = [];
+  function warStep() {
+    if (!warUnlocked()) return;
+    const s = warState(); s.fielded.length = 0;
+    const want = warMaxFielded(), pref = ['Ser Aldric', 'Sister Wren', 'Dr. AA', 'Mimi', 'Zaki', 'Iris', 'Mezstorm', 'Eliz', 'Senedra', 'Gino'];
+    for (const n of pref) if (s.fielded.length < want && warCandidates().some(m => m.name === n)) s.fielded.push(n);
+    if (!s.fielded.length) return;
+    P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
+    startWar(true); let streak = 0;
+    for (let i = 0; i < 20; i++) {
+      const before = s.streak; fight(2500);
+      if (s.streak > before) { streak = s.streak; trainingMode = null; P.hp = Math.max(P.hp, P.mhp * 0.6); Object.values(GameState.companions).forEach(c => c.hp = c.mhp); startWar(false); }
+      else break;
+    }
+    if (trainingMode) leaveTraining();
+    warLog.push({ lvl: P.level, streak, fielded: want });
+  }
   function readChapters() {
     let more = true;
     while (more) { more = false; for (const c of CHAPTERS) if (!GameState.readChapters.has(c.id) && isChapterUnlocked(c)) { GameState.readChapters.add(c.id); if (c.xpReward) grantXP(c.xpReward); more = true; } }
@@ -119,11 +136,11 @@ const bot = async (maxZones) => {
     if (!zs.bossDefeated && window.__botDebug) rec.debug = { inBattle, enemy: currentEnemy && [currentEnemy.name, currentEnemy.hp, currentEnemy.mhp], paused, pReady, eReady, hp: P.hp, log: document.getElementById('battle-log').textContent, errs: (window.__errs || []).slice(-3) };
     if (!zs.bossDefeated) { rec.wall = true; zs.bossDefeated = true; grantXP(z.boss.xp); } // report the wall, then skip past it so later zones still get measured
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    readChapters(); shop(); guildStep(); libraryStep(); siegeStep();
+    readChapters(); shop(); guildStep(); libraryStep(); siegeStep(); if (window.__warEvery === undefined || out.length % 8 === 0) warStep();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
   }
   const unread = CHAPTERS.filter(c => !GameState.readChapters.has(c.id)).map(c => c.id);
-  return { out, level: P.level, unread, hunts, siege: siegeLog, library: { total: lib().total, done: lib().done, wins: lib().wins }, guild: { rank: guildRank().name, rep: GameState.guild.rep, owned: Object.keys(GameState.guild.owned).length }, errs: window.__errs || [] };
+  return { out, level: P.level, unread, hunts, siege: siegeLog, war: warLog, library: { total: lib().total, done: lib().done, wins: lib().wins }, guild: { rank: guildRank().name, rep: GameState.guild.rep, owned: Object.keys(GameState.guild.owned).length }, errs: window.__errs || [] };
 };
 
 (async () => {
@@ -145,6 +162,7 @@ const bot = async (maxZones) => {
   console.log('lowest HP fraction in first boss attempt: min', mins[0], 'p10', mins[Math.floor(mins.length * .1)], 'median', mins[Math.floor(mins.length / 2)], 'p90', mins[Math.floor(mins.length * .9)]);
   console.log('hardest:', rows.filter(r => r.bossMin !== undefined).sort((a, b) => a.bossMin - b.bossMin).slice(0, 8).map(r => `${r.zone} L${r.lvlIn} ${r.bossMin}`).join('; '));
   console.log('guild:', JSON.stringify(res.guild), '| hunts:', res.hunts.map(x => `${x.hunt}@L${x.lvl}${x.failed ? ' FAILED' : ' tries ' + x.tries + ' low ' + x.low}`).join('; '));
+  console.log('war musters', res.war.length, 'streaks', res.war.map(w => 'L' + w.lvl + ':' + w.streak).join(' '));
   const sg = res.siege; console.log('siege attempts', sg.length, 'broken', sg.filter(x => x.won).length, 'tiers reached', Math.max(...sg.map(x => x.tier)), '| library', JSON.stringify(res.library));
   console.log(`chapters read ${CHAPTER_TOTAL - res.unread.length}/${CHAPTER_TOTAL}`, res.unread.length ? 'unread: ' + res.unread.slice(0, 20).join(',') : '');
   console.log('page errors:', [...errs, ...res.errs].slice(0, 5));

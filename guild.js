@@ -266,8 +266,9 @@ const _closeBattle = closeBattle;
 closeBattle = function(fled){
   const mode = trainingMode;
   if(mode === 'siege' && inBattleWasSiege()) siegeEnd();
+  if(mode === 'war' && window.warEnd) warEnd();
   _closeBattle(fled);
-  if(mode === 'siege' || (mode === 'hunt' && fled)){ trainingMode = null; currentBossDef = null; renderGuild(); showScreen('guild'); }
+  if(mode === 'siege' || mode === 'war' || (mode === 'hunt' && fled)){ trainingMode = null; currentBossDef = null; renderGuild(); showScreen('guild'); }
 };
 const inBattleWasSiege = () => !!currentEnemy;
 
@@ -295,6 +296,7 @@ function renderGuild(){
       <div class="lk-progress-track"><div class="lk-progress-fill" style="width:${Math.round(st.frac * 100)}%"></div></div>
       <p class="sync-note">${Math.round(st.frac * 100)}% of its strength remains. Wounds carry over between attempts. Every companion who has joined fights with you. ${siegeTier() < 10 && st.tier > siegeTier() ? 'Your rank must rise before the next tier opens.' : ''}</p>
       <button class="sync-btn primary" id="guild-siege" ${siegeAvailable() ? '' : 'disabled'}>${siegeAvailable() ? 'Join the siege' : 'Next attempt tomorrow'}</button></div>`;
+    html += window.warSectionHtml ? warSectionHtml() : '';
     html += `<div class="inv-section-label">Contract Board · reposts daily</div>`;
     const board = openContracts();
     html += board.length ? board.map(c => { const s = g.contracts[c.id] || { count:0 }, r = contractReward(c);
@@ -315,6 +317,7 @@ function renderGuild(){
       <div class="tr-stats">${h(x.desc.split('. ')[0])}.</div><div class="tr-mats">${lock ? h(lock) : 'Special: ' + ({ blind:'blinds you (30% misses)', silence:'silences your spells', apocalypse:'unavoidable apocalypse', cosmic:'cycles cosmic phases', rampage:'rampages' }[x.mech])}</div></div>
       <button class="tr-buy" data-hunt="${x.id}" ${lock ? 'disabled' : ''}>${done ? 'Hunt Again' : 'Hunt'}</button></div>`; }).join('');
   root.innerHTML = html;
+  if(window.warBind) warBind(root);
   const siegeBtn = document.getElementById('guild-siege');
   if(siegeBtn) siegeBtn.addEventListener('click', startSiege);
   const join = document.getElementById('guild-join');
