@@ -124,7 +124,7 @@ const bot = async (maxZones) => {
     const best = SPELLS.filter(spellOk).sort((a, b) => b.cost - a.cost)[0];
     const [dn, ds] = best.dice.split('d').map(Number);
     const rec = { zone: z.name, lvlIn: P.level, grind: 0, bossTries: 0, deaths: 0,
-      cal: { lvl: P.level, mhp: P.mhp, def: getPlayerDefBonus(), dmg: Math.round((dn * (ds + 1) / 2 + Math.floor(P.level / 2) + getPlayerAtkBonus()) * (best.mult || 1) * (window.libraryMult ? libraryMult() : 1)) } };
+      cal: { lvl: P.level, mhp: P.mhp, def: getPlayerDefBonus(), dmg: Math.round((dn * (ds + 1) / 2 + Math.floor(P.level / 2) + getPlayerAtkBonus()) * (best.mult || 1) * (window.libraryMult ? libraryMult() : 1) * (window.bondSpellMult ? bondSpellMult() : 1)) } };
     enterZone(zid); zs.quest.started = true;
     let guard = 0;
     while (!zs.quest.done && guard++ < 60) { startEncounter(); fight(); }
