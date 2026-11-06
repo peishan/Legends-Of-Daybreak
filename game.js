@@ -1518,9 +1518,11 @@ function leaveTraining(){
   if(trainingMode === 'siege' && window.siegeEnd) siegeEnd();
   if(trainingMode === 'war' && window.warEnd) warEnd();
   const wasHunt = trainingMode === 'hunt' || trainingMode === 'siege' || trainingMode === 'war';
+  const wasSea = trainingMode === 'sea';
   trainingMode = null; trainingZoneId = null; currentBossDef = null;
   if(wasHunt && window.renderGuild) renderGuild();
-  showScreen(wasHunt ? 'guild' : 'training');
+  if(wasSea && window.renderVoyage) renderVoyage();
+  showScreen(wasSea ? 'voyage' : wasHunt ? 'guild' : 'training');
   playTrack(null);
 }
 document.getElementById('battle-result-leave-btn').addEventListener('click', leaveTraining);
@@ -2370,6 +2372,7 @@ function onVictory(){
   if(trainingMode === 'hunt'){ huntVictory(); return; }
   if(trainingMode === 'siege'){ siegeVictory(); return; }
   if(trainingMode === 'war'){ warVictory(); return; }
+  if(trainingMode === 'sea'){ seaVictory(); return; }
   if(window.guildOnDefeat) guildOnDefeat(currentEnemy.name, isBoss);
   if(trainingMode){
     let xpGain, goldGain, title, rewardHtml;

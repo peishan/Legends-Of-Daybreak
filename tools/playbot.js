@@ -110,6 +110,10 @@ const bot = async (maxZones) => {
     if (trainingMode) leaveTraining();
     warLog.push({ lvl: P.level, streak, fielded: want });
   }
+  function holdStep() {
+    collectStipends();
+    for (let k = 0; k < 6; k++) { let any = false; for (const id of Object.keys(STRONGHOLD_DEFS)) { const before = holdLevel(id); if (before) { upgradeHall(id); if (holdLevel(id) > before) any = true; } } if (!any) break; }
+  }
   function readChapters() {
     let more = true;
     while (more) { more = false; for (const c of CHAPTERS) if (!GameState.readChapters.has(c.id) && isChapterUnlocked(c)) { GameState.readChapters.add(c.id); if (c.xpReward) grantXP(c.xpReward); more = true; } }
@@ -136,7 +140,7 @@ const bot = async (maxZones) => {
     if (!zs.bossDefeated && window.__botDebug) rec.debug = { inBattle, enemy: currentEnemy && [currentEnemy.name, currentEnemy.hp, currentEnemy.mhp], paused, pReady, eReady, hp: P.hp, log: document.getElementById('battle-log').textContent, errs: (window.__errs || []).slice(-3) };
     if (!zs.bossDefeated) { rec.wall = true; zs.bossDefeated = true; grantXP(z.boss.xp); } // report the wall, then skip past it so later zones still get measured
     P.hp = P.mhp; P.mp = P.mmp; Object.values(GameState.companions).forEach(c => c.hp = c.mhp);
-    readChapters(); shop(); guildStep(); libraryStep(); siegeStep(); if (window.__warEvery === undefined || out.length % 8 === 0) warStep();
+    readChapters(); shop(); guildStep(); libraryStep(); siegeStep(); holdStep(); if (window.__warEvery === undefined || out.length % 8 === 0) warStep();
     rec.lvlOut = P.level; rec.gold = P.gold; out.push(rec);
   }
   const unread = CHAPTERS.filter(c => !GameState.readChapters.has(c.id)).map(c => c.id);

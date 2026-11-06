@@ -267,8 +267,10 @@ closeBattle = function(fled){
   const mode = trainingMode;
   if(mode === 'siege' && inBattleWasSiege()) siegeEnd();
   if(mode === 'war' && window.warEnd) warEnd();
+  if(mode === 'sea' && fled && window.seaDefeat) seaDefeat();
   _closeBattle(fled);
   if(mode === 'siege' || mode === 'war' || (mode === 'hunt' && fled)){ trainingMode = null; currentBossDef = null; renderGuild(); showScreen('guild'); }
+  if(mode === 'sea' && fled){ trainingMode = null; currentBossDef = null; renderVoyage(); showScreen('voyage'); }
 };
 const inBattleWasSiege = () => !!currentEnemy;
 

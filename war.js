@@ -17,7 +17,7 @@ for(const [fn, key] of [['bondSpellMult', 'spellDmgPct'], ['bondAtkMult', 'atkPc
 }
 
 function warRivalDef(rv){
-  const s = warState(), L = GameState.player.level, cal = curveAt(L), levelXp = 30 + (L - 1) * 25, mult = 1 + s.streak * 0.08;
+  const s = warState(), L = GameState.player.level, cal = curveAt(L), levelXp = 30 + (L - 1) * 25, mult = 1 + s.streak * 0.15;
   const atk = Math.round((cal.def + cal.mhp * 0.10) * 1.3 * mult), hp = Math.round(cal.dmg * 28 * 1.2 * mult);
   const b = { name:rv.n, mechanic:rv.mechanic, hp, atk, spd:5, xp:Math.round(levelXp * 0.02 * (1 + s.streak * 0.1)), g:Math.round(L * 35 * (1 + s.streak * 0.1)),
     hint:rv.desc.split('. ')[0] + '.', introLine:rv.desc, spriteCls:'act2-body', crownCls:'act2-crown', tint:['#e0a050', '#704020'] };
@@ -70,7 +70,7 @@ function warVictory(){
   const leveled = grantXP(xp); updateMapHud();
   document.getElementById('battle-res-eyebrow').textContent = `Muster won · streak ${s.streak}`;
   document.getElementById('battle-res-title').textContent = `${currentEnemy.name} stands down`;
-  document.getElementById('battle-res-rewards').innerHTML = `+${xp} XP · +${gold} Gold · +${rep} Guild Rep<br>The next rival will be ${Math.round(s.streak * 8)}% tougher.`;
+  document.getElementById('battle-res-rewards').innerHTML = `+${xp} XP · +${gold} Gold · +${rep} Guild Rep<br>The next rival will be ${Math.round(s.streak * 15)}% tougher.`;
   document.getElementById('battle-result').classList.add('show');
   const cont = document.getElementById('battle-result-continue-btn'); cont.textContent = 'Next muster'; cont.onclick = () => startWar(false);
   const leave = document.getElementById('battle-result-leave-btn'); leave.style.display = 'block'; leave.textContent = 'Retreat (keep rewards)';
@@ -99,7 +99,7 @@ window.warSectionHtml = () => {
   if(!warUnlocked()){
     html += `<p class="sync-note">Opens at Level ${WAR_MIN_LEVEL} once you have joined the Guild and met Iris and Ash (Chapter ${WAR_CHAPTER}).</p></div>`; return html;
   }
-  html += `<p class="sync-note">Field up to ${warMaxFielded()} members (more at Guild ranks 4, 7 and 10). They fight the muster in place of your party and add their field bonus. Each win makes the next rival 8% tougher; lose and the streak ends, but everything earned stays.</p>`;
+  html += `<p class="sync-note">Field up to ${warMaxFielded()} members (more at Guild ranks 4, 7 and 10). They fight the muster in place of your party and add their field bonus. Each win makes the next rival 15% tougher; lose and the streak ends, but everything earned stays.</p>`;
   html += warCandidates().map(m => { const on = s.fielded.includes(m.name), full = !on && s.fielded.length >= warMaxFielded();
     return `<button class="sync-btn ${on ? 'primary' : 'ghost'}" data-field="${e(m.name)}" ${full ? 'disabled' : ''}>${m.icon || ''} ${e(m.name)} · ${e(m.role)} · ${Object.entries(m.fieldBuff).map(([k, v]) => '+' + Math.round(v * 100) + '% ' + k.replace('Pct', '')).join(', ')}${on ? ' ✓' : ''}</button>`; }).join('');
   html += `<button class="sync-btn primary" id="war-start" ${s.fielded.length ? '' : 'disabled'}>${s.fielded.length ? 'Start a muster' : 'Field at least one member'}</button>`;
