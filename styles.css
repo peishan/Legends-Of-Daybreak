@@ -941,3 +941,7 @@
 
   #library-content{ padding:70px 16px 50px; }
   #screen-library{ background:linear-gradient(180deg,#14172a,#0e0b12); }
+
+  #bonds-content{ padding:70px 16px 50px; }
+  #screen-bonds{ background:linear-gradient(180deg,#1a1322,#0e0b12); }
+  .bond-av{ float:right; width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--sun); margin:0 0 6px 8px; }

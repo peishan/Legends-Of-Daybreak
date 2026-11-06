@@ -99,7 +99,7 @@ const RECIPES = [
 function getCompanionGearBonus(name){
   // Bonuses from every crafted piece stack, so the post-Nexus upgrades add to the original gear.
   const crafted = RECIPES.filter(r => r.type === 'companion_gear' && r.companion === name && GameState.companionGear[r.id]);
-  const extra = [window.libraryCompanionBonus ? libraryCompanionBonus(name) : null, window.allyBonus ? allyBonus(name) : null].reduce((t, x) => { if(x) for(const k in x) (t = t || {})[k] = (t[k] || 0) + x[k]; return t; }, null);
+  const extra = [window.libraryCompanionBonus ? libraryCompanionBonus(name) : null, window.allyBonus ? allyBonus(name) : null, window.bondGearBonus ? bondGearBonus(name) : null].reduce((t, x) => { if(x) for(const k in x) (t = t || {})[k] = (t[k] || 0) + x[k]; return t; }, null);
   if(!crafted.length && !extra) return null;
   const total = crafted.reduce((t, r) => { for(const k in r.bonus) t[k] = (t[k]||0) + r.bonus[k]; return t; }, {});
   if(extra) for(const k in extra) total[k] = (total[k]||0) + extra[k];
@@ -210,7 +210,8 @@ const GameState = {
   readChapters: new Set(),
   guild: { joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} },
   library: null,
-  allies: { seen:[] }
+  allies: { seen:[] },
+  bonds: null
 };
 function activeZoneId(){
   for(const id in ZONES){ if(!GameState.zoneState[id].bossDefeated) return id; }
@@ -1659,7 +1660,7 @@ function companionAct(name){
   if(combat.heals){
     const targets = livingTargets();
     const lowest = targets.reduce((a,b)=> (b.hp/b.mhp < a.hp/a.mhp ? b : a));
-    const healAmt = roll(combat.healDie) + combat.healBonus + (gear && gear.healBonus ? gear.healBonus : 0);
+    const healAmt = Math.round((roll(combat.healDie) + combat.healBonus + (gear && gear.healBonus ? gear.healBonus : 0)) * (window.bondHealMult ? bondHealMult() : 1));
     if(lowest.key === 'player'){ GameState.player.hp = Math.min(GameState.player.mhp, GameState.player.hp + healAmt); }
     else { const tc = GameState.companions[lowest.key]; tc.hp = Math.min(tc.mhp, tc.hp + healAmt); }
     document.getElementById('battle-log').textContent = `${name} ${combat.verb}`;
@@ -1667,7 +1668,7 @@ function companionAct(name){
     updateBattleBars();
     return;
   }
-  const dmg = roll(combat.dmgDie) + (combat.dmgBonus||0) + (gear && gear.dmgBonus ? gear.dmgBonus : 0);
+  const dmg = Math.round((roll(combat.dmgDie) + (combat.dmgBonus||0) + (gear && gear.dmgBonus ? gear.dmgBonus : 0)) * (window.bondAtkMult ? bondAtkMult() : 1));
   currentEnemy.hp = Math.max(0, currentEnemy.hp - dmg);
   if(isBoss) bossDamageDealt += dmg;
   document.getElementById('battle-log').textContent = `${name} ${combat.verb.replace('{t}', currentEnemy.name)}`;
@@ -1685,7 +1686,7 @@ function playerAct(type){
   const lvlBonus = Math.floor(p.level/2);
   const gearAtk = getPlayerAtkBonus();
   let dmg = roll(4) + lvlBonus + gearAtk;
-  dmg = Math.round(dmg * (window.libraryMult ? libraryMult() : 1));
+  dmg = Math.round(dmg * (window.libraryMult ? libraryMult() : 1) * (window.bondAtkMult ? bondAtkMult() : 1));
   let critText = '';
   if(isBoss && currentEnemy.mechanic === 'blind' && Math.random() < 0.3){
     document.getElementById('battle-log').textContent = 'Blinded, San strikes at empty air.';
@@ -1731,7 +1732,7 @@ function castSpell(spellId){
       pATB = 0; pReady = false; hideSpellPanel(); updateBattleBars(); checkEnemyDefeatedOrResurrect(); return;
     }
     let dmg = rollDice(spell.dice) + lvlBonus + gearAtk;
-    dmg = Math.round(dmg * (spell.mult || 1) * (window.libraryMult ? libraryMult() : 1));
+    dmg = Math.round(dmg * (spell.mult || 1) * (window.libraryMult ? libraryMult() : 1) * (window.bondSpellMult ? bondSpellMult() : 1));
     if(isCompanionActive('Mezstorm')) dmg = Math.round(dmg * 1.15);
     let critText = '';
     if((isCompanionActive('Senedra') && Math.random() < 0.2) || (window.guildCrit && Math.random() < guildCrit())){ dmg *= 2; critText = ' A critical hit!'; }
@@ -1936,7 +1937,7 @@ function doDrown(boss){
     const dmg = saved ? Math.round(boss.drownDmg * 0.35) : boss.drownDmg;
     const name = t.key === 'player' ? 'San' : t.key;
     if(t.key === 'player'){
-      const mitigated = Math.max(1, dmg - getPlayerDefBonus());
+      const mitigated = Math.max(1, Math.round((dmg - getPlayerDefTotal()) * (1 - (window.bondDmgRed ? bondDmgRed() : 0))));
       GameState.player.hp = Math.max(0, GameState.player.hp - mitigated);
     } else {
       const c = GameState.companions[t.key];
@@ -2308,7 +2309,7 @@ function doRampage(){
 function applyEnemyDamage(targetKey, dmg, msg, big){
   let logText = msg;
   if(targetKey === 'player'){
-    const mitigated = Math.max(1, dmg - getPlayerDefBonus());
+    const mitigated = Math.max(1, Math.round((dmg - getPlayerDefTotal()) * (1 - (window.bondDmgRed ? bondDmgRed() : 0))));
     GameState.player.hp = Math.max(0, GameState.player.hp - mitigated);
     dmg = mitigated;
   }
@@ -2357,9 +2358,10 @@ function grantXP(amount){
 function onVictory(){
   inBattle = false; stopTicking();
   if(window.libraryOnWin) libraryOnWin();
+  if(window.bondsOnWin) bondsOnWin();
   const p = GameState.player;
   p.mp = Math.min(p.mmp, p.mp + Math.round(p.mmp * 0.2)); // a little focus returns after each win
-  const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1) * (window.allyGoldMult ? allyGoldMult() : 1);
+  const goldMult = (isCompanionActive('Aisyah') ? 1.2 : 1) * (window.guildGoldMult ? guildGoldMult() : 1) * (window.allyGoldMult ? allyGoldMult() : 1) * (window.bondGoldMult ? bondGoldMult() : 1);
   const xpMult = window.guildXpMult ? guildXpMult() : 1;
 
   if(trainingMode === 'hunt'){ huntVictory(); return; }
@@ -2603,12 +2605,15 @@ const RING_SHOP = [
 function getPlayerAtkBonus(){
   const p = GameState.player;
   return (p.equippedWeapon?.atk||0) + (p.equippedArmor?.atk||0) + (p.equippedAmulet?.atk||0) +
-    (p.equippedHead?.atk||0) + (p.equippedHands?.atk||0) + (p.equippedFeet?.atk||0) + (p.equippedRing?.atk||0);
+    (p.equippedHead?.atk||0) + (p.equippedHands?.atk||0) + (p.equippedFeet?.atk||0) + (p.equippedRing?.atk||0) + (window.bondFlat ? bondFlat('atk') : 0);
 }
 function getPlayerDefBonus(){
   const p = GameState.player;
   return (p.equippedWeapon?.def||0) + (p.equippedArmor?.def||0) + (p.equippedAmulet?.def||0) +
     (p.equippedHead?.def||0) + (p.equippedHands?.def||0) + (p.equippedFeet?.def||0) + (p.equippedRing?.def||0) + getPlayerBuffDef() + (window.allyDefAura ? allyDefAura() : 0);
+}
+function getPlayerDefTotal(){
+  return Math.round(getPlayerDefBonus() * (window.bondDefMult ? bondDefMult() : 1)) + (window.bondFlat ? bondFlat('def') : 0);
 }
 
 function trinketStatLine(t){
@@ -3556,6 +3561,7 @@ function getSaveData(){
     guild: GameState.guild,
     library: GameState.library,
     allies: GameState.allies,
+    bonds: GameState.bonds,
     activePartyChoice: GameState.activePartyChoice,
     partyManualMode: GameState.partyManualMode
   };
@@ -3574,6 +3580,7 @@ function applySaveData(data){
   GameState.readChapters = new Set(data.readChapters || []);
   GameState.library = data.library || null;
   GameState.allies = data.allies || { seen:[] };
+  GameState.bonds = data.bonds || null;
   GameState.guild = Object.assign({ joined:false, rep:0, repBal:0, week:-1, contracts:{}, hunts:{}, owned:{} }, data.guild || {});
   GameState.activePartyChoice = data.activePartyChoice || [];
   GameState.partyManualMode = data.partyManualMode || false;
