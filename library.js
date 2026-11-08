@@ -53,7 +53,7 @@ window.libraryOnWin = () => {
 };
 function checkMilestones(){
   const l = lib();
-  for(const k in LIBRARY_MILESTONES) if(l.total >= +k && !l.milestones.includes(k)){ l.milestones.push(k); libLog(LIBRARY_MILESTONES[k]); }
+  for(const k in LIBRARY_MILESTONES) if(l.total >= +k && !l.milestones.includes(k)){ l.milestones.push(k); libLog(LIBRARY_MILESTONES[k]); if(window.addChronicle) addChronicle('\u{1F4D6}', `The Library reached ${k} breakthroughs.`); }
 }
 function nextQuestion(who){
   const pool = LIBRARY_DILEMMAS[who], th = lib().threads[who];

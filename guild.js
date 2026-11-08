@@ -167,6 +167,7 @@ function huntVictory(){
   const first = !huntDone(h), mult = first ? 1 : 0.5;
   const xp = Math.round(currentEnemy.xp * mult * guildXpMult()), gold = Math.round(currentEnemy.g * mult * guildGoldMult());
   const rep = (first ? 3 : 1) * (120 + h.tier * 60 + Math.round(p.level * 0.5));
+  if(first && window.addChronicle) addChronicle('\u{1F441}\uFE0F', `${h.name} fell in a Temple Hunt.`);
   g.hunts[h.id] = true; p.gold += gold; p.templeRep += rep;
   const leveled = grantXP(xp);
   updateMapHud();
@@ -248,6 +249,7 @@ function siegeVictory(){
   const xp = Math.round(levelXp * (0.8 + t * 0.25) * guildXpMult()), gold = Math.round(L * 90 * t * guildGoldMult());
   const rep = Math.round(repFor(L) * 12 * (1 + t * 0.5));
   g.rep += rep; g.repBal += rep; p.gold += gold; st.kills++; st.frac = 1;
+  if(window.addChronicle) addChronicle('\u{1F6E1}\uFE0F', `${SIEGE_TIERS[t - 1][0]} was broken by the whole guild.`);
   const advanced = st.tier === t && t < 10; if(advanced) st.tier = t + 1;
   const leveled = grantXP(xp);
   updateMapHud();

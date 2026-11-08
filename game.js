@@ -268,7 +268,7 @@ function renderHub(){
   const unlockedChapters = CHAPTERS.filter(c => isChapterUnlocked(c));
   const hasUnread = unlockedChapters.some(c => !GameState.readChapters.has(c.id));
   document.getElementById('hub-journal-status').textContent = `${unlockedChapters.length} of ${CHAPTERS.length} chapters unlocked`;
-  document.getElementById('hub-journal-progress').style.width = (GameState.readChapters.size/CHAPTERS.length*100)+'%';
+  document.getElementById('hub-journal-progress').style.width = (CHAPTERS.filter(c=>GameState.readChapters.has(c.id)).length/CHAPTERS.length*100)+'%';
   document.getElementById('hub-journal-badge').classList.toggle('show', hasUnread);
 
   // Party tile
@@ -2413,6 +2413,7 @@ function onVictory(){
   let rewardHtml, title, xpGain;
   if(isBoss){
     zs.bossDefeated = true;
+    if(window.addChronicle) addChronicle('\u2694\uFE0F', `${zone.boss.name} fell in ${zone.name}.`);
     const bossGold = Math.round(zone.boss.g * goldMult);
     p.gold += bossGold;
     p.templeRep += zone.templeRepOnClear;
@@ -3451,7 +3452,7 @@ function typeText(str){
 function skipType(str){ clearInterval(jrTypeTimer); document.getElementById('jr-text').textContent = str; jrTyping = false; }
 
 function renderJrScene(){
-  const ch = CHAPTERS.find(c=>c.id===currentChapter);
+  const ch = chapterById(currentChapter);
   const s = ch.scenes[jrIdx];
   const speakerEl = document.getElementById('jr-speaker');
   const textEl = document.getElementById('jr-text');
@@ -3479,7 +3480,7 @@ function renderJrScene(){
 }
 
 function jrNext(){
-  const ch = CHAPTERS.find(c=>c.id===currentChapter);
+  const ch = chapterById(currentChapter);
   if(jrTyping){ skipType(ch.scenes[jrIdx].text); return; }
   jrIdx++;
   if(jrIdx >= ch.scenes.length){ showJrEnd(ch); return; }
@@ -3490,7 +3491,7 @@ function showJrEnd(ch){
   const wasRead = GameState.readChapters.has(ch.id);
   GameState.readChapters.add(ch.id);
   if(window.allyCheck) allyCheck();
-  document.getElementById('jr-ec-title').textContent = 'Chapter ' + ch.id + ' complete';
+  document.getElementById('jr-ec-title').textContent = ch.eyebrow ? 'Memory kept' : 'Chapter ' + ch.id + ' complete';
   const xpEl = document.getElementById('jr-ec-xp');
   if(!wasRead && ch.xpReward > 0){
     grantXP(ch.xpReward);
@@ -3504,13 +3505,13 @@ function showJrEnd(ch){
 
 function openReader(chapterId, rebuildList){
   currentChapter = chapterId;
-  const ch = CHAPTERS.find(c=>c.id===chapterId);
+  const ch = chapterById(chapterId);
   jrIdx = -1; clearInterval(jrTypeTimer); jrTyping = false;
   document.getElementById('jr-end-card').classList.remove('show');
   buildSceneDecor(ch.theme);
   if(ch.motifs || ch.motif) buildAct2Motif(document.getElementById('jr-scene'), ch.motifs || [ch.motif], ch.id);
   buildJrProgress(ch.scenes);
-  document.getElementById('jr-tc-eyebrow').textContent = 'Chapter ' + ch.id;
+  document.getElementById('jr-tc-eyebrow').textContent = ch.eyebrow || ('Chapter ' + ch.id);
   document.getElementById('jr-tc-title').textContent = ch.title;
   document.getElementById('jr-tc-sub').textContent = ch.sub;
   document.getElementById('jr-titlecard').classList.remove('hide');
@@ -3522,8 +3523,10 @@ function showScreenRaw(name){
   document.getElementById('screen-'+name).classList.add('active');
 }
 
+const chapterById = (id) => CHAPTERS.find(c => c.id === id) || (typeof MEMORIES !== 'undefined' ? MEMORIES.find(m => m.id === id) : null);
 function backToJournalSelect(){
   document.getElementById('jr-end-card').classList.remove('show');
+  if(typeof currentChapter === 'string' && window.renderMemories){ renderMemories(); showScreen('memories'); return; }
   showScreen('journal-select');
 }
 

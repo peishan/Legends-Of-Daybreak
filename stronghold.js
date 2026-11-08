@@ -21,7 +21,12 @@ for(const [fn, calc] of [['guildXpMult', () => hallSum('xpBonus')], ['bondGoldMu
 }
 const stipendMult = (id) => Math.max(1, ...STRONGHOLD_DEFS[id].guildHall.filter(h => h.level <= holdLevel(id)).map(h => 1 + (h.stipendMult ? h.stipendMult - 1 : 0)));
 const stipendFor = (id) => ({ xp:Math.round(STRONGHOLD_DEFS[id].stipend.xp * stipendMult(id)), gold:Math.round(STRONGHOLD_DEFS[id].stipend.gold * stipendMult(id)) });
+function noteNewHolds(){
+  const s = holdSave(); s.noted = s.noted || {};
+  claimedHolds().forEach(id => { if(!s.noted[id]){ s.noted[id] = true; if(window.addChronicle) addChronicle(STRONGHOLD_DEFS[id].icon, `${STRONGHOLD_DEFS[id].name} claimed for the Guild.`); } });
+}
 function collectStipends(){
+  noteNewHolds();
   const s = holdSave(), day = guildWeek(), ids = claimedHolds(); if(!ids.length || s.lastStipend === day) return;
   const days = s.lastStipend < 0 ? 1 : Math.min(3, day - s.lastStipend); // a few missed days stack, no more
   let xp = 0, gold = 0; ids.forEach(id => { const x = stipendFor(id); xp += x.xp * days; gold += x.gold * days; });

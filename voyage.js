@@ -18,7 +18,7 @@ const priceMult = () => Math.max(1, GameState.player.level / 60);   // V2 prices
 const sailsLeft = () => { const v = voy(), d = guildWeek(); if(v.sailDay !== d){ v.sailDay = d; v.sails = 0; } return VOY_SAILS_PER_DAY - v.sails; };
 const bonusOf = (type) => voy().crew.reduce((t, n) => t + (CREW_TYPE[n] === type ? CREW_BONUS : 0), 0) + VOYAGER_MASTERY.filter(m => m.type === type && voy().level >= m.level).reduce((t, m) => t + m.value, 0);
 const voyXpNeeded = (l) => 500 + (l - 1) * 250;
-function gainVoyXp(n){ const v = voy(); v.xp += n; while(v.xp >= voyXpNeeded(v.level)){ v.xp -= voyXpNeeded(v.level); v.level++; showHubToast(`Voyager Level ${v.level}!`); } }
+function gainVoyXp(n){ const v = voy(); v.xp += n; while(v.xp >= voyXpNeeded(v.level)){ v.xp -= voyXpNeeded(v.level); v.level++; showHubToast(`Voyager Level ${v.level}!`); if(window.addChronicle) addChronicle('\u2693', `Voyager Level ${v.level} reached.`); } }
 const goodPrice = (port, id, mode) => { const g = VOYAGE_GOODS[id], spec = voyPort(port).specialties.includes(id);
   return Math.round(g.basePrice * priceMult() * (mode === 'buy' ? (spec ? 0.6 : 1.2) : (spec ? 0.7 : 1.4))); };
 

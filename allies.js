@@ -45,6 +45,7 @@ window.allyCheck = () => {
     if(allyRecruited(a.name) && !GameState.allies.seen.includes(a.name)){
       GameState.allies.seen.push(a.name);
       showHubToast(`${a.name} joins your crew!`);
+      if(window.addChronicle) addChronicle('\u{1F91D}', `${a.name} joined the crew.`);
     }
   });
 };

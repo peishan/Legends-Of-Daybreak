@@ -64,7 +64,8 @@ function startWar(fresh = true){
 }
 function warVictory(){
   const s = warState(), p = GameState.player, g = GameState.guild;
-  s.streak++; s.best = Math.max(s.best, s.streak);
+  s.streak++; if(s.streak > s.best && s.streak % 5 === 0 && window.addChronicle) addChronicle('\u2694\uFE0F', `A Guild War streak of ${s.streak}.`);
+  s.best = Math.max(s.best, s.streak);
   const xp = Math.round(currentEnemy.xp * guildXpMult()), gold = Math.round(currentEnemy.g * guildGoldMult()), rep = Math.round(repFor(p.level) * 0.8 * (1 + s.streak * 0.1));
   g.rep += rep; g.repBal += rep; p.gold += gold;
   const leveled = grantXP(xp); updateMapHud();
